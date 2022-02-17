@@ -17,4 +17,5 @@ Route::get('/', function () {
     return view('parent');
 });
 
+Route::get('/usuarios/search', [UserController::class, 'search'])->name('usuarios.search');
 Route::resource('usuarios', UserController::class);

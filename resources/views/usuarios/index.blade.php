@@ -9,6 +9,15 @@
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Usuários</h1>
 
+            <p class="text-right">
+                <button class="btn btn-primary" id="btn-search" data-toggle="modal" data-target="#usersSearchModal">
+                    <i class="fas fa-search"></i>
+                    Buscar
+                </button>
+            </p>
+
+            @include('usuarios.modals.search')
+
             @if (count($usuarios) > 0)
                 <table class="table table-bordered table-striped table-hover">
                     <tr>

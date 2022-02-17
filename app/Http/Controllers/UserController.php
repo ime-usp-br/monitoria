@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserSearchRequest;
 use Illuminate\Support\Facades\Hash;
 use Uspdev\Replicado\Pessoa;
 use Auth;
@@ -25,8 +26,9 @@ class UserController extends Controller
         }
 
         $usuarios = User::orderBy('name')->get();
+        $roles = Role::all();
 
-        return view('usuarios.index', compact('usuarios'));
+        return view('usuarios.index', compact('usuarios', 'roles'));
     }
 
     /**
@@ -110,5 +112,35 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function search(UserSearchRequest $request){
+        if(!Gate::allows('editar usuario')){
+            abort(403);
+        }
+
+        $validated = $request->validated();
+
+        $nome = $validated["name"];
+        $perfis = $validated["roles"] ?? [];
+        $codpes = $validated["codpes"];
+
+        $usuarios = new User;
+        $roles = Role::all();
+
+        $usuarios = $usuarios->when($nome, function ($query) use ($nome) {
+            return $query->where("name", "like", "%".$nome."%");
+        })->when($codpes, function ($query) use ($codpes) {
+            return $query->where("codpes", "like", $codpes);
+        });
+
+        if($perfis){
+            $usuarios = $usuarios->role($perfis);
+        }
+
+        $usuarios = $usuarios->orderBy("name", "asc");
+        $usuarios = $usuarios->get();
+
+        return view('usuarios.index', compact('usuarios', 'roles'));
     }
 }

@@ -65,7 +65,6 @@ $right_menu = [
     [
         'text' => '<i class="fas fa-cog"></i> Usuários',
         'title' => 'Configurações',
-        'target' => '_blank',
         'url' => config('app.url') . '/usuarios',
         'align' => 'right',
         'can' => 'editar usuario',
