@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 use \Spatie\Permission\Traits\HasRoles;
 use \Uspdev\SenhaunicaSocialite\Traits\HasSenhaunica;
+use Uspdev\Replicado\Pessoa;
 
 class User extends Authenticatable
 {
@@ -44,4 +45,24 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function booted(){
+
+        static::created(function ($user){
+            $codpes = $user->codpes;
+            foreach(Pessoa::vinculos($codpes) as $vinculo){
+                if (str_contains($vinculo, 'Docente') && str_contains($vinculo, 'IME')){
+                    $user->assignRole("Docente");
+                }
+                if (str_contains($vinculo, 'Aluno de Graduação')){
+                    $user->assignRole("Aluno");
+                }
+                if (str_contains(env('LOG_AS_ADMINISTRATOR'), $codpes)){
+                    $user->assignRole("Administrador");
+                }
+            }
+        });
+    }
+
+
 }

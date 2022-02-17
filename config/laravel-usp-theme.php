@@ -37,8 +37,8 @@ $submenu2 = [
 
 $menu = [
     [
-        'text' => '<i class="fas fa-home"></i> Home',
-        'url' => 'home',
+        'text' => '<i class="fas fa-home"></i>',
+        'url' => '/',
     ],
     [
         # este item de menu será substituido no momento da renderização
@@ -48,11 +48,6 @@ $menu = [
         'text' => 'Drop Down',
         'submenu' => $submenu2,
         'can' => '',
-    ],
-    [
-        'text' => 'Está logado',
-        'url' => config('app.url') . '/logado', // com caminho absoluto
-        'can' => 'user',
     ],
     [
         'text' => 'Menu gerente',
@@ -68,15 +63,12 @@ $menu = [
 
 $right_menu = [
     [
-        // menu utilizado para views da biblioteca senhaunica-socialite.
-        'key' => 'senhaunica-socialite',
-    ],
-    [
-        'text' => '<i class="fas fa-cog"></i>',
+        'text' => '<i class="fas fa-cog"></i> Usuários',
         'title' => 'Configurações',
         'target' => '_blank',
-        'url' => config('app.url') . '/item1',
+        'url' => config('app.url') . '/usuarios',
         'align' => 'right',
+        'can' => 'editar usuario',
     ],
 ];
 
