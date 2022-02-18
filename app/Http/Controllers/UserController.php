@@ -28,7 +28,7 @@ class UserController extends Controller
         $usuarios = User::orderBy('name')->get();
         $roles = Role::all();
 
-        return view('usuarios.index', compact('usuarios', 'roles'));
+        return view('users.index', compact('usuarios', 'roles'));
     }
 
     /**
@@ -78,7 +78,7 @@ class UserController extends Controller
         $usuario = User::find($id);
         $roles = Role::all();
 
-        return view('usuarios.edit', compact('usuario', 'roles'));
+        return view('users.edit', compact('usuario', 'roles'));
     }
 
     /**
@@ -99,7 +99,7 @@ class UserController extends Controller
         $usuario->roles()->detach();
         $usuario->assignRole($validated['roles']);
         $usuario->update($validated);
-        return redirect('/usuarios');
+        return redirect('/users');
         
     }
 
@@ -140,7 +140,6 @@ class UserController extends Controller
 
         $usuarios = $usuarios->orderBy("name", "asc");
         $usuarios = $usuarios->get();
-
-        return view('usuarios.index', compact('usuarios', 'roles'));
+        return view('users.index', compact('usuarios', 'roles'));
     }
 }

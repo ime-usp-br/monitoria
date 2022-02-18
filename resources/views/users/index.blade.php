@@ -3,7 +3,7 @@
 @section('title', 'Usuários')
 
 @section('content')
-
+@parent
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -16,7 +16,7 @@
                 </button>
             </p>
 
-            @include('usuarios.modals.search')
+            @include('users.modals.search')
 
             @if (count($usuarios) > 0)
                 <table class="table table-bordered table-striped table-hover">
@@ -38,7 +38,7 @@
                                 <a class="text-dark text-decoration-none"
                                     data-toggle="tooltip" data-placement="top"
                                     title="Editar"
-                                    href="{{ route('usuarios.edit', $usuario) }}"
+                                    href="{{ route('users.edit', $usuario) }}"
                                 >
                                     <i class="fas fa-edit"></i>
                                 </a>

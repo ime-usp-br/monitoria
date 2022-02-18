@@ -18,18 +18,36 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         Permission::create(['name' => 'editar usuario']);
+        Permission::create(['name' => 'visualizar periodo letivo']);
+        Permission::create(['name' => 'criar periodo letivo']);
+        Permission::create(['name' => 'editar periodo letivo']);
+        Permission::create(['name' => 'deletar periodo letivo']);
 
 
         Role::create(['name' => 'Secretária'])
-            ->givePermissionTo('editar usuario');
+            ->givePermissionTo('editar usuario')
+            ->givePermissionTo('visualizar periodo letivo')
+            ->givePermissionTo('criar periodo letivo')
+            ->givePermissionTo('editar periodo letivo')
+            ->givePermissionTo('deletar periodo letivo');
 
-        Role::create(['name' => 'Docente']);
-        Role::create(['name' => 'Aluno']);
-        Role::create(['name' => 'Monitor']);
-        Role::create(['name' => 'Presidente de Comissão']);
-        Role::create(['name' => 'Vice Presidente de Comissão']);
-        Role::create(['name' => 'Membro Comissão']);
+        Role::create(['name' => 'Docente'])
+            ->givePermissionTo('visualizar periodo letivo');
 
+        Role::create(['name' => 'Aluno'])
+            ->givePermissionTo('visualizar periodo letivo');
+
+        Role::create(['name' => 'Monitor'])
+            ->givePermissionTo('visualizar periodo letivo');
+
+        Role::create(['name' => 'Presidente de Comissão'])
+            ->givePermissionTo('visualizar periodo letivo');
+
+        Role::create(['name' => 'Vice Presidente de Comissão'])
+            ->givePermissionTo('visualizar periodo letivo');
+
+        Role::create(['name' => 'Membro Comissão'])
+            ->givePermissionTo('visualizar periodo letivo');
 
         Role::create(['name' => 'Administrador'])
             ->givePermissionTo(Permission::all());

@@ -4,7 +4,7 @@
             <div class="modal-header">
                 <h4 class="modal-title">Buscar Usuário</h4>
             </div>
-        <form id="searchForm" action="{{ route('usuarios.search') }}" method="get">
+        <form id="searchForm" action="{{ route('users.search') }}" method="get">
 
             <div class="modal-body">
                     <div class="row custom-form-group align-items-center">

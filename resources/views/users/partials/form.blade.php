@@ -73,11 +73,11 @@
 <div class="row">
     <div class="col-4 d-none d-lg-block"></div>
     <div class="col-md-12 col-lg-6">
-        <button type="submit" class="btn btn-warning text-white rounded-0">
+        <button type="submit" class="btn btn-outline-dark">
             {{ $buttonText }}
         </button>
-        <a class="btn btn-secondary rounded-0"
-            href="{{ route('usuarios.index') }}"
+        <a class="btn btn-outline-dark"
+            href="{{ route('users.index') }}"
         >
             Cancelar
         </a>

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SchoolTermController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,5 +18,6 @@ Route::get('/', function () {
     return view('parent');
 });
 
-Route::get('/usuarios/search', [UserController::class, 'search'])->name('usuarios.search');
-Route::resource('usuarios', UserController::class);
+Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
+Route::resource('users', UserController::class);
+Route::resource('schoolterms', SchoolTermController::class);

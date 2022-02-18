@@ -35,6 +35,19 @@ $submenu2 = [
     ],
 ];
 
+$submenuConfig = [
+    [
+        'text' => 'Usuários',
+        'url' => config('app.url') . '/users',
+        'can' => 'editar usuario',
+    ],
+    [
+        'text' => 'Período Letivo',
+        'url' => config('app.url') . '/schoolterms',
+        'can' => 'visualizar periodo letivo',
+    ],
+];
+
 $menu = [
     [
         'text' => '<i class="fas fa-home"></i>',
@@ -63,11 +76,10 @@ $menu = [
 
 $right_menu = [
     [
-        'text' => '<i class="fas fa-cog"></i> Usuários',
+        'text' => '<i class="fas fa-cog"></i>',
         'title' => 'Configurações',
-        'url' => config('app.url') . '/usuarios',
+        'submenu' => $submenuConfig,
         'align' => 'right',
-        'can' => 'editar usuario',
     ],
 ];
 

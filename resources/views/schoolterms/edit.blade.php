@@ -1,13 +1,14 @@
 @extends('parent')
 
-@section('title', 'Editar perfis')
+@section('title', 'Editar período letivo')
 
 @section('content')
+@parent
 <div class="container">
     <div class="row">
         <div class="col-md-12">
             <h1 class='h5 font-weight-bold my-3'>
-                Editar usuário {{ $usuario->name }}
+                Editar período letivo
             </h1>
 
             <p class="alert alert-info rounded-0">
@@ -16,12 +17,12 @@
             </p>
 
             <form method="POST"
-                action="{{ route('usuarios.update', $usuario) }}"
+                action="{{ route('schoolterms.update', $periodo) }}"
             >
                 @method('patch')
                 @csrf
 
-                @include('usuarios.partials.form', ['buttonText' => 'Editar'])
+                @include('schoolterms.partials.form', ['buttonText' => 'Editar'])
             </form>
         </div>
     </div>
