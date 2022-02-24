@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SchoolTermController;
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\InstructorController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,4 +22,10 @@ Route::get('/', function () {
 
 Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
 Route::resource('users', UserController::class);
+
 Route::resource('schoolterms', SchoolTermController::class);
+
+Route::patch('/groups/import', [GroupController::class, 'import'])->name('groups.import');
+Route::resource('groups', GroupController::class);
+
+Route::resource('instructors', InstructorController::class);

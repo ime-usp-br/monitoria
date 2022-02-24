@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Group;
 
 class SchoolTerm extends Model
 {
@@ -30,4 +31,9 @@ class SchoolTerm extends Model
         'start_date_student_registration' => 'datetime',
         'end_date_student_registration' => 'datetime',
     ];
+
+    public function groups()
+    {
+        return $this->hasMany(Group::class);
+    }
 }

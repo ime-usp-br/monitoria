@@ -14,23 +14,116 @@
     function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
     
     $(function () {
-      $('#started_at').datepicker({
-        showOn: 'both',
-        buttonText: '<i class="far fa-calendar"></i>',
-        onSelect: function () {
-          var dataFinal = $('#finished_at');
-          var dtMin = $('#started_at').datepicker('getDate');
-          dataFinal.datepicker('option', 'minDate', dtMin);
+      $('#btn-addClassSchedule2').on('click', function(e) {
+        var count = document.getElementById('count-new-classSchedule');
+        var id = parseInt(count.value)+1;
+        count.value = id;
+        var diasmnocp = $('#diasmnocp-add').val();
+        var diasDaSemana = ["seg","ter","qua","qui","sex","sab","dom"];
+        var error = false;
+        $('#diasmnocp-add-error-div').empty();
+        if(!diasDaSemana.includes(diasmnocp)){
+          error = true;
+          var errorLabel = "<p class='alert alert-warning align-items-center'>Escolha um dia da semana</p>";
+          $('#diasmnocp-add-error-div').append(errorLabel);
+        }
+        var horent = $('#horent-add').val();
+        var horsai = $('#horsai-add').val();
+        var validHour = /^([0-1][0-9]|2[0-3]):([0-5][0-9])$/;
+        $('#horent-add-error-div').empty();
+        if(!validHour.test(horent)){
+          error = true;
+          var errorLabel = "<p class='alert alert-warning align-items-center'>Informe a hora de entrada</p>";
+          $('#horent-add-error-div').append(errorLabel);
+        }
+        $('#horsai-add-error-div').empty();
+        if(!validHour.test(horsai)){
+          error = true;
+          var errorLabel = "<p class='alert alert-warning align-items-center'>Informe a hora de saida</p>";
+          $('#horsai-add-error-div').append(errorLabel);
+        }
+        if(error){
+          e.preventDefault();
+          e.stopPropagation();
+          return
+        }
+        var label = diasmnocp+" "+horent+" "+horsai;
+        var html = ['<div id="horario-new'+id+'">',
+            '<input id="horarios[new'+id+'][diasmnocp]" name="horarios[new'+id+'][diasmnocp]" type="hidden" value='+diasmnocp+'>',
+            '<input id="horarios[new'+id+'][horent]" name="horarios[new'+id+'][horent]" type="hidden" value='+horent+'>',
+            '<input id="horarios[new'+id+'][horsai]" name="horarios[new'+id+'][horsai]" type="hidden" value='+horsai+'>',
+            '<label id="label-horario-new'+id+'" class="font-weight-normal">'+label+'</label>',
+            '<a class="btn btn-link btn-sm text-dark text-decoration-none"',
+            '    style="padding-left:0px"',
+            '    id="btn-remove-horario-new'+id+'"',
+            '    onclick="removeHorario(\'new'+id+'\')"',
+            '>',
+            '    <i class="fas fa-trash-alt"></i>',
+            '</a>',
+            '<br/>',
+        '</div>'].join("\n");
+        $('#novos-horarios').append(html);
+      });
+      $('#addClassScheduleModal').on('show.bs.modal', function(e){
+        $('#diasmnocp-add-error-div').empty();
+        $('#horent-add-error-div').empty();
+        $('#horsai-add-error-div').empty();
+        $('#diasmnocp-add').val("");
+        $('#horent-add').val("");
+        $('#horsai-add').val("");
+      });
+      $('#btn-addInstructor2').on('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var count = document.getElementById('count-new-instructor');
+        var id = parseInt(count.value)+1;
+        count.value = id;
+        var codpes = $('#codpes-add').val();
+        $('#codpes-div').empty();
+        if($.isNumeric(codpes)){
+          $.ajax({
+            url: baseURL + '/instructors?codpes=' + codpes,
+            dataType: 'json',
+          success: function success(instructorName){
+            var nompes = instructorName;
+            if(nompes != ""){
+              var html = ['<div id="instrutor-new'+id+'">',
+                  '<input id="instrutores[new'+id+'][codpes]" name="instrutores[new'+id+'][codpes]" type="hidden" value='+codpes+'>',
+                  '<label id="label-instrutor-new'+id+'" class="font-weight-normal">'+nompes+'</label>',
+                  '<a class="btn btn-link btn-sm text-dark text-decoration-none"',
+                  '    style="padding-left:0px"',
+                  '    id="btn-remove-instrutor-new'+id+'"',
+                  '    onclick="removeInstrutor(\'new'+id+'\')"',
+                  '>',
+                  '    <i class="fas fa-trash-alt"></i>',
+                  '</a>',
+                  '<br/>',
+              '</div>'].join("\n");
+              $('#novos-instrutores').append(html);
+              $('#addInstructorModal').hide();
+              $('body').removeClass('modal-open');
+              $('.modal-backdrop').remove(); 
+            } else{
+              var error = "<p class='alert alert-warning align-items-center'>Docente não encontrado</p>";
+              $('#codpes-div').append(error);
+            }
+          }
+          });
+        }else{
+          var error = "<p class='alert alert-warning align-items-center'>Informe um número USP valido</p>";
+          $('#codpes-div').append(error);
+
         }
       });
-      $('#finished_at').datepicker({
-        showOn: 'both',
-        buttonText: '<i class="far fa-calendar"></i>',
-        onSelect: function () {
-          var dataInicial = $('#started_at');
-          var dtMax = $('#finished_at').datepicker('getDate');
-          dataInicial.datepicker('option', 'maxDate', dtMax);
-        }
+      $('#addInstructorModal').on('show.bs.modal', function(e){
+        $('#codpes-div').empty();
+        $('#codpes-add').val("");
+        $('#nompes-add').val("");
+      });
+      $('#removalModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var routePath = button.attr('href');
+        $(this).find('.modal-footer form').attr('action', routePath);
       });
       $('.custom-datepicker').datepicker({
         showOn: 'both',

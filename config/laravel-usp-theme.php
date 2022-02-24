@@ -46,6 +46,11 @@ $submenuConfig = [
         'url' => config('app.url') . '/schoolterms',
         'can' => 'visualizar periodo letivo',
     ],
+    [
+        'text' => 'Turmas',
+        'url' => config('app.url') . '/groups',
+        'can' => 'visualizar turma',
+    ],
 ];
 
 $menu = [
