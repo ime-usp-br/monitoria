@@ -41,7 +41,21 @@
         />
     </div>
 </div>
-
+@if ($buttonText === "Cadastrar")
+<div class="row custom-form-group align-items-center">
+    <div class="col-12 col-lg-4 text-lg-right">
+        <label for="department_id" >Departamento *</label>
+    </div>
+    <div class="col-12 col-md-5">        
+        <select id="department_id" name="department_id" class="custom-form-control">
+                <option value="" selected></option>
+            @foreach(App\Models\Department::where('sglund', 'IME')->get() as $department)
+                <option value={{ $department->id }}>Departamento de {{ $department->nomset }}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
+@endif
 <div class="row custom-form-group align-items-center">
     <div class="col-12 col-lg-4 text-lg-right">
         <label >Horários</label>

@@ -18,7 +18,7 @@
                     title="Cadastrar" 
                 >
                     <i class="fas fa-plus-circle"></i>
-                    Cadastrar turma
+                    Cadastrar
                 </a>
                 <a class="btn btn-primary"
                     data-toggle="modal"
@@ -28,14 +28,21 @@
                     <i class="fas fa-file-upload"></i>
                     Importar do Jupiter
                 </a>
+                
+                <button class="btn btn-primary" id="btn-search" data-toggle="modal" data-target="#groupsSearchModal">
+                    <i class="fas fa-search"></i>
+                    Buscar
+                </button>
             </p>
+            @include('groups.modals.search')
 
             @if (count($turmas) > 0)
-                <table class="table table-bordered table-striped table-hover" style="font-size:15px;">
+                <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
                     <tr>
                         <th>Código da Turma</th>
                         <th>Código da Disciplina</th>
                         <th>Nome da Disciplina</th>
+                        <th>Departamento</th>
                         <th>Tipo da Turma</th>
                         <th>Horários</th>
                         <th>Prof(a)</th>
@@ -49,6 +56,7 @@
                             <td>{{ $turma->codtur }}</td>
                             <td>{{ $turma->coddis }}</td>
                             <td>{{ $turma->nomdis }}</td>
+                            <td style="text-align: center">{{ $turma->department->nomabvset }}</td>
                             <td>{{ $turma->tiptur }}</td>
                             <td style="white-space: nowrap;">
                                 @foreach($turma->classschedules as $horario)

@@ -25,6 +25,7 @@ class StoreGroupRequest extends FormRequest
     {
         $rules = [
             'periodoId' => 'required|numeric',
+            'department_id' => 'required|numeric|in:1,2,3,4',
             'codtur' => 'required|numeric',
             'coddis' => 'required',
             'nomdis' => 'required',

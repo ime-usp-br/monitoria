@@ -15,10 +15,12 @@ class CreateInstructorsTable extends Migration
     {
         Schema::create('instructors', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('department_id');
             $table->string('codpes');
             $table->string('nompes');
             $table->timestamps();
             $table->unique(['codpes', 'nompes']);
+            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
         });
     }
 

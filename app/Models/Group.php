@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\SchoolTerm;
 use App\Models\Instructor;
 use App\Models\ClassSchedule;
+use App\Models\Department;
 use Uspdev\Replicado\DB;
 
 class Group extends Model
@@ -18,10 +19,10 @@ class Group extends Model
         'tiptur',
         'nomdis',
         'coddis',
-        'department',
         'dtainitur',
         'dtafimtur',
         'school_term_id',
+        'department_id',
     ];
 
     protected $casts = [
@@ -34,6 +35,11 @@ class Group extends Model
         return $this->belongsTo(SchoolTerm::class, "school_term_id");
     }
 
+    public function department()
+    {
+        return $this->belongsTo(Department::class, "department_id");
+    }
+
     public function instructors()
     {
         return $this->belongsToMany(Instructor::class);
@@ -44,67 +50,63 @@ class Group extends Model
         return $this->belongsToMany(ClassSchedule::class);
     }
 
-    public function getGroupsFromReplicado(SchoolTerm $schoolTerm)
+    public static function getDisciplinesFromReplicadoByInstitute($sglund){
+        $query = " SELECT DC.coddis";
+        $query .= " FROM UNIDADE AS U, SETOR AS S, PREFIXODISCIP AS PD, DISCIPGRCODIGO AS DC";
+        $query .= " WHERE (U.sglund LIKE :sglund)";
+        $query .= " AND S.codund = U.codund";
+        $query .= " AND PD.codset = S.codset";
+        $query .= " AND DC.codclg = PD.codclg";
+        $param = [
+            'sglund' => $sglund,
+        ];
+
+        return array_unique(DB::fetchAll($query, $param),SORT_REGULAR);
+
+    }
+
+    public static function getFromReplicadoBySchoolTerm(SchoolTerm $schoolTerm)
     {
+        $disciplinas = SELF::getDisciplinesFromReplicadoByInstitute(env("UNIDADE"));
+
         $periodo = [
             '1° Semestre' => '1',
             '2° Semestre' => '2',
         ];
-        $codtur = $schoolTerm->year;
-        $codtur .= $periodo[$schoolTerm->period] . '%';
+        $groups = [];
+        foreach($disciplinas as $disc){
+            $codtur = $schoolTerm->year;
+            $codtur .= $periodo[$schoolTerm->period] . '%';
+            $coddis = $disc['coddis'];
 
-        $query = " SELECT T.codtur, T.coddis, D.nomdis, T.dtainitur, T.dtafimtur, T.tiptur";
-        $query .= " FROM TURMAGR AS T, DISCIPLINAGR AS D";
-        $query .= " WHERE (T.codtur LIKE :codtur)";
-        $query .= " AND (T.coddis LIKE :coddis1 OR T.coddis LIKE :coddis2 OR T.coddis LIKE :coddis3 OR T.coddis LIKE :coddis4 )";
-        $query .= " AND D.coddis = T.coddis";
-        $query .= " AND D.verdis = T.verdis";
-        $param = [
-            'codtur' => $codtur,
-            'coddis1' => 'MAC%',
-            'coddis2' => 'MAE%',
-            'coddis3' => 'MAP%',
-            'coddis4' => 'MAT%',
-        ];
 
-        $turmas = array_unique(DB::fetchAll($query, $param), SORT_REGULAR);
-
-        foreach($turmas as $key => $turma){
-            $query = " SELECT O.diasmnocp, P.horent, P.horsai";
-            $query .= " FROM OCUPTURMA AS O, PERIODOHORARIO AS P";
-            $query .= " WHERE O.coddis = :coddis";
-            $query .= " AND O.codtur = :codtur";
-            $query .= " AND P.codperhor = O.codperhor";
+            $query = " SELECT T.codtur, T.coddis, D.nomdis, T.dtainitur, T.dtafimtur, T.tiptur, DC.pfxdisval";
+            $query .= " FROM TURMAGR AS T, DISCIPLINAGR AS D, DISCIPGRCODIGO AS DC";
+            $query .= " WHERE (T.coddis = :coddis)";
+            $query .= " AND T.codtur LIKE :codtur";
+            $query .= " AND T.verdis = (SELECT MAX(T.verdis) 
+                                        FROM TURMAGR AS T 
+                                        WHERE T.coddis = :coddis)";
+            $query .= " AND D.coddis = T.coddis";
+            $query .= " AND D.verdis = T.verdis";
+            $query .= " AND DC.coddis = T.coddis";
             $param = [
-                'coddis' => $turma['coddis'],
-                'codtur' => $turma['codtur'],
+                'coddis' => $coddis,
+                'codtur' => $codtur,
             ];
 
-            $class_schedules = DB::fetchAll($query, $param);
+            $turmas = DB::fetchAll($query, $param);
+            
+            foreach($turmas as $key => $turma){
+                $turmas[$key]['class_schedules'] = ClassSchedule::getFromReplicadoByGroup($turma);
+                $turmas[$key]['instructors'] = Instructor::getFromReplicadoByGroup($turma);
+                $turmas[$key]['department_id'] = Department::firstOrCreate(Department::getFromReplicadoByNomabvset($turma['pfxdisval']))->id;
+                $turmas[$key]['school_term_id'] = $schoolTerm->id;
+                unset($turmas[$key]['pfxdisval']);
 
-            $turmas[$key]['class_schedule'] = [];
-            foreach($class_schedules as $class_schedule){
-                array_push($turmas[$key]['class_schedule'], $class_schedule);
             }
-
-            $query = " SELECT M.codpes, PS.nompes";
-            $query .= " FROM OCUPTURMA AS O, MINISTRANTE AS M, PESSOA AS PS";
-            $query .= " WHERE O.coddis = :coddis";
-            $query .= " AND O.codtur = :codtur";
-            $query .= " AND M.coddis = :coddis";
-            $query .= " AND M.codtur = :codtur";
-            $query .= " AND M.codperhor = O.codperhor";
-            $query .= " AND PS.codpes = M.codpes";
-            $param = [
-                'coddis' => $turma['coddis'],
-                'codtur' => $turma['codtur'],
-            ];
-
-            $turmas[$key]['instructor'] = array_unique(DB::fetchAll($query, $param), SORT_REGULAR);
-
-            $turmas[$key]['department'] = substr($turmas[$key]['coddis'],0,3);
-
+            $groups = array_merge($groups, $turmas);
         }
-        return $turmas;
+        return $groups;
     }
 }

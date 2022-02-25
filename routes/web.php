@@ -25,6 +25,7 @@ Route::resource('users', UserController::class);
 
 Route::resource('schoolterms', SchoolTermController::class);
 
+Route::get('/groups/search', [GroupController::class, 'search'])->name('groups.search');
 Route::patch('/groups/import', [GroupController::class, 'import'])->name('groups.import');
 Route::resource('groups', GroupController::class);
 
