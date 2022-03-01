@@ -50,15 +50,15 @@ class User extends Authenticatable
 
         static::created(function ($user){
             $codpes = $user->codpes;
+            if (str_contains(env('LOG_AS_ADMINISTRATOR'), $codpes)){
+                $user->assignRole("Administrador");
+            }
             foreach(Pessoa::vinculos($codpes) as $vinculo){
                 if (str_contains($vinculo, 'Docente') && str_contains($vinculo, 'IME')){
                     $user->assignRole("Docente");
                 }
                 if (str_contains($vinculo, 'Aluno de Graduação')){
                     $user->assignRole("Aluno");
-                }
-                if (str_contains(env('LOG_AS_ADMINISTRATOR'), $codpes)){
-                    $user->assignRole("Administrador");
                 }
             }
         });
