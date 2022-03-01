@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Instructor;
 use App\Models\Group;
-use App\Models\Activities;
+use App\Models\Activity;
 
 class TeachingAssistantApplication extends Model
 {
@@ -28,6 +28,6 @@ class TeachingAssistantApplication extends Model
     }
 
     public function activities(){
-        return $this->belongsToMany(Activities::class);
+        return $this->belongsToMany(Activity::class);
     }
 }

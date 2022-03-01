@@ -20,6 +20,7 @@ class CreateTeachingAssistantApplicationsTable extends Migration
             $table->integer('requested_number');
             $table->string('priority');
             $table->timestamps();
+            $table->unique(['instructor_id','group_id']);
             $table->foreign('instructor_id')->references('id')->on('instructors')->onDelete('cascade');
             $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
         });
