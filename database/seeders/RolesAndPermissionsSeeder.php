@@ -29,6 +29,7 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'editar turma']);
         Permission::create(['name' => 'deletar turma']);
         Permission::create(['name' => 'importar turmas do replicado']);
+        Permission::create(['name' => 'buscar turmas']);
 
 
         Role::create(['name' => 'Secretária'])
@@ -39,7 +40,8 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('visualizar turma')
             ->givePermissionTo('criar turma')
             ->givePermissionTo('editar turma')
-            ->givePermissionTo('importar turmas do replicado');
+            ->givePermissionTo('importar turmas do replicado')
+            ->givePermissionTo('buscar turmas');
 
         Role::create(['name' => 'Docente'])
             ->givePermissionTo('visualizar periodo letivo')

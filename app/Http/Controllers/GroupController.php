@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Uspdev\Replicado\Pessoa;
 use Session;
+use Auth;
 
 class GroupController extends Controller
 {
@@ -27,9 +28,14 @@ class GroupController extends Controller
     {
         if(!Gate::allows('visualizar turma')){
             abort(403);
+        }elseif(Auth::user()->hasRole('Docente')){
+            $turmas = Group::whereHas('instructors', function($query) { 
+                $query->where('instructors.codpes', Auth::user()->codpes); 
+            })->get();
+        }else{
+            $turmas = Group::all();
         }
 
-        $turmas = Group::all();
         $schoolterms = SchoolTerm::all();
 
         return view('groups.index', compact(['turmas', 'schoolterms']));
@@ -186,7 +192,7 @@ class GroupController extends Controller
 
     public function import(CreateGroupRequest $request)
     {   
-        if(!Gate::allows('criar turma')){
+        if(!Gate::allows('importar turmas do replicado')){
             abort(403);
         }
 
