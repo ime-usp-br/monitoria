@@ -30,4 +30,13 @@ class TeachingAssistantApplication extends Model
     public function activities(){
         return $this->belongsToMany(Activity::class);
     }
+
+    public function hasActivity($activity){
+        foreach($this->activities as $act){
+            if($act->description == $activity){
+                return true;
+            }
+        }
+        return false;
+    }
 }

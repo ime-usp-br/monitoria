@@ -13,7 +13,7 @@ class UpdateTeachingAssistantApplicationRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +23,13 @@ class UpdateTeachingAssistantApplicationRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
+        $rules = [
+            'requested_number' => 'required|numeric|gt:0',
+            'priority' => 'required|numeric|in:1,2,3',
+            'activities' => 'required|array',
+            'activities.*' => 'required|in:Atendimento a alunos,Correção de listas de exercícios,Fiscalização de provas',
         ];
+
+        return $rules;
     }
 }

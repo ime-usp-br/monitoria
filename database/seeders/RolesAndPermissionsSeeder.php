@@ -31,6 +31,11 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'importar turmas do replicado']);
         Permission::create(['name' => 'buscar turmas']);
 
+        Permission::create(['name' => 'visualizar solicitação de monitor']);
+        Permission::create(['name' => 'criar solicitação de monitor']);
+        Permission::create(['name' => 'editar solicitação de monitor']);
+        Permission::create(['name' => 'deletar solicitação de monitor']);
+
 
         Role::create(['name' => 'Secretária'])
             ->givePermissionTo('editar usuario')
@@ -47,7 +52,10 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('visualizar periodo letivo')
             ->givePermissionTo('visualizar turma')
             ->givePermissionTo('criar turma')
-            ->givePermissionTo('editar turma');
+            ->givePermissionTo('editar turma')
+            ->givePermissionTo('visualizar solicitação de monitor')
+            ->givePermissionTo('criar solicitação de monitor')
+            ->givePermissionTo('editar solicitação de monitor');
 
         Role::create(['name' => 'Aluno'])
             ->givePermissionTo('visualizar periodo letivo')

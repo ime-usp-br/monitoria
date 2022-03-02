@@ -1,40 +1,5 @@
 <?php
 
-$admin = [
-    [
-        'text' => '<i class="fas fa-atom"></i>  SubItem 1',
-        'url' => 'subitem1',
-    ],
-    [
-        'text' => 'SubItem 2',
-        'url' =>  '/subitem2',
-        'can' => 'admin',
-    ],
-    [
-        'type' => 'divider',
-    ],
-    [
-        'type' => 'header',
-        'text' => 'Cabeçalho',
-    ],
-    [
-        'text' => 'SubItem 3',
-        'url' => 'subitem3',
-    ],
-];
-
-$submenu2 = [
-    [
-        'text' => 'SubItem 1',
-        'url' => 'subitem1',
-    ],
-    [
-        'text' => 'SubItem 2',
-        'url' => 'subitem2',
-        'can' => 'admin',
-    ],
-];
-
 $submenuConfig = [
     [
         'text' => 'Usuários',
@@ -63,19 +28,9 @@ $menu = [
         'key' => 'menu_dinamico',
     ],
     [
-        'text' => 'Drop Down',
-        'submenu' => $submenu2,
-        'can' => '',
-    ],
-    [
-        'text' => 'Menu gerente',
-        'url' => 'gerente',
-        'can' => 'gerente',
-    ],
-    [
-        'text' => 'Menu admin',
-        'submenu' => $admin,
-        'can' => 'admin',
+        'text' => 'Solicitar Monitor',
+        'url' => config('app.url') . '/requestAssistant',
+        'can' => 'visualizar solicitação de monitor',
     ],
 ];
 

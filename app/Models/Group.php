@@ -8,6 +8,7 @@ use App\Models\SchoolTerm;
 use App\Models\Instructor;
 use App\Models\ClassSchedule;
 use App\Models\Department;
+use App\Models\TeachingAssistantApplication;
 use Uspdev\Replicado\DB;
 
 class Group extends Model
@@ -48,6 +49,27 @@ class Group extends Model
     public function classschedules()
     {
         return $this->belongsToMany(ClassSchedule::class);
+    }
+
+    public function teachingAssistantApplication(){
+        return $this->hasOne(TeachingAssistantApplication::class);
+    }
+
+    public function isSchoolTermOpen(){
+        if($this->schoolterm->status == "Aberto"){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function isInstructor($codpes){
+        foreach($this->instructors as $instructor){
+            if($instructor->codpes == $codpes){
+                return true;
+            }
+        }
+        return false;
     }
 
     public static function getDisciplinesFromReplicadoByInstitute($sglund){

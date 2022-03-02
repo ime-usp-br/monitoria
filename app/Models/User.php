@@ -52,7 +52,6 @@ class User extends Authenticatable
             $codpes = $user->codpes;
             if (str_contains(env('LOG_AS_ADMINISTRATOR'), $codpes)){
                 $user->assignRole("Administrador");
-                $user->givePermissionTo('admin');
             }
             foreach(Pessoa::vinculos($codpes) as $vinculo){
                 if (str_contains($vinculo, 'Docente') && str_contains($vinculo, 'IME')){

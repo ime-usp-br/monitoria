@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SchoolTermController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\InstructorController;
+use App\Http\Controllers\TeachingAssistantApplicationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,3 +31,5 @@ Route::patch('/groups/import', [GroupController::class, 'import'])->name('groups
 Route::resource('groups', GroupController::class);
 
 Route::resource('instructors', InstructorController::class);
+
+Route::resource('requestAssistant', TeachingAssistantApplicationController::class);
