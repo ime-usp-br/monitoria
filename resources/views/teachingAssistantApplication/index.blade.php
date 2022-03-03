@@ -28,22 +28,40 @@
             @if (count($turmas) > 0)
                 <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
                     <tr>
+                        <th>Sigla da Disciplina</th>
                         <th>Código da Turma</th>
-                        <th>Código da Disciplina</th>
                         <th>Nome da Disciplina</th>
                         <th>Horários</th>
+                        <th>N.° da Solicitação</th>
+                        <th>Data da Solicitação</th>
+                        <th>N.° de Monitores</th>
                         <th></th>
                     </tr>
 
                     @foreach($turmas as $turma)
-                        <tr style="font-size:12px;">
-                            <td>{{ $turma->codtur }}</td>
+                        <tr style="font-size:12px;" class="text-center">
                             <td>{{ $turma->coddis }}</td>
+                            <td>{{ $turma->codtur }}</td>
                             <td>{{ $turma->nomdis }}</td>
                             <td style="white-space: nowrap;">
                                 @foreach($turma->classschedules as $horario)
                                     {{ $horario->diasmnocp . ' ' . $horario->horent . ' ' . $horario->horsai }} <br/>
                                 @endforeach
+                            </td>
+                            <td>
+                                @if($turma->teachingAssistantApplication)
+                                    {{str_pad($turma->teachingAssistantApplication->id,5,'0',STR_PAD_LEFT)}}
+                                @endif
+                            </td>
+                            <td>
+                                @if($turma->teachingAssistantApplication)
+                                    {{$turma->teachingAssistantApplication->created_at}}
+                                @endif
+                            </td>
+                            <td>
+                                @if($turma->teachingAssistantApplication)
+                                    {{$turma->teachingAssistantApplication->requested_number}}
+                                @endif
                             </td>
                             @if($turma->teachingAssistantApplication)
                                 <td class="text-center" style="white-space: nowrap;">
@@ -52,7 +70,7 @@
                                         title="Editar Solicitação"
                                         href="{{ route('requestAssistant.edit', $turma->teachingAssistantApplication) }}"
                                     >
-                                        Editar Solicitação
+                                        Editar
                                     </a>
                                 </td>
                             @else
@@ -60,7 +78,7 @@
                                     <form method="GET" action="{{ route('requestAssistant.create') }}">
                                         <input type="hidden" name="group_id" value="{{ $turma->id }}">
                                         <button class="btn btn-outline-dark" type="submit">
-                                            Solicitar Monitor
+                                            Solicitar
                                         </button>
                                     </form> 
                                 </td>
