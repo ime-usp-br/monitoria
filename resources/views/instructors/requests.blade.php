@@ -8,7 +8,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Solicitações de Monitores</h1>
-            <h4 class='text-center mb-5'>{{ $docente->nompes }}</h4>
+            <h4 class='text-center mb-5'>{{ $docente->getPronountreatment() . $docente->nompes }}</h4>
 
             <p class="text-right">
                 <a class="btn btn-primary"

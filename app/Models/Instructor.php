@@ -24,11 +24,13 @@ class Instructor extends Model
         return $this->belongsToMany(Group::class);
     }
 
-    public function department(){
+    public function department()
+    {
         return $this->belongsTo(Department::class, "department_id");
     }
 
-    public function hasRequests(){
+    public function hasRequests()
+    {
         foreach($this->groups as $group){
             if($group->teachingAssistantApplication){
                 return true;
@@ -37,7 +39,8 @@ class Instructor extends Model
         return false;
     }
 
-    public function getRequests(){
+    public function getRequests()
+    {
         $requests = [];
         foreach($this->groups as $group){
             if($group->teachingAssistantApplication){
@@ -47,7 +50,8 @@ class Instructor extends Model
         return $requests;
     }
 
-    public function hasRequestsInCurrentSchoolTerm(){
+    public function hasRequestsInCurrentSchoolTerm()
+    {
         foreach($this->groups as $group){
             if($group->isSchoolTermOpen()){
                 if($group->teachingAssistantApplication){
@@ -58,7 +62,8 @@ class Instructor extends Model
         return false;
     }
 
-    public function getRequestsInCurrentSchoolTerm(){
+    public function getRequestsInCurrentSchoolTerm()
+    {
         $requests = [];
         foreach($this->groups as $group){
             if($group->isSchoolTermOpen()){
@@ -70,7 +75,26 @@ class Instructor extends Model
         return $requests;
     }
 
-    public static function getFromReplicadoByGroup($group){
+    public function getPronounTreatment()
+    {
+        $query = " SELECT P.sexpes";
+        $query .= " FROM PESSOA AS P";
+        $query .= " WHERE P.codpes = :codpes";
+        $param = [
+            'codpes' => $this->codpes,
+        ];
+
+        $res = DB::fetchAll($query, $param)[0];
+
+        if($res['sexpes'] == 'F'){
+            return 'Profa. Dra. ';
+        }else{
+            return 'Prof. Dr. ';
+        }
+    }
+
+    public static function getFromReplicadoByGroup($group)
+    {
         $query = " SELECT M.codpes";
         $query .= " FROM OCUPTURMA AS O, MINISTRANTE AS M";
         $query .= " WHERE O.coddis = :coddis";
@@ -93,7 +117,8 @@ class Instructor extends Model
         return $instructors;
     }
 
-    public static function getFromReplicadoByCodpes($codpes){
+    public static function getFromReplicadoByCodpes($codpes)
+    {
         $query = " SELECT P.codpes, P.nompes, VP.codset, LP.codema";
         $query .= " FROM VINCULOPESSOAUSP AS VP, PESSOA AS P, LOCALIZAPESSOA as LP";
         $query .= " WHERE VP.codpes = :codpes";
