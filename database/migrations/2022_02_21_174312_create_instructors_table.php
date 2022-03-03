@@ -18,6 +18,7 @@ class CreateInstructorsTable extends Migration
             $table->unsignedBigInteger('department_id');
             $table->string('codpes');
             $table->string('nompes');
+            $table->string('codema');
             $table->timestamps();
             $table->unique(['codpes', 'nompes']);
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');

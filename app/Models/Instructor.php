@@ -15,6 +15,7 @@ class Instructor extends Model
     protected $fillable = [
         'codpes',
         'nompes',
+        'codema',
         'department_id'
     ];
 
@@ -25,6 +26,48 @@ class Instructor extends Model
 
     public function department(){
         return $this->belongsTo(Department::class, "department_id");
+    }
+
+    public function hasRequests(){
+        foreach($this->groups as $group){
+            if($group->teachingAssistantApplication){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function getRequests(){
+        $requests = [];
+        foreach($this->groups as $group){
+            if($group->teachingAssistantApplication){
+                array_push($requests, $group->teachingAssistantApplication);
+            }
+        }
+        return $requests;
+    }
+
+    public function hasRequestsInCurrentSchoolTerm(){
+        foreach($this->groups as $group){
+            if($group->isSchoolTermOpen()){
+                if($group->teachingAssistantApplication){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public function getRequestsInCurrentSchoolTerm(){
+        $requests = [];
+        foreach($this->groups as $group){
+            if($group->isSchoolTermOpen()){
+                if($group->teachingAssistantApplication){
+                    array_push($requests, $group->teachingAssistantApplication);
+                }
+            }
+        }
+        return $requests;
     }
 
     public static function getFromReplicadoByGroup($group){
@@ -51,17 +94,19 @@ class Instructor extends Model
     }
 
     public static function getFromReplicadoByCodpes($codpes){
-        $query = " SELECT P.codpes, P.nompes, VP.codset";
-        $query .= " FROM VINCULOPESSOAUSP AS VP, PESSOA AS P";
+        $query = " SELECT P.codpes, P.nompes, VP.codset, LP.codema";
+        $query .= " FROM VINCULOPESSOAUSP AS VP, PESSOA AS P, LOCALIZAPESSOA as LP";
         $query .= " WHERE VP.codpes = :codpes";
         $query .= " AND VP.tipfnc = :tipfnc";
         $query .= " AND P.codpes = :codpes";
+        $query .= " AND LP.codpes = :codpes";
+        $query .= " AND LP.tipvin = VP.tipvin";
         $param = [
             'codpes' => $codpes,
             'tipfnc' => 'Docente',
         ];
 
-        $res = DB::fetchAll($query, $param);
+        $res = array_unique(DB::fetchAll($query, $param),SORT_REGULAR);
         
         $res[0]["department_id"] = Department::firstOrCreate(Department::getFromReplicadoByCodset($res[0]["codset"]))->id;
         unset($res[0]["codset"]);

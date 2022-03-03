@@ -30,6 +30,8 @@ Route::get('/groups/search', [GroupController::class, 'search'])->name('groups.s
 Route::patch('/groups/import', [GroupController::class, 'import'])->name('groups.import');
 Route::resource('groups', GroupController::class);
 
+Route::get('/instructors/{instructor}/requests', [InstructorController::class, 'requests'])->name('instructors.requests');
+Route::get('/instructors/search', [InstructorController::class, 'search'])->name('instructors.search');
 Route::resource('instructors', InstructorController::class);
 
 Route::resource('requestAssistant', TeachingAssistantApplicationController::class);

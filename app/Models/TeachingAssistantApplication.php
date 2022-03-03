@@ -39,4 +39,12 @@ class TeachingAssistantApplication extends Model
         }
         return false;
     }
+
+    public function getPriority(){
+        $res = [3=>'Imprescindivel',
+                2=>'Extremamente necessário, mas não imprescindivel',
+                1=>'Importante, porém posso abrir mão do auxilio de um monitor'];
+
+        return $res[$this->priority];
+    }
 }

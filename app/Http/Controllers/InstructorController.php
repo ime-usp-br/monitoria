@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreInstructorRequest;
 use App\Http\Requests\UpdateInstructorRequest;
 use App\Http\Requests\IndexInstructorRequest;
+use App\Http\Requests\SearchInstructorRequest;
 use App\Models\Instructor;
 use Uspdev\Replicado\Pessoa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class InstructorController extends Controller
 {
@@ -35,6 +37,14 @@ class InstructorController extends Controller
 
             return response()->json("");
         }
+
+        if(!Gate::allows('visualizar docente')){
+            abort(403);
+        }
+
+        $docentes = Instructor::all();
+
+        return view('instructors.index', compact('docentes'));
     }
 
     /**
@@ -101,5 +111,33 @@ class InstructorController extends Controller
     public function destroy(Instructor $instructor)
     {
         //
+    }
+
+    public function requests(Instructor $instructor)
+    {
+        if(!Gate::allows('visualizar docente')){
+            abort(403);
+        }
+
+        $docente = $instructor;
+
+        return view('instructors.requests', compact('docente'));
+    }
+
+    public function search(SearchInstructorRequest $request)
+    {
+        if(!Gate::allows('visualizar docente')){
+            abort(403);
+        }
+        
+        $validated = $request->validated();
+        $codpes = $validated['codpes'];
+
+        $docentes = new Instructor;
+        $docentes = $docentes->when($codpes, function ($query) use ($codpes){
+            return $query->where('codpes', $codpes);
+        })->get();
+
+        return view('instructors.index', compact('docentes'));
     }
 }

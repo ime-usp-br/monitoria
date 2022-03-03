@@ -7,6 +7,11 @@ $submenuConfig = [
         'can' => 'editar usuario',
     ],
     [
+        'text' => 'Docentes',
+        'url' => config('app.url') . '/instructors',
+        'can' => 'visualizar docente',
+    ],
+    [
         'text' => 'Período Letivo',
         'url' => config('app.url') . '/schoolterms',
         'can' => 'visualizar periodo letivo',
