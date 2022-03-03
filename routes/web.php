@@ -6,6 +6,7 @@ use App\Http\Controllers\SchoolTermController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\TeachingAssistantApplicationController;
+use App\Http\Controllers\MainController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,9 +18,7 @@ use App\Http\Controllers\TeachingAssistantApplicationController;
 |
 */
 
-Route::get('/', function () {
-    return view('parent');
-});
+Route::get('/', [MainController::class, 'index']);
 
 Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
 Route::resource('users', UserController::class);
