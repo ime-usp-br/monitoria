@@ -36,6 +36,11 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'editar solicitação de monitor']);
         Permission::create(['name' => 'deletar solicitação de monitor']);
 
+        Permission::create(['name' => 'visualizar docente']);
+        Permission::create(['name' => 'criar docente']);
+        Permission::create(['name' => 'editar docente']);
+        Permission::create(['name' => 'deletar docente']);
+
 
         Role::create(['name' => 'Secretária'])
             ->givePermissionTo('editar usuario')
@@ -46,6 +51,7 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('criar turma')
             ->givePermissionTo('editar turma')
             ->givePermissionTo('importar turmas do replicado')
+            ->givePermissionTo('visualizar docente')
             ->givePermissionTo('buscar turmas');
 
         Role::create(['name' => 'Docente'])
@@ -61,6 +67,8 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('visualizar periodo letivo')
             ->givePermissionTo('visualizar turma');
 
+        Role::create(['name' => 'Aluno sem cadastro']);
+        
         Role::create(['name' => 'Monitor'])
             ->givePermissionTo('visualizar periodo letivo')
             ->givePermissionTo('visualizar turma');
@@ -71,6 +79,7 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('editar periodo letivo')
             ->givePermissionTo('visualizar turma')
             ->givePermissionTo('criar turma')
+            ->givePermissionTo('visualizar docente')
             ->givePermissionTo('editar turma');
 
         Role::create(['name' => 'Vice Presidente de Comissão'])
@@ -79,10 +88,13 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('editar periodo letivo')
             ->givePermissionTo('visualizar turma')
             ->givePermissionTo('criar turma')
+            ->givePermissionTo('visualizar docente')
             ->givePermissionTo('editar turma');
 
         Role::create(['name' => 'Membro Comissão'])
             ->givePermissionTo('visualizar periodo letivo')
+            ->givePermissionTo('visualizar docente')
+            ->givePermissionTo('visualizar solicitação de monitor')
             ->givePermissionTo('visualizar turma');
 
         Role::create(['name' => 'Administrador'])

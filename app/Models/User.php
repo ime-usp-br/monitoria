@@ -10,9 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 use \Spatie\Permission\Traits\HasRoles;
 use \Uspdev\SenhaunicaSocialite\Traits\HasSenhaunica;
-use Uspdev\Replicado\Pessoa;
 use Uspdev\Replicado\DB;
-use App\Models\Instructor;
 
 class User extends Authenticatable
 {
@@ -60,7 +58,7 @@ class User extends Authenticatable
                     $user->assignRole("Docente");
                 }
                 if ($vinculo == 'Aluno'){
-                    $user->assignRole("Aluno");
+                    $user->assignRole("Aluno sem cadastro");
                 }
             }
         });

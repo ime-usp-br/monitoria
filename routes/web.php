@@ -7,6 +7,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\TeachingAssistantApplicationController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\StudentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,3 +35,5 @@ Route::get('/instructors/search', [InstructorController::class, 'search'])->name
 Route::resource('instructors', InstructorController::class);
 
 Route::resource('requestAssistant', TeachingAssistantApplicationController::class);
+
+Route::resource('students', StudentController::class);
