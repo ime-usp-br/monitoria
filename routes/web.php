@@ -8,6 +8,8 @@ use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\TeachingAssistantApplicationController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\EnrollmentController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,3 +39,6 @@ Route::resource('instructors', InstructorController::class);
 Route::resource('requestAssistant', TeachingAssistantApplicationController::class);
 
 Route::resource('students', StudentController::class);
+
+Route::get('enrollments/groups', [EnrollmentController::class, 'showGroupsInCurrentSchoolTerm'])->name('enrollments.groups');
+Route::resource('enrollments', EnrollmentController::class);

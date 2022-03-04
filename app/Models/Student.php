@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Uspdev\Replicado\DB;
+use App\Models\Enrollment;
 
 class Student extends Model
 {
@@ -26,6 +27,11 @@ class Student extends Model
         'tel_residencial',
         'possui_conta_bb',
     ];
+
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
 
     public static function getFromReplicadoByCodpes($codpes)
     {

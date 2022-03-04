@@ -116,23 +116,28 @@ class Instructor extends Model
 
         return $instructors;
     }
-
+    
     public static function getFromReplicadoByCodpes($codpes)
     {
-        $query = " SELECT P.codpes, P.nompes, VP.codset, LP.codema";
-        $query .= " FROM VINCULOPESSOAUSP AS VP, PESSOA AS P, LOCALIZAPESSOA as LP";
-        $query .= " WHERE VP.codpes = :codpes";
+        $query = " SELECT P.codpes, P.nompes, VP.codset, EP.codema";
+        $query .= " FROM PESSOA AS P, VINCULOPESSOAUSP AS VP, EMAILPESSOA as EP";
+        $query .= " WHERE P.codpes = :codpes";
+        $query .= " AND VP.codpes = :codpes";
         $query .= " AND VP.tipfnc = :tipfnc";
-        $query .= " AND P.codpes = :codpes";
-        $query .= " AND LP.codpes = :codpes";
-        $query .= " AND LP.tipvin = VP.tipvin";
+        $query .= " AND EP.codpes = :codpes";
+        $query .= " AND EP.stamtr = :stamtr";
         $param = [
             'codpes' => $codpes,
             'tipfnc' => 'Docente',
+            'stamtr' => 'S'
         ];
 
         $res = array_unique(DB::fetchAll($query, $param),SORT_REGULAR);
         
+        if(!$res){
+            dd($codpes);
+        }
+
         $res[0]["department_id"] = Department::firstOrCreate(Department::getFromReplicadoByCodset($res[0]["codset"]))->id;
         unset($res[0]["codset"]);
 

@@ -37,6 +37,11 @@ $menu = [
         'url' => config('app.url') . '/requestAssistant',
         'can' => 'visualizar solicitação de monitor',
     ],
+    [
+        'text' => 'Fazer Inscrição',
+        'url' => config('app.url') . '/enrollments/groups',
+        'can' => 'fazer inscrição',
+    ],
 ];
 
 $right_menu = [

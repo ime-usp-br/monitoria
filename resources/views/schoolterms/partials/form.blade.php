@@ -18,8 +18,8 @@
             id="period"
         >
             @foreach ([
-                        '1° semestre',
-                        '2° semestre',
+                        '1° Semestre',
+                        '2° Semestre',
                      ] as $period)
                 <option value="{{ $period }}" {{ ( $periodo->period === $period) ? 'selected' : ''}}>{{ $period }}</option>
             @endforeach

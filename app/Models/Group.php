@@ -9,6 +9,7 @@ use App\Models\Instructor;
 use App\Models\ClassSchedule;
 use App\Models\Department;
 use App\Models\TeachingAssistantApplication;
+use App\Models\Enrollment;
 use Uspdev\Replicado\DB;
 
 class Group extends Model
@@ -53,6 +54,23 @@ class Group extends Model
 
     public function teachingAssistantApplication(){
         return $this->hasOne(TeachingAssistantApplication::class);
+    }
+
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    public function isStudentEnrolled(Student $student)
+    {
+        if($this->enrollments){
+            foreach($this->enrollments as $enrollment){
+                if($enrollment->student == $student){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public function isSchoolTermOpen(){

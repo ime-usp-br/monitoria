@@ -12,6 +12,7 @@ use App\Models\Instructor;
 use App\Models\Activity;
 use Illuminate\Support\Facades\Gate;
 use Auth;
+use Session;
 
 class TeachingAssistantApplicationController extends Controller
 {
