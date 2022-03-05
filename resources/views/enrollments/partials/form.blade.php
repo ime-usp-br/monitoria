@@ -3,7 +3,7 @@
         <label >Unidade: </label>
     </div>
     <div class="col-12 col-md-5">
-        <a >{{ $turma->department->nomund }} </a>
+        <a >{{ $turma->department->nomund ?? $inscricao->group->department->nomund }} </a>
     </div>
 </div>
 
@@ -12,7 +12,7 @@
         <label >Departamento: </label>
     </div>
     <div class="col-12 col-md-5">
-        <a >{{ $turma->department->nomset }} </a>
+        <a >{{ $turma->department->nomset ?? $inscricao->group->department->nomset }} </a>
     </div>
 </div>
 
@@ -21,7 +21,7 @@
         <label >Disciplina: </label>
     </div>
     <div class="col-12 col-md-5">
-        <a >{{ $turma->nomdis }} </a>
+        <a >{{ $turma->nomdis ?? $inscricao->group->nomdis }} </a>
     </div>
 </div>
 
@@ -30,7 +30,7 @@
         <label >Sigla: </label>
     </div>
     <div class="col-12 col-md-5">
-        <a >{{ $turma->coddis }} </a>
+        <a >{{ $turma->coddis ?? $inscricao->group->coddis }} </a>
     </div>
 </div>
 
@@ -39,7 +39,7 @@
         <label >Turma: </label>
     </div>
     <div class="col-12 col-md-5">
-        <a >{{ $turma->codtur }} </a>
+        <a >{{ $turma->codtur ?? $inscricao->group->codtur }} </a>
     </div>
 </div>
 
@@ -48,7 +48,8 @@
         <label >Horários:</label>
     </div>
     <div class="col-12 col-md-5">
-        @foreach($turma->classschedules as $horario)
+        @php $horarios = $turma->classschedules ?? $inscricao->group->classschedules @endphp
+        @foreach($horarios as $horario)
             <label id="label-horario-{{$horario->id}}" class="font-weight-normal">{{ $horario->diasmnocp . ' ' . $horario->horent . ' ' . $horario->horsai }}</label> 
             <br/>
         @endforeach
@@ -62,7 +63,7 @@
     <div class="col-12 col-md-5">
         <div>
             <input class="checkbox" type="checkbox" name="disponibilidade_diurno"
-            value="1"/>
+            value="1" {{ isset($inscricao) ? ($inscricao->disponibilidade_diurno ? 'checked' : '') : '' }}/>
         </div>
     </div>
 </div>
@@ -74,7 +75,7 @@
     <div class="col-12 col-md-5">
         <div>
             <input class="checkbox" type="checkbox" name="disponibilidade_noturno"
-            value="1" />
+            value="1" {{ isset($inscricao) ? ($inscricao->disponibilidade_noturno ? 'checked' : '') : '' }}/>
         </div>
     </div>
 </div>
@@ -89,7 +90,7 @@
             @foreach(['Diurno',
                       'Noturno',
                       'Indiferente'] as $preferencia)
-                <option value="{{ $preferencia }}" >{{ $preferencia }}</option>
+                <option value="{{ $preferencia }}" {{ isset($inscricao) ? ($inscricao->preferencia_horario==$preferencia ? 'selected' : '') : '' }}>{{ $preferencia }}</option>
             @endforeach
         </select>
     </div>
@@ -102,7 +103,7 @@
     <div class="col-12 col-md-5">
         <div>
             <input class="checkbox" type="checkbox" name="voluntario"
-            value="1" />
+            value="1" {{ isset($inscricao) ? ($inscricao->voluntario ? 'checked' : '') : '' }}/>
         </div>
     </div>
 </div>
@@ -113,7 +114,7 @@
     </div>
     <div class="col-12 col-md-5">
         <div>
-            <textarea class="custom-form-control" type="checkbox" name="observacoes"></textarea>
+            <textarea class="custom-form-control" type="checkbox" name="observacoes">{{ isset($inscricao) ? $inscricao->observacoes : '' }}</textarea>
         </div>
     </div>
 </div>
@@ -125,7 +126,7 @@
             {{ $buttonText }}
         </button>
         <a class="btn btn-outline-dark"
-            href="{{ route('requestAssistant.index') }}"
+            href="{{ route('enrollments.groups') }}"
         >
             Cancelar
         </a>

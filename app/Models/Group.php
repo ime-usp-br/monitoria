@@ -61,6 +61,19 @@ class Group extends Model
         return $this->hasMany(Enrollment::class);
     }
 
+    public static function whereInEnrollmentPeriod()
+    {
+        return Group::whereHas('schoolterm', function($query){
+            $query->where('start_date_student_registration', '<=', now())
+            ->where('end_date_student_registration', '>=', now());
+        });
+    }
+
+    public function getEnrollmentByStudent(Student $student)
+    {
+        return $this->enrollments()->where(['student_id'=>$student->id])->first();
+    }
+
     public function isStudentEnrolled(Student $student)
     {
         if($this->enrollments){

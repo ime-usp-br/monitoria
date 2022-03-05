@@ -13,7 +13,7 @@ class UpdateEnrollmentRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +23,14 @@ class UpdateEnrollmentRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
+        $rules = [
+            'disponibilidade_diurno' => 'sometimes|bool',
+            'disponibilidade_noturno' => 'sometimes|bool',
+            'voluntario' => 'sometimes|bool',
+            'observacoes' => 'nullable',
+            'preferencia_horario' => 'required',
         ];
+
+        return $rules;
     }
 }

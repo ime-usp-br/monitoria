@@ -18,7 +18,7 @@ class Enrollment extends Model
         'disponibilidade_diurno',
         'disponibilidade_noturno',
         'preferencia_horario',
-        'observações',
+        'observacoes',
     ];
 
     public function student()

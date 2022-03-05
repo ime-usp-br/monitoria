@@ -33,23 +33,18 @@ class EnrollmentController extends Controller
     {
         if(!Auth::user()->hasRole('Aluno')){
             abort(403);
-        }
-
-        $validated = $request->validated();
-
-        $periodoAbertoAInscrições = SchoolTerm::where('start_date_student_registration', '<=', now())
-                                              ->where('end_date_student_registration', '>=', now())->first();
-        
-        if(!$periodoAbertoAInscrições){
+        }elseif(!SchoolTerm::isEnrollmentPeriod()){
             Session::flash('alert-warning', 'Período de inscrições encerrado');
             return redirect('/');
         } 
+
+        $validated = $request->validated();
         
         $estudante = Student::where(['codpes'=>Auth::user()->codpes])->first();
 
         if(count($estudante->enrollments)>=4){
             Session::flash('alert-warning', 'Você excedeu o número máximo de inscrições');
-            return redirect('/');
+            return redirect('/enrollments/groups');
         }
 
         $turma = Group::find($validated['group_id']);
@@ -67,7 +62,10 @@ class EnrollmentController extends Controller
     {
         if(!Auth::user()->hasRole('Aluno')){
             abort(403);
-        }
+        }elseif(!SchoolTerm::isEnrollmentPeriod()){
+            Session::flash('alert-warning', 'Período de inscrições encerrado');
+            return redirect('/');
+        } 
 
         $validated = $request->validated();
 
@@ -97,7 +95,16 @@ class EnrollmentController extends Controller
      */
     public function edit(Enrollment $enrollment)
     {
-        //
+        if(!Auth::user()->hasRole('Aluno')){
+            abort(403);
+        }elseif(!SchoolTerm::isEnrollmentPeriod()){
+            Session::flash('alert-warning', 'Período de inscrições encerrado');
+            return redirect('/');
+        } 
+
+        $inscricao = $enrollment;
+
+        return view('enrollments.edit', compact('inscricao'));
     }
 
     /**
@@ -109,7 +116,24 @@ class EnrollmentController extends Controller
      */
     public function update(UpdateEnrollmentRequest $request, Enrollment $enrollment)
     {
-        //
+        if(!Auth::user()->hasRole('Aluno')){
+            abort(403);
+        }elseif(!SchoolTerm::isEnrollmentPeriod()){
+            Session::flash('alert-warning', 'Período de inscrições encerrado');
+            return redirect('/');
+        } 
+
+        $validated = $request->validated();
+
+        $validated['voluntario'] = isset($validated['voluntario']) ? 1 : 0;
+
+        $validated['disponibilidade_diurno'] = isset($validated['disponibilidade_diurno']) ? 1 : 0;
+
+        $validated['disponibilidade_noturno'] = isset($validated['disponibilidade_noturno']) ? 1 : 0;
+
+        $enrollment->update($validated);
+
+        return redirect('/enrollments/groups');
     }
 
     /**
@@ -120,24 +144,31 @@ class EnrollmentController extends Controller
      */
     public function destroy(Enrollment $enrollment)
     {
-        //
+        if(!Auth::user()->hasRole('Aluno')){
+            abort(403);
+        }elseif(!SchoolTerm::isEnrollmentPeriod()){
+            Session::flash('alert-warning', 'Período de inscrições encerrado');
+            return redirect('/');
+        } 
+        
+        $enrollment->delete();
+
+        return redirect('/enrollments/groups');
     }
 
     public function showGroupsInCurrentSchoolTerm()
     {
         if(!Auth::user()->hasRole('Aluno')){
             abort(403);
-        }
-        $periodoAbertoAInscrições = SchoolTerm::where('start_date_student_registration', '<=', now())
-                                              ->where('end_date_student_registration', '>=', now())->first();
-        
-        if(!$periodoAbertoAInscrições){
+        }elseif(!SchoolTerm::isEnrollmentPeriod()){
             Session::flash('alert-warning', 'Período de inscrições encerrado');
             return redirect('/');
-        }                                
+        }                                 
 
         $estudante = Student::where(['codpes'=>Auth::user()->codpes])->first();
-        $turmas = Group::where(['school_term_id'=>$periodoAbertoAInscrições->id])->get();
+        $turmas = Group::whereInEnrollmentPeriod()
+        ->withCount('enrollments')->orderBy('enrollments_count', 'desc')
+        ->get();
 
         return view('enrollments.groups', compact(['turmas', 'estudante']));
     }

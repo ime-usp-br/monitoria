@@ -42,14 +42,26 @@
                             </td>
                             @if($turma->isStudentEnrolled($estudante))
                                 <td style="text-align: center">Sim</td>
-                                <td class="text-center" style="white-space: nowrap;">
-                                    <a class="btn btn-outline-dark"
-                                        data-toggle="tooltip" data-placement="top"
-                                        title="Fazer Inscrição"
-                                        href="{{ route('groups.edit', $turma) }}"
-                                    >
-                                        Editar
-                                    </a>
+                                <td >
+                                    <div class="row justify-content-center">
+                                        <a class="btn btn-outline-dark"
+                                            data-toggle="tooltip" data-placement="top"
+                                            title="Fazer Inscrição"
+                                            href="{{ route('enrollments.edit', $turma->getEnrollmentByStudent($estudante)) }}"
+                                        >
+                                            Editar
+                                        </a>
+                                        <form method="POST" action="{{ route('enrollments.destroy', $turma->getEnrollmentByStudent($estudante)) }}">
+                                            @method('delete')
+                                            @csrf
+                                            <button class="btn btn-outline-dark"
+                                                data-toggle="tooltip" data-placement="top"
+                                                title="Remover Inscrição"
+                                            >
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             @else
                                 <td style="text-align: center">Não</td>

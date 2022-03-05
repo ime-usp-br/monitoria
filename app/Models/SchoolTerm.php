@@ -36,4 +36,10 @@ class SchoolTerm extends Model
     {
         return $this->hasMany(Group::class);
     }
+
+    public static function isEnrollmentPeriod()
+    {
+        return SchoolTerm::where('start_date_student_registration', '<=', now())
+            ->where('end_date_student_registration', '>=', now())->first() ? 1 : 0;
+    }
 }
