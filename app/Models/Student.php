@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Uspdev\Replicado\DB;
 use App\Models\Enrollment;
+use App\Models\SchoolRecord;
 
 class Student extends Model
 {
@@ -31,6 +32,18 @@ class Student extends Model
     public function enrollments()
     {
         return $this->hasMany(Enrollment::class);
+    }
+
+    public function schoolrecords()
+    {
+        return $this->hasMany(SchoolRecord::class);
+    }
+
+    public function getSchoolRecordFromOpenSchoolTerm()
+    {
+        return $this->schoolrecords()->whereHas('schoolterm', function($query){
+                        $query->where('status','=', 'Aberto');
+                    })->first();
     }
 
     public static function getFromReplicadoByCodpes($codpes)

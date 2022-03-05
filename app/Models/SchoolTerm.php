@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Group;
+use App\Models\SchoolRecord;
 
 class SchoolTerm extends Model
 {
@@ -37,9 +38,20 @@ class SchoolTerm extends Model
         return $this->hasMany(Group::class);
     }
 
+    public function schoolrecords()
+    {
+        return $this->hasMany(SchoolRecord::class);
+    }
+
     public static function isEnrollmentPeriod()
     {
         return SchoolTerm::where('start_date_student_registration', '<=', now())
             ->where('end_date_student_registration', '>=', now())->first() ? 1 : 0;
+    }
+
+    public static function getSchoolTermInEnrollmentPeriod()
+    {
+        return SchoolTerm::where('start_date_student_registration', '<=', now())
+        ->where('end_date_student_registration', '>=', now())->first();
     }
 }

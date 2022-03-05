@@ -9,6 +9,7 @@ use App\Http\Controllers\TeachingAssistantApplicationController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\EnrollmentController;
+use App\Http\Controllers\SchoolRecordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,5 +41,6 @@ Route::resource('requestAssistant', TeachingAssistantApplicationController::clas
 
 Route::resource('students', StudentController::class);
 
-Route::get('enrollments/groups', [EnrollmentController::class, 'showGroupsInCurrentSchoolTerm'])->name('enrollments.groups');
 Route::resource('enrollments', EnrollmentController::class);
+
+Route::resource('schoolRecords', SchoolRecordController::class);

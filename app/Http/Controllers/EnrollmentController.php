@@ -21,7 +21,24 @@ class EnrollmentController extends Controller
      */
     public function index()
     {
-        //
+        if(!Auth::user()->hasRole('Aluno')){
+            abort(403);
+        }elseif(!SchoolTerm::isEnrollmentPeriod()){
+            Session::flash('alert-warning', 'Período de inscrições encerrado');
+            return redirect('/');
+        }                                 
+
+        $estudante = Student::where(['codpes'=>Auth::user()->codpes])->first();
+
+        if(!$estudante->getSchoolRecordFromOpenSchoolTerm()){
+            return redirect(route('schoolRecords.create'));
+        }
+
+        $turmas = Group::whereInEnrollmentPeriod()
+        ->withCount('enrollments')->orderBy('enrollments_count', 'desc')
+        ->get();
+
+        return view('enrollments.index', compact(['turmas', 'estudante']));
     }
 
     /**
@@ -154,22 +171,5 @@ class EnrollmentController extends Controller
         $enrollment->delete();
 
         return redirect('/enrollments/groups');
-    }
-
-    public function showGroupsInCurrentSchoolTerm()
-    {
-        if(!Auth::user()->hasRole('Aluno')){
-            abort(403);
-        }elseif(!SchoolTerm::isEnrollmentPeriod()){
-            Session::flash('alert-warning', 'Período de inscrições encerrado');
-            return redirect('/');
-        }                                 
-
-        $estudante = Student::where(['codpes'=>Auth::user()->codpes])->first();
-        $turmas = Group::whereInEnrollmentPeriod()
-        ->withCount('enrollments')->orderBy('enrollments_count', 'desc')
-        ->get();
-
-        return view('enrollments.groups', compact(['turmas', 'estudante']));
     }
 }

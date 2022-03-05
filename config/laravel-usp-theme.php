@@ -39,7 +39,7 @@ $menu = [
     ],
     [
         'text' => 'Fazer Inscrição',
-        'url' => config('app.url') . '/enrollments/groups',
+        'url' => config('app.url') . '/enrollments',
         'can' => 'fazer inscrição',
     ],
 ];
