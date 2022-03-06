@@ -14,7 +14,7 @@
             <form method="POST"
                 action="{{ route('requestAssistant.store') }}"
             >
-                <input name="group_id" value="{{$turma->id}}" type="hidden">
+                <input name="school_class_id" value="{{$turma->id}}" type="hidden">
                 @csrf
                 @include('teachingAssistantApplication.partials.form', ['buttonText' => 'Cadastrar'])
             </form>

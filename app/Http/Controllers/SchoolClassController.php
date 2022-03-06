@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreGroupRequest;
-use App\Http\Requests\UpdateGroupRequest;
-use App\Http\Requests\CreateGroupRequest;
-use App\Http\Requests\SearchGroupRequest;
-use App\Models\Group;
+use App\Http\Requests\StoreSchoolClassRequest;
+use App\Http\Requests\UpdateSchoolClassRequest;
+use App\Http\Requests\CreateSchoolClassRequest;
+use App\Http\Requests\SearchSchoolClassRequest;
+use App\Models\SchoolClass;
 use App\Models\Instructor;
 use App\Models\ClassSchedule;
 use App\Models\SchoolTerm;
@@ -17,7 +17,7 @@ use Uspdev\Replicado\Pessoa;
 use Session;
 use Auth;
 
-class GroupController extends Controller
+class SchoolClassController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -29,16 +29,16 @@ class GroupController extends Controller
         if(!Gate::allows('visualizar turma')){
             abort(403);
         }elseif(Auth::user()->hasRole('Docente')){
-            $turmas = Group::whereHas('instructors', function($query) { 
+            $turmas = SchoolClass::whereHas('instructors', function($query) { 
                 $query->where('instructors.codpes', Auth::user()->codpes); 
             })->get();
         }else{
-            $turmas = Group::all();
+            $turmas = SchoolClass::all();
         }
 
         $schoolterms = SchoolTerm::all();
 
-        return view('groups.index', compact(['turmas', 'schoolterms']));
+        return view('schoolclasses.index', compact(['turmas', 'schoolterms']));
     }
 
     /**
@@ -46,13 +46,13 @@ class GroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(CreateGroupRequest $request)
+    public function create(CreateSchoolClassRequest $request)
     {
         if(!Gate::allows('criar turma')){
             abort(403);
         }
 
-        $turma = new Group;
+        $turma = new SchoolClass;
         $validated = $request->validated();
         $schoolTerm = SchoolTerm::find($validated["periodoId"]);
         $turma->schoolterm()->associate($schoolTerm);
@@ -61,16 +61,16 @@ class GroupController extends Controller
             Department::firstOrCreate($department);
         }
 
-        return view('groups.create', compact('turma'));
+        return view('schoolclasses.create', compact('turma'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreGroupRequest  $request
+     * @param  \App\Http\Requests\StoreSchoolClassRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreGroupRequest $request)
+    public function store(StoreSchoolClassRequest $request)
     {
         if(!Gate::allows('criar turma')){
             abort(403);
@@ -78,43 +78,43 @@ class GroupController extends Controller
 
         $validated = $request->validated();
         $schoolTerm = SchoolTerm::find($validated["periodoId"]);
-        $group = Group::where(array_intersect_key($validated, array_flip(array('codtur', 'coddis'))))->first();
+        $schoolclass = SchoolClass::where(array_intersect_key($validated, array_flip(array('codtur', 'coddis'))))->first();
 
-        if(!$group){
-            $group = new Group;
+        if(!$schoolclass){
+            $schoolclass = new SchoolClass;
 
-            $group->fill($validated);
+            $schoolclass->fill($validated);
 
-            $group->schoolterm()->associate($schoolTerm);
-            $group->save();
+            $schoolclass->schoolterm()->associate($schoolTerm);
+            $schoolclass->save();
 
             if(array_key_exists('instrutores', $validated)){
                 foreach($validated['instrutores'] as $instructor){
-                    $group->instructors()->attach(Instructor::firstOrCreate(Instructor::getFromReplicadoByCodpes($instructor['codpes'])));
+                    $schoolclass->instructors()->attach(Instructor::firstOrCreate(Instructor::getFromReplicadoByCodpes($instructor['codpes'])));
                 }
             }   
 
             if(array_key_exists('horarios', $validated)){
                 foreach($validated['horarios'] as $classSchedule){
-                    $group->classschedules()->attach(ClassSchedule::firstOrCreate($classSchedule));
+                    $schoolclass->classschedules()->attach(ClassSchedule::firstOrCreate($classSchedule));
                 }
             }
-            $group->save();
+            $schoolclass->save();
         }else{
             Session::flash("alert-warning", "Já existe uma turma cadastrada com esse código da turma e código da disciplina");
             return back();
         }
 
-        return redirect('/groups');
+        return redirect('/schoolclasses');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Group  $group
+     * @param  \App\Models\SchoolClass  $schoolclass
      * @return \Illuminate\Http\Response
      */
-    public function show(Group $group)
+    public function show(SchoolClass $schoolclass)
     {
         //
     }
@@ -122,28 +122,28 @@ class GroupController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Group  $group
+     * @param  \App\Models\SchoolClass  $schoolclass
      * @return \Illuminate\Http\Response
      */
-    public function edit(Group $group)
+    public function edit(SchoolClass $schoolclass)
     {
         if(!Gate::allows('editar turma')){
             abort(403);
         }
 
-        $turma = $group;
+        $turma = $schoolclass;
 
-        return view('groups.edit', compact('turma'));
+        return view('schoolclasses.edit', compact('turma'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateGroupRequest  $request
-     * @param  \App\Models\Group  $group
+     * @param  \App\Http\Requests\UpdateSchoolClassRequest  $request
+     * @param  \App\Models\SchoolClass  $schoolclass
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateGroupRequest $request, Group $group)
+    public function update(UpdateSchoolClassRequest $request, SchoolClass $schoolclass)
     {
         if(!Gate::allows('editar turma')){
             abort(403);
@@ -151,46 +151,46 @@ class GroupController extends Controller
 
         $validated = $request->validated();
 
-        $group->instructors()->detach();
+        $schoolclass->instructors()->detach();
         if(array_key_exists('instrutores', $validated)){
             foreach($validated['instrutores'] as $instructor){
                 $nompes = Pessoa::obterNome($instructor['codpes']);
                 $instructor['nompes'] = $nompes;
-                $group->instructors()->attach(Instructor::firstOrCreate($instructor));
+                $schoolclass->instructors()->attach(Instructor::firstOrCreate($instructor));
             }
         }
 
-        $group->classschedules()->detach();
+        $schoolclass->classschedules()->detach();
         if(array_key_exists('horarios', $validated)){
             foreach($validated['horarios'] as $classSchedule){
-                $group->classschedules()->attach(ClassSchedule::firstOrCreate($classSchedule));
+                $schoolclass->classschedules()->attach(ClassSchedule::firstOrCreate($classSchedule));
             }
         }
 
-        $group->update($validated);
+        $schoolclass->update($validated);
 
-        return redirect('/groups');
+        return redirect('/schoolclasses');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Group  $groupperiodoId
+     * @param  \App\Models\SchoolClass  $schoolclass
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Group $group)
+    public function destroy(SchoolClass $schoolclass)
     {
         if(!Gate::allows('deletar turma')){
             abort(403);
         }
-        $group->instructors()->detach();
-        $group->classschedules()->detach();
-        $group->delete();
+        $schoolclass->instructors()->detach();
+        $schoolclass->classschedules()->detach();
+        $schoolclass->delete();
 
-        return redirect('/groups');
+        return redirect('/schoolclasses');
     }
 
-    public function import(CreateGroupRequest $request)
+    public function import(CreateSchoolClassRequest $request)
     {   
         if(!Gate::allows('importar turmas do replicado')){
             abort(403);
@@ -198,41 +198,41 @@ class GroupController extends Controller
 
         $validated = $request->validated();
         $schoolTerm = SchoolTerm::find($validated["periodoId"]);
-        $turmas = Group::getFromReplicadoBySchoolTerm($schoolTerm);
+        $turmas = SchoolClass::getFromReplicadoBySchoolTerm($schoolTerm);
         foreach($turmas as $turma){
-            $group = Group::where(array_intersect_key($turma, array_flip(array('codtur', 'coddis'))))->first();
+            $schoolclass = SchoolClass::where(array_intersect_key($turma, array_flip(array('codtur', 'coddis'))))->first();
 
-            if(!$group){
-                $group = new Group;
-                $group->fill($turma);
-                $group->save();
+            if(!$schoolclass){
+                $schoolclass = new SchoolClass;
+                $schoolclass->fill($turma);
+                $schoolclass->save();
         
                 foreach($turma['instructors'] as $instructor){
-                    $group->instructors()->attach(Instructor::firstOrCreate($instructor));
+                    $schoolclass->instructors()->attach(Instructor::firstOrCreate($instructor));
                 }
     
                 foreach($turma['class_schedules'] as $classSchedule){
-                    $group->classschedules()->attach(ClassSchedule::firstOrCreate($classSchedule));
+                    $schoolclass->classschedules()->attach(ClassSchedule::firstOrCreate($classSchedule));
                 }
-                $group->save();
+                $schoolclass->save();
             }
         }
 
-        return redirect("/groups");
+        return redirect("/schoolclasses");
     }
 
-    public function search(SearchGroupRequest $request){
+    public function search(SearchSchoolClassRequest $request){
         $validated = $request->validated();
         
         $coddis = $validated['coddis'];
 
-        $turmas = new Group;
+        $turmas = new SchoolClass;
         $turmas = $turmas->when($coddis, function ($query) use ($coddis) {
             return $query->where('coddis', $coddis);
         })->get();
 
         $schoolterms = SchoolTerm::all();
 
-        return view('groups.index', compact(['turmas', 'schoolterms']));
+        return view('schoolclasses.index', compact(['turmas', 'schoolterms']));
     }
 }

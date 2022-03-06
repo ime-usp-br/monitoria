@@ -1,6 +1,6 @@
 @extends('parent')
 
-@section('title', 'Editar turma')
+@section('title', 'Cadastrar turma')
 
 @section('content')
 @parent
@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-md-12">
             <h1 class='h5 font-weight-bold my-3'>
-                Editar turma
+                Cadastrar turma
             </h1>
 
             <p class="alert alert-info rounded-0">
@@ -17,16 +17,16 @@
             </p>
 
             <form method="POST"
-                action="{{ route('groups.update', $turma) }}"
+                action="{{ route('schoolclasses.store', $turma) }}"
             >
-                @method('patch')
                 @csrf
+                <input name="periodoId" value="{{$turma->schoolterm->id}}" type="hidden">
 
-                @include('groups.partials.form', ['buttonText' => 'Editar'])
+                @include('schoolclasses.partials.form', ['buttonText' => 'Cadastrar'])
             </form>
 
-            @include('groups.modals.addClassSchedule')
-            @include('groups.modals.addInstructor')
+            @include('schoolclasses.modals.addClassSchedule')
+            @include('schoolclasses.modals.addInstructor')
         </div>
     </div>
 </div>

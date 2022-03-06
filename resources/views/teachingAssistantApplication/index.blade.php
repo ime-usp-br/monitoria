@@ -16,14 +16,14 @@
             <p class="text-right">
                 <a class="btn btn-primary"
                     data-toggle="modal"
-                    data-target="#addGroupModal"
+                    data-target="#addSchoolClassModal"
                     title="Cadastrar" 
                 >
                     <i class="fas fa-plus-circle"></i>
                     Cadastrar Nova Turma
                 </a>
             </p>
-            @include('groups.modals.addGroup')
+            @include('schoolclasses.modals.addSchoolClass')
 
             @if (count($turmas) > 0)
                 <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
@@ -76,7 +76,7 @@
                             @else
                                 <td class="text-center" style="white-space: nowrap;">
                                     <form method="GET" action="{{ route('requestAssistant.create') }}">
-                                        <input type="hidden" name="group_id" value="{{ $turma->id }}">
+                                        <input type="hidden" name="school_class_id" value="{{ $turma->id }}">
                                         <button class="btn btn-outline-dark" type="submit">
                                             Solicitar
                                         </button>

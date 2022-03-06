@@ -1,10 +1,10 @@
-<div class="modal fade" id="groupsSearchModal">
+<div class="modal fade" id="schoolclassesSearchModal">
    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Buscar Turma</h4>
             </div>
-            <form id="searchForm" action="{{ route('groups.search') }}" method="get">
+            <form id="searchForm" action="{{ route('schoolclasses.search') }}" method="get">
                 <div class="modal-body">
                         <div class="row custom-form-group align-items-center">
                             <div class="col-12 col-lg-6 text-lg-right">

@@ -3,7 +3,7 @@
         <label >Unidade: </label>
     </div>
     <div class="col-12 col-md-5">
-        <a >{{ $turma->department->nomund ?? $inscricao->group->department->nomund }} </a>
+        <a >{{ $turma->department->nomund ?? $inscricao->schoolclass->department->nomund }} </a>
     </div>
 </div>
 
@@ -12,7 +12,7 @@
         <label >Departamento: </label>
     </div>
     <div class="col-12 col-md-5">
-        <a >{{ $turma->department->nomset ?? $inscricao->group->department->nomset }} </a>
+        <a >{{ $turma->department->nomset ?? $inscricao->schoolclass->department->nomset }} </a>
     </div>
 </div>
 
@@ -21,7 +21,7 @@
         <label >Disciplina: </label>
     </div>
     <div class="col-12 col-md-5">
-        <a >{{ $turma->nomdis ?? $inscricao->group->nomdis }} </a>
+        <a >{{ $turma->nomdis ?? $inscricao->schoolclass->nomdis }} </a>
     </div>
 </div>
 
@@ -30,7 +30,7 @@
         <label >Sigla: </label>
     </div>
     <div class="col-12 col-md-5">
-        <a >{{ $turma->coddis ?? $inscricao->group->coddis }} </a>
+        <a >{{ $turma->coddis ?? $inscricao->schoolclass->coddis }} </a>
     </div>
 </div>
 
@@ -39,7 +39,7 @@
         <label >Turma: </label>
     </div>
     <div class="col-12 col-md-5">
-        <a >{{ $turma->codtur ?? $inscricao->group->codtur }} </a>
+        <a >{{ $turma->codtur ?? $inscricao->schoolclass->codtur }} </a>
     </div>
 </div>
 
@@ -48,7 +48,7 @@
         <label >Horários:</label>
     </div>
     <div class="col-12 col-md-5">
-        @php $horarios = $turma->classschedules ?? $inscricao->group->classschedules @endphp
+        @php $horarios = $turma->classschedules ?? $inscricao->schoolclass->classschedules @endphp
         @foreach($horarios as $horario)
             <label id="label-horario-{{$horario->id}}" class="font-weight-normal">{{ $horario->diasmnocp . ' ' . $horario->horent . ' ' . $horario->horsai }}</label> 
             <br/>
@@ -126,7 +126,7 @@
             {{ $buttonText }}
         </button>
         <a class="btn btn-outline-dark"
-            href="{{ route('enrollments.groups') }}"
+            href="{{ route('enrollments.index') }}"
         >
             Cancelar
         </a>

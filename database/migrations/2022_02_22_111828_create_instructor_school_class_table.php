@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGroupInstructorTable extends Migration
+class CreateInstructorSchoolClassTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateGroupInstructorTable extends Migration
      */
     public function up()
     {
-        Schema::create('group_instructor', function (Blueprint $table) {
+        Schema::create('instructor_school_class', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('instructor_id')->unsigned();
-            $table->unsignedBigInteger('group_id')->unsigned();
+            $table->unsignedBigInteger('school_class_id')->unsigned();
         });
     }
 
@@ -27,6 +27,6 @@ class CreateGroupInstructorTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('group_instructor');
+        Schema::dropIfExists('instructor_school_class');
     }
 }

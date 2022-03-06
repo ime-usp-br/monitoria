@@ -9,13 +9,13 @@
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Turmas</h1>
 
-            @include('groups.modals.import')
-            @include('groups.modals.addGroup')
+            @include('schoolclasses.modals.import')
+            @include('schoolclasses.modals.addSchoolClass')
             <p class="text-right">
                 @if(Auth::user()->hasPermissionTo('criar turma'))
                 <a class="btn btn-primary"
                     data-toggle="modal"
-                    data-target="#addGroupModal"
+                    data-target="#addSchoolClassModal"
                     title="Cadastrar" 
                 >
                     <i class="fas fa-plus-circle"></i>
@@ -25,7 +25,7 @@
                 @if(Auth::user()->hasPermissionTo('importar turmas do replicado'))
                 <a class="btn btn-primary"
                     data-toggle="modal"
-                    data-target="#importGroupModal"
+                    data-target="#importSchoolClassModal"
                     title="Importar" 
                 >
                     <i class="fas fa-file-upload"></i>
@@ -33,13 +33,13 @@
                 </a>
                 @endif
                 @if(Auth::user()->hasPermissionTo('buscar turmas'))
-                <button class="btn btn-primary" id="btn-search" data-toggle="modal" data-target="#groupsSearchModal">
+                <button class="btn btn-primary" id="btn-search" data-toggle="modal" data-target="#schoolclassesSearchModal">
                     <i class="fas fa-search"></i>
                     Buscar
                 </button>
                 @endif
             </p>
-            @include('groups.modals.search')
+            @include('schoolclasses.modals.search')
 
             @if (count($turmas) > 0)
                 <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
@@ -83,7 +83,7 @@
                                 <a class="text-dark text-decoration-none"
                                     data-toggle="tooltip" data-placement="top"
                                     title="Editar"
-                                    href="{{ route('groups.edit', $turma) }}"
+                                    href="{{ route('schoolclasses.edit', $turma) }}"
                                 >
                                     <i class="fas fa-edit"></i>
                                 </a>
@@ -94,7 +94,7 @@
                                     data-target="#removalModal"
                                     title="Remover"
                                     href="{{ route(
-                                        'groups.destroy',
+                                        'schoolclasses.destroy',
                                         $turma
                                     ) }}"
                                 >
@@ -106,7 +106,7 @@
                         </tr>
                     @endforeach
                 </table>
-                @include('groups.modals.removal')
+                @include('schoolclasses.modals.removal')
             @else
                 <p class="text-center">Não há turmas cadastradas</p>
             @endif

@@ -16,13 +16,13 @@ class CreateTeachingAssistantApplicationsTable extends Migration
         Schema::create('teaching_assistant_applications', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('instructor_id')->unsigned();
-            $table->unsignedBigInteger('group_id')->unsigned();
+            $table->unsignedBigInteger('school_class_id')->unsigned();
             $table->integer('requested_number');
             $table->string('priority');
             $table->timestamps();
-            $table->unique(['instructor_id','group_id']);
+            $table->unique(['instructor_id','school_class_id'], 'taa_instructor_id_school_class_id_unique');
             $table->foreign('instructor_id')->references('id')->on('instructors')->onDelete('cascade');
-            $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
+            $table->foreign('school_class_id')->references('id')->on('school_classes')->onDelete('cascade');
         });
     }
 

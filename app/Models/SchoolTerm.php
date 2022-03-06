@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Group;
+use App\Models\SchoolClass;
 use App\Models\SchoolRecord;
 
 class SchoolTerm extends Model
@@ -33,9 +33,9 @@ class SchoolTerm extends Model
         'end_date_student_registration' => 'datetime',
     ];
 
-    public function groups()
+    public function schoolclasses()
     {
-        return $this->hasMany(Group::class);
+        return $this->hasMany(SchoolClass::class);
     }
 
     public function schoolrecords()

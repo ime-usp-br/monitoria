@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Group;
+use App\Models\SchoolClass;
 use App\Models\Department;
 use Uspdev\Replicado\DB;
 
@@ -19,9 +19,9 @@ class Instructor extends Model
         'department_id'
     ];
 
-    public function groups()
+    public function schoolclasses()
     {
-        return $this->belongsToMany(Group::class);
+        return $this->belongsToMany(SchoolClass::class);
     }
 
     public function department()
@@ -31,8 +31,8 @@ class Instructor extends Model
 
     public function hasRequests()
     {
-        foreach($this->groups as $group){
-            if($group->teachingAssistantApplication){
+        foreach($this->schoolclasses as $schoolclass){
+            if($schoolclass->teachingAssistantApplication){
                 return true;
             }
         }
@@ -42,9 +42,9 @@ class Instructor extends Model
     public function getRequests()
     {
         $requests = [];
-        foreach($this->groups as $group){
-            if($group->teachingAssistantApplication){
-                array_push($requests, $group->teachingAssistantApplication);
+        foreach($this->schoolclasses as $schoolclass){
+            if($schoolclass->teachingAssistantApplication){
+                array_push($requests, $schoolclass->teachingAssistantApplication);
             }
         }
         return $requests;
@@ -52,9 +52,9 @@ class Instructor extends Model
 
     public function hasRequestsInCurrentSchoolTerm()
     {
-        foreach($this->groups as $group){
-            if($group->isSchoolTermOpen()){
-                if($group->teachingAssistantApplication){
+        foreach($this->schoolclasses as $schoolclass){
+            if($schoolclass->isSchoolTermOpen()){
+                if($schoolclass->teachingAssistantApplication){
                     return true;
                 }
             }
@@ -65,10 +65,10 @@ class Instructor extends Model
     public function getRequestsInCurrentSchoolTerm()
     {
         $requests = [];
-        foreach($this->groups as $group){
-            if($group->isSchoolTermOpen()){
-                if($group->teachingAssistantApplication){
-                    array_push($requests, $group->teachingAssistantApplication);
+        foreach($this->schoolclasses as $schoolclass){
+            if($schoolclass->isSchoolTermOpen()){
+                if($schoolclass->teachingAssistantApplication){
+                    array_push($requests, $schoolclass->teachingAssistantApplication);
                 }
             }
         }
@@ -93,7 +93,7 @@ class Instructor extends Model
         }
     }
 
-    public static function getFromReplicadoByGroup($group)
+    public static function getFromReplicadoBySchoolClass($schoolclass)
     {
         $query = " SELECT M.codpes";
         $query .= " FROM OCUPTURMA AS O, MINISTRANTE AS M";
@@ -103,8 +103,8 @@ class Instructor extends Model
         $query .= " AND M.codtur = :codtur";
         $query .= " AND M.codperhor = O.codperhor";
         $param = [
-            'coddis' => $group['coddis'],
-            'codtur' => $group['codtur'],
+            'coddis' => $schoolclass['coddis'],
+            'codtur' => $schoolclass['codtur'],
         ];
 
         $res = array_unique(DB::fetchAll($query, $param),SORT_REGULAR);

@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Student;
-use App\Models\Group;
+use App\Models\SchoolClass;
 
 class Enrollment extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'group_id',
+        'school_class_id',
         'student_id',
         'voluntario',
         'disponibilidade_diurno',
@@ -26,8 +26,8 @@ class Enrollment extends Model
         return $this->belongsTo(Student::class, 'student_id');
     }
 
-    public function group()
+    public function schoolclass()
     {
-        return $this->belongsTo(Group::class, 'group_id');
+        return $this->belongsTo(SchoolClass::class, 'school_class_id');
     }
 }

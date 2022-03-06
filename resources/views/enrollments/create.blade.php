@@ -15,7 +15,7 @@
             <form method="POST"
                 action="{{ route('enrollments.store') }}"
             >
-                <input name="group_id" value="{{$turma->id}}" type="hidden">
+                <input name="school_class_id" value="{{$turma->id}}" type="hidden">
                 @csrf
                 @include('enrollments.partials.form', ['buttonText' => 'Cadastrar'])
             </form>

@@ -7,7 +7,7 @@ use App\Http\Requests\UpdateEnrollmentRequest;
 use App\Http\Requests\CreateEnrollmentRequest;
 use App\Models\Enrollment;
 use App\Models\Student;
-use App\Models\Group;
+use App\Models\SchoolClass;
 use App\Models\SchoolTerm;
 use Auth;
 use Session;
@@ -34,7 +34,7 @@ class EnrollmentController extends Controller
             return redirect(route('schoolRecords.create'));
         }
 
-        $turmas = Group::whereInEnrollmentPeriod()
+        $turmas = SchoolClass::whereInEnrollmentPeriod()
         ->withCount('enrollments')->orderBy('enrollments_count', 'desc')
         ->get();
 
@@ -61,10 +61,10 @@ class EnrollmentController extends Controller
 
         if(count($estudante->enrollments)>=4){
             Session::flash('alert-warning', 'Você excedeu o número máximo de inscrições');
-            return redirect('/enrollments/groups');
+            return redirect('/enrollments');
         }
 
-        $turma = Group::find($validated['group_id']);
+        $turma = SchoolClass::find($validated['school_class_id']);
 
         return view('enrollments.create', compact(['turma', 'estudante']));
     }
@@ -90,7 +90,7 @@ class EnrollmentController extends Controller
         
         $inscricao = Enrollment::create($validated);
 
-        return redirect('/enrollments/groups');
+        return redirect('/enrollments');
     }
 
     /**
@@ -107,7 +107,7 @@ class EnrollmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Enrollment  $enrollmentreturn redirect('/enrollments/groups');
+     * @param  \App\Models\Enrollment  $enrollment
      * @return \Illuminate\Http\Response
      */
     public function edit(Enrollment $enrollment)
@@ -150,7 +150,7 @@ class EnrollmentController extends Controller
 
         $enrollment->update($validated);
 
-        return redirect('/enrollments/groups');
+        return redirect('/enrollments');
     }
 
     /**
@@ -170,6 +170,6 @@ class EnrollmentController extends Controller
         
         $enrollment->delete();
 
-        return redirect('/enrollments/groups');
+        return redirect('/enrollments');
     }
 }

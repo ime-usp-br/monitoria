@@ -12,7 +12,7 @@ use App\Models\TeachingAssistantApplication;
 use App\Models\Enrollment;
 use Uspdev\Replicado\DB;
 
-class Group extends Model
+class SchoolClass extends Model
 {
     use HasFactory;
 
@@ -63,7 +63,7 @@ class Group extends Model
 
     public static function whereInEnrollmentPeriod()
     {
-        return Group::whereHas('schoolterm', function($query){
+        return SchoolClass::whereHas('schoolterm', function($query){
             $query->where('start_date_student_registration', '<=', now())
             ->where('end_date_student_registration', '>=', now());
         });
@@ -126,7 +126,7 @@ class Group extends Model
             '1° Semestre' => '1',
             '2° Semestre' => '2',
         ];
-        $groups = [];
+        $schoolclasses = [];
         foreach($disciplinas as $disc){
             $codtur = $schoolTerm->year;
             $codtur .= $periodo[$schoolTerm->period] . '%';
@@ -151,15 +151,15 @@ class Group extends Model
             $turmas = DB::fetchAll($query, $param);
             
             foreach($turmas as $key => $turma){
-                $turmas[$key]['class_schedules'] = ClassSchedule::getFromReplicadoByGroup($turma);
-                $turmas[$key]['instructors'] = Instructor::getFromReplicadoByGroup($turma);
+                $turmas[$key]['class_schedules'] = ClassSchedule::getFromReplicadoBySchoolClass($turma);
+                $turmas[$key]['instructors'] = Instructor::getFromReplicadoBySchoolClass($turma);
                 $turmas[$key]['department_id'] = Department::firstOrCreate(Department::getFromReplicadoByNomabvset($turma['pfxdisval']))->id;
                 $turmas[$key]['school_term_id'] = $schoolTerm->id;
                 unset($turmas[$key]['pfxdisval']);
 
             }
-            $groups = array_merge($groups, $turmas);
+            $schoolclasses = array_merge($schoolclasses, $turmas);
         }
-        return $groups;
+        return $schoolclasses;
     }
 }

@@ -35,11 +35,11 @@
 
                     @foreach($docente->getRequests() as $solicitacao)
                         <tr>
-                            <td class="text-center">{{ $solicitacao->group->coddis }}</td>
-                            <td class="text-center">{{ $solicitacao->group->codtur }}</td>
-                            <td>{{ $solicitacao->group->nomdis }}</td>
+                            <td class="text-center">{{ $solicitacao->schoolclass->coddis }}</td>
+                            <td class="text-center">{{ $solicitacao->schoolclass->codtur }}</td>
+                            <td>{{ $solicitacao->schoolclass->nomdis }}</td>
                             <td style="white-space: nowrap;">
-                                @foreach($solicitacao->group->classschedules as $horario)
+                                @foreach($solicitacao->schoolclass->classschedules as $horario)
                                     {{ $horario->diasmnocp . ' ' . $horario->horent . ' ' . $horario->horsai }} <br/>
                                 @endforeach
                             </td>

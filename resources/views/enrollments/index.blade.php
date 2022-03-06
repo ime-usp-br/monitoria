@@ -67,7 +67,7 @@
                                 <td style="text-align: center">Não</td>
                                 <td class="text-center" style="white-space: nowrap;">
                                     <form method="GET" action="{{ route('enrollments.create') }}">
-                                        <input type="hidden" name="group_id" value="{{ $turma->id }}">
+                                        <input type="hidden" name="school_class_id" value="{{ $turma->id }}">
                                         <button class="btn btn-outline-dark" type="submit">
                                             Inscrição
                                         </button>

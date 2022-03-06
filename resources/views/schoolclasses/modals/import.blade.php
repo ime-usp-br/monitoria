@@ -1,10 +1,10 @@
-<div class="modal fade" id="importGroupModal">
+<div class="modal fade" id="importSchoolClassModal">
    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Importar turmas</h4>
             </div>
-            <form id="importGroupsForm" action="{{ route('groups.import') }}" method="POST"
+            <form id="importSchoolClassesForm" action="{{ route('schoolclasses.import') }}" method="POST"
             enctype="multipart/form-data"
             >
 
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="btn-importGroups" class="btn btn-default" type="submit">Importar</button>
+                <button id="btn-importSchoolClasses" class="btn btn-default" type="submit">Importar</button>
                 <button class="btn btn-default" type="button" data-dismiss="modal">Fechar</button>
             </div>
             </form>

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Instructor;
-use App\Models\Group;
+use App\Models\SchoolClass;
 use Uspdev\Replicado\DB;
 
 class Department extends Model
@@ -24,8 +24,8 @@ class Department extends Model
         return $this->hasMany(Instructor::class);
     }
 
-    public function groups(){
-        return $this->hasMany(Group::class);
+    public function schoolclasses(){
+        return $this->hasMany(SchoolClass::class);
     }
 
     public static function getFromReplicadoByInstitute($sglund){

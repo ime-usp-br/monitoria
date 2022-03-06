@@ -1,10 +1,10 @@
-<div class="modal fade" id="addGroupModal">
+<div class="modal fade" id="addSchoolClassModal">
    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Cadastrar turma</h4>
             </div>
-            <form id="addGroupsForm" action="{{ route('groups.create') }}" method="GET"
+            <form id="addSchoolClassesForm" action="{{ route('schoolclasses.create') }}" method="GET"
             enctype="multipart/form-data"
             >
             @csrf
@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="btn-addGroup" class="btn btn-default" type="submit">Cadastrar</button>
+                <button id="btn-addSchoolClass" class="btn btn-default" type="submit">Cadastrar</button>
                 <button class="btn btn-default" type="button" data-dismiss="modal">Fechar</button>
             </div>
             </form>

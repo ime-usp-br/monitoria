@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Instructor;
-use App\Models\Group;
+use App\Models\SchoolClass;
 use App\Models\Activity;
 
 class TeachingAssistantApplication extends Model
@@ -14,17 +14,17 @@ class TeachingAssistantApplication extends Model
 
     protected $fillable = [
         'instructor_id',
-        'group_id',
+        'school_class_id',
         'requested_number',
         'priority',
     ];
 
     public function instructor(){
-        return $this->belongsTo(Instructor::class);
+        return $this->belongsTo(Instructor::class, 'instructor_id');
     }
 
-    public function group(){
-        return $this->belongsTo(Group::class);
+    public function schoolclass(){
+        return $this->belongsTo(SchoolClass::class, 'school_class_id');
     }
 
     public function activities(){

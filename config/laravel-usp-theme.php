@@ -18,7 +18,7 @@ $submenuConfig = [
     ],
     [
         'text' => 'Turmas',
-        'url' => config('app.url') . '/groups',
+        'url' => config('app.url') . '/schoolclasses',
         'can' => 'visualizar turma',
     ],
 ];

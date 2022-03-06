@@ -15,7 +15,7 @@ class CreateEnrollmentsTable extends Migration
     {
         Schema::create('enrollments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('group_id')->unsigned();
+            $table->unsignedBigInteger('school_class_id')->unsigned();
             $table->unsignedBigInteger('student_id')->unsigned();
             $table->boolean('voluntario')->default(0);
             $table->boolean('disponibilidade_diurno')->default(0);
@@ -23,9 +23,9 @@ class CreateEnrollmentsTable extends Migration
             $table->string('preferencia_horario');
             $table->string('observacoes')->nullable();
             $table->timestamps();
-            $table->unique(['group_id','student_id']);
+            $table->unique(['school_class_id','student_id']);
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
-            $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
+            $table->foreign('school_class_id')->references('id')->on('school_classes')->onDelete('cascade');
         });
     }
 

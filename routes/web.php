@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SchoolTermController;
-use App\Http\Controllers\GroupController;
+use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\TeachingAssistantApplicationController;
 use App\Http\Controllers\MainController;
@@ -29,9 +29,9 @@ Route::resource('users', UserController::class);
 
 Route::resource('schoolterms', SchoolTermController::class);
 
-Route::get('/groups/search', [GroupController::class, 'search'])->name('groups.search');
-Route::patch('/groups/import', [GroupController::class, 'import'])->name('groups.import');
-Route::resource('groups', GroupController::class);
+Route::get('/schoolclasses/search', [SchoolClassController::class, 'search'])->name('schoolclasses.search');
+Route::patch('/schoolclasses/import', [SchoolClassController::class, 'import'])->name('schoolclasses.import');
+Route::resource('schoolclasses', SchoolClassController::class);
 
 Route::get('/instructors/{instructor}/requests', [InstructorController::class, 'requests'])->name('instructors.requests');
 Route::get('/instructors/search', [InstructorController::class, 'search'])->name('instructors.search');

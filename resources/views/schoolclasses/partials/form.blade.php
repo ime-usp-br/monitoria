@@ -171,7 +171,7 @@
             {{ $buttonText }}
         </button>
         <a class="btn btn-outline-dark"
-            href="{{ route('groups.index') }}"
+            href="{{ route('schoolclasses.index') }}"
         >
             Cancelar
         </a>

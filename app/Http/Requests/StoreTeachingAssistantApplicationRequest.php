@@ -24,7 +24,7 @@ class StoreTeachingAssistantApplicationRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'group_id' => 'required|numeric',
+            'school_class_id' => 'required|numeric',
             'requested_number' => 'required|numeric|gt:0',
             'priority' => 'required|numeric|in:1,2,3',
             'activities' => 'required|array',

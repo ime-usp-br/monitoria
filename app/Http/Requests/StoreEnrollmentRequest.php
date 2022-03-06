@@ -24,7 +24,7 @@ class StoreEnrollmentRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'group_id' => 'required|numeric',
+            'school_class_id' => 'required|numeric',
             'disponibilidade_diurno' => 'sometimes|bool',
             'disponibilidade_noturno' => 'sometimes|bool',
             'voluntario' => 'sometimes|bool',

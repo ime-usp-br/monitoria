@@ -6,7 +6,7 @@ use App\Http\Requests\StoreTeachingAssistantApplicationRequest;
 use App\Http\Requests\UpdateTeachingAssistantApplicationRequest;
 use App\Http\Requests\CreateTeachingAssistantApplicationRequest;
 use App\Models\TeachingAssistantApplication;
-use App\Models\Group;
+use App\Models\SchoolClass;
 use App\Models\SchoolTerm;
 use App\Models\Instructor;
 use App\Models\Activity;
@@ -27,7 +27,7 @@ class TeachingAssistantApplicationController extends Controller
             abort(403);
         }
 
-        $turmas = Group::whereHas('instructors', function($query) { 
+        $turmas = SchoolClass::whereHas('instructors', function($query) { 
             $query->where('instructors.codpes', Auth::user()->codpes); 
         })->get();
 
@@ -48,7 +48,7 @@ class TeachingAssistantApplicationController extends Controller
         }
 
         $validated = $request->validated();
-        $turma = Group::find($validated['group_id']);
+        $turma = SchoolClass::find($validated['school_class_id']);
 
         if($turma->isInstructor(Auth::user()->codpes)){
             if($turma->isSchoolTermOpen()){
@@ -113,7 +113,7 @@ class TeachingAssistantApplicationController extends Controller
             abort(403);
         }
 
-        $turma = $requestAssistant->group;
+        $turma = $requestAssistant->schoolclass;
         if($turma->isInstructor(Auth::user()->codpes)){
             if($turma->isSchoolTermOpen()){
                 return view('teachingAssistantApplication.edit', compact('turma'));
