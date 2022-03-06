@@ -16,6 +16,7 @@ class SchoolTerm extends Model
         'period',
         'status',
         'evaluation_period',
+        'max_enrollments',
         'started_at',
         'finished_at',
         'start_date_teacher_requests',

@@ -19,6 +19,7 @@ class CreateSchoolTermsTable extends Migration
             $table->string('period');
             $table->string('status');
             $table->string('evaluation_period');
+            $table->integer('max_enrollments');
             $table->timestamp('started_at')->nullable();
             $table->timestamp('finished_at')->nullable();
             $table->timestamp('start_date_teacher_requests')->nullable();

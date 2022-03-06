@@ -1,21 +1,21 @@
 @extends('parent')
 
-@section('title', 'Turmas')
+@section('title', 'Turmas com inscrições abertas')
 
 @section('content')
 @parent
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <h1 class='text-center mb-5'>Turmas</h1>
-
-            <p class="alert alert-info rounded-0">
-                <b>Atenção:</b>
-                O período de solicitação de monitores está aberto, portanto, você pode se inscrever em turmas sem vagas.
-            </p>
-
+            <h1 class='text-center mb-5'>Turmas com inscrições abertas</h1>
 
             @if (count($turmas) > 0)
+
+                <p class="alert alert-info rounded-0">
+                    <b>Atenção:</b>
+                    O período de solicitação de monitores está aberto, portanto, você pode se inscrever em turmas sem vagas.
+                </p>
+
                 <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
                     <tr>
                         <th>Sigla da Disciplina</th>

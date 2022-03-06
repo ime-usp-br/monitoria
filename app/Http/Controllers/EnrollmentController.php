@@ -64,7 +64,7 @@ class EnrollmentController extends Controller
         
         $estudante = Student::where(['codpes'=>Auth::user()->codpes])->first();
 
-        if(count($estudante->enrollments)>=4){
+        if(count($estudante->enrollments)>=SchoolTerm::getSchoolTermInEnrollmentPeriod()->max_enrollments){
             Session::flash('alert-warning', 'Você excedeu o número máximo de inscrições');
             return redirect('/enrollments');
         }

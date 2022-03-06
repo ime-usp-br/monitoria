@@ -28,6 +28,7 @@ class UpdateSchoolTermRequest extends FormRequest
             'period' => 'required|in:1° Semestre,2° Semestre',
             'status' => 'required|in:Aberto,Aberto para inscrições,Fechado',
             'evaluation_period' => 'required|in:Aberto,Fechado',
+            'max_enrollments' => 'required|numeric',
             'started_at' => 'required',
             'finished_at' => 'required',
             'start_date_teacher_requests' => 'required',
