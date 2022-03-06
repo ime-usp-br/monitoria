@@ -9,6 +9,12 @@
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Turmas</h1>
 
+            <p class="alert alert-info rounded-0">
+                <b>Atenção:</b>
+                O período de solicitação de monitores está aberto, portanto, você pode se inscrever em turmas sem vagas.
+            </p>
+
+
             @if (count($turmas) > 0)
                 <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
                     <tr>
@@ -19,6 +25,7 @@
                         <th>Tipo da Turma</th>
                         <th>Horários</th>
                         <th>Prof(a)</th>
+                        <th>Vagas</th>
                         <th>Inscrito</th>
                         <th></th>
                     </tr>
@@ -39,6 +46,13 @@
                                 @foreach($turma->instructors as $instrutor)
                                     {{ $instrutor->nompes }} <br/>
                                 @endforeach
+                            </td>
+                            <td class="text-center">
+                                @if($turma->teachingAssistantApplication)
+                                    {{ $turma->teachingAssistantApplication->requested_number }}
+                                @else
+                                    0
+                                @endif
                             </td>
                             @if($turma->isStudentEnrolled($estudante))
                                 <td style="text-align: center">Sim</td>

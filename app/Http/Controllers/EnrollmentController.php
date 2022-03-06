@@ -33,10 +33,15 @@ class EnrollmentController extends Controller
         if(!$estudante->getSchoolRecordFromOpenSchoolTerm()){
             return redirect(route('schoolRecords.create'));
         }
-
-        $turmas = SchoolClass::whereInEnrollmentPeriod()
-        ->withCount('enrollments')->orderBy('enrollments_count', 'desc')
-        ->get();
+        
+        $turmas = SchoolClass::whereInEnrollmentPeriod()->whereHas('enrollments', function($query) use ($estudante){
+            return $query->where(['student_id'=>$estudante->id]);
+        })->union(SchoolClass::whereInEnrollmentPeriod()->whereDoesntHave('enrollments', function($query) use ($estudante){
+            return $query->where(['student_id'=>$estudante->id]);
+        })->whereHas('teachingAssistantApplication'))
+        ->union(SchoolClass::whereInEnrollmentPeriod()->whereDoesntHave('enrollments', function($query) use ($estudante){
+            return $query->where(['student_id'=>$estudante->id]);})
+            ->whereDoesntHave('teachingAssistantApplication'))->get();
 
         return view('enrollments.index', compact(['turmas', 'estudante']));
     }
