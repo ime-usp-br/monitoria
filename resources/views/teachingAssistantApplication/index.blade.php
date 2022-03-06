@@ -1,31 +1,45 @@
 @extends('parent')
 
-@section('title', 'Solicitar Monitor')
+@section('title', 'Solicitação de Monitores')
 
 @section('content')
 @parent
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <h1 class='text-center mb-5'>Turmas ministradas</h1>
-
-            <p class="alert alert-info rounded-0 text-center">
-                (Preencher um formulário para cada turma)
-            </p>
-
-            <p class="text-right">
-                <a class="btn btn-primary"
-                    data-toggle="modal"
-                    data-target="#addSchoolClassModal"
-                    title="Cadastrar" 
-                >
-                    <i class="fas fa-plus-circle"></i>
-                    Cadastrar Nova Turma
-                </a>
-            </p>
+            <h1 class='text-center mb-5'>Solicitação de Monitores</h1>
             @include('schoolclasses.modals.addSchoolClass')
 
+                @if (count($turmas) > 0)
+                    <p class="alert alert-info rounded-0 text-center">
+                        Preencher um formulário para cada turma
+                    </p>
+                @else
+                    @if(App\Models\SchoolTerm::isApplicationPeriod())
+                        <p class="alert alert-warning rounded-0 text-center">
+                            Você não ministra turmas esse semestre
+                        </p>
+                    @else
+                        <p class="alert alert-warning rounded-0 text-center">
+                            Período de solicitação de monitores encerrado
+                        </p>
+                    @endif
+                @endif
+                @if(App\Models\SchoolTerm::isApplicationPeriod())
+                    <p class="text-right">
+                        <a class="btn btn-primary"
+                            data-toggle="modal"
+                            data-target="#addSchoolClassModal"
+                            title="Cadastrar" 
+                        >
+                            <i class="fas fa-plus-circle"></i>
+                            Cadastrar Nova Turma
+                        </a>
+                    </p>
+                @endif
+
             @if (count($turmas) > 0)
+
                 <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
                     <tr>
                         <th>Sigla da Disciplina</th>
@@ -92,8 +106,6 @@
                         </tr>
                     @endforeach
                 </table>
-            @else
-                <p class="text-center">Você não ministra turmas esse semestre</p>
             @endif
         </div>
     </div>

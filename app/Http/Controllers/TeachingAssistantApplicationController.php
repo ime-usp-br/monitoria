@@ -27,7 +27,7 @@ class TeachingAssistantApplicationController extends Controller
             abort(403);
         }
 
-        $turmas = SchoolClass::whereHas('instructors', function($query) { 
+        $turmas = SchoolClass::whereInApplicationPeriod()->whereHas('instructors', function($query) { 
             $query->where('instructors.codpes', Auth::user()->codpes); 
         })->get();
 

@@ -35,13 +35,15 @@ class EnrollmentController extends Controller
         }
         
         $turmas = SchoolClass::whereInEnrollmentPeriod()->whereHas('enrollments', function($query) use ($estudante){
-            return $query->where(['student_id'=>$estudante->id]);
-        })->union(SchoolClass::whereInEnrollmentPeriod()->whereDoesntHave('enrollments', function($query) use ($estudante){
-            return $query->where(['student_id'=>$estudante->id]);
-        })->whereHas('teachingAssistantApplication'))
-        ->union(SchoolClass::whereInEnrollmentPeriod()->whereDoesntHave('enrollments', function($query) use ($estudante){
-            return $query->where(['student_id'=>$estudante->id]);})
-            ->whereDoesntHave('teachingAssistantApplication'))->get();
+                    return $query->where(['student_id'=>$estudante->id]);
+                })->union(
+                  SchoolClass::whereInEnrollmentPeriod()->whereDoesntHave('enrollments', function($query) use ($estudante){
+                    return $query->where(['student_id'=>$estudante->id]);
+                })->whereHas('teachingAssistantApplication'))
+                ->union(
+                  SchoolClass::whereInEnrollmentPeriod()->whereDoesntHave('enrollments', function($query) use ($estudante){
+                    return $query->where(['student_id'=>$estudante->id]);
+                })->whereDoesntHave('teachingAssistantApplication'))->get();
 
         return view('enrollments.index', compact(['turmas', 'estudante']));
     }

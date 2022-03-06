@@ -69,6 +69,14 @@ class SchoolClass extends Model
         });
     }
 
+    public static function whereInApplicationPeriod()
+    {
+        return SchoolClass::whereHas('schoolterm', function($query){
+            $query->where('start_date_teacher_requests', '<=', now())
+            ->where('end_date_teacher_requests', '>=', now());
+        });
+    }
+
     public function getEnrollmentByStudent(Student $student)
     {
         return $this->enrollments()->where(['student_id'=>$student->id])->first();

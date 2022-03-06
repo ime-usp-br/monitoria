@@ -44,10 +44,23 @@ class SchoolTerm extends Model
         return $this->hasMany(SchoolRecord::class);
     }
 
+    public static function isApplicationPeriod()
+    {
+        return SchoolTerm::where('start_date_teacher_requests', '<=', now())
+            ->where('end_date_teacher_requests', '>=', now())->first() ? 1 : 0;
+        
+    }
+
     public static function isEnrollmentPeriod()
     {
         return SchoolTerm::where('start_date_student_registration', '<=', now())
             ->where('end_date_student_registration', '>=', now())->first() ? 1 : 0;
+    }
+
+    public static function getSchoolTermInApplicationPeriod()
+    {
+        return SchoolTerm::where('start_date_teacher_requests', '<=', now())
+        ->where('end_date_teacher_requests', '>=', now())->first();
     }
 
     public static function getSchoolTermInEnrollmentPeriod()
