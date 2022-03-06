@@ -29,6 +29,11 @@ class Instructor extends Model
         return $this->belongsTo(Department::class, "department_id");
     }
 
+    public function teachingAssistantApplications()
+    {
+        return $this->hasMany(TeachingAssistantApplication::class);
+    }
+
     public function hasRequests()
     {
         foreach($this->schoolclasses as $schoolclass){

@@ -8,8 +8,8 @@ use App\Http\Requests\IndexInstructorRequest;
 use App\Http\Requests\SearchInstructorRequest;
 use App\Models\Instructor;
 use Uspdev\Replicado\Pessoa;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\DB;
 
 class InstructorController extends Controller
 {
@@ -42,7 +42,10 @@ class InstructorController extends Controller
             abort(403);
         }
 
-        $docentes = Instructor::all();
+        $docentes = Instructor::select(DB::raw('instructors.*, SUM(teaching_assistant_applications.requested_number) as requested_number'))->join('teaching_assistant_applications', 'teaching_assistant_applications.instructor_id', '=', 'instructors.id')
+        ->groupBy('instructors.id')->orderBy('requested_number', 'desc')
+        ->get()->merge(Instructor::doesntHave('teachingAssistantApplications')->get());
+
 
         return view('instructors.index', compact('docentes'));
     }
