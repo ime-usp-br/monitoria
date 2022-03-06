@@ -35,7 +35,7 @@
                             <td>{{ $docente->codema }}</td>
                             <td class="text-center">{{ $docente->department->nomabvset }}</td>
                             <td class="text-center">
-                                @if($docente->hasRequests())
+                                @if($docente->teachingAssistantApplications()->exists())
                                     <a 
                                         data-toggle="tooltip" data-placement="top"
                                         title="Solicitações"

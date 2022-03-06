@@ -34,16 +34,6 @@ class Instructor extends Model
         return $this->hasMany(TeachingAssistantApplication::class);
     }
 
-    public function hasRequests()
-    {
-        foreach($this->schoolclasses as $schoolclass){
-            if($schoolclass->teachingAssistantApplication){
-                return true;
-            }
-        }
-        return false;
-    }
-
     public function getRequests()
     {
         $requests = [];

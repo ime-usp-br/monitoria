@@ -64,14 +64,20 @@
                                 @endif
                             </td>
                             @if($turma->teachingAssistantApplication)
-                                <td class="text-center" style="white-space: nowrap;">
-                                    <a class="btn btn-outline-dark"
-                                        data-toggle="tooltip" data-placement="top"
-                                        title="Editar Solicitação"
-                                        href="{{ route('requestAssistant.edit', $turma->teachingAssistantApplication) }}"
-                                    >
-                                        Editar
-                                    </a>
+                                <td class="text-center" style="max-width:200px">
+                                    @if($turma->teachingAssistantApplication->instructor->codpes == Auth::user()->codpes)
+                                        <a class="btn btn-outline-dark"
+                                            data-toggle="tooltip" data-placement="top"
+                                            title="Editar Solicitação"
+                                            href="{{ route('requestAssistant.edit', $turma->teachingAssistantApplication) }}"
+                                        >
+                                            Editar
+                                        </a>
+                                    @else
+                                        Já foi solicitado {{ $turma->teachingAssistantApplication->instructor->getPronounTreatment() == 'Prof. Dr. ' ? 'pelo' : 'pela' }}
+                                        {{ $turma->teachingAssistantApplication->instructor->getPronounTreatment() }}
+                                        {{ $turma->teachingAssistantApplication->instructor->nompes }}
+                                    @endif
                                 </td>
                             @else
                                 <td class="text-center" style="white-space: nowrap;">
