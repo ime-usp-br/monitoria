@@ -29,6 +29,7 @@ Route::resource('users', UserController::class);
 
 Route::resource('schoolterms', SchoolTermController::class);
 
+Route::get('/schoolclasses/{schoolclass}/enrollments', [SchoolClassController::class, 'enrollments'])->name('schoolclasses.enrollments');
 Route::get('/schoolclasses/search', [SchoolClassController::class, 'search'])->name('schoolclasses.search');
 Route::patch('/schoolclasses/import', [SchoolClassController::class, 'import'])->name('schoolclasses.import');
 Route::resource('schoolclasses', SchoolClassController::class);
@@ -43,4 +44,5 @@ Route::resource('students', StudentController::class);
 
 Route::resource('enrollments', EnrollmentController::class);
 
+Route::post('/schoolrecords/download', [SchoolRecordController::class, 'download'])->name('schoolrecords.download');
 Route::resource('schoolRecords', SchoolRecordController::class);

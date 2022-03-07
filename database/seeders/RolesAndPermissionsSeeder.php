@@ -17,6 +17,8 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
+        Permission::create(['name' => 'visualizar menu de configuração']);
+
         Permission::create(['name' => 'editar usuario']);
 
         Permission::create(['name' => 'visualizar periodo letivo']);
@@ -46,7 +48,10 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'editar inscrição']);
         Permission::create(['name' => 'deletar inscrição']);
 
+        Permission::create(['name' => 'baixar histórico escolar']);
+
         Role::create(['name' => 'Secretária'])
+            ->givePermissionTo('visualizar menu de configuração')
             ->givePermissionTo('editar usuario')
             ->givePermissionTo('visualizar periodo letivo')
             ->givePermissionTo('criar periodo letivo')
@@ -59,9 +64,11 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('buscar turmas')
             ->givePermissionTo('visualizar inscrição')
             ->givePermissionTo('editar inscrição')
-            ->givePermissionTo('deletar inscrição');
+            ->givePermissionTo('deletar inscrição')
+            ->givePermissionTo('baixar histórico escolar');
 
         Role::create(['name' => 'Docente'])
+            ->givePermissionTo('visualizar menu de configuração')
             ->givePermissionTo('visualizar periodo letivo')
             ->givePermissionTo('visualizar turma')
             ->givePermissionTo('criar turma')
@@ -82,11 +89,17 @@ class RolesAndPermissionsSeeder extends Seeder
         
         Role::create(['name' => 'Monitor']);
 
-        Role::create(['name' => 'Presidente de Comissão']);
+        Role::create(['name' => 'Presidente de Comissão'])
+            ->givePermissionTo('visualizar menu de configuração')
+            ->givePermissionTo('baixar histórico escolar');
 
-        Role::create(['name' => 'Vice Presidente de Comissão']);
+        Role::create(['name' => 'Vice Presidente de Comissão'])
+            ->givePermissionTo('visualizar menu de configuração')
+            ->givePermissionTo('baixar histórico escolar');
 
-        Role::create(['name' => 'Membro Comissão']);
+        Role::create(['name' => 'Membro Comissão'])
+            ->givePermissionTo('visualizar menu de configuração')
+            ->givePermissionTo('baixar histórico escolar');
 
         Role::create(['name' => 'Administrador'])
             ->givePermissionTo(Permission::all());

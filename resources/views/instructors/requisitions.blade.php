@@ -31,6 +31,7 @@
                         <th>N.° de Monitores</th>
                         <th>Atividades atribuidas</th>
                         <th>Prioridade</th>
+                        <th>Inscritos</th>
                     </tr>
 
                     @foreach($docente->getRequests() as $solicitacao)
@@ -50,11 +51,24 @@
                                 @endforeach
                             </td>
                             <td>{{$solicitacao->getPriority()}}</td>
+                            <td class="text-center">
+                                @if($solicitacao->schoolclass->enrollments()->exists())
+                                    <a 
+                                        data-toggle="tooltip" data-placement="top"
+                                        title="Ver Inscritos"
+                                        href="{{ route('schoolclasses.enrollments', $solicitacao->schoolclass) }}"
+                                    >
+                                        Ver Inscritos
+                                    </a>
+                                @else
+                                    Nenhuma Inscrição
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </table>
             @else
-                <p class="text-center">Não há docentes cadastrados</p>
+                <p class="text-center">Não há solicitações de monitores cadastradas</p>
             @endif
         </div>
     </div>

@@ -35,7 +35,7 @@ $menu = [
     [
         'text' => 'Solicitar Monitor',
         'url' => config('app.url') . '/requisitions',
-        'can' => 'visualizar solicitação de monitor',
+        'can' => 'criar solicitação de monitor',
     ],
     [
         'text' => 'Fazer Inscrição',
@@ -50,6 +50,7 @@ $right_menu = [
         'title' => 'Configurações',
         'submenu' => $submenuConfig,
         'align' => 'right',
+        'can' => 'visualizar menu de configuração',
     ],
 ];
 

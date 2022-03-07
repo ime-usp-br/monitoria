@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSchoolRecordRequest;
 use App\Http\Requests\UpdateSchoolRecordRequest;
+use App\Http\Requests\DownloadSchoolRecordRequest;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Gate;
 use App\Models\SchoolRecord;
 use App\Models\SchoolTerm;
 use App\Models\Student;
@@ -46,6 +49,13 @@ class SchoolRecordController extends Controller
      */
     public function store(StoreSchoolRecordRequest $request)
     {
+        if(!Auth::user()->hasRole('Aluno')){
+            abort(403);
+        }elseif(!SchoolTerm::isEnrollmentPeriod()){
+            Session::flash('alert-warning', 'Período de inscrições encerrado');
+            return redirect('/');
+        }
+
         $validated = $request->validated();
 
         $path = $validated['file']->store(Auth::user()->codpes);
@@ -105,5 +115,16 @@ class SchoolRecordController extends Controller
     public function destroy(SchoolRecord $schoolRecord)
     {
         //
+    }
+
+    public function download(DownloadSchoolRecordRequest $request)
+    {
+        if(!Gate::allows('baixar histórico escolar')){
+            abort(403);
+        }
+
+        $validated = $request->validated();
+
+        return Storage::download($validated['path'], explode('/',$validated['path'])[0] . '.pdf');
     }
 }

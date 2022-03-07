@@ -221,7 +221,12 @@ class SchoolClassController extends Controller
         return redirect("/schoolclasses");
     }
 
-    public function search(SearchSchoolClassRequest $request){
+    public function search(SearchSchoolClassRequest $request)
+    {
+        if(!Gate::allows('visualizar inscrição')){
+            abort(403);
+        }
+
         $validated = $request->validated();
         
         $coddis = $validated['coddis'];
@@ -234,5 +239,12 @@ class SchoolClassController extends Controller
         $schoolterms = SchoolTerm::all();
 
         return view('schoolclasses.index', compact(['turmas', 'schoolterms']));
+    }
+
+    public function enrollments(SchoolClass $schoolclass)
+    {
+        $turma = $schoolclass;
+
+        return view('schoolclasses.enrollments', compact('turma'));
     }
 }
