@@ -5,7 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SchoolTermController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\InstructorController;
-use App\Http\Controllers\TeachingAssistantApplicationController;
+use App\Http\Controllers\RequisitionController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\EnrollmentController;
@@ -33,11 +33,11 @@ Route::get('/schoolclasses/search', [SchoolClassController::class, 'search'])->n
 Route::patch('/schoolclasses/import', [SchoolClassController::class, 'import'])->name('schoolclasses.import');
 Route::resource('schoolclasses', SchoolClassController::class);
 
-Route::get('/instructors/{instructor}/requests', [InstructorController::class, 'requests'])->name('instructors.requests');
+Route::get('/instructors/{instructor}/requisitions', [InstructorController::class, 'requisitions'])->name('instructors.requisitions');
 Route::get('/instructors/search', [InstructorController::class, 'search'])->name('instructors.search');
 Route::resource('instructors', InstructorController::class);
 
-Route::resource('requestAssistant', TeachingAssistantApplicationController::class);
+Route::resource('requisitions', RequisitionController::class);
 
 Route::resource('students', StudentController::class);
 

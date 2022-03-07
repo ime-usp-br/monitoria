@@ -31,10 +31,10 @@ class UpdateSchoolTermRequest extends FormRequest
             'max_enrollments' => 'required|numeric',
             'started_at' => 'required',
             'finished_at' => 'required',
-            'start_date_teacher_requests' => 'required',
-            'end_date_teacher_requests' => 'required',
-            'start_date_student_registration' => 'required',
-            'end_date_student_registration' => 'required',
+            'start_date_requisitions' => 'required',
+            'end_date_requisitions' => 'required',
+            'start_date_enrollments' => 'required',
+            'end_date_enrollments' => 'required',
         ];
 
         return $rules;

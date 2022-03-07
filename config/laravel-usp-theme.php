@@ -34,7 +34,7 @@ $menu = [
     ],
     [
         'text' => 'Solicitar Monitor',
-        'url' => config('app.url') . '/requestAssistant',
+        'url' => config('app.url') . '/requisitions',
         'can' => 'visualizar solicitação de monitor',
     ],
     [

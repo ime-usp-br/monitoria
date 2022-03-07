@@ -43,10 +43,10 @@
                             <td>{{ $periodo->max_enrollments }}</td>
                             <td>{{ $periodo->started_at->format('Y-m-d') }}</td>
                             <td>{{ $periodo->finished_at->format('Y-m-d') }}</td>
-                            <td>{{ $periodo->start_date_teacher_requests->format('Y-m-d') }}</td>
-                            <td>{{ $periodo->end_date_teacher_requests->format('Y-m-d') }}</td>
-                            <td>{{ $periodo->start_date_student_registration->format('Y-m-d') }}</td>
-                            <td>{{ $periodo->end_date_student_registration->format('Y-m-d') }}</td>
+                            <td>{{ $periodo->start_date_requisitions->format('Y-m-d') }}</td>
+                            <td>{{ $periodo->end_date_requisitions->format('Y-m-d') }}</td>
+                            <td>{{ $periodo->start_date_enrollments->format('Y-m-d') }}</td>
+                            <td>{{ $periodo->end_date_enrollments->format('Y-m-d') }}</td>
                             <td class="text-center">
                                 <a class="text-dark text-decoration-none"
                                     data-toggle="tooltip" data-placement="top"

@@ -48,8 +48,8 @@
                                 @endforeach
                             </td>
                             <td class="text-center">
-                                @if($turma->teachingAssistantApplication)
-                                    {{ $turma->teachingAssistantApplication->requested_number }}
+                                @if($turma->requisition)
+                                    {{ $turma->requisition->requested_number }}
                                 @else
                                     0
                                 @endif

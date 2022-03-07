@@ -12,11 +12,11 @@
             </h1>
 
             <form method="POST"
-                action="{{ route('requestAssistant.update', $turma->teachingAssistantApplication) }}"
+                action="{{ route('requisitions.update', $turma->requisition) }}"
             >
                 @method('patch')
                 @csrf
-                @include('teachingAssistantApplication.partials.form', ['buttonText' => 'Editar'])
+                @include('requisitions.partials.form', ['buttonText' => 'Editar'])
             </form>
         </div>
     </div>

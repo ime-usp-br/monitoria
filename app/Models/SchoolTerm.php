@@ -19,19 +19,19 @@ class SchoolTerm extends Model
         'max_enrollments',
         'started_at',
         'finished_at',
-        'start_date_teacher_requests',
-        'end_date_teacher_requests',
-        'start_date_student_registration',
-        'end_date_student_registration',
+        'start_date_requisitions',
+        'end_date_requisitions',
+        'start_date_enrollments',
+        'end_date_enrollments',
     ];
 
     protected $casts = [
         'started_at' => 'datetime',
         'finished_at' => 'datetime',
-        'start_date_teacher_requests' => 'datetime',
-        'end_date_teacher_requests' => 'datetime',
-        'start_date_student_registration' => 'datetime',
-        'end_date_student_registration' => 'datetime',
+        'start_date_requisitions' => 'datetime',
+        'end_date_requisitions' => 'datetime',
+        'start_date_enrollments' => 'datetime',
+        'end_date_enrollments' => 'datetime',
     ];
 
     public function schoolclasses()
@@ -44,28 +44,28 @@ class SchoolTerm extends Model
         return $this->hasMany(SchoolRecord::class);
     }
 
-    public static function isApplicationPeriod()
+    public static function isRequisitionPeriod()
     {
-        return SchoolTerm::where('start_date_teacher_requests', '<=', now())
-            ->where('end_date_teacher_requests', '>=', now())->first() ? 1 : 0;
+        return SchoolTerm::where('start_date_requisitions', '<=', now())
+            ->where('end_date_requisitions', '>=', now())->first() ? 1 : 0;
         
     }
 
     public static function isEnrollmentPeriod()
     {
-        return SchoolTerm::where('start_date_student_registration', '<=', now())
-            ->where('end_date_student_registration', '>=', now())->first() ? 1 : 0;
+        return SchoolTerm::where('start_date_enrollments', '<=', now())
+            ->where('end_date_enrollments', '>=', now())->first() ? 1 : 0;
     }
 
-    public static function getSchoolTermInApplicationPeriod()
+    public static function getSchoolTermInRequisitionPeriod()
     {
-        return SchoolTerm::where('start_date_teacher_requests', '<=', now())
-        ->where('end_date_teacher_requests', '>=', now())->first();
+        return SchoolTerm::where('start_date_requisitions', '<=', now())
+        ->where('end_date_requisitions', '>=', now())->first();
     }
 
     public static function getSchoolTermInEnrollmentPeriod()
     {
-        return SchoolTerm::where('start_date_student_registration', '<=', now())
-        ->where('end_date_student_registration', '>=', now())->first();
+        return SchoolTerm::where('start_date_enrollments', '<=', now())
+        ->where('end_date_enrollments', '>=', now())->first();
     }
 }

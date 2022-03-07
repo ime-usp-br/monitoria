@@ -42,10 +42,10 @@ class InstructorController extends Controller
             abort(403);
         }
 
-        $docentes = Instructor::select(DB::raw('instructors.*, SUM(teaching_assistant_applications.requested_number) as requested_number'))
-        ->join('teaching_assistant_applications', 'teaching_assistant_applications.instructor_id', '=', 'instructors.id')
+        $docentes = Instructor::select(DB::raw('instructors.*, SUM(requisitions.requested_number) as requested_number'))
+        ->join('requisitions', 'requisitions.instructor_id', '=', 'instructors.id')
         ->groupBy('instructors.id')->orderBy('requested_number', 'desc')
-        ->get()->merge(Instructor::doesntHave('teachingAssistantApplications')->get());
+        ->get()->merge(Instructor::doesntHave('requisitions')->get());
 
 
         return view('instructors.index', compact('docentes'));
@@ -117,7 +117,7 @@ class InstructorController extends Controller
         //
     }
 
-    public function requests(Instructor $instructor)
+    public function requisitions(Instructor $instructor)
     {
         if(!Gate::allows('visualizar docente')){
             abort(403);
@@ -125,7 +125,7 @@ class InstructorController extends Controller
 
         $docente = $instructor;
 
-        return view('instructors.requests', compact('docente'));
+        return view('instructors.requisitions', compact('docente'));
     }
 
     public function search(SearchInstructorRequest $request)

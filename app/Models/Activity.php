@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\TeachingAssistantApplication;
+use App\Models\Requisition;
 
 class Activity extends Model
 {
@@ -14,7 +14,7 @@ class Activity extends Model
         'description'
     ];
 
-    public function teachingAssistantApplications(){
-        return $this->belongsToMany(TeachingAssistantApplication::class);
+    public function requisitions(){
+        return $this->belongsToMany(Requisition::class);
     }
 }

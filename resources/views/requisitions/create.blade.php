@@ -12,11 +12,11 @@
             </h1>
 
             <form method="POST"
-                action="{{ route('requestAssistant.store') }}"
+                action="{{ route('requisitions.store') }}"
             >
                 <input name="school_class_id" value="{{$turma->id}}" type="hidden">
                 @csrf
-                @include('teachingAssistantApplication.partials.form', ['buttonText' => 'Cadastrar'])
+                @include('requisitions.partials.form', ['buttonText' => 'Cadastrar'])
             </form>
         </div>
     </div>

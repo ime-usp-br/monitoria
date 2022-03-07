@@ -70,7 +70,7 @@
     </div>
     <div class="col-3 col-md-1">
         <input class="custom-form-control" type="number" name="requested_number" id="requested_number"
-            value="{{ $turma->teachingAssistantApplication->requested_number ?? '1' }}"
+            value="{{ $turma->requisition->requested_number ?? '1' }}"
         />
     </div>
 </div>
@@ -85,7 +85,7 @@
                   'Fiscalização de provas'] as $activity)
             <div>
                 <input class="checkbox" type="checkbox" name="activities[]"
-                value="{{$activity}}" {{ $turma->teachingAssistantApplication ? ($turma->teachingAssistantApplication->hasActivity($activity) ? 'checked':'') : ''}}/>
+                value="{{$activity}}" {{ $turma->requisition ? ($turma->requisition->hasActivity($activity) ? 'checked':'') : ''}}/>
                 <a>{{$activity}}</a>
             </div>
         @endforeach
@@ -102,7 +102,7 @@
             @foreach([3=>'Imprescindivel',
                       2=>'Extremamente necessário, mas não imprescindivel',
                       1=>'Importante, porém posso abrir mão do auxilio de um monitor'] as $n=>$description)
-                <option value="{{ $n }}" {{ $turma->teachingAssistantApplication ? ($turma->teachingAssistantApplication->priority == $n ? "selected":'') :'' }}>{{ $description }}</option>
+                <option value="{{ $n }}" {{ $turma->requisition ? ($turma->requisition->priority == $n ? "selected":'') :'' }}>{{ $description }}</option>
             @endforeach
         </select>
     </div>
@@ -115,7 +115,7 @@
             {{ $buttonText }}
         </button>
         <a class="btn btn-outline-dark"
-            href="{{ route('requestAssistant.index') }}"
+            href="{{ route('requisitions.index') }}"
         >
             Cancelar
         </a>

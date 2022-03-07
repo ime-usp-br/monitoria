@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTeachingAssistantApplicationRequest extends FormRequest
+class CreateRequisitionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,10 +25,6 @@ class StoreTeachingAssistantApplicationRequest extends FormRequest
     {
         $rules = [
             'school_class_id' => 'required|numeric',
-            'requested_number' => 'required|numeric|gt:0',
-            'priority' => 'required|numeric|in:1,2,3',
-            'activities' => 'required|array',
-            'activities.*' => 'required|in:Atendimento a alunos,Correção de listas de exercícios,Fiscalização de provas',
         ];
 
         return $rules;

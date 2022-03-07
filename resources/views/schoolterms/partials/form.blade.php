@@ -109,39 +109,39 @@
 
 <div class="row custom-form-group align-items-center">
     <div class="col-12 col-lg-5 text-lg-right">
-        <label for="start_date_teacher_requests">Data inicial dos pedidos pelos docentes *</label>
+        <label for="start_date_requisitions">Data inicial dos pedidos pelos docentes *</label>
     </div>
 
     <div class="col-12 col-md-2">
         <input class="custom-form-control custom-datepicker"
-            type="text" name="start_date_teacher_requests" id="start_date_teacher_requests" autocomplete="off"
-            value="{{ old('start_date_teacher_requests') ?? ($periodo->start_date_teacher_requests ? $periodo->start_date_teacher_requests->format('Y-m-d'): null) ?? ''}}"
+            type="text" name="start_date_requisitions" id="start_date_requisitions" autocomplete="off"
+            value="{{ old('start_date_requisitions') ?? ($periodo->start_date_requisitions ? $periodo->start_date_requisitions->format('Y-m-d'): null) ?? ''}}"
         />
     </div>
 </div>
 
 <div class="row custom-form-group align-items-center">
     <div class="col-12 col-lg-5 text-lg-right">
-        <label for="end_date_teacher_requests">Data final dos pedidos pelos docentes *</label>
+        <label for="end_date_requisitions">Data final dos pedidos pelos docentes *</label>
     </div>
 
     <div class="col-12 col-md-2">
         <input class="custom-form-control custom-datepicker"
-            type="text" name="end_date_teacher_requests" id="end_date_teacher_requests" autocomplete="off"
-            value="{{  old('end_date_teacher_requests') ?? ($periodo->end_date_teacher_requests ? $periodo->end_date_teacher_requests->format('Y-m-d'): null) ?? ''}}"
+            type="text" name="end_date_requisitions" id="end_date_requisitions" autocomplete="off"
+            value="{{  old('end_date_requisitions') ?? ($periodo->end_date_requisitions ? $periodo->end_date_requisitions->format('Y-m-d'): null) ?? ''}}"
         />
     </div>
 </div>
 
 <div class="row custom-form-group align-items-center">
     <div class="col-12 col-lg-5 text-lg-right">
-        <label for="start_date_student_registration">Data inicial das inscrições pelos alunos *</label>
+        <label for="start_date_enrollments">Data inicial das inscrições pelos alunos *</label>
     </div>
 
     <div class="col-12 col-md-2">
         <input class="custom-form-control custom-datepicker"
-            type="text" name="start_date_student_registration" id="start_date_student_registration" autocomplete="off"
-            value="{{ old('start_date_student_registration') ?? ($periodo->start_date_student_registration ? $periodo->start_date_student_registration->format('Y-m-d'): null) ?? ''}}"
+            type="text" name="start_date_enrollments" id="start_date_enrollments" autocomplete="off"
+            value="{{ old('start_date_enrollments') ?? ($periodo->start_date_enrollments ? $periodo->start_date_enrollments->format('Y-m-d'): null) ?? ''}}"
         />
     </div>
 </div>
@@ -153,8 +153,8 @@
 
     <div class="col-12 col-md-2">
         <input class="custom-form-control custom-datepicker"
-            type="text" name="end_date_student_registration" id="end_date_student_registration" autocomplete="off"
-            value="{{  old('end_date_student_registration') ?? ($periodo->end_date_student_registration ? $periodo->end_date_student_registration->format('Y-m-d'): null) ?? ''}}"
+            type="text" name="end_date_enrollments" id="end_date_enrollments" autocomplete="off"
+            value="{{  old('end_date_enrollments') ?? ($periodo->end_date_enrollments ? $periodo->end_date_enrollments->format('Y-m-d'): null) ?? ''}}"
         />
     </div>
 </div>

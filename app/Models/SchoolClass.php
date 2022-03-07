@@ -8,7 +8,7 @@ use App\Models\SchoolTerm;
 use App\Models\Instructor;
 use App\Models\ClassSchedule;
 use App\Models\Department;
-use App\Models\TeachingAssistantApplication;
+use App\Models\Requisition;
 use App\Models\Enrollment;
 use Uspdev\Replicado\DB;
 
@@ -52,8 +52,8 @@ class SchoolClass extends Model
         return $this->belongsToMany(ClassSchedule::class);
     }
 
-    public function teachingAssistantApplication(){
-        return $this->hasOne(TeachingAssistantApplication::class);
+    public function requisition(){
+        return $this->hasOne(Requisition::class);
     }
 
     public function enrollments()
@@ -64,16 +64,16 @@ class SchoolClass extends Model
     public static function whereInEnrollmentPeriod()
     {
         return SchoolClass::whereHas('schoolterm', function($query){
-            $query->where('start_date_student_registration', '<=', now())
-            ->where('end_date_student_registration', '>=', now());
+            $query->where('start_date_enrollments', '<=', now())
+            ->where('end_date_enrollments', '>=', now());
         });
     }
 
-    public static function whereInApplicationPeriod()
+    public static function whereInRequisitionPeriod()
     {
         return SchoolClass::whereHas('schoolterm', function($query){
-            $query->where('start_date_teacher_requests', '<=', now())
-            ->where('end_date_teacher_requests', '>=', now());
+            $query->where('start_date_requisitions', '<=', now())
+            ->where('end_date_requisitions', '>=', now());
         });
     }
 

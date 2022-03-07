@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateActivityTeachingAssistantApplicationTable extends Migration
+class CreateActivityRequisitionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateActivityTeachingAssistantApplicationTable extends Migration
      */
     public function up()
     {
-        Schema::create('activity_teaching_assistant_application', function (Blueprint $table) {
+        Schema::create('activity_requisition', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('activity_id')->unsigned();
-            $table->unsignedBigInteger('teaching_assistant_application_id')->unsigned();
+            $table->unsignedBigInteger('requisition_id')->unsigned();
         });
     }
 
@@ -27,6 +27,6 @@ class CreateActivityTeachingAssistantApplicationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('activity_teaching_assistant_application');
+        Schema::dropIfExists('activity_requisition');
     }
 }

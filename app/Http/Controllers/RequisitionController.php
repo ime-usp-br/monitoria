@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTeachingAssistantApplicationRequest;
-use App\Http\Requests\UpdateTeachingAssistantApplicationRequest;
-use App\Http\Requests\CreateTeachingAssistantApplicationRequest;
-use App\Models\TeachingAssistantApplication;
+use App\Http\Requests\StoreRequisitionRequest;
+use App\Http\Requests\UpdateRequisitionRequest;
+use App\Http\Requests\CreateRequisitionRequest;
+use App\Models\Requisition;
 use App\Models\SchoolClass;
 use App\Models\SchoolTerm;
 use App\Models\Instructor;
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Gate;
 use Auth;
 use Session;
 
-class TeachingAssistantApplicationController extends Controller
+class RequisitionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,13 +27,13 @@ class TeachingAssistantApplicationController extends Controller
             abort(403);
         }
 
-        $turmas = SchoolClass::whereInApplicationPeriod()->whereHas('instructors', function($query) { 
+        $turmas = SchoolClass::whereInRequisitionPeriod()->whereHas('instructors', function($query) { 
             $query->where('instructors.codpes', Auth::user()->codpes); 
         })->get();
 
         $schoolterms = SchoolTerm::all();
 
-        return view('teachingAssistantApplication.index', compact(['turmas', 'schoolterms']));
+        return view('requisitions.index', compact(['turmas', 'schoolterms']));
     }
 
     /**
@@ -41,7 +41,7 @@ class TeachingAssistantApplicationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(CreateTeachingAssistantApplicationRequest $request)
+    public function create(CreateRequisitionRequest $request)
     {
         if(!Gate::allows('criar solicitação de monitor')){
             abort(403);
@@ -52,10 +52,10 @@ class TeachingAssistantApplicationController extends Controller
 
         if($turma->isInstructor(Auth::user()->codpes)){
             if($turma->isSchoolTermOpen()){
-                return view('teachingAssistantApplication.create', compact('turma'));
+                return view('requisitions.create', compact('turma'));
             }else{
                 Session::flash('alert-warning', 'Período de solicitação de monitores encerrado');
-                return redirect('/requestAssistant');
+                return redirect('/requisitions');
             }
         }else{
             abort(403);
@@ -65,10 +65,10 @@ class TeachingAssistantApplicationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreTeachingAssistantApplicationRequest  $request
+     * @param  \App\Http\Requests\StoreRequisitionRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTeachingAssistantApplicationRequest $request)
+    public function store(StoreRequisitionRequest $request)
     {
         if(!Gate::allows('criar solicitação de monitor')){
             abort(403);
@@ -81,22 +81,22 @@ class TeachingAssistantApplicationController extends Controller
 
         $validated['instructor_id'] = Instructor::where(['codpes'=>Auth::user()->codpes])->first()->id;
 
-        $requestAssistant = TeachingAssistantApplication::create($validated);
+        $requisition = Requisition::create($validated);
 
         foreach($activities as $act){
-            $requestAssistant->activities()->attach(Activity::firstOrCreate(['description'=>$act]));
+            $requisition->activities()->attach(Activity::firstOrCreate(['description'=>$act]));
         }
 
-        return redirect('/requestAssistant');
+        return redirect('/requisitions');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\TeachingAssistantApplication  $teachingAssistantApplication
+     * @param  \App\Models\Requisition  $requisition
      * @return \Illuminate\Http\Response
      */
-    public function show(TeachingAssistantApplication $teachingAssistantApplication)
+    public function show(Requisition $requisition)
     {
         //
     }
@@ -104,22 +104,22 @@ class TeachingAssistantApplicationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\TeachingAssistantApplication  $teachingAssistantApplication
+     * @param  \App\Models\Requisition  $requisition
      * @return \Illuminate\Http\Response
      */
-    public function edit(TeachingAssistantApplication $requestAssistant)
+    public function edit(Requisition $requisition)
     {
         if(!Gate::allows('editar solicitação de monitor')){
             abort(403);
         }
 
-        $turma = $requestAssistant->schoolclass;
+        $turma = $requisition->schoolclass;
         if($turma->isInstructor(Auth::user()->codpes)){
             if($turma->isSchoolTermOpen()){
-                return view('teachingAssistantApplication.edit', compact('turma'));
+                return view('requisitions.edit', compact('turma'));
             }else{
                 Session::flash('alert-warning', 'Período de solicitação de monitores encerrado');
-                return redirect('/requestAssistant');
+                return redirect('/requisitions');
             }
         }else{
             abort(403);
@@ -130,11 +130,11 @@ class TeachingAssistantApplicationController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateTeachingAssistantApplicationRequest  $request
-     * @param  \App\Models\TeachingAssistantApplication  $teachingAssistantApplication
+     * @param  \App\Http\Requests\UpdateRequisitionRequest  $request
+     * @param  \App\Models\Requisition  $requisition
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTeachingAssistantApplicationRequest $request, TeachingAssistantApplication $requestAssistant)
+    public function update(UpdateRequisitionRequest $request, Requisition $requisition)
     {
         if(!Gate::allows('editar solicitação de monitor')){
             abort(403);
@@ -142,23 +142,23 @@ class TeachingAssistantApplicationController extends Controller
 
         $validated = $request->validated();
 
-        $requestAssistant->activities()->detach();
+        $requisition->activities()->detach();
         foreach($validated['activities'] as $act){
-            $requestAssistant->activities()->attach(Activity::firstOrCreate(['description'=>$act]));
+            $requisition->activities()->attach(Activity::firstOrCreate(['description'=>$act]));
         }
 
-        $requestAssistant->update($validated);
+        $requisition->update($validated);
 
-        return redirect('/requestAssistant');
+        return redirect('/requisitions');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\TeachingAssistantApplication  $teachingAssistantApplication
+     * @param  \App\Models\Requisition  $requisition
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TeachingAssistantApplication $teachingAssistantApplication)
+    public function destroy(Requisition $requisition)
     {
         //
     }

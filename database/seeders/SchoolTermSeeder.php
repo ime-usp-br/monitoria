@@ -22,10 +22,10 @@ class SchoolTermSeeder extends Seeder
         $schoolTerm->max_enrollments = 4;
         $schoolTerm->started_at = "2022-03-14";
         $schoolTerm->finished_at = "2022-07-30";
-        $schoolTerm->start_date_teacher_requests = "2022-02-01";
-        $schoolTerm->end_date_teacher_requests = "2022-02-30";
-        $schoolTerm->start_date_student_registration = "2022-02-01";
-        $schoolTerm->end_date_student_registration = "2022-02-30";
+        $schoolTerm->start_date_requisitions = "2022-02-01";
+        $schoolTerm->end_date_requisitions = "2022-02-30";
+        $schoolTerm->start_date_enrollments = "2022-02-01";
+        $schoolTerm->end_date_enrollments = "2022-02-30";
         $schoolTerm->save();
 
 
@@ -37,10 +37,10 @@ class SchoolTermSeeder extends Seeder
         $schoolTerm->max_enrollments = 4;
         $schoolTerm->started_at = "2021-03-14";
         $schoolTerm->finished_at = "2021-07-30";
-        $schoolTerm->start_date_teacher_requests = "2021-02-01";
-        $schoolTerm->end_date_teacher_requests = "2021-02-30";
-        $schoolTerm->start_date_student_registration = "2021-02-01";
-        $schoolTerm->end_date_student_registration = "2021-02-30";
+        $schoolTerm->start_date_requisitions = "2021-02-01";
+        $schoolTerm->end_date_requisitions = "2021-02-30";
+        $schoolTerm->start_date_enrollments = "2021-02-01";
+        $schoolTerm->end_date_enrollments = "2021-02-30";
         $schoolTerm->save();
 
 
@@ -52,10 +52,10 @@ class SchoolTermSeeder extends Seeder
         $schoolTerm->max_enrollments = 4;
         $schoolTerm->started_at = "2021-08-14";
         $schoolTerm->finished_at = "2021-12-30";
-        $schoolTerm->start_date_teacher_requests = "2021-07-01";
-        $schoolTerm->end_date_teacher_requests = "2021-07-30";
-        $schoolTerm->start_date_student_registration = "2021-07-01";
-        $schoolTerm->end_date_student_registration = "2021-07-30";
+        $schoolTerm->start_date_requisitions = "2021-07-01";
+        $schoolTerm->end_date_requisitions = "2021-07-30";
+        $schoolTerm->start_date_enrollments = "2021-07-01";
+        $schoolTerm->end_date_enrollments = "2021-07-30";
         $schoolTerm->save();
     }
 }

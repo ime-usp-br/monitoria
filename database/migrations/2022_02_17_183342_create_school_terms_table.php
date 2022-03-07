@@ -22,10 +22,10 @@ class CreateSchoolTermsTable extends Migration
             $table->integer('max_enrollments');
             $table->timestamp('started_at')->nullable();
             $table->timestamp('finished_at')->nullable();
-            $table->timestamp('start_date_teacher_requests')->nullable();
-            $table->timestamp('end_date_teacher_requests')->nullable();
-            $table->timestamp('start_date_student_registration')->nullable();
-            $table->timestamp('end_date_student_registration')->nullable();
+            $table->timestamp('start_date_requisitions')->nullable();
+            $table->timestamp('end_date_requisitions')->nullable();
+            $table->timestamp('start_date_enrollments')->nullable();
+            $table->timestamp('end_date_enrollments')->nullable();
             $table->timestamps();
             $table->unique(['year', 'period']);
         });

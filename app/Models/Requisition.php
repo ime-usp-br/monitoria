@@ -8,7 +8,7 @@ use App\Models\Instructor;
 use App\Models\SchoolClass;
 use App\Models\Activity;
 
-class TeachingAssistantApplication extends Model
+class Requisition extends Model
 {
     use HasFactory;
 

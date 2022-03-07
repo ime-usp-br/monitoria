@@ -15,7 +15,7 @@
                         Preencher um formulário para cada turma
                     </p>
                 @else
-                    @if(App\Models\SchoolTerm::isApplicationPeriod())
+                    @if(App\Models\SchoolTerm::isRequisitionPeriod())
                         <p class="alert alert-warning rounded-0 text-center">
                             Você não ministra turmas esse semestre
                         </p>
@@ -25,7 +25,7 @@
                         </p>
                     @endif
                 @endif
-                @if(App\Models\SchoolTerm::isApplicationPeriod())
+                @if(App\Models\SchoolTerm::isRequisitionPeriod())
                     <p class="text-right">
                         <a class="btn btn-primary"
                             data-toggle="modal"
@@ -63,39 +63,39 @@
                                 @endforeach
                             </td>
                             <td>
-                                @if($turma->teachingAssistantApplication)
-                                    {{str_pad($turma->teachingAssistantApplication->id,5,'0',STR_PAD_LEFT)}}
+                                @if($turma->requisition)
+                                    {{str_pad($turma->requisition->id,5,'0',STR_PAD_LEFT)}}
                                 @endif
                             </td>
                             <td>
-                                @if($turma->teachingAssistantApplication)
-                                    {{$turma->teachingAssistantApplication->created_at}}
+                                @if($turma->requisition)
+                                    {{$turma->requisition->created_at}}
                                 @endif
                             </td>
                             <td>
-                                @if($turma->teachingAssistantApplication)
-                                    {{$turma->teachingAssistantApplication->requested_number}}
+                                @if($turma->requisition)
+                                    {{$turma->requisition->requested_number}}
                                 @endif
                             </td>
-                            @if($turma->teachingAssistantApplication)
+                            @if($turma->requisition)
                                 <td class="text-center" style="max-width:200px">
-                                    @if($turma->teachingAssistantApplication->instructor->codpes == Auth::user()->codpes)
+                                    @if($turma->requisition->instructor->codpes == Auth::user()->codpes)
                                         <a class="btn btn-outline-dark"
                                             data-toggle="tooltip" data-placement="top"
                                             title="Editar Solicitação"
-                                            href="{{ route('requestAssistant.edit', $turma->teachingAssistantApplication) }}"
+                                            href="{{ route('requisitions.edit', $turma->requisition) }}"
                                         >
                                             Editar
                                         </a>
                                     @else
-                                        Já foi solicitado {{ $turma->teachingAssistantApplication->instructor->getPronounTreatment() == 'Prof. Dr. ' ? 'pelo' : 'pela' }}
-                                        {{ $turma->teachingAssistantApplication->instructor->getPronounTreatment() }}
-                                        {{ $turma->teachingAssistantApplication->instructor->nompes }}
+                                        Já foi solicitado {{ $turma->requisition->instructor->getPronounTreatment() == 'Prof. Dr. ' ? 'pelo' : 'pela' }}
+                                        {{ $turma->requisition->instructor->getPronounTreatment() }}
+                                        {{ $turma->requisition->instructor->nompes }}
                                     @endif
                                 </td>
                             @else
                                 <td class="text-center" style="white-space: nowrap;">
-                                    <form method="GET" action="{{ route('requestAssistant.create') }}">
+                                    <form method="GET" action="{{ route('requisitions.create') }}">
                                         <input type="hidden" name="school_class_id" value="{{ $turma->id }}">
                                         <button class="btn btn-outline-dark" type="submit">
                                             Solicitar

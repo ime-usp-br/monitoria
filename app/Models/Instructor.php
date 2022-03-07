@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\SchoolClass;
 use App\Models\Department;
+use App\Models\Requisition;
 use Uspdev\Replicado\DB;
 
 class Instructor extends Model
@@ -29,17 +30,17 @@ class Instructor extends Model
         return $this->belongsTo(Department::class, "department_id");
     }
 
-    public function teachingAssistantApplications()
+    public function requisitions()
     {
-        return $this->hasMany(TeachingAssistantApplication::class);
+        return $this->hasMany(Requisition::class);
     }
 
     public function getRequests()
     {
         $requests = [];
         foreach($this->schoolclasses as $schoolclass){
-            if($schoolclass->teachingAssistantApplication){
-                array_push($requests, $schoolclass->teachingAssistantApplication);
+            if($schoolclass->requisition){
+                array_push($requests, $schoolclass->requisition);
             }
         }
         return $requests;
@@ -49,7 +50,7 @@ class Instructor extends Model
     {
         foreach($this->schoolclasses as $schoolclass){
             if($schoolclass->isSchoolTermOpen()){
-                if($schoolclass->teachingAssistantApplication){
+                if($schoolclass->requisition){
                     return true;
                 }
             }
@@ -62,8 +63,8 @@ class Instructor extends Model
         $requests = [];
         foreach($this->schoolclasses as $schoolclass){
             if($schoolclass->isSchoolTermOpen()){
-                if($schoolclass->teachingAssistantApplication){
-                    array_push($requests, $schoolclass->teachingAssistantApplication);
+                if($schoolclass->requisition){
+                    array_push($requests, $schoolclass->requisition);
                 }
             }
         }

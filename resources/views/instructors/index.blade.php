@@ -35,11 +35,11 @@
                             <td>{{ $docente->codema }}</td>
                             <td class="text-center">{{ $docente->department->nomabvset }}</td>
                             <td class="text-center">
-                                @if($docente->teachingAssistantApplications()->exists())
+                                @if($docente->requisitions()->exists())
                                     <a 
                                         data-toggle="tooltip" data-placement="top"
                                         title="Solicitações"
-                                        href="{{ route('instructors.requests', $docente) }}"
+                                        href="{{ route('instructors.requisitions', $docente) }}"
                                     >
                                         Ver Solicitações
                                     </a>
