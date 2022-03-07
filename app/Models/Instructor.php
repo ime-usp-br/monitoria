@@ -129,10 +129,6 @@ class Instructor extends Model
         ];
 
         $res = array_unique(DB::fetchAll($query, $param),SORT_REGULAR);
-        
-        if(!$res){
-            dd($codpes);
-        }
 
         $res[0]["department_id"] = Department::firstOrCreate(Department::getFromReplicadoByCodset($res[0]["codset"]))->id;
         unset($res[0]["codset"]);

@@ -84,8 +84,6 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('fazer inscrição')
             ->givePermissionTo('editar inscrição')
             ->givePermissionTo('deletar inscrição');
-
-        Role::create(['name' => 'Aluno sem cadastro']);
         
         Role::create(['name' => 'Monitor']);
 

@@ -13,7 +13,7 @@ class StoreStudentRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -23,21 +23,8 @@ class StoreStudentRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
-            'codema' => 'required',
-            'sexo' => 'required|in:Masculino,Feminino',
-            'cpf' => 'required|numeric',
-            'endereco' => 'required',
-            'complemento' => 'nullable',
-            'cep' => 'required|numeric',
-            'bairro' => 'required',
-            'cidade' => 'required',
-            'estado' => 'required',
-            'tel_celular' => 'nullable|numeric',
-            'tel_residencial' => 'nullable|numeric',
-            'possui_conta_bb' => 'sometimes|bool',
+        return [
+            //
         ];
-
-        return $rules;
     }
 }

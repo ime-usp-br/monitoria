@@ -18,18 +18,8 @@ class CreateStudentsTable extends Migration
             $table->string('codpes');
             $table->string('nompes');
             $table->string('codema');
-            $table->string('sexo');
-            $table->string('cpf');
-            $table->string('endereco');
-            $table->string('complemento')->nullable();
-            $table->string('cep');
-            $table->string('bairro');
-            $table->string('cidade');
-            $table->string('estado');
-            $table->string('tel_celular')->nullable();
-            $table->string('tel_residencial')->nullable();
-            $table->boolean('possui_conta_bb')->default(0);
             $table->timestamps();
+            $table->unique(['codpes', 'nompes']);
         });
     }
 

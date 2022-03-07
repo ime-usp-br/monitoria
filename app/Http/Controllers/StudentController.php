@@ -26,13 +26,9 @@ class StudentController extends Controller
      */
     public function create()
     {
-        if(!Auth::user()->hasRole('Aluno sem cadastro')){
+        if(!Auth::user()->hasRole('Aluno')){
             abort(403);
         }
-
-        $estudante = new Student;
-
-        return view('students.create', compact('estudante'));
     }
 
     /**
@@ -43,21 +39,9 @@ class StudentController extends Controller
      */
     public function store(StoreStudentRequest $request)
     {
-        if(!Auth::user()->hasRole('Aluno sem cadastro')){
+        if(!Auth::user()->hasRole('Aluno')){
             abort(403);
         }
-
-        $validated = $request->validated();
-
-        $validated['codpes'] = Auth::user()->codpes;
-        $validated['nompes'] = Auth::user()->name;
-
-        Student::create($validated);
-
-        Auth::user()->removeRole('Aluno sem cadastro');
-        Auth::user()->assignRole('Aluno');
-
-        return redirect('/');
     }
 
     /**

@@ -58,7 +58,7 @@ class User extends Authenticatable
                     $user->assignRole("Docente");
                 }
                 if ($vinculo == 'Aluno'){
-                    $user->assignRole("Aluno sem cadastro");
+                    $user->assignRole("Aluno");
                 }
             }
         });
