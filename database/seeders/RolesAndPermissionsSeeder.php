@@ -50,7 +50,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         Permission::create(['name' => 'baixar histórico escolar']);
 
-        Role::create(['name' => 'Secretária'])
+        Role::create(['name' => 'Secretaria'])
             ->givePermissionTo('visualizar menu de configuração')
             ->givePermissionTo('editar usuario')
             ->givePermissionTo('visualizar periodo letivo')

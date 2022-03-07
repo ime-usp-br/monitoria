@@ -25,7 +25,13 @@ class UserController extends Controller
             abort(403);
         }
 
-        $usuarios = User::orderBy('name')->get();
+        $perfisEspeciais = ['Administrador', 'Secretaria', 'Membro Comissão', 'Presidente de Comissão', 'Vice Presidente de Comissão'];
+        $usuarios = User::whereHas('roles', function($q) use ($perfisEspeciais){ 
+                        return $q->whereIn('name', $perfisEspeciais);})->orderBy('users.name')->get()
+                    ->merge(
+                    User::whereDoesntHave('roles', function($q) use ($perfisEspeciais){ 
+                        return $q->whereIn('name', $perfisEspeciais);})->orderBy('users.name')->get());
+
         $roles = Role::all();
 
         return view('users.index', compact('usuarios', 'roles'));
