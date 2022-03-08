@@ -10,6 +10,7 @@ use App\Models\ClassSchedule;
 use App\Models\Department;
 use App\Models\Requisition;
 use App\Models\Enrollment;
+use App\Models\Selection;
 use Uspdev\Replicado\DB;
 
 class SchoolClass extends Model
@@ -59,6 +60,11 @@ class SchoolClass extends Model
     public function enrollments()
     {
         return $this->hasMany(Enrollment::class);
+    }
+
+    public function selections()
+    {
+        return $this->hasMany(Selection::class);
     }
 
     public static function whereInEnrollmentPeriod()

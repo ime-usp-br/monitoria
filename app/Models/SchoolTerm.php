@@ -68,4 +68,9 @@ class SchoolTerm extends Model
         return SchoolTerm::where('start_date_enrollments', '<=', now())
         ->where('end_date_enrollments', '>=', now())->first();
     }
+
+    public static function getOpenSchoolTerm()
+    {
+        return SchoolTerm::where(['status'=>'Aberto'])->first();
+    }
 }

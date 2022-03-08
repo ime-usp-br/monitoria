@@ -50,6 +50,9 @@ class RolesAndPermissionsSeeder extends Seeder
 
         Permission::create(['name' => 'baixar histórico escolar']);
 
+        Permission::create(['name' => 'Selecionar monitor']);
+        Permission::create(['name' => 'Preterir monitor']);
+
         Role::create(['name' => 'Secretaria'])
             ->givePermissionTo('visualizar menu de configuração')
             ->givePermissionTo('editar usuario')
@@ -65,6 +68,8 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('visualizar inscrição')
             ->givePermissionTo('editar inscrição')
             ->givePermissionTo('deletar inscrição')
+            ->givePermissionTo('Eleger monitor')
+            ->givePermissionTo('Preterir monitor')
             ->givePermissionTo('baixar histórico escolar');
 
         Role::create(['name' => 'Docente'])
@@ -87,16 +92,13 @@ class RolesAndPermissionsSeeder extends Seeder
         
         Role::create(['name' => 'Monitor']);
 
-        Role::create(['name' => 'Presidente de Comissão'])
-            ->givePermissionTo('visualizar menu de configuração')
-            ->givePermissionTo('baixar histórico escolar');
+        Role::create(['name' => 'Presidente de Comissão']);
 
-        Role::create(['name' => 'Vice Presidente de Comissão'])
-            ->givePermissionTo('visualizar menu de configuração')
-            ->givePermissionTo('baixar histórico escolar');
+        Role::create(['name' => 'Vice Presidente de Comissão']);
 
         Role::create(['name' => 'Membro Comissão'])
-            ->givePermissionTo('visualizar menu de configuração')
+            ->givePermissionTo('Selecionar monitor')
+            ->givePermissionTo('Preterir monitor')
             ->givePermissionTo('baixar histórico escolar');
 
         Role::create(['name' => 'Administrador'])

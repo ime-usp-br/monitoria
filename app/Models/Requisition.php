@@ -8,6 +8,7 @@ use App\Models\Instructor;
 use App\Models\SchoolClass;
 use App\Models\Activity;
 use App\Models\Recomendation;
+use App\Models\Selection;
 
 class Requisition extends Model
 {
@@ -35,6 +36,11 @@ class Requisition extends Model
     public function recommendations()
     {
         return $this->hasMany(Recommendation::class);
+    }
+
+    public function selections()
+    {
+        return $this->hasMany(Selection::class);
     }
 
     public function isStudentRecommended(Student $student)

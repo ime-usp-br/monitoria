@@ -10,6 +10,7 @@ use App\Http\Controllers\MainController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\SchoolRecordController;
+use App\Http\Controllers\SelectionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,3 +47,6 @@ Route::resource('enrollments', EnrollmentController::class);
 
 Route::post('/schoolrecords/download', [SchoolRecordController::class, 'download'])->name('schoolrecords.download');
 Route::resource('schoolRecords', SchoolRecordController::class);
+
+Route::get('/selections/{schoolclass}/enrollments', [SelectionController::class, 'enrollments'])->name('selections.enrollments');
+Route::resource('selections', SelectionController::class);

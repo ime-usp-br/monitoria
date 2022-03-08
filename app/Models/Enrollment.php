@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Student;
 use App\Models\SchoolClass;
+use App\Models\Selection;
 
 class Enrollment extends Model
 {
@@ -29,5 +30,10 @@ class Enrollment extends Model
     public function schoolclass()
     {
         return $this->belongsTo(SchoolClass::class, 'school_class_id');
+    }
+
+    public function selection()
+    {
+        return $this->hasOne(Selection::class);
     }
 }

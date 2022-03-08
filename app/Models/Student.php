@@ -8,6 +8,7 @@ use Uspdev\Replicado\DB;
 use App\Models\Enrollment;
 use App\Models\SchoolRecord;
 use App\Models\User;
+use App\Models\Selection;
 
 class Student extends Model
 {
@@ -27,6 +28,11 @@ class Student extends Model
     public function schoolrecords()
     {
         return $this->hasMany(SchoolRecord::class);
+    }
+
+    public function selections()
+    {
+        return $this->hasMany(Selection::class);
     }
 
     public function getSchoolRecordFromOpenSchoolTerm()

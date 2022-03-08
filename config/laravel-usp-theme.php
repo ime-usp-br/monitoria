@@ -42,6 +42,11 @@ $menu = [
         'url' => config('app.url') . '/enrollments',
         'can' => 'fazer inscrição',
     ],
+    [
+        'text' => 'Selecionar Monitores',
+        'url' => config('app.url') . '/selections',
+        'can' => 'Selecionar monitor',
+    ],
 ];
 
 $right_menu = [
