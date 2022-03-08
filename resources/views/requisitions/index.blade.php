@@ -8,7 +8,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Solicitação de Monitores</h1>
-            @include('schoolclasses.modals.addSchoolClass')
+            @include('requisitions.modals.addSchoolClass')
 
                 @if (count($turmas) > 0)
                     <p class="alert alert-info rounded-0 text-center">
@@ -41,7 +41,7 @@
             @if (count($turmas) > 0)
 
                 <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
-                    <tr>
+                    <tr class="text-center">
                         <th>Sigla da Disciplina</th>
                         <th>Código da Turma</th>
                         <th>Nome da Disciplina</th>
@@ -49,6 +49,7 @@
                         <th>N.° da Solicitação</th>
                         <th>Data da Solicitação</th>
                         <th>N.° de Monitores</th>
+                        <th>Alunos Indicados</th>
                         <th></th>
                     </tr>
 
@@ -77,10 +78,19 @@
                                     {{$turma->requisition->requested_number}}
                                 @endif
                             </td>
+                            <td class="text-left" style="white-space: nowrap;">
+                                @if($turma->requisition)
+                                    @if($turma->requisition->recommendations)
+                                        @foreach($turma->requisition->recommendations as $indicacao)
+                                            {{ $indicacao->student->nompes }} <br/>
+                                        @endforeach
+                                    @endif
+                                @endif
+                            </td>
                             @if($turma->requisition)
                                 <td class="text-center" style="max-width:200px">
                                     @if($turma->requisition->instructor->codpes == Auth::user()->codpes)
-                                        <a class="btn btn-outline-dark"
+                                        <a class="btn btn-outline-dark btn-sm"
                                             data-toggle="tooltip" data-placement="top"
                                             title="Editar Solicitação"
                                             href="{{ route('requisitions.edit', $turma->requisition) }}"
@@ -97,7 +107,7 @@
                                 <td class="text-center" style="white-space: nowrap;">
                                     <form method="GET" action="{{ route('requisitions.create') }}">
                                         <input type="hidden" name="school_class_id" value="{{ $turma->id }}">
-                                        <button class="btn btn-outline-dark" type="submit">
+                                        <button class="btn btn-outline-dark btn-sm" type="submit" title="Solicitar Monitor">
                                             Solicitar
                                         </button>
                                     </form> 

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
+use App\Http\Requests\IndexStudentRequest;
 use App\Models\Student;
+use App\Models\User;
 use Auth;
 
 class StudentController extends Controller
@@ -14,9 +16,29 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(IndexStudentRequest $request)
     {
-        //
+        $validated = $request->validated();
+        
+        if($request->expectsJson()){
+            if(array_key_exists('codpes', $validated)){
+                $codpes = $validated['codpes'];
+
+                $estudante = Student::getFromReplicadoByCodpes($codpes);
+                if($estudante){
+                    return response()->json($estudante);
+                }
+            }elseif(array_key_exists('nompes', $validated)){
+                $nompes = $validated['nompes'];
+
+                $estudante = Student::getFromReplicadoByNompes($nompes);
+                if($estudante){
+                    return response()->json($estudante);
+                }
+            }
+
+            return response()->json("");
+        }
     }
 
     /**

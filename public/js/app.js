@@ -115,10 +115,93 @@
 
         }
       });
+      $('#btn-chooseRecommendationModal').on('click', function(e) {
+        var codpes = $('#chosen-student:checked').val();
+        var nompes = $("label[for='"+codpes+"']").text();
+        var count = document.getElementById('count-new-recommendation');
+        var id = parseInt(count.value)+1;
+        count.value = id;
+        if(codpes != "" && nompes != ""){
+          var html = ['<div id="indicacao-new'+id+'">',
+              '<input id="recommendations[new'+id+'][codpes]" name="recommendations[new'+id+'][codpes]" type="hidden" value='+codpes+'>',
+              '<label id="label-indicacao-new'+id+'" class="font-weight-normal">'+nompes+'</label>',
+              '<a class="btn btn-link btn-sm text-dark text-decoration-none"',
+              '    style="padding-left:0px"',
+              '    id="btn-remove-indicacao-new'+id+'"',
+              '    onclick="removeRecommendation(\'new'+id+'\')"',
+              '>',
+              '    <i class="fas fa-trash-alt"></i>',
+              '</a>',
+              '<br/>',
+          '</div>'].join("\n");
+          $('#novas-indicacoes').append(html);
+          $('#addRecommendationModal').hide();
+          $('body').removeClass('modal-open');
+          $('.modal-backdrop').remove(); 
+
+        }
+      });
+      $('#btn-addRecommendationModal').on('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var codpes = $('#codpes-add').val();
+        var nompes_modal = $('#nompes-add').val();
+        $('#msn-div').empty();
+        $('#select-student-div').empty();
+        if($.isNumeric(codpes)){
+          $.ajax({
+            url: baseURL + '/students?codpes=' + codpes,
+            dataType: 'json',
+          success: function success(estudante){
+            if(estudante != ""){
+              var label_titulo = "<h4 class='modal-title text-center'>Escolha um aluno</h4>";
+              $('#msn-div').append(label_titulo);
+              $('#btn-addRecommendationModal')
+              var html ="<input class='checkbox' type='radio' id='chosen-student' name='chosen-student' value='"+estudante['codpes']+"'/></input><label for='"+estudante['codpes']+"'> "+estudante['nompes']+"</label><br>"
+              $('#select-student-div').append(html);
+            } else{
+              var error = "<p class='alert alert-warning align-items-center'>Aluno não encontrado</p>";
+              $('#msn-div').append(error);
+            }
+          }
+          });
+        }else if(nompes_modal != ""){
+          $.ajax({
+            url: baseURL + '/students?nompes=' + nompes_modal,
+            dataType: 'json',
+          success: function success(estudantes){
+            if(estudantes != ""){
+              var label_titulo = "<h4 class='modal-title text-center'>Escolha um aluno</h4>";
+              $('#msn-div').append(label_titulo);
+              $('#btn-addRecommendationModal')
+              estudantes.forEach(function (estudante, i){
+                if(i<10){
+                  var html ="<input class='checkbox' type='radio' id='chosen-student' name='chosen-student' value='"+estudante['codpes']+"'/></input><label for='"+estudante['codpes']+"'> "+estudante['nompes']+"</label><br>"
+                  $('#select-student-div').append(html);
+                }
+              })
+            } else{
+              var error = "<p class='alert alert-warning align-items-center'>Aluno não encontrado</p>";
+              $('#msn-div').append(error);
+            }
+          }
+          });
+        }else{
+          var error = "<p class='alert alert-warning align-items-center'>Informe um número USP ou nome válidos</p>";
+          $('#msn-div').append(error);
+
+        }
+      });
       $('#addInstructorModal').on('show.bs.modal', function(e){
         $('#codpes-div').empty();
         $('#codpes-add').val("");
         $('#nompes-add').val("");
+      });
+      $('#addRecommendationModal').on('show.bs.modal', function(e){
+        $('#codpes-add').val("");
+        $('#nompes-add').val("");
+        $('#msn-div').empty();
+        $('#select-student-div').empty();
       });
       $('#removalModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);

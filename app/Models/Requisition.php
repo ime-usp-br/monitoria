@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Instructor;
 use App\Models\SchoolClass;
 use App\Models\Activity;
+use App\Models\Recomendation;
 
 class Requisition extends Model
 {
@@ -29,6 +30,16 @@ class Requisition extends Model
 
     public function activities(){
         return $this->belongsToMany(Activity::class);
+    }
+
+    public function recommendations()
+    {
+        return $this->hasMany(Recommendation::class);
+    }
+
+    public function isStudentRecommended(Student $student)
+    {
+        return $this->recommendations()->whereBelongsTo($student)->first() ? 1 : 0 ;
     }
 
     public function hasActivity($activity){

@@ -10,6 +10,8 @@ use App\Models\SchoolClass;
 use App\Models\SchoolTerm;
 use App\Models\Instructor;
 use App\Models\Activity;
+use App\Models\Recommendation;
+use App\Models\Student;
 use Illuminate\Support\Facades\Gate;
 use Auth;
 use Session;
@@ -79,12 +81,22 @@ class RequisitionController extends Controller
         $activities = $validated['activities'];
         unset($validated['activities']);
 
+        $recommendations = array_key_exists('recommendations', $validated) ? $validated['recommendations'] : [];
+        unset($validated['recommendations']);
+
         $validated['instructor_id'] = Instructor::where(['codpes'=>Auth::user()->codpes])->first()->id;
 
         $requisition = Requisition::create($validated);
 
         foreach($activities as $act){
             $requisition->activities()->attach(Activity::firstOrCreate(['description'=>$act]));
+        }
+
+        foreach($recommendations as $recommendation){
+            Recommendation::create([
+                'student_id'=>Student::firstOrCreate(Student::getFromReplicadoByCodpes($recommendation['codpes']))->id,
+                'requisition_id'=>$requisition->id
+            ]);
         }
 
         return redirect('/requisitions');
@@ -142,9 +154,23 @@ class RequisitionController extends Controller
 
         $validated = $request->validated();
 
+        $activities = $validated['activities'];
+        unset($validated['activities']);
+
+        $recommendations = array_key_exists('recommendations', $validated) ? $validated['recommendations'] : [];
+        unset($validated['recommendations']);
+
         $requisition->activities()->detach();
-        foreach($validated['activities'] as $act){
+        foreach($activities as $act){
             $requisition->activities()->attach(Activity::firstOrCreate(['description'=>$act]));
+        }
+
+        $requisition->recommendations()->delete();
+        foreach($recommendations as $recommendation){
+            Recommendation::create([
+                'student_id'=>Student::firstOrCreate(Student::getFromReplicadoByCodpes($recommendation['codpes']))->id,
+                'requisition_id'=>$requisition->id
+            ]);
         }
 
         $requisition->update($validated);

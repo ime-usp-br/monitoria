@@ -22,7 +22,7 @@
             </p>
 
             @if (count($docente->getRequests()) > 0)
-                <table class="table table-bordered table-striped table-hover">
+                <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
                     <tr class="text-center">
                         <th>Sigla da Disciplina</th>
                         <th>Código da Turma</th>
@@ -31,6 +31,7 @@
                         <th>N.° de Monitores</th>
                         <th>Atividades atribuidas</th>
                         <th>Prioridade</th>
+                        <th>Alunos indicados</th>
                         <th>Inscritos</th>
                     </tr>
 
@@ -51,6 +52,13 @@
                                 @endforeach
                             </td>
                             <td>{{$solicitacao->getPriority()}}</td>
+                            <td class="text-left" style="white-space: nowrap;">
+                                @if($solicitacao->recommendations)
+                                    @foreach($solicitacao->recommendations as $indicacao)
+                                        {{ $indicacao->student->nompes }} <br/>
+                                    @endforeach
+                                @endif
+                            </td>
                             <td class="text-center">
                                 @if($solicitacao->schoolclass->enrollments()->exists())
                                     <a 

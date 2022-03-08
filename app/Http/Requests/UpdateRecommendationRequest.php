@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndexInstructorRequest extends FormRequest
+class UpdateRecommendationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class IndexInstructorRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -23,11 +23,8 @@ class IndexInstructorRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
-            'codpes' => 'sometimes|numeric',
-            'nompes' => 'sometimes',
+        return [
+            //
         ];
-
-        return $rules;
     }
 }

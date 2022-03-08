@@ -11,6 +11,11 @@
                 Formulário de Requisição de Monitor(es)
             </h1>
 
+            <p class="alert alert-info rounded-0 text-center">
+                <b>Atenção:</b>
+                A indicação de alunos é apenas uma sugestão, a escolha final será feita pela comissão de monitoria. 
+            </p>
+
             <form method="POST"
                 action="{{ route('requisitions.store') }}"
             >

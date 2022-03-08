@@ -75,6 +75,49 @@
     </div>
 </div>
 
+@include('requisitions.modals.addRecommendation')
+
+<div class="row custom-form-group align-items-center">
+    <div class="col-12 col-lg-5 text-lg-right">
+        <label >Indicar aluno(s):</label>
+    </div>
+    <div class="col-12 col-md-5">
+        @if($turma->requisition)
+            @foreach($turma->requisition->recommendations as $indicacao)
+                <div id="indicacao-{{ $indicacao->id }}">
+                    <input id="recommendations[{{$indicacao->id}}][codpes]" name="recommendations[{{$indicacao->id}}][codpes]" type="hidden" value="{{ $indicacao->student->codpes }}">
+                    <label id="label-indicacao-{{ $indicacao->id }}" class="font-weight-normal">{{ $indicacao->student->nompes }}</label> 
+                    
+                    <a class="btn btn-link btn-sm text-dark text-decoration-none"
+                        style="padding-left:0px"
+                        id="btn-remove-indicacao-{{ $indicacao->id }}"
+                        onclick="removeRecommendation({{ $indicacao->id }})"
+                        title="Remover"
+                    >
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                    <br/>
+                </div>
+            @endforeach
+        @endif
+
+        <div id="novas-indicacoes"></div>
+        <label class="font-weight-normal">Adicionar aluno</label> 
+        <input id="count-new-recommendation" value=0 type="hidden" disabled>
+        <a class="btn btn-link btn-sm text-dark text-decoration-none" id="btn-addRecommendation" 
+            data-toggle="modal" data-target="#addRecommendationModal"
+            title="Adicionar aluno">
+            <i class="fas fa-plus-circle"></i>
+        </a>
+
+        <script>
+            function removeRecommendation(id){
+                document.getElementById("indicacao-"+id).remove();
+            }
+        </script>
+    </div>
+</div>
+
 <div class="row custom-form-group align-items-center">
     <div class="col-12 col-lg-5 text-lg-right">
         <label for="nomdis">Atividade(s) que pretende atribuir ao(s) monitor(es):</label>

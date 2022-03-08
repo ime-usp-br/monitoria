@@ -9,13 +9,13 @@
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Alunos Inscritos</h1>
             <h4 class='text-center mb-5'>
-                <b>Departamento {{ $turma->department->nomset }}</b> <br>
+                <b>Departamento de {{ $turma->department->nomset }}</b> <br>
                 <b>Disciplina:</b>  {{ $turma->nomdis }} <br>
                 <b>Turma:</b> {{ $turma->codtur }}
             </h4>
 
             @if (count($turma->enrollments) > 0)
-                <table class="table table-bordered table-striped table-hover">
+                <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
                     <tr class="text-center">
                         <th>N.° USP</th>
                         <th>Nome do Aluno</th>
@@ -25,6 +25,7 @@
                         <th>Preferência de trabalhar no período</th>
                         <th>Voluntário</th>
                         <th>Observações</th>
+                        <th>Aluno indicado</th>
                     </tr>
 
                     @foreach($turma->enrollments as $inscricao)
@@ -48,6 +49,11 @@
                             <td class="text-center">{{ $inscricao->preferencia_horario }}</td>
                             <td class="text-center">{{ $inscricao->voluntario ? 'Sim' : 'Não'}}</td>
                             <td class="text-center">{{ $inscricao->observacoes }}</td>
+                            <td>
+                                @if($turma->requisition)
+                                    {{ $turma->requisition->isStudentRecommended($inscricao->student) ? 'Sim' : 'Não' }} <br/>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </table>
