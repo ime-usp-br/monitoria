@@ -63,7 +63,8 @@
     <div class="col-12 col-md-5">
         <div>
             <input class="checkbox" type="checkbox" name="disponibilidade_diurno"
-            value="1" {{ isset($inscricao) ? ($inscricao->disponibilidade_diurno ? 'checked' : '') : '' }}/>
+            value="1" {{ isset($inscricao) ? ($inscricao->disponibilidade_diurno ? 'checked' : '') : 
+                ($estudante->hasEnrollmentinEnrollmentPeriod() ? ($estudante->getEnrollmentsInEnrollmentPeriod()[0]->disponibilidade_diurno ? 'checked' : '') : '')  }}/>
         </div>
     </div>
 </div>
@@ -75,7 +76,8 @@
     <div class="col-12 col-md-5">
         <div>
             <input class="checkbox" type="checkbox" name="disponibilidade_noturno"
-            value="1" {{ isset($inscricao) ? ($inscricao->disponibilidade_noturno ? 'checked' : '') : '' }}/>
+            value="1" {{ isset($inscricao) ? ($inscricao->disponibilidade_noturno ? 'checked' : '') : 
+                ($estudante->hasEnrollmentinEnrollmentPeriod() ? ($estudante->getEnrollmentsInEnrollmentPeriod()[0]->disponibilidade_noturno ? 'checked' : '') : '') }}/>
         </div>
     </div>
 </div>
@@ -90,7 +92,8 @@
             @foreach(['Diurno',
                       'Noturno',
                       'Indiferente'] as $preferencia)
-                <option value="{{ $preferencia }}" {{ isset($inscricao) ? ($inscricao->preferencia_horario==$preferencia ? 'selected' : '') : '' }}>{{ $preferencia }}</option>
+                <option value="{{ $preferencia }}" {{ isset($inscricao) ? ($inscricao->preferencia_horario==$preferencia ? 'selected' : '') : 
+                    ($estudante->hasEnrollmentinEnrollmentPeriod() ? ($estudante->getEnrollmentsInEnrollmentPeriod()[0]->preferencia_horario == $preferencia ? 'selected' : '') : '') }}>{{ $preferencia }}</option>
             @endforeach
         </select>
     </div>
@@ -103,7 +106,7 @@
     <div class="col-12 col-md-5">
         <div>
             <input class="checkbox" type="checkbox" name="voluntario"
-            value="1" {{ isset($inscricao) ? ($inscricao->voluntario ? 'checked' : '') : '' }}/>
+            value="1" {{ isset($inscricao) ? ($inscricao->voluntario ? 'checked' : '') : ($estudante->hasEnrollmentinEnrollmentPeriod() ? ($estudante->getEnrollmentsInEnrollmentPeriod()[0]->voluntario ? 'checked' : '') : '') }}/>
         </div>
     </div>
 </div>

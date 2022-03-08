@@ -93,7 +93,7 @@ class EnrollmentController extends Controller
 
         $validated = $request->validated();
 
-        $validated['student_id'] =Student::where(['codpes'=>Auth::user()->codpes])->first()->id;
+        $validated['student_id'] = Student::where(['codpes'=>Auth::user()->codpes])->first()->id;
         
         $inscricao = Enrollment::create($validated);
 
@@ -128,7 +128,9 @@ class EnrollmentController extends Controller
 
         $inscricao = $enrollment;
 
-        return view('enrollments.edit', compact('inscricao'));
+        $estudante = $enrollment->student;
+
+        return view('enrollments.edit', compact(['inscricao', 'estudante']));
     }
 
     /**

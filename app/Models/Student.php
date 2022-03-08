@@ -35,6 +35,24 @@ class Student extends Model
                         $query->where('status','=', 'Aberto');
                     })->first();
     }
+
+    public function hasEnrollmentInEnrollmentPeriod()
+    {
+        return $this->enrollments()->wherehas('schoolclass', function ($q) {
+                    return $q->whereHas('schoolterm', function($q){ 
+                        return $q->where('start_date_enrollments', '<=', now())->where('end_date_enrollments', '>=', now());
+                    });
+                })->first() ? 1 : 0;
+    }
+
+    public function getEnrollmentsInEnrollmentPeriod()
+    {
+        return $this->enrollments()->wherehas('schoolclass', function ($q) {
+                    return $q->whereHas('schoolterm', function($q){ 
+                        return $q->where('start_date_enrollments', '<=', now())->where('end_date_enrollments', '>=', now());
+                    });
+                })->get();
+    }
     
     public static function getFromReplicadoByCodpes($codpes)
     {
