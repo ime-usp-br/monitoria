@@ -83,6 +83,13 @@ class SchoolClass extends Model
         });
     }
 
+    public static function whereInOpenSchoolTerm()
+    {
+        return SchoolClass::whereHas('schoolterm', function($query){
+            $query->where(['status'=>'Aberto']);
+        });
+    }
+
     public function getEnrollmentByStudent(Student $student)
     {
         return $this->enrollments()->where(['student_id'=>$student->id])->first();

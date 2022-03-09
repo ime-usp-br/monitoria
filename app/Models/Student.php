@@ -9,6 +9,7 @@ use App\Models\Enrollment;
 use App\Models\SchoolRecord;
 use App\Models\User;
 use App\Models\Selection;
+use App\Models\Recommendation;
 
 class Student extends Model
 {
@@ -33,6 +34,25 @@ class Student extends Model
     public function selections()
     {
         return $this->hasMany(Selection::class);
+    }
+
+    public function recommendations()
+    {
+        return $this->hasMany(Recommendation::class);
+    }
+
+    public function hasSelectionInOpenSchoolTerm()
+    {
+        return $this->getSelectionFromOpenSchoolTerm() ? 1 : 0;
+    }
+
+    public function getSelectionFromOpenSchoolTerm()
+    {
+        return $this->selections()->whereHas('schoolclass', function ($query){
+            return $query->whereHas('schoolterm', function ($query){
+                return $query->where(['status'=>'Aberto']);
+            });
+        })->first();
     }
 
     public function getSchoolRecordFromOpenSchoolTerm()

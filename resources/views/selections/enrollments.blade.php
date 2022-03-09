@@ -20,7 +20,7 @@
                         <th>Sigla da Disciplina</th>
                         <th>Horários</th>
                         <th>{{ $turma->requisition->instructor->getPronounTreatment() == "Prof. Dr. " ? "Professor solicitante" : "Professora solicitante" }}</th>
-                        <th>N.° de Monitores</th>
+                        <th>N.° de Monitores Solicitados</th>
                         <th>Atividades atribuidas</th>
                         <th>Prioridade</th>
                         <th>Alunos indicados</th>
@@ -33,9 +33,9 @@
                                 {{ $horario->diasmnocp . ' ' . $horario->horent . ' ' . $horario->horsai }} <br/>
                             @endforeach
                         </td>
-                        <td>{{ $turma->requisition->instructor->getPronounTreatment() . $turma->requisition->instructor->nompes}}</td>
+                        <td style="white-space: nowrap;">{{ $turma->requisition->instructor->getPronounTreatment() . $turma->requisition->instructor->nompes}}</td>
                         <td>{{$turma->requisition->requested_number}}</td>
-                        <td style="white-space: nowrap;">
+                        <td class="text-left"  style="white-space: nowrap;">
                             @foreach($turma->requisition->activities as $atividade)
                                 {{ $atividade->description }} <br/>
                             @endforeach
@@ -55,6 +55,17 @@
                 Alunos Inscritos
             </h4>
 
+            <p class="text-right">
+                <a class="btn btn-primary"
+                    data-toggle="tooltip" data-placement="top"
+                    title="Voltar"
+                    href="{{ route('selections.index') }}"
+                >
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar
+                </a>
+            </p>
+
             @if (count($turma->enrollments) > 0)
                 <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
                     <tr class="text-center">
@@ -71,17 +82,17 @@
                         <th></th>
                     </tr>
 
-                    @foreach($turma->enrollments as $inscricao)
+                    @foreach($inscricoes as $inscricao)
                         <tr class="text-center">
                             <td >{{ $inscricao->student->codpes }}</td>
-                            <td class="text-left" style="white-space: nowrap;">{{ $inscricao->student->nompes }}</td>
+                            <td class="text-left" style="{{ $inscricao->hasOtherSelectionInOpenSchoolTerm() ? 'text-decoration: Line-Through;white-space: nowrap;' : 'white-space: nowrap;'}}">{{ $inscricao->student->nompes }}</td>
                             <td>
                                 <form method="POST" action="{{ route('schoolrecords.download') }}" target="_blank">
                                     @csrf
                                     <input type='hidden' name='path' value="{{ $inscricao->student->getSchoolRecordFromOpenSchoolTerm()->file_path }}">
                                     <button class="btn btn-link"
                                         data-toggle="tooltip" data-placement="top"
-                                        title="Download"
+                                        title="Baixar Histórico Escolar"
                                     >
                                         Download
                                     </button>
@@ -100,13 +111,16 @@
                             <td>
                                 <b>{{ $inscricao->selection ? 'Sim' : 'Não' }}</b> 
                             </td>
-                            <td>
+                            <td style="text-decoration-skip: all;">
+                                
                                 @if($inscricao->selection)
                                     <form method="POST" action="{{ route('selections.destroy', $inscricao->selection) }}">
                                         @method('delete')
                                         @csrf
                                         <button class='btn btn-outline-danger btn-sm'> Preterir Monitor</button>
                                     </form>
+                                @elseif($inscricao->hasOtherSelectionInOpenSchoolTerm())
+                                    Já foi eleito monitor
                                 @else
                                     <form method="POST"
                                         action="{{ route('selections.store') }}"

@@ -36,4 +36,15 @@ class Enrollment extends Model
     {
         return $this->hasOne(Selection::class);
     }
+
+    public function hasOtherSelectionInOpenSchoolTerm()
+    {
+        $schoolclass_id = $this->school_class_id;
+        return $this->student->selections()->whereHas('schoolclass', function ($query) use ($schoolclass_id){
+            return $query->where('id', '!=', $schoolclass_id)
+                         ->whereHas('schoolterm', function($query){
+                            $query->where(['status'=>'Aberto']);
+                        });
+        })->first() ? 1 : 0;
+    }
 }

@@ -24,7 +24,7 @@
                         <th>Professor(a) Solicitante</th>
                         <th>N.° de Monitores Solicitados</th>
                         <th>Monitores Eleitos</th>
-                        <th>Inscritos</th>
+                        <th></th>
                     </tr>
 
                     @foreach($solicitacoes as $solicitacao)

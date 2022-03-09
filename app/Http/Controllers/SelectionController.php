@@ -161,6 +161,18 @@ class SelectionController extends Controller
 
         $turma = $schoolclass;
 
-        return view('selections.enrollments', compact('turma'));
+        $inscricoes = $schoolclass->enrollments()->whereHas('selection')
+            ->union(
+                $schoolclass->enrollments()->whereDoesntHave('selection')
+                            ->whereHas('student.recommendations.requisition', function ($query) use ($turma){
+                                return $query->whereBelongsTo($turma);
+                            }))
+            ->union(
+                $schoolclass->enrollments()->whereDoesnthave('selection')
+                            ->whereDoesntHave('student.recommendations.requisition', function ($query) use ($turma){
+                                return $query->whereBelongsTo($turma);
+                            }))->get();
+
+        return view('selections.enrollments', compact(['turma', 'inscricoes']));
     }
 }
