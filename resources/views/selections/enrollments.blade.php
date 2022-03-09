@@ -64,7 +64,15 @@
                     <i class="fas fa-arrow-left"></i>
                     Voltar
                 </a>
+
+                <a class="btn btn-primary"
+                    data-toggle="modal" data-target="#selectUnenrolledStudentModal"
+                    title="Eleger como monitor aluno não inscrito na Turma">
+                    Eleger Não Inscrito
+                </a>
             </p>
+
+            @include('selections.modals.selectUnenrolledStudentModal')
 
             @if (count($turma->enrollments) > 0)
                 <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
@@ -120,7 +128,9 @@
                                         <button class='btn btn-outline-danger btn-sm'> Preterir Monitor</button>
                                     </form>
                                 @elseif($inscricao->hasOtherSelectionInOpenSchoolTerm())
-                                    Já foi eleito monitor
+                                    Já foi eleito monitor da turma 
+                                    {{ $inscricao->student->getSelectionFromOpenSchoolTerm()->schoolclass->codtur }} da disciplina 
+                                    {{ $inscricao->student->getSelectionFromOpenSchoolTerm()->schoolclass->coddis }}
                                 @else
                                     <form method="POST"
                                         action="{{ route('selections.store') }}"

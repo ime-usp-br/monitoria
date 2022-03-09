@@ -48,5 +48,6 @@ Route::resource('enrollments', EnrollmentController::class);
 Route::post('/schoolrecords/download', [SchoolRecordController::class, 'download'])->name('schoolrecords.download');
 Route::resource('schoolRecords', SchoolRecordController::class);
 
+Route::post('/selections/selectunenrolled', [SelectionController::class, 'selectUnenrolled'])->name('selections.selectunenrolled');
 Route::get('/selections/{schoolclass}/enrollments', [SelectionController::class, 'enrollments'])->name('selections.enrollments');
 Route::resource('selections', SelectionController::class);

@@ -189,7 +189,55 @@
         }else{
           var error = "<p class='alert alert-warning align-items-center'>Informe um número USP ou nome válidos</p>";
           $('#msn-div').append(error);
-
+        }
+      });$('#btn-searchSelectModal').on('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var codpes = $('#codpes-select').val();
+        var nompes_modal = $('#nompes-select').val();
+        $('#msn-div').empty();
+        $('#select-student-div').empty();
+        if($.isNumeric(codpes)){
+          $.ajax({
+            url: baseURL + '/students?codpes=' + codpes,
+            dataType: 'json',
+          success: function success(estudante){
+            if(estudante != ""){
+              var label_titulo = "<h4 class='modal-title text-center'>Escolha um aluno</h4>";
+              $('#msn-div').append(label_titulo);
+              $('#btn-addRecommendationModal')
+              var html ="<input class='checkbox' type='radio' id='codpes' name='codpes' value='"+estudante['codpes']+"'/></input><label> "+estudante['nompes']+" N.° USP "+estudante['codpes']+"</label><br>"
+              $('#select-student-div').append(html);
+            } else{
+              var error = "<p class='alert alert-warning align-items-center'>Aluno não encontrado</p>";
+              $('#msn-div').append(error);
+            }
+          }
+          });
+        }else if(nompes_modal != ""){
+          $.ajax({
+            url: baseURL + '/students?nompes=' + nompes_modal,
+            dataType: 'json',
+          success: function success(estudantes){
+            if(estudantes != ""){
+              var label_titulo = "<h4 class='modal-title text-center'>Escolha um aluno</h4>";
+              $('#msn-div').append(label_titulo);
+              $('#btn-addRecommendationModal')
+              estudantes.forEach(function (estudante, i){
+                if(i<10){
+                  var html ="<input class='checkbox' type='radio' id='codpes' name='codpes' value='"+estudante['codpes']+"'/></input><label> "+estudante['nompes']+" N.° USP "+estudante['codpes']+"</label><br>"
+                  $('#select-student-div').append(html);
+                }
+              })
+            } else{
+              var error = "<p class='alert alert-warning align-items-center'>Aluno não encontrado</p>";
+              $('#msn-div').append(error);
+            }
+          }
+          });
+        }else{
+          var error = "<p class='alert alert-warning align-items-center'>Informe um número USP ou nome válidos</p>";
+          $('#msn-div').append(error);
         }
       });
       $('#addInstructorModal').on('show.bs.modal', function(e){
@@ -200,6 +248,12 @@
       $('#addRecommendationModal').on('show.bs.modal', function(e){
         $('#codpes-add').val("");
         $('#nompes-add').val("");
+        $('#msn-div').empty();
+        $('#select-student-div').empty();
+      });
+      $('#selectUnenrolledStudentModal').on('show.bs.modal', function(e){
+        $('#codpes-select').val("");
+        $('#nompes-select').val("");
         $('#msn-div').empty();
         $('#select-student-div').empty();
       });

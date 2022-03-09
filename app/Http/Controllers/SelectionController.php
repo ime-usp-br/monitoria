@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSelectionRequest;
 use App\Http\Requests\UpdateSelectionRequest;
+use App\Http\Requests\SelectUnenrolledSelectionRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Selection;
@@ -12,6 +13,8 @@ use App\Models\Requisition;
 use App\Models\SchoolTerm;
 use App\Models\SchoolClass;
 use App\Models\Enrollment;
+use App\Models\Student;
+use Session;
 
 class SelectionController extends Controller
 {
@@ -87,7 +90,6 @@ class SelectionController extends Controller
             abort(403);
         }
 
-
         return back();
     }
 
@@ -162,8 +164,14 @@ class SelectionController extends Controller
         $turma = $schoolclass;
 
         $inscricoes = $schoolclass->enrollments()->whereHas('selection')
+                                                 ->whereDoesntHave('student.selections.schoolclass', function ($query) use ($turma){
+                                                     return $query->where('id', '!=', $turma->id);
+                                                 })
             ->union(
                 $schoolclass->enrollments()->whereDoesntHave('selection')
+                            ->whereDoesntHave('student.selections.schoolclass', function ($query) use ($turma){
+                                return $query->where('id', '!=', $turma->id);
+                            })
                             ->whereHas('student.recommendations.requisition', function ($query) use ($turma){
                                 return $query->whereBelongsTo($turma);
                             }))
@@ -171,8 +179,70 @@ class SelectionController extends Controller
                 $schoolclass->enrollments()->whereDoesnthave('selection')
                             ->whereDoesntHave('student.recommendations.requisition', function ($query) use ($turma){
                                 return $query->whereBelongsTo($turma);
-                            }))->get();
+                            })
+                            ->whereDoesntHave('student.selections.schoolclass', function ($query) use ($turma){
+                                return $query->where('id', '!=', $turma->id);
+                            }))
+            ->union(
+                $schoolclass->enrollments()->whereHas('student.selections.schoolclass', function ($query) use ($turma){
+                                return $query->where('id', '!=', $turma->id);
+                            })
+            )->get();
 
         return view('selections.enrollments', compact(['turma', 'inscricoes']));
+    }
+
+    public function selectUnenrolled(SelectUnenrolledSelectionRequest $request){
+        $validated = $request->validated();
+        
+        $estudante = Student::firstOrCreate(Student::getFromReplicadoByCodpes($validated['codpes']));
+        $validated['student_id'] = $estudante->id;
+        unset($validated['codpes']);
+
+        if(Enrollment::where(['school_class_id'=>$validated['school_class_id'],
+                             'student_id'=>$validated['student_id']])->first()){
+            Session::flash('alert-warning', 'O aluno já está inscrito nesta turma, caso ele não 
+                esteja na lista de inscritos, entrar em contato com a Secretaria de Monitoria');
+            return back();
+        }elseif($estudante->hasSelectionInOpenSchoolTerm()){
+            Session::flash('alert-warning', 'Este aluno já foi eleito monitor da turma ' . 
+                $estudante->getSelectionFromOpenSchoolTerm()->schoolclass->codtur . ' da disciplina ' .
+                $estudante->getSelectionFromOpenSchoolTerm()->schoolclass->coddis);
+            return back();
+        }elseif(!$estudante->getSchoolRecordFromOpenSchoolTerm()){
+            Session::flash('alert-warning', 'Este aluno não subiu o histórico escolar no período letivo virgente');
+            return back();
+        }
+
+        $validated['codpescad'] = Auth::user()->codpes;
+
+        $inscricao = Enrollment::create([
+            'student_id'=>$validated['student_id'],
+            'school_class_id' => $validated['school_class_id'],
+            'disponibilidade_diurno' => 0,
+            'disponibilidade_noturno' => 0,
+            'voluntario' => 0,
+            'observacoes' => 'Eleição feita sem inscrição por ' . Auth::user()->name,
+            'preferencia_horario' => 'Indiferente',
+        ]);
+
+        $validated['enrollment_id'] = $inscricao->id;
+
+        $validated['requisition_id'] = SchoolClass::where(['id'=>$validated['school_class_id']])->first()->requisition->id;
+
+        if(Auth::user()->hasRole('Membro Comissão')){
+            $docente = Instructor::where(['codpes'=>Auth::user()->codpes])->first();
+            if($inscricao->schoolclass->department == $docente->department){
+                $selecao = Selection::firstOrCreate($validated);
+            }else{
+                abort(403);
+            }
+        }elseif(Auth::user()->hasRole(['Secretaria', 'Administrador'])){
+            $selecao = Selection::firstOrCreate($validated);
+        }else{
+            abort(403);
+        }
+
+        return back();
     }
 }
