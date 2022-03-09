@@ -47,17 +47,13 @@
                                 @endif
                             </td>
                             <td>
-                                @if($solicitacao->schoolclass->enrollments()->exists())
-                                    <a class='btn btn-outline-dark btn-sm'
-                                        data-toggle="tooltip" data-placement="top"
-                                        title="Ver Inscritos"
-                                        href="{{ route('selections.enrollments', $solicitacao->schoolclass) }}"
-                                    >
-                                        Ver Inscritos
-                                    </a>
-                                @else
-                                    Nenhuma Inscrição
-                                @endif
+                                <a class='btn btn-outline-dark btn-sm'
+                                    data-toggle="tooltip" data-placement="top"
+                                    title="Ver Inscritos"
+                                    href="{{ route('selections.enrollments', $solicitacao->schoolclass) }}"
+                                >
+                                    Ver Inscritos
+                                </a>
                             </td>
                         </tr>
                     @endforeach

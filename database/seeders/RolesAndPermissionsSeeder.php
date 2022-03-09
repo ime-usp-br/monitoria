@@ -68,7 +68,7 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('visualizar inscrição')
             ->givePermissionTo('editar inscrição')
             ->givePermissionTo('deletar inscrição')
-            ->givePermissionTo('Eleger monitor')
+            ->givePermissionTo('Selecionar monitor')
             ->givePermissionTo('Preterir monitor')
             ->givePermissionTo('baixar histórico escolar');
 
