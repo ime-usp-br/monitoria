@@ -6,6 +6,7 @@ use App\Http\Requests\StoreSchoolClassRequest;
 use App\Http\Requests\UpdateSchoolClassRequest;
 use App\Http\Requests\CreateSchoolClassRequest;
 use App\Http\Requests\SearchSchoolClassRequest;
+use App\Jobs\ProcessGetSchoolClassesFromReplicado;
 use App\Models\SchoolClass;
 use App\Models\Instructor;
 use App\Models\ClassSchedule;
@@ -197,24 +198,29 @@ class SchoolClassController extends Controller
         }
 
         $validated = $request->validated();
-        $schoolTerm = SchoolTerm::find($validated["periodoId"]);
-        $turmas = SchoolClass::getFromReplicadoBySchoolTerm($schoolTerm);
-        foreach($turmas as $turma){
-            $schoolclass = SchoolClass::where(array_intersect_key($turma, array_flip(array('codtur', 'coddis'))))->first();
-
-            if(!$schoolclass){
-                $schoolclass = new SchoolClass;
-                $schoolclass->fill($turma);
-                $schoolclass->save();
+        $schoolTerm = SchoolTerm::where(['id'=>$validated["periodoId"]])->first();
         
-                foreach($turma['instructors'] as $instructor){
-                    $schoolclass->instructors()->attach(Instructor::firstOrCreate($instructor));
-                }
+        if(env('IS_SUPERVISOR_CONFIG')){
+            Session::flash('alert-warning', 'A importação das turmas está rodando em background, atualize a pagina para ver o progresso.');
+            ProcessGetSchoolClassesFromReplicado::dispatch($schoolTerm);
+        }else{
+            foreach($turmas as $turma){
+                $schoolclass = SchoolClass::where(array_intersect_key($turma, array_flip(array('codtur', 'coddis'))))->first();
     
-                foreach($turma['class_schedules'] as $classSchedule){
-                    $schoolclass->classschedules()->attach(ClassSchedule::firstOrCreate($classSchedule));
+                if(!$schoolclass){
+                    $schoolclass = new SchoolClass;
+                    $schoolclass->fill($turma);
+                    $schoolclass->save();
+            
+                    foreach($turma['instructors'] as $instructor){
+                        $schoolclass->instructors()->attach(Instructor::firstOrCreate($instructor));
+                    }
+        
+                    foreach($turma['class_schedules'] as $classSchedule){
+                        $schoolclass->classschedules()->attach(ClassSchedule::firstOrCreate($classSchedule));
+                    }
+                    $schoolclass->save();
                 }
-                $schoolclass->save();
             }
         }
 
