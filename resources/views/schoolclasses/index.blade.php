@@ -8,35 +8,44 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Turmas</h1>
-
+ 
+            <div id="progressbar-div">
+            </div>
+            <br>
             @include('schoolclasses.modals.import')
             @include('schoolclasses.modals.addSchoolClass')
             <p class="text-right">
                 @if(Auth::user()->hasPermissionTo('criar turma'))
-                <a class="btn btn-primary"
-                    data-toggle="modal"
-                    data-target="#addSchoolClassModal"
-                    title="Cadastrar" 
-                >
-                    <i class="fas fa-plus-circle"></i>
-                    Cadastrar
-                </a>
+                    <a  id="btn-addModal"
+                        class="btn btn-primary"
+                        data-toggle="modal"
+                        data-target="#addSchoolClassModal"
+                        title="Cadastrar" 
+                    >
+                        <i class="fas fa-plus-circle"></i>
+                        Cadastrar
+                    </a>
                 @endif
                 @if(Auth::user()->hasPermissionTo('importar turmas do replicado'))
-                <a class="btn btn-primary"
-                    data-toggle="modal"
-                    data-target="#importSchoolClassModal"
-                    title="Importar" 
-                >
-                    <i class="fas fa-file-upload"></i>
-                    Importar do Jupiter
-                </a>
+                    <a  id="btn-importModal"
+                        class="btn btn-primary"
+                        data-toggle="modal"
+                        data-target="#importSchoolClassModal"
+                        title="Importar" 
+                    >
+                        <i class="fas fa-file-upload"></i>
+                        Importar do Jupiter
+                    </a>
                 @endif
                 @if(Auth::user()->hasPermissionTo('buscar turmas'))
-                <button class="btn btn-primary" id="btn-search" data-toggle="modal" data-target="#schoolclassesSearchModal">
-                    <i class="fas fa-search"></i>
-                    Buscar
-                </button>
+                    <a  id="btn-searchModal" 
+                        class="btn btn-primary" 
+                        data-toggle="modal" 
+                        data-target="#schoolclassesSearchModal"
+                    >
+                        <i class="fas fa-search"></i>
+                        Buscar
+                    </a>
                 @endif
             </p>
             @include('schoolclasses.modals.search')
@@ -54,7 +63,7 @@
                         <th>Início</th>
                         <th>Fim</th>
                         @if(Auth::user()->hasPermissionTo('editar turma') || Auth::user()->hasPermissionTo('deletar turma'))
-                        <th></th>
+                            <th></th>
                         @endif
                     </tr>
 
@@ -80,26 +89,26 @@
                             @if(Auth::user()->hasPermissionTo('editar turma') || Auth::user()->hasPermissionTo('deletar turma'))
                             <td class="text-center" style="white-space: nowrap;">
                                 @if(Auth::user()->hasPermissionTo('editar turma'))
-                                <a class="text-dark text-decoration-none"
-                                    data-toggle="tooltip" data-placement="top"
-                                    title="Editar"
-                                    href="{{ route('schoolclasses.edit', $turma) }}"
-                                >
-                                    <i class="fas fa-edit"></i>
-                                </a>
+                                    <a class="text-dark text-decoration-none"
+                                        data-toggle="tooltip" data-placement="top"
+                                        title="Editar"
+                                        href="{{ route('schoolclasses.edit', $turma) }}"
+                                    >
+                                        <i class="fas fa-edit"></i>
+                                    </a>
                                 @endif
                                 @if(Auth::user()->hasPermissionTo('deletar turma'))
-                                <a class="text-dark text-decoration-none"
-                                    data-toggle="modal"
-                                    data-target="#removalModal"
-                                    title="Remover"
-                                    href="{{ route(
-                                        'schoolclasses.destroy',
-                                        $turma
-                                    ) }}"
-                                >
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>
+                                    <a class="text-dark text-decoration-none"
+                                        data-toggle="modal"
+                                        data-target="#removalModal"
+                                        title="Remover"
+                                        href="{{ route(
+                                            'schoolclasses.destroy',
+                                            $turma
+                                        ) }}"
+                                    >
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
                                 @endif
                             </td>
                             @endif
@@ -113,4 +122,42 @@
         </div>
     </div>
 </div>
+@endsection
+
+
+@section('javascripts_bottom')
+    <script>
+        $( function() {        
+            function progress() {
+                $.ajax({
+                    url: window.location.origin+'/monitor/getimportschoolclassesjob',
+                    dataType: 'json',
+                    success: function success(json){
+                        if('progress' in json){
+                            if(document.getElementById('progressbar')){
+                                $( "#progressbar" ).progressbar( "value", json['progress'] );
+                            }else if(json['progress'] != 100){
+                                document.getElementById("btn-searchModal").disabled = true;
+                                document.getElementById("btn-addModal").disabled = true;
+                                document.getElementById("btn-importModal").disabled = true;
+                                $('#progressbar-div').append("<div id='progressbar'><div class='progress-label'></div></div>");
+                                var progressbar = $( "#progressbar" ),
+                                progressLabel = $( ".progress-label" );
+                                progressbar.progressbar({
+                                value: false,
+                                change: function() {
+                                    progressLabel.text( progressbar.progressbar( "value" ) + "%" );
+                                },
+                                complete: function() {
+                                    document.location.reload(true);
+                                }
+                                });
+                            }
+                        }
+                        setTimeout( progress, 1000 );
+                    }});
+            }        
+            setTimeout( progress, 50 );
+        });
+    </script>
 @endsection

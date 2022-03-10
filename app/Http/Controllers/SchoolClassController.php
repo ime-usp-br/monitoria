@@ -201,7 +201,6 @@ class SchoolClassController extends Controller
         $schoolTerm = SchoolTerm::where(['id'=>$validated["periodoId"]])->first();
         
         if(env('IS_SUPERVISOR_CONFIG')){
-            Session::flash('alert-warning', 'A importação das turmas está rodando em background, atualize a pagina para ver o progresso.');
             ProcessGetSchoolClassesFromReplicado::dispatch($schoolTerm);
         }else{
             foreach($turmas as $turma){

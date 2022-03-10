@@ -80,4 +80,16 @@ input[type=file].custom-form-input:hover::file-selector-button {
   background-color: #0069d9;
   border-color: #0062cc;
 	color: white;
+}  
+
+.ui-progressbar {
+  position: relative;
+}
+
+.progress-label {
+  position: absolute;
+  left: 50%;
+  top: 4px;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 #fff;
 }

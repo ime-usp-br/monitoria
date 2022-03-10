@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use romanzipp\QueueMonitor\Traits\IsMonitored;
 use App\Models\SchoolTerm;
 use App\Models\SchoolClass;
 use App\Models\ClassSchedule;
@@ -15,7 +16,7 @@ use App\Models\Instructor;
 
 class ProcessGetSchoolClassesFromReplicado implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, IsMonitored;
 
     private $schoolterm;
     /**
@@ -28,6 +29,11 @@ class ProcessGetSchoolClassesFromReplicado implements ShouldQueue
         $this->schoolterm = $schoolterm;
     }
 
+    public function progressCooldown(): int
+    {
+        return 1; 
+    }
+
     /**
      * Execute the job.
      *
@@ -35,7 +41,14 @@ class ProcessGetSchoolClassesFromReplicado implements ShouldQueue
      */
     public function handle()
     {
+        $this->queueProgress(0);
+
         $turmas = SchoolClass::getFromReplicadoBySchoolTerm($this->schoolterm);
+
+        $this->queueProgress(20);
+        $t = count($turmas);
+        $n = 0;
+
         foreach($turmas as $turma){
             $schoolclass = SchoolClass::where(array_intersect_key($turma, array_flip(array('codtur', 'coddis'))))->first();
 
@@ -53,6 +66,8 @@ class ProcessGetSchoolClassesFromReplicado implements ShouldQueue
                 }
                 $schoolclass->save();
             }
+            $n += 1;
+            $this->queueProgress(20 + floor($n*80/$t));
         }
     }
 }
