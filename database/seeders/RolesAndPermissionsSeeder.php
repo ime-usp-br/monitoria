@@ -53,6 +53,8 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'Selecionar monitor']);
         Permission::create(['name' => 'Preterir monitor']);
 
+        Permission::create(['name' => 'Disparar emails']);
+
         Role::create(['name' => 'Secretaria'])
             ->givePermissionTo('visualizar menu de configuração')
             ->givePermissionTo('editar usuario')
@@ -70,6 +72,7 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('deletar inscrição')
             ->givePermissionTo('Selecionar monitor')
             ->givePermissionTo('Preterir monitor')
+            ->givePermissionTo('Disparar emails')
             ->givePermissionTo('baixar histórico escolar');
 
         Role::create(['name' => 'Docente'])

@@ -12,6 +12,7 @@ use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\SchoolRecordController;
 use App\Http\Controllers\SelectionController;
 use App\Http\Controllers\MonitorController;
+use App\Http\Controllers\EmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,3 +55,7 @@ Route::get('/selections/{schoolclass}/enrollments', [SelectionController::class,
 Route::resource('selections', SelectionController::class);
 
 Route::get('/monitor/getimportschoolclassesjob', [MonitorController::class, 'getImportSchoolClassesJob']);
+
+Route::get('/emails', [EmailController::class, 'index'])->name('emails.index');
+Route::post('/emails/dispatch', [EmailController::class, 'dispatchForAll'])->name('emails.dispatch');
+

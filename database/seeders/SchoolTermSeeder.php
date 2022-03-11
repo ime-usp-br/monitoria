@@ -23,9 +23,9 @@ class SchoolTermSeeder extends Seeder
         $schoolTerm->started_at = "2022-03-14";
         $schoolTerm->finished_at = "2022-07-30";
         $schoolTerm->start_date_requisitions = "2022-02-01";
-        $schoolTerm->end_date_requisitions = "2022-02-30";
+        $schoolTerm->end_date_requisitions = "2022-03S-30";
         $schoolTerm->start_date_enrollments = "2022-02-01";
-        $schoolTerm->end_date_enrollments = "2022-02-30";
+        $schoolTerm->end_date_enrollments = "2022-03-30";
         $schoolTerm->save();
 
 

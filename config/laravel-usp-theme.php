@@ -47,6 +47,11 @@ $menu = [
         'url' => config('app.url') . '/selections',
         'can' => 'Selecionar monitor',
     ],
+    [
+        'text' => 'Disparar E-mails',
+        'url' => config('app.url') . '/emails',
+        'can' => 'Disparar emails',
+    ],
 ];
 
 $right_menu = [
