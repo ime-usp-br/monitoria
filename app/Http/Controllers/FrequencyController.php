@@ -70,7 +70,7 @@ class FrequencyController extends Controller
      */
     public function update(UpdateFrequencyRequest $request, Frequency $frequency)
     {
-        $frequency->registered = TRUE;
+        $frequency->registered  = !$frequency->registered;
         $frequency->save();
         return back();
     }

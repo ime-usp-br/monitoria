@@ -29,20 +29,20 @@
                         <tr style="font-size:12px;">
                             <td>{{ $frequencia->created_at->format('Y') }}</td>
                             <td>{{ $frequencia->created_at->format('m') }}</td>
-                            @if($frequencia->registered)
-                                <td>Registrada <i class="fa fa-check" aria-hidden="true"></i></td>
-                            @else
-                                <form action="/frequencies/{{$frequencia->id}}" method="POST">
-                                    @csrf
-                                    @method('patch')
-                                    <td><button type="submit" class="btn btn-outline-dark btn-sm">Registrar</button></td>
-                                </form>
-                            @endif
+                            <form action="/frequencies/{{$frequencia->id}}" method="POST">
+                                @csrf
+                                @method('patch')
+                                @if($frequencia->registered)
+                                    <td><button type="submit" class="btn btn-outline-success btn-sm">Sim</button></td>
+                                @else  
+                                    <td><button type="submit" class="btn btn-outline-danger btn-sm">Não</button></td>
+                                @endif
+                            </form>
                         </tr>
                     @endforeach
                 </table>
             @else
-                <p class="text-center">Esta turma não possui monitores.</p>
+                <p class="text-center">Este monitor não possui frequências para serem registradas.</p>
             @endif
         </div>
     </div>
