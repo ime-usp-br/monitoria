@@ -13,6 +13,7 @@ use App\Http\Controllers\SchoolRecordController;
 use App\Http\Controllers\SelectionController;
 use App\Http\Controllers\MonitorController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\FrequencyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,8 @@ Route::resource('schoolterms', SchoolTermController::class);
 Route::get('/schoolclasses/{schoolclass}/enrollments', [SchoolClassController::class, 'enrollments'])->name('schoolclasses.enrollments');
 Route::get('/schoolclasses/search', [SchoolClassController::class, 'search'])->name('schoolclasses.search');
 Route::patch('/schoolclasses/import', [SchoolClassController::class, 'import'])->name('schoolclasses.import');
+Route::get('/schoolclasses/{schoolclass}/electedTutors', [SchoolClassController::class, 'electedTutors'])->name('schoolclasses.electedTutors');
+Route::get('/schoolclasses/{schoolclass}/electedTutors/{tutor}/frequencies', [SchoolClassController::class, 'showFrequencies'])->name('schoolclasses.showFrequencies');
 Route::resource('schoolclasses', SchoolClassController::class);
 
 Route::get('/instructors/{instructor}/requisitions', [InstructorController::class, 'requisitions'])->name('instructors.requisitions');
@@ -59,3 +62,4 @@ Route::get('/monitor/getimportschoolclassesjob', [MonitorController::class, 'get
 Route::get('/emails', [EmailController::class, 'index'])->name('emails.index');
 Route::post('/emails/dispatch', [EmailController::class, 'dispatchForAll'])->name('emails.dispatch');
 
+Route::resource('frequencies', FrequencyController::class);
