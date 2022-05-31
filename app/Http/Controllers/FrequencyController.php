@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreFrequencyRequest;
 use App\Http\Requests\UpdateFrequencyRequest;
 use App\Models\Frequency;
+use Auth;
+use Illuminate\Support\Facades\Gate;
 
 class FrequencyController extends Controller
 {
@@ -70,6 +72,12 @@ class FrequencyController extends Controller
      */
     public function update(UpdateFrequencyRequest $request, Frequency $frequency)
     {
+        if(!Gate::allows('registrar frequencia')){
+            abort(403);
+        }elseif(Auth::user()->hasRole("Docente") && !$frequency->schoolclass->isInstructor(Auth::user()->codpes)){
+            abort(403);
+        }
+
         $frequency->registered  = !$frequency->registered;
         $frequency->save();
         return back();

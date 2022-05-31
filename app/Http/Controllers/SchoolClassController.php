@@ -232,7 +232,7 @@ class SchoolClassController extends Controller
 
     public function search(SearchSchoolClassRequest $request)
     {
-        if(!Gate::allows('visualizar inscrição')){
+        if(!Gate::allows('visualizar turma')){
             abort(403);
         }
 
@@ -252,20 +252,37 @@ class SchoolClassController extends Controller
 
     public function enrollments(SchoolClass $schoolclass)
     {
+        if(!Gate::allows('visualizar inscrição')){
+            abort(403);
+        }
+
         $turma = $schoolclass;
 
         return view('schoolclasses.enrollments', compact('turma'));
     }
 
-    public function electedTutors($schoolclass){        
+    public function electedTutors($schoolclass){   
+        if(!Gate::allows('registrar frequencia')){
+            abort(403);
+        }
+
         $turma = SchoolClass::find($schoolclass);
-        
+
         return view('schoolclasses.electedTutors', [
             'turma' => $turma,
         ]);
+        
     }
 
-    public function showFrequencies($schoolclass, $tutor){
+    public function showFrequencies($schoolclass, $tutor, Request $request){
+        if(Auth::check()){
+            if(!Gate::allows('registrar frequencia')){
+                abort(403);
+            }
+        }elseif(!$request->hasValidSignature()){
+            abort(403);
+        }
+
         $monitor = Student::find($tutor);
         $turma = SchoolClass::find($schoolclass);
 
@@ -273,5 +290,6 @@ class SchoolClassController extends Controller
             'monitor' => $monitor,
             'turma' => $turma
         ]);
+
     }
 }

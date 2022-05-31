@@ -8,6 +8,7 @@ use App\Models\SchoolTerm;
 use App\Models\Frequency;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NotifyInstructorAboutAttendanceRecord;
+use \Illuminate\Support\Facades\URL;
 
 class Kernel extends ConsoleKernel
 {
@@ -36,11 +37,15 @@ class Kernel extends ConsoleKernel
                 foreach($eleicoes as $eleicao){
                     $frequencia = new Frequency();
                     $frequencia->student_id = $eleicao->student->id;
+                    $frequencia->school_class_id = $turma->id;
+                    $frequencia->month = date("m");
                     $frequencia->save();
-                    Mail::to($turma->instructor->codema)->send(new NotifyInstructorAboutAttendanceRecord($turma, $eleicao->student, $frequencia->created_at->format('m'), $periodo[0]->year, $periodo[0]->period));
+                    Mail::to($eleicao->requisition->instructor->codema)->send(new NotifyInstructorAboutAttendanceRecord($turma, 
+                        $eleicao->student, $frequencia->month, $periodo[0]->year, $periodo[0]->period,
+                        URL::signedRoute('schoolclasses.showFrequencies', ['schoolclass'=>$turma->id,'tutor'=>$eleicao->student->id])));
                 }
             }
-        })->monthlyOn(25, '00:00');
+        })->monthlyOn(20, '08:00');
     }
 
     /**

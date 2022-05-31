@@ -3,11 +3,9 @@
         <p>A{{ $instructor->getPronounTreatment() == 'Prof. Dr. ' ? 'o' : ''}} {{ $instructor->getPronounTreatment() }} {{ $instructor->nompes }},</p>
         <p></p>
         <p>
-            Informamos que já é possível registrar a frequência do monitor {{$student->nompes}} da disciplina {{$schoolclass->nomdis}} turma {{$schoolclass->codtur}} referente ao mês {{$month}} do {{$period}} de {{$year}}.
+            Informamos que já é possível <a href="{{ $link }}">registrar a frequência do monitor</a> <strong>{{$student->nompes}}</strong> da disciplina <strong>{{$schoolclass->nomdis}}</strong> turma <strong>{{$schoolclass->codtur}}</strong> referente ao mês {{$month}} do {{$period}} de {{$year}}.
         </p>
-        <p></p>
-        <p>Segue o contato do{{ $plural ? 's' : '' }} monitor{{ $plural ? 'es' : '' }}:</p>
-        <p></p>
+        <p></p> <br>
         <p>Lembretes:</p>
         <p>
             Cadastrar mensalmente a frequência de seu aluno-monitor no Sistema de Monitoria entre os dias 25 e o último dia do mês vigente, durante 
@@ -23,7 +21,7 @@
         </p>
         <p>
             Informar a Comissão de Monitoria caso haja desistência ou desligamento de qualquer monitor sob sua supervisão.
-        </p> <br><br>
+        </p> <br>
         <p>
             Essa mensagem foi gerada automaticamente pelo <a href="{{ url('') }}">Sistema de Monitoria</a>
         </p>

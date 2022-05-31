@@ -11,21 +11,22 @@ class NotifyInstructorAboutAttendanceRecord extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $schoolclass, $instructor, $student, $month, $year, $period;
+    public $schoolclass, $instructor, $student, $month, $year, $period, $link;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($schoolclass, $student, $month, $year, $period)
+    public function __construct($schoolclass, $student, $month, $year, $period, $link)
     {
         $this->schoolclass = $schoolclass;
-        $this->instructor = $schoolclass->instructor;
+        $this->instructor = $schoolclass->requisition->instructor;
         $this->student = $student;
         $this->month = $month;
         $this->year = $year;
         $this->period = $period;
+        $this->link = $link;
     }
 
     /**
@@ -35,7 +36,7 @@ class NotifyInstructorAboutAttendanceRecord extends Mailable
      */
     public function build()
     {
-        $subject = "[Sistema de Monitoria] Registro de frequência do monitor ". $student->nompes;
+        $subject = "[Sistema de Monitoria] Registro de frequência do monitor ".$this->student->nompes;
         return $this->view('emails.attendanceRecord')
                     ->subject($subject);
     }

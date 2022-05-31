@@ -14,33 +14,39 @@
             <h4 class='text-center mb-5'>
                 <b>Disciplina:</b>  {{ $turma->nomdis }} <b>Turma:</b> {{ $turma->codtur }}
             </h4>
-            <div id="progressbar-div">
-            </div>
 
             @if ( !is_null($monitor->frequencies) && count($monitor->frequencies) > 0)
-                <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
-                    <tr>
-                        <th>Ano</th>
-                        <th>Mês</th>
-                        <th>Frequência</th>
-                    </tr>
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
+                            <tr class="text-center">
+                                <th>Ano</th>
+                                <th>Mês</th>
+                                <th>Frequência</th>
+                                <th></th>
+                            </tr>
 
-                    @foreach($monitor->frequencies as $frequencia)
-                        <tr style="font-size:12px;">
-                            <td>{{ $frequencia->created_at->format('Y') }}</td>
-                            <td>{{ $frequencia->created_at->format('m') }}</td>
-                            <form action="/frequencies/{{$frequencia->id}}" method="POST">
-                                @csrf
-                                @method('patch')
-                                @if($frequencia->registered)
-                                    <td><button type="submit" class="btn btn-outline-success btn-sm">Sim</button></td>
-                                @else  
-                                    <td><button type="submit" class="btn btn-outline-danger btn-sm">Não</button></td>
-                                @endif
-                            </form>
-                        </tr>
-                    @endforeach
-                </table>
+                            @foreach($monitor->frequencies()->whereHas('schoolclass', function($query) use($turma){ 
+                                return $query->where('id', $turma->id);})->get() as $frequencia)
+                                <tr class="text-center" style="font-size:12px;">
+                                    <td>{{ $frequencia->created_at->format('Y') }}</td>
+                                    <td>{{ $frequencia->month }}</td>
+                                    <td>{{ $frequencia->registered ? 'Sim' : 'Não' }}</td>
+
+                                    <form action="/frequencies/{{$frequencia->id}}" method="POST">
+                                        @csrf
+                                        @method('patch')
+                                        @if($frequencia->registered)
+                                            <td style="width: 150px;"><button type="submit" class="btn btn-outline-danger btn-sm">Desmarcar</button></td>
+                                        @else  
+                                            <td style="width: 150px;"><button type="submit" class="btn btn-outline-success btn-sm">Registrar</button></td>
+                                        @endif
+                                    </form>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                </div>
             @else
                 <p class="text-center">Este monitor não possui frequências para serem registradas.</p>
             @endif

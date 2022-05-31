@@ -17,8 +17,12 @@ class CreateFrequenciesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->boolean('registered')->default(FALSE);
+            $table->integer('month');
             $table->unsignedBigInteger('student_id')->unsigned();
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
+            $table->unsignedBigInteger('school_class_id')->unsigned();
+            $table->foreign('school_class_id')->references('id')->on('school_classes')->onDelete('cascade');
+            $table->unique(['student_id', 'school_class_id', 'month']);
         });
     }
 

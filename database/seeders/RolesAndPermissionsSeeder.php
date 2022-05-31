@@ -17,45 +17,47 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        Permission::create(['name' => 'visualizar menu de configuração']);
+        Permission::firstOrCreate(['name' => 'visualizar menu de configuração']);
 
-        Permission::create(['name' => 'editar usuario']);
+        Permission::firstOrCreate(['name' => 'editar usuario']);
 
-        Permission::create(['name' => 'visualizar periodo letivo']);
-        Permission::create(['name' => 'criar periodo letivo']);
-        Permission::create(['name' => 'editar periodo letivo']);
-        Permission::create(['name' => 'deletar periodo letivo']);
+        Permission::firstOrCreate(['name' => 'visualizar periodo letivo']);
+        Permission::firstOrCreate(['name' => 'criar periodo letivo']);
+        Permission::firstOrCreate(['name' => 'editar periodo letivo']);
+        Permission::firstOrCreate(['name' => 'deletar periodo letivo']);
         
-        Permission::create(['name' => 'visualizar turma']);
-        Permission::create(['name' => 'criar turma']);
-        Permission::create(['name' => 'editar turma']);
-        Permission::create(['name' => 'deletar turma']);
-        Permission::create(['name' => 'importar turmas do replicado']);
-        Permission::create(['name' => 'buscar turmas']);
+        Permission::firstOrCreate(['name' => 'visualizar turma']);
+        Permission::firstOrCreate(['name' => 'criar turma']);
+        Permission::firstOrCreate(['name' => 'editar turma']);
+        Permission::firstOrCreate(['name' => 'deletar turma']);
+        Permission::firstOrCreate(['name' => 'importar turmas do replicado']);
+        Permission::firstOrCreate(['name' => 'buscar turmas']);
 
-        Permission::create(['name' => 'visualizar solicitação de monitor']);
-        Permission::create(['name' => 'criar solicitação de monitor']);
-        Permission::create(['name' => 'editar solicitação de monitor']);
-        Permission::create(['name' => 'deletar solicitação de monitor']);
+        Permission::firstOrCreate(['name' => 'visualizar solicitação de monitor']);
+        Permission::firstOrCreate(['name' => 'criar solicitação de monitor']);
+        Permission::firstOrCreate(['name' => 'editar solicitação de monitor']);
+        Permission::firstOrCreate(['name' => 'deletar solicitação de monitor']);
 
-        Permission::create(['name' => 'visualizar docente']);
-        Permission::create(['name' => 'criar docente']);
-        Permission::create(['name' => 'editar docente']);
-        Permission::create(['name' => 'deletar docente']);
+        Permission::firstOrCreate(['name' => 'visualizar docente']);
+        Permission::firstOrCreate(['name' => 'criar docente']);
+        Permission::firstOrCreate(['name' => 'editar docente']);
+        Permission::firstOrCreate(['name' => 'deletar docente']);
 
-        Permission::create(['name' => 'visualizar inscrição']);
-        Permission::create(['name' => 'fazer inscrição']);
-        Permission::create(['name' => 'editar inscrição']);
-        Permission::create(['name' => 'deletar inscrição']);
+        Permission::firstOrCreate(['name' => 'visualizar inscrição']);
+        Permission::firstOrCreate(['name' => 'fazer inscrição']);
+        Permission::firstOrCreate(['name' => 'editar inscrição']);
+        Permission::firstOrCreate(['name' => 'deletar inscrição']);
 
-        Permission::create(['name' => 'baixar histórico escolar']);
+        Permission::firstOrCreate(['name' => 'baixar histórico escolar']);
 
-        Permission::create(['name' => 'Selecionar monitor']);
-        Permission::create(['name' => 'Preterir monitor']);
+        Permission::firstOrCreate(['name' => 'Selecionar monitor']);
+        Permission::firstOrCreate(['name' => 'Preterir monitor']);
 
-        Permission::create(['name' => 'Disparar emails']);
+        Permission::firstOrCreate(['name' => 'Disparar emails']);
 
-        Role::create(['name' => 'Secretaria'])
+        Permission::firstOrCreate(['name' => 'registrar frequencia']);
+
+        Role::firstOrCreate(['name' => 'Secretaria'])
             ->givePermissionTo('visualizar menu de configuração')
             ->givePermissionTo('editar usuario')
             ->givePermissionTo('visualizar periodo letivo')
@@ -73,9 +75,10 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('Selecionar monitor')
             ->givePermissionTo('Preterir monitor')
             ->givePermissionTo('Disparar emails')
+            ->givePermissionTo('registrar frequencia')
             ->givePermissionTo('baixar histórico escolar');
 
-        Role::create(['name' => 'Docente'])
+        Role::firstOrCreate(['name' => 'Docente'])
             ->givePermissionTo('visualizar menu de configuração')
             ->givePermissionTo('visualizar periodo letivo')
             ->givePermissionTo('visualizar turma')
@@ -83,9 +86,10 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('editar turma')
             ->givePermissionTo('visualizar solicitação de monitor')
             ->givePermissionTo('criar solicitação de monitor')
+            ->givePermissionTo('registrar frequencia')
             ->givePermissionTo('editar solicitação de monitor');
 
-        Role::create(['name' => 'Aluno'])
+        Role::firstOrCreate(['name' => 'Aluno'])
             ->givePermissionTo('visualizar periodo letivo')
             ->givePermissionTo('visualizar turma')
             ->givePermissionTo('visualizar inscrição')
@@ -93,18 +97,18 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('editar inscrição')
             ->givePermissionTo('deletar inscrição');
         
-        Role::create(['name' => 'Monitor']);
+        Role::firstOrCreate(['name' => 'Monitor']);
 
-        Role::create(['name' => 'Presidente de Comissão']);
+        Role::firstOrCreate(['name' => 'Presidente de Comissão']);
 
-        Role::create(['name' => 'Vice Presidente de Comissão']);
+        Role::firstOrCreate(['name' => 'Vice Presidente de Comissão']);
 
-        Role::create(['name' => 'Membro Comissão'])
+        Role::firstOrCreate(['name' => 'Membro Comissão'])
             ->givePermissionTo('Selecionar monitor')
             ->givePermissionTo('Preterir monitor')
             ->givePermissionTo('baixar histórico escolar');
 
-        Role::create(['name' => 'Administrador'])
+        Role::firstOrCreate(['name' => 'Administrador'])
             ->givePermissionTo(Permission::all());
 
     }
