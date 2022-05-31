@@ -7,11 +7,15 @@ use App\Http\Requests\UpdateSchoolClassRequest;
 use App\Http\Requests\CreateSchoolClassRequest;
 use App\Http\Requests\SearchSchoolClassRequest;
 use App\Jobs\ProcessGetSchoolClassesFromReplicado;
+use Illuminate\Support\Facades\URL;
 use App\Models\SchoolClass;
 use App\Models\Instructor;
 use App\Models\ClassSchedule;
 use App\Models\SchoolTerm;
 use App\Models\Department;
+use App\Models\Selection;
+use App\Models\Student;
+use App\Models\Frequency;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Uspdev\Replicado\Pessoa;
@@ -251,5 +255,23 @@ class SchoolClassController extends Controller
         $turma = $schoolclass;
 
         return view('schoolclasses.enrollments', compact('turma'));
+    }
+
+    public function electedTutors($schoolclass){        
+        $turma = SchoolClass::find($schoolclass);
+        
+        return view('schoolclasses.electedTutors', [
+            'turma' => $turma,
+        ]);
+    }
+
+    public function showFrequencies($schoolclass, $tutor){
+        $monitor = Student::find($tutor);
+        $turma = SchoolClass::find($schoolclass);
+
+        return view('schoolclasses.frequencies', [
+            'monitor' => $monitor,
+            'turma' => $turma
+        ]);
     }
 }

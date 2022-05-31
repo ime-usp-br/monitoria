@@ -1,36 +1,12 @@
 <html>
     <body>
-        @php $instructor = $schoolclass->requisition->instructor; @endphp
         <p>A{{ $instructor->getPronounTreatment() == 'Prof. Dr. ' ? 'o' : ''}} {{ $instructor->getPronounTreatment() }} {{ $instructor->nompes }},</p>
         <p></p>
-        @php $plural = count($schoolclass->selections) > 1 ? 1 : 0; @endphp
         <p>
-            Informamos que a Comissão de Monitoria do IME selecionou {{ count($schoolclass->selections) }} aluno{{ $plural ? 's' : '' }} como 
-            monitor{{ $plural ? 'es' : '' }} da disciplina {{ $schoolclass->nomdis }} turma {{ $schoolclass->codtur }} para o 
-            {{ $schoolclass->schoolterm->period }} de {{ $schoolclass->schoolterm->year }}.
+            Informamos que já é possível registrar a frequência do monitor {{$student->nompes}} da disciplina {{$schoolclass->nomdis}} turma {{$schoolclass->codtur}} referente ao mês {{$month}} do {{$period}} de {{$year}}.
         </p>
         <p></p>
         <p>Segue o contato do{{ $plural ? 's' : '' }} monitor{{ $plural ? 'es' : '' }}:</p>
-        <p></p>
-            <div class="container">
-                <div class="row justify-content-start">
-                    <div class="col-md-auto">
-                        <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
-                            <tr>
-                                <th>Nome</th>
-                                <th>E-mail</th>
-                            </tr>
-
-                            @foreach($schoolclass->selections as $selection)
-                                <tr style="font-size:12px;">
-                                    <td>{{ $selection->student->nompes }}</td>
-                                    <td>{{ $selection->student->codema }}</td>
-                                </tr>
-                            @endforeach
-                        </table>
-                    </div>
-                </div>
-            </div>
         <p></p>
         <p>Lembretes:</p>
         <p>

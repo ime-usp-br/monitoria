@@ -78,9 +78,9 @@ class User extends Authenticatable
         $vinculos = [];
         foreach($res as $r){
             if(!$r['dtafimvin']){
-                if($r['tipvin'] == 'ALUNOGR' || $r['tipvin'] == 'ALUNOPOS' || $r['tipvin'] == 'ALUNOPOSESP'){
+                if( str_contains($r['tipvin'], 'ALUNOGR') || str_contains($r['tipvin'], 'ALUNOPOS') || str_contains($r['tipvin'], 'ALUNOPOSESP')){
                     array_push($vinculos, 'Aluno');
-                }elseif($r['tipvin'] == 'SERVIDOR'){
+                }elseif(str_contains($r['tipvin'], 'SERVIDOR')){
                     if($r['tipfnc'] == 'Docente'){
                         array_push($vinculos, 'Docente');
                     }

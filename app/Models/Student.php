@@ -10,6 +10,7 @@ use App\Models\SchoolRecord;
 use App\Models\User;
 use App\Models\Selection;
 use App\Models\Recommendation;
+use App\Models\Frequency;
 
 class Student extends Model
 {
@@ -39,6 +40,11 @@ class Student extends Model
     public function recommendations()
     {
         return $this->hasMany(Recommendation::class);
+    }
+
+    public function frequencies()
+    {
+        return $this->hasMany(Frequency::class);
     }
 
     public function hasSelectionInOpenSchoolTerm()

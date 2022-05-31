@@ -62,6 +62,7 @@
                         <th>Prof(a)</th>
                         <th>Início</th>
                         <th>Fim</th>
+                        <th>Monitores eleitos</th>
                         @if(Auth::user()->hasPermissionTo('editar turma') || Auth::user()->hasPermissionTo('deletar turma'))
                             <th></th>
                         @endif
@@ -86,6 +87,7 @@
                             </td>
                             <td>{{ $turma->dtainitur->format('Y-m-d') }}</td>
                             <td>{{ $turma->dtafimtur->format('Y-m-d') }}</td>
+                            <td><a href="/schoolclasses/{{$turma->id}}/electedTutors" class="btn btn-outline-dark btn-sm">Monitores</a></td>
                             @if(Auth::user()->hasPermissionTo('editar turma') || Auth::user()->hasPermissionTo('deletar turma'))
                             <td class="text-center" style="white-space: nowrap;">
                                 @if(Auth::user()->hasPermissionTo('editar turma'))
