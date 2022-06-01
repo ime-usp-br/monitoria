@@ -14,48 +14,6 @@ class SchoolTermSeeder extends Seeder
      */
     public function run()
     {
-        $schoolTerm = new SchoolTerm;
-        $schoolTerm->year = 2022;
-        $schoolTerm->period = "1° Semestre";
-        $schoolTerm->status = "Aberto";
-        $schoolTerm->evaluation_period = "Aberto";
-        $schoolTerm->max_enrollments = 4;
-        $schoolTerm->started_at = "2022-03-14";
-        $schoolTerm->finished_at = "2022-07-30";
-        $schoolTerm->start_date_requisitions = "2022-02-01";
-        $schoolTerm->end_date_requisitions = "2022-03S-30";
-        $schoolTerm->start_date_enrollments = "2022-02-01";
-        $schoolTerm->end_date_enrollments = "2022-03-30";
-        $schoolTerm->save();
-
-
-        $schoolTerm = new SchoolTerm;
-        $schoolTerm->year = 2021;
-        $schoolTerm->period = "1° Semestre";
-        $schoolTerm->status = "Fechado";
-        $schoolTerm->evaluation_period = "Fechado";
-        $schoolTerm->max_enrollments = 4;
-        $schoolTerm->started_at = "2021-03-14";
-        $schoolTerm->finished_at = "2021-07-30";
-        $schoolTerm->start_date_requisitions = "2021-02-01";
-        $schoolTerm->end_date_requisitions = "2021-02-30";
-        $schoolTerm->start_date_enrollments = "2021-02-01";
-        $schoolTerm->end_date_enrollments = "2021-02-30";
-        $schoolTerm->save();
-
-
-        $schoolTerm = new SchoolTerm;
-        $schoolTerm->year = 2021;
-        $schoolTerm->period = "2° Semestre";
-        $schoolTerm->status = "Fechado";
-        $schoolTerm->evaluation_period = "Fechado";
-        $schoolTerm->max_enrollments = 4;
-        $schoolTerm->started_at = "2021-08-14";
-        $schoolTerm->finished_at = "2021-12-30";
-        $schoolTerm->start_date_requisitions = "2021-07-01";
-        $schoolTerm->end_date_requisitions = "2021-07-30";
-        $schoolTerm->start_date_enrollments = "2021-07-01";
-        $schoolTerm->end_date_enrollments = "2021-07-30";
-        $schoolTerm->save();
+        //
     }
 }

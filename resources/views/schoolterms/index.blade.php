@@ -9,15 +9,15 @@
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Período Letivo</h1>
 
+            <p class="text-right">
+                <a class="btn btn-primary" href="{{ route('schoolterms.create') }}">
+                    <i class="fas fa-plus-circle"></i>
+                    Cadastrar período letivo
+                </a>
+            </p>
+
+
             @if (count($periodos) > 0)
-
-                <p class="text-right">
-                    <a class="btn btn-primary" href="{{ route('schoolterms.create') }}">
-                        <i class="fas fa-plus-circle"></i>
-                        Cadastrar período letivo
-                    </a>
-                </p>
-
                 <table class="table table-bordered table-striped table-hover" style="font-size:15px;">
                     <tr>
                         <th>Ano</th>

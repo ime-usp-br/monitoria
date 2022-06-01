@@ -261,7 +261,8 @@ class SchoolClassController extends Controller
         return view('schoolclasses.enrollments', compact('turma'));
     }
 
-    public function electedTutors($schoolclass){   
+    public function electedTutors($schoolclass)
+    {   
         if(!Gate::allows('registrar frequencia')){
             abort(403);
         }
@@ -274,7 +275,8 @@ class SchoolClassController extends Controller
         
     }
 
-    public function showFrequencies($schoolclass, $tutor, Request $request){
+    public function showFrequencies($schoolclass, $tutor, Request $request)
+    {
         if(Auth::check()){
             if(!Gate::allows('registrar frequencia')){
                 abort(403);
