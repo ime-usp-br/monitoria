@@ -75,4 +75,24 @@ Gere uma nova chave
     
 Crie as tabelas do banco de dados
 
-    php artisan migrate
+    php artisan migrate --seed
+    
+Instale o supervisor
+
+    apt install supervisor
+    
+Copie o arquivo de configuração do supervisor, lembre-se de alterar o diretório do projeto
+
+    cp supervisor.conf.example /etc/supervisor/conf.d/laravel-worker.conf
+    
+
+Indique ao supervisor que há um novo arquivo de configuração
+
+    supervisorctl reread
+    supervisorctl update
+    
+Informe no arquivo .env que o supervisor foi configurado
+
+    IS_SUPERVISOR_CONFIG=true
+
+    
