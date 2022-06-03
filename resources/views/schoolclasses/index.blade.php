@@ -129,12 +129,12 @@
 
 @section('javascripts_bottom')
     <script>
-        $( function() {        
+$( function() {       
             function progress() {
                 $.ajax({
                     url: window.location.origin+'/monitor/getimportschoolclassesjob',
                     dataType: 'json',
-                    success: function success(json){
+		    success: function success(json){
                         if('progress' in json){
                             if(document.getElementById('progressbar')){
                                 $( "#progressbar" ).progressbar( "value", json['progress'] );
@@ -150,13 +150,14 @@
                                 change: function() {
                                     progressLabel.text( progressbar.progressbar( "value" ) + "%" );
                                 },
-                                complete: function() {
-                                    document.location.reload(true);
+				complete: function() {
+					location.replace(location);
+					window.clearTimeout(timeouthandle);
                                 }
                                 });
                             }
-                        }
-                        setTimeout( progress, 1000 );
+			}
+			var timeoutehandle = setTimeout( progress, 1000);
                     }});
             }        
             setTimeout( progress, 50 );
