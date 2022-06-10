@@ -88,23 +88,19 @@ class Student extends Model
     
     public static function getFromReplicadoByCodpes($codpes)
     {
-        if(in_array('Aluno', User::getVinculosFromReplicadoByCodpes($codpes))){
-            $query = " SELECT P.codpes, P.nompes, EP.codema";
-            $query .= " FROM PESSOA AS P, EMAILPESSOA as EP";
-            $query .= " WHERE P.codpes = :codpes";
-            $query .= " AND EP.codpes = :codpes";
-            $query .= " AND EP.stamtr = :stamtr";
-            $param = [
-                'codpes' => $codpes,
-                'stamtr' => 'S'
-            ];
-    
-            $res = array_unique(DB::fetchAll($query, $param),SORT_REGULAR);
+        $query = " SELECT P.codpes, P.nompes, EP.codema";
+        $query .= " FROM PESSOA AS P, EMAILPESSOA as EP";
+        $query .= " WHERE P.codpes = :codpes";
+        $query .= " AND EP.codpes = :codpes";
+        $query .= " AND EP.stamtr = :stamtr";
+        $param = [
+            'codpes' => $codpes,
+            'stamtr' => 'S'
+        ];
 
-            return $res[0];
-        }else{
-            return [];
-        }
+        $res = array_unique(DB::fetchAll($query, $param),SORT_REGULAR);
+
+        return $res[0];
     }
     
     public static function getFromReplicadoByNompes($nompes)
