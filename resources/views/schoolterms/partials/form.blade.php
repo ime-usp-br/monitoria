@@ -159,6 +159,17 @@
     </div>
 </div>
 
+<div class="row custom-form-group align-items-center">
+    <div class="col-12 col-lg-5 text-lg-right">
+        <label>Edital em pdf *</label>
+    </div>
+
+    <div class="col-12 col-md-2">
+        <input id="public_notice_file" class="custom-form-input2" type='file' name='public_notice' value="{{  old('public_notice_file') ?? $periodo->public_notice_file_path ?? ''}}">
+    </div>
+</div>
+
+
 <div class="row">
     <div class="col-4 d-none d-lg-block"></div>
     <div class="col-md-12 col-lg-6">

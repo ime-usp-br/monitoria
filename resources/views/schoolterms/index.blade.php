@@ -25,6 +25,7 @@
                         <th>Estado</th>
                         <th>Período de avaliação</th>
                         <th>Maxímo de inscrições por aluno</th>
+                        <th>Edital</th>
                         <th>Data inícial</th>
                         <th>Data final</th>
                         <th>Data inicial dos pedidos pelos docentes</th>
@@ -41,6 +42,18 @@
                             <td>{{ $periodo->status }}</td>
                             <td>{{ $periodo->evaluation_period }}</td>
                             <td>{{ $periodo->max_enrollments }}</td>
+                            <td>
+                                <form method="POST" action="{{ route('schoolterms.download') }}" target="_blank">
+                                    @csrf
+                                    <input type='hidden' name='path' value="{{ $periodo->public_notice_file_path }}">
+                                    <button class="btn btn-link"
+                                        data-toggle="tooltip" data-placement="top"
+                                        title="Baixar Edital"
+                                    >
+                                        Download
+                                    </button>
+                                </form>                            
+                            </td>
                             <td>{{ $periodo->started_at }}</td>
                             <td>{{ $periodo->finished_at }}</td>
                             <td>{{ $periodo->start_date_requisitions }}</td>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSchoolTermRequest;
 use App\Http\Requests\UpdateSchoolTermRequest;
+use App\Http\Requests\DownloadPublicNoticeRequest;
+use Illuminate\Support\Facades\Storage;
 use App\Models\SchoolTerm;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -67,6 +69,8 @@ class SchoolTermController extends Controller
             }
         }
 
+        $validated['public_notice_file_path'] = $validated['public_notice']->store($validated['year'] . $validated['period'][0]);
+
         $periodo = SchoolTerm::updateOrCreate(['year'=>$validated['year'], 'period'=>$validated['period']],$validated);
 
         return redirect('/schoolterms');
@@ -127,6 +131,8 @@ class SchoolTermController extends Controller
             }
         }
 
+        $validated['public_notice_file_path'] = $validated['public_notice']->store($validated['year'] . $validated['period'][0]);
+
         $schoolterm->update($validated);
 
         return redirect('/schoolterms');
@@ -143,5 +149,12 @@ class SchoolTermController extends Controller
         if(!Gate::allows('deletar periodo letivo')){
             abort(403);
         }
+    }
+
+    public function download(DownloadPublicNoticeRequest $request)
+    {
+        $validated = $request->validated();
+
+        return Storage::download($validated['path'], 'edital_monitoria.pdf');
     }
 }

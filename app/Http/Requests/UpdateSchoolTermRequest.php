@@ -29,6 +29,7 @@ class UpdateSchoolTermRequest extends FormRequest
             'status' => 'required|in:Aberto,Aberto para inscrições,Fechado',
             'evaluation_period' => 'required|in:Aberto,Fechado',
             'max_enrollments' => 'required|numeric|gt:0',
+            "public_notice" => "required|mimetypes:application/pdf|max:1000",
             'started_at' => 'required|date_format:d/m/Y|before:finished_at',
             'finished_at' => 'required|date_format:d/m/Y',
             'start_date_requisitions' => 'required|date_format:d/m/Y|before:end_date_requisitions',

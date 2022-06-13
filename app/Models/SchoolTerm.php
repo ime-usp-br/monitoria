@@ -18,6 +18,7 @@ class SchoolTerm extends Model
         'status',
         'evaluation_period',
         'max_enrollments',
+        'public_notice_file_path',
         'started_at',
         'finished_at',
         'start_date_requisitions',

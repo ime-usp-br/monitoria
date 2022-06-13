@@ -32,6 +32,7 @@ Route::get('/users/search', [UserController::class, 'search'])->name('users.sear
 Route::resource('users', UserController::class);
 
 Route::resource('schoolterms', SchoolTermController::class);
+Route::post('/schoolterms/download', [SchoolTermController::class, 'download'])->name('schoolterms.download');
 
 Route::get('/schoolclasses/{schoolclass}/enrollments', [SchoolClassController::class, 'enrollments'])->name('schoolclasses.enrollments');
 Route::get('/schoolclasses/search', [SchoolClassController::class, 'search'])->name('schoolclasses.search');
