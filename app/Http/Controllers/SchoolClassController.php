@@ -202,11 +202,13 @@ class SchoolClassController extends Controller
         }
 
         $validated = $request->validated();
-        $schoolTerm = SchoolTerm::where(['id'=>$validated["periodoId"]])->first();
+        $schoolTerm = SchoolTerm::find($validated["periodoId"]);
         
         if(env('IS_SUPERVISOR_CONFIG')){
             ProcessGetSchoolClassesFromReplicado::dispatch($schoolTerm);
         }else{
+            $turmas = SchoolClass::getFromReplicadoBySchoolTerm($schoolTerm);
+
             foreach($turmas as $turma){
                 $schoolclass = SchoolClass::where(array_intersect_key($turma, array_flip(array('codtur', 'coddis'))))->first();
     
@@ -216,7 +218,7 @@ class SchoolClassController extends Controller
                     $schoolclass->save();
             
                     foreach($turma['instructors'] as $instructor){
-                        $schoolclass->instructors()->attach(Instructor::firstOrCreate($instructor));
+                        $schoolclass->instructors()->attach(Instructor::firstOrCreate(Instructor::getFromReplicadoByCodpes($instructor["codpes"])));
                     }
         
                     foreach($turma['class_schedules'] as $classSchedule){

@@ -24,8 +24,8 @@ class UpdateSchoolClassRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'dtainitur' => 'required|date_format:Y-m-d|before:dtafimtur',
-            'dtafimtur' => 'required|date_format:Y-m-d',
+            'dtainitur' => 'required|date_format:d/m/Y|before:dtafimtur',
+            'dtafimtur' => 'required|date_format:d/m/Y',
             'horarios' => 'sometimes|array',
             'horarios.*.diasmnocp' => 'required|in:seg,ter,qua,qui,sex,sab,dom',
             'horarios.*.horent' => 'required|date_format:H:i|before:horarios.*.horsai',

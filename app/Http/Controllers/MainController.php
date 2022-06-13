@@ -21,6 +21,6 @@ class MainController extends Controller
             }
         }
 
-        return view('parent');
+        return view('main');
     }
 }

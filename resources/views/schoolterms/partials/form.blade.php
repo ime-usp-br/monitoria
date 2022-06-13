@@ -89,7 +89,7 @@
     <div class="col-12 col-md-2">
         <input class="custom-form-control custom-datepicker"
             type="text" name="started_at" id="started_at" autocomplete="off"
-            value="{{ old('started_at') ?? ($periodo->started_at ? $periodo->started_at->format('Y-m-d'): null) ?? ''}}"
+            value="{{ old('started_at') ?? $periodo->started_at ?? ''}}"
         />
     </div>
 </div>
@@ -102,7 +102,7 @@
     <div class="col-12 col-md-2">
         <input class="custom-form-control custom-datepicker"
             type="text" name="finished_at" id="finished_at" autocomplete="off"
-            value="{{  old('finished_at') ?? ($periodo->finished_at ? $periodo->finished_at->format('Y-m-d'): null) ?? ''}}"
+            value="{{  old('finished_at') ?? $periodo->finished_at ?? ''}}"
         />
     </div>
 </div>
@@ -115,7 +115,7 @@
     <div class="col-12 col-md-2">
         <input class="custom-form-control custom-datepicker"
             type="text" name="start_date_requisitions" id="start_date_requisitions" autocomplete="off"
-            value="{{ old('start_date_requisitions') ?? ($periodo->start_date_requisitions ? $periodo->start_date_requisitions->format('Y-m-d'): null) ?? ''}}"
+            value="{{ old('start_date_requisitions') ?? $periodo->start_date_requisitions ?? ''}}"
         />
     </div>
 </div>
@@ -128,7 +128,7 @@
     <div class="col-12 col-md-2">
         <input class="custom-form-control custom-datepicker"
             type="text" name="end_date_requisitions" id="end_date_requisitions" autocomplete="off"
-            value="{{  old('end_date_requisitions') ?? ($periodo->end_date_requisitions ? $periodo->end_date_requisitions->format('Y-m-d'): null) ?? ''}}"
+            value="{{  old('end_date_requisitions') ?? $periodo->end_date_requisitions ?? ''}}"
         />
     </div>
 </div>
@@ -141,7 +141,7 @@
     <div class="col-12 col-md-2">
         <input class="custom-form-control custom-datepicker"
             type="text" name="start_date_enrollments" id="start_date_enrollments" autocomplete="off"
-            value="{{ old('start_date_enrollments') ?? ($periodo->start_date_enrollments ? $periodo->start_date_enrollments->format('Y-m-d'): null) ?? ''}}"
+            value="{{ old('start_date_enrollments') ?? $periodo->start_date_enrollments ?? ''}}"
         />
     </div>
 </div>
@@ -154,10 +154,21 @@
     <div class="col-12 col-md-2">
         <input class="custom-form-control custom-datepicker"
             type="text" name="end_date_enrollments" id="end_date_enrollments" autocomplete="off"
-            value="{{  old('end_date_enrollments') ?? ($periodo->end_date_enrollments ? $periodo->end_date_enrollments->format('Y-m-d'): null) ?? ''}}"
+            value="{{  old('end_date_enrollments') ?? $periodo->end_date_enrollments ?? ''}}"
         />
     </div>
 </div>
+
+<div class="row custom-form-group align-items-center">
+    <div class="col-12 col-lg-5 text-lg-right">
+        <label>Edital em pdf *</label>
+    </div>
+
+    <div class="col-12 col-md-2">
+        <input id="public_notice_file" class="custom-form-input2" type='file' name='public_notice' value="{{  old('public_notice_file') ?? $periodo->public_notice_file_path ?? ''}}">
+    </div>
+</div>
+
 
 <div class="row">
     <div class="col-4 d-none d-lg-block"></div>

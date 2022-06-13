@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\SchoolClass;
 use App\Models\SchoolRecord;
+use Carbon\Carbon;
 
 class SchoolTerm extends Model
 {
@@ -17,6 +18,7 @@ class SchoolTerm extends Model
         'status',
         'evaluation_period',
         'max_enrollments',
+        'public_notice_file_path',
         'started_at',
         'finished_at',
         'start_date_requisitions',
@@ -26,13 +28,73 @@ class SchoolTerm extends Model
     ];
 
     protected $casts = [
-        'started_at' => 'datetime',
-        'finished_at' => 'datetime',
-        'start_date_requisitions' => 'datetime',
-        'end_date_requisitions' => 'datetime',
-        'start_date_enrollments' => 'datetime',
-        'end_date_enrollments' => 'datetime',
-    ];
+        'started_at' => 'date:d/m/Y',
+        'finished_at' => 'date:d/m/Y',
+        'start_date_requisitions' => 'date:d/m/Y',
+        'end_date_requisitions' => 'date:d/m/Y',
+        'start_date_enrollments' => 'date:d/m/Y',
+        'end_date_enrollments' => 'date:d/m/Y',
+    ];    
+
+    public function setStartedAtAttribute($value)
+    {
+        $this->attributes['started_at'] = Carbon::createFromFormat('d/m/Y', $value);
+    }
+
+    public function setFinishedAtAttribute($value)
+    {
+        $this->attributes['finished_at'] = Carbon::createFromFormat('d/m/Y', $value);
+    }
+
+    public function setStartDateRequisitionsAttribute($value)
+    {
+        $this->attributes['start_date_requisitions'] = Carbon::createFromFormat('d/m/Y', $value);
+    }
+
+    public function setEndDateRequisitionsAttribute($value)
+    {
+        $this->attributes['end_date_requisitions'] = Carbon::createFromFormat('d/m/Y', $value);
+    }
+
+    public function setStartDateEnrollmentsAttribute($value)
+    {
+        $this->attributes['start_date_enrollments'] = Carbon::createFromFormat('d/m/Y', $value);
+    }
+
+    public function setEndDateEnrollmentsAttribute($value)
+    {
+        $this->attributes['end_date_enrollments'] = Carbon::createFromFormat('d/m/Y', $value);
+    }
+
+    public function getStartedAtAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('d/m/Y') : '';
+    }
+
+    public function getFinishedAtAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('d/m/Y') : '';
+    }
+
+    public function getStartDateRequisitionsAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('d/m/Y') : '';
+    }
+
+    public function getEndDateRequisitionsAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('d/m/Y') : '';
+    }
+
+    public function getStartDateEnrollmentsAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('d/m/Y') : '';
+    }
+
+    public function getEndDateEnrollmentsAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('d/m/Y') : '';
+    }
 
     public function schoolclasses()
     {

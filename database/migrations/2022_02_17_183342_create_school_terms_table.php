@@ -20,6 +20,7 @@ class CreateSchoolTermsTable extends Migration
             $table->string('status');
             $table->string('evaluation_period');
             $table->integer('max_enrollments');
+            $table->string('public_notice_file_path');
             $table->timestamp('started_at')->nullable();
             $table->timestamp('finished_at')->nullable();
             $table->timestamp('start_date_requisitions')->nullable();

@@ -36,6 +36,6 @@ class StorageFileExists implements Rule
      */
     public function message()
     {
-        return 'O histórico escolar não foi encontrado no servidor. Entrar em contato com o administrador da pagina.';
+        return 'O arquivo não foi encontrado no servidor. Entrar em contato com o administrador da pagina.';
     }
 }

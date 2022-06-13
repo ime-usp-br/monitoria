@@ -18,6 +18,7 @@
 
             <form method="POST"
                 action="{{ route('schoolterms.update', $periodo) }}"
+                enctype='multipart/form-data'
             >
                 @method('patch')
                 @csrf

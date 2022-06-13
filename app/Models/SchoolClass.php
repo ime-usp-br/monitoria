@@ -12,6 +12,7 @@ use App\Models\Requisition;
 use App\Models\Enrollment;
 use App\Models\Selection;
 use Uspdev\Replicado\DB;
+use Carbon\Carbon;
 
 class SchoolClass extends Model
 {
@@ -29,9 +30,29 @@ class SchoolClass extends Model
     ];
 
     protected $casts = [
-        'dtainitur' => 'datetime',
-        'dtafimtur' => 'datetime',
+        'dtainitur' => 'date:d/m/Y',
+        'dtafimtur' => 'date:d/m/Y',
     ];
+
+    public function setDtainiturAttribute($value)
+    {
+        $this->attributes['dtainitur'] = Carbon::createFromFormat('d/m/Y', $value);
+    }
+
+    public function setDtafimturAttribute($value)
+    {
+        $this->attributes['dtafimtur'] = Carbon::createFromFormat('d/m/Y', $value);
+    }
+
+    public function getDtainiturAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('d/m/Y') : '';
+    }
+
+    public function getDtafimturAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('d/m/Y') : '';
+    }
 
     public function schoolterm()
     {
@@ -176,6 +197,8 @@ class SchoolClass extends Model
                 $turmas[$key]['instructors'] = Instructor::getFromReplicadoBySchoolClass($turma);
                 $turmas[$key]['department_id'] = Department::firstOrCreate(Department::getFromReplicadoByNomabvset($turma['pfxdisval']))->id;
                 $turmas[$key]['school_term_id'] = $schoolTerm->id;
+                $turmas[$key]['dtainitur'] = Carbon::createFromFormat("Y-m-d H:i:s", $turma["dtainitur"])->format("d/m/Y");
+                $turmas[$key]['dtafimtur'] = Carbon::createFromFormat("Y-m-d H:i:s", $turma["dtafimtur"])->format("d/m/Y");
                 unset($turmas[$key]['pfxdisval']);
 
             }
