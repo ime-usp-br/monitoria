@@ -14,6 +14,7 @@ use App\Http\Controllers\SelectionController;
 use App\Http\Controllers\MonitorController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\FrequencyController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,3 +65,6 @@ Route::get('/emails', [EmailController::class, 'index'])->name('emails.index');
 Route::post('/emails/dispatch', [EmailController::class, 'dispatchForAll'])->name('emails.dispatch');
 
 Route::resource('frequencies', FrequencyController::class);
+
+Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+Route::post('/reports/make', [ReportController::class, 'make'])->name('reports.make');

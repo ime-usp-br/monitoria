@@ -57,6 +57,8 @@ class RolesAndPermissionsSeeder extends Seeder
 
         Permission::firstOrCreate(['name' => 'registrar frequencia']);
 
+        Permission::firstOrCreate(['name' => 'gerar relatorio']);
+
         Role::firstOrCreate(['name' => 'Secretaria'])
             ->givePermissionTo('visualizar menu de configuração')
             ->givePermissionTo('editar usuario')
@@ -76,6 +78,7 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('Preterir monitor')
             ->givePermissionTo('Disparar emails')
             ->givePermissionTo('registrar frequencia')
+            ->givePermissionTo('gerar relatorio')
             ->givePermissionTo('baixar histórico escolar');
 
         Role::firstOrCreate(['name' => 'Docente'])
@@ -106,6 +109,7 @@ class RolesAndPermissionsSeeder extends Seeder
         Role::firstOrCreate(['name' => 'Membro Comissão'])
             ->givePermissionTo('Selecionar monitor')
             ->givePermissionTo('Preterir monitor')
+            ->givePermissionTo('gerar relatorio')
             ->givePermissionTo('baixar histórico escolar');
 
         Role::firstOrCreate(['name' => 'Administrador'])
