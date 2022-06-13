@@ -15,7 +15,7 @@
     </div>
     <div class="col-12 col-md-5">
         <input class="custom-form-control" type="text" name="coddis" id="coddis"
-            value='{{ $turma->coddis ?? ""}}' {{ $buttonText === "Editar" ? "disabled":"" }}
+            value="{{ old('coddis') ?? $turma->coddis ?? ''}}" {{ $buttonText === "Editar" ? "disabled":"" }}
         />
     </div>
 </div>
@@ -26,7 +26,7 @@
     </div>
     <div class="col-12 col-md-5">
         <input class="custom-form-control" type="text" name="nomdis" id="nomdis"
-            value='{{ $turma->nomdis ?? ""}}' {{ $buttonText === "Editar" ? "disabled":"" }}
+            value="{{ old('nomdis') ?? $turma->nomdis ?? ''}}" {{ $buttonText === "Editar" ? "disabled":"" }}
         />
     </div>
 </div>
@@ -37,7 +37,7 @@
     </div>
     <div class="col-12 col-md-5">
         <input class="custom-form-control" type="text" name="tiptur" id="tiptur"
-            value='{{ $turma->tiptur ?? ""}}' {{ $buttonText === "Editar" ? "disabled":"" }}
+            value="{{ old('tiptur') ?? $turma->tiptur ?? ''}}" {{ $buttonText === "Editar" ? "disabled":"" }}
         />
     </div>
 </div>
@@ -48,9 +48,9 @@
     </div>
     <div class="col-12 col-md-5">        
         <select id="department_id" name="department_id" class="custom-form-control">
-                <option value="" selected></option>
+                <option value="" {{ old('department_id') ? '' : 'selected'}}></option>
             @foreach(App\Models\Department::where('sglund', 'IME')->get() as $department)
-                <option value={{ $department->id }}>Departamento de {{ $department->nomset }}</option>
+                <option value={{ $department->id }} {{ old('department_id') == $department->id ? 'selected' : ''}}>Departamento de {{ $department->nomset }}</option>
             @endforeach
         </select>
     </div>
@@ -145,7 +145,7 @@
     <div class="col-12 col-md-5">
         <input class="custom-form-control custom-datepicker"
             type="text" name="dtainitur" id="dtainitur" autocomplete="off"
-            value="{{ old('dtainitur') ?? ($turma->dtainitur ? $turma->dtainitur->format('Y-m-d'): null) ?? ''}}"
+            value="{{ old('dtainitur') ?? $turma->dtainitur ?? ''}}"
         />
     </div>
 </div>
@@ -158,7 +158,7 @@
     <div class="col-12 col-md-5">
         <input class="custom-form-control custom-datepicker"
             type="text" name="dtafimtur" id="dtafimtur" autocomplete="off"
-            value="{{ old('dtafimtur') ?? ($turma->dtafimtur ? $turma->dtafimtur->format('Y-m-d'): null) ?? ''}}"
+            value="{{ old('dtafimtur') ?? $turma->dtafimtur ?? ''}}"
         />
     </div>
 </div>

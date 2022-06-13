@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateSchoolTermRequest;
 use App\Models\SchoolTerm;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Session;
 
 class SchoolTermController extends Controller
 {
@@ -56,7 +57,17 @@ class SchoolTermController extends Controller
         }
 
         $validated = $request->validated();
-        $periodo = SchoolTerm::create($validated);
+
+        if($validated['status'] == 'Aberto'){
+            $estadoEmAberto = SchoolTerm::where('status', 'Aberto')->first();
+            if($estadoEmAberto){
+                Session::flash("alert-warning", "O período letivo {$estadoEmAberto->period} de {$estadoEmAberto->year} consta com estado em aberto, o sistema permite apenas um período letivo com 
+                estado em aberto por vez.");
+                return back();
+            }
+        }
+
+        $periodo = SchoolTerm::updateOrCreate(['year'=>$validated['year'], 'period'=>$validated['period']],$validated);
 
         return redirect('/schoolterms');
     }
@@ -106,6 +117,16 @@ class SchoolTermController extends Controller
         }
 
         $validated = $request->validated();
+
+        if($validated['status'] == 'Aberto'){
+            $estadoEmAberto = SchoolTerm::where('status', 'Aberto')->where('id', '!=', $schoolterm->id)->first();
+            if($estadoEmAberto){
+                Session::flash("alert-warning", "O período letivo {$estadoEmAberto->period} de {$estadoEmAberto->year} consta com estado em aberto, o sistema permite apenas um período letivo com 
+                estado em aberto por vez.");
+                return back();
+            }
+        }
+
         $schoolterm->update($validated);
 
         return redirect('/schoolterms');

@@ -33,7 +33,7 @@ datepicker.regional[ "pt-BR" ] = {
 	dayNamesShort: [ "Dom","Seg","Ter","Qua","Qui","Sex","Sáb" ],
 	dayNamesMin: [ "Dom","Seg","Ter","Qua","Qui","Sex","Sáb" ],
 	weekHeader: "Sm",
-	dateFormat: "yy-mm-dd",
+	dateFormat: 'dd/mm/yy',
 	firstDay: 0,
 	isRTL: false,
 	showMonthAfterYear: false,

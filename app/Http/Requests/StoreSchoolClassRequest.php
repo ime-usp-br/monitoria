@@ -25,13 +25,13 @@ class StoreSchoolClassRequest extends FormRequest
     {
         $rules = [
             'periodoId' => 'required|numeric',
-            'department_id' => 'required|numeric|in:1,2,3,4',
+            'department_id' => 'required|numeric',
             'codtur' => 'required|numeric',
             'coddis' => 'required',
             'nomdis' => 'required',
             'tiptur' => 'required',
-            'dtainitur' => 'required|date_format:Y-m-d|before:dtafimtur',
-            'dtafimtur' => 'required|date_format:Y-m-d',
+            'dtainitur' => 'required|date_format:d/m/Y|before:dtafimtur',
+            'dtafimtur' => 'required|date_format:d/m/Y',
             'horarios' => 'sometimes|array',
             'horarios.*.diasmnocp' => 'required|in:seg,ter,qua,qui,sex,sab,dom',
             'horarios.*.horent' => 'required|date_format:H:i|before:horarios.*.horsai',
