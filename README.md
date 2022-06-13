@@ -2,7 +2,7 @@
 <br />
 <div align="center">
   <a href="https://monitoria.ime.usp.br">
-    <img src="logo_ime.jpg" alt="Logo" width="150" height="150">
+    <img src="logo_ime_vert.jpg" alt="Logo" width="150" height="150">
   </a>
 
   <h3 align="center">Sistema da Monitoria</h3>
