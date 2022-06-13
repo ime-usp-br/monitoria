@@ -95,4 +95,6 @@ Informe no arquivo .env que o supervisor foi configurado
 
     IS_SUPERVISOR_CONFIG=true
 
-    
+Instale os pacotes LaTeX para gerar os relatórios
+
+    sudo apt install texlive texlive-latex-extra texlive-lang-portuguese
