@@ -52,6 +52,11 @@ $menu = [
         'url' => config('app.url') . '/emails',
         'can' => 'Disparar emails',
     ],
+    [
+        'text' => 'Relatório',
+        'url' => config('app.url') . '/reports',
+        'can' => 'gerar relatorio',
+    ],
 ];
 
 $right_menu = [
