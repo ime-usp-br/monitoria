@@ -15,7 +15,7 @@
                     fornecendo às turmas um canal acessível para atendimento de dúvidas.</p>
 
             @php $schoolterm = App\Models\SchoolTerm::getOpenSchoolTerm(); @endphp
-            @if($schoolterm->exists())
+            @if($schoolterm)
                 <form method="POST" action="{{ route('schoolterms.download') }}" target="_blank">
                     @csrf
                     <input type='hidden' name='path' value="{{ $schoolterm->public_notice_file_path }}">
