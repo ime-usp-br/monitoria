@@ -77,6 +77,13 @@ class SelectionController extends Controller
         $validated['requisition_id'] = $inscricao->schoolclass->requisition->id;
         $validated['codpescad'] = Auth::user()->codpes;
 
+        if($inscricao->student->selections()
+                              ->whereHas('schoolclass.schoolterm', function ($query) {return $query->where(['status'=>'Aberto']);})
+                              ->where('school_class_id', '!=', $inscricao->schoolclass->id)->exists()){
+            Session::flash('alert-warning', 'Aluno já foi eleito monitor de outra turma.');
+            return back();
+        }
+        
         if(Auth::user()->hasRole('Membro Comissão')){
             $docente = Instructor::where(['codpes'=>Auth::user()->codpes])->first();
             if($inscricao->schoolclass->department == $docente->department){
