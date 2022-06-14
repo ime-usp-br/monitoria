@@ -49,10 +49,10 @@
                             <td>
                                 <a class='btn btn-outline-dark btn-sm'
                                     data-toggle="tooltip" data-placement="top"
-                                    title="Ver Inscritos"
+                                    title="Inscritos"
                                     href="{{ route('selections.enrollments', $solicitacao->schoolclass) }}"
                                 >
-                                    Ver Inscritos
+                                    Selecionar Monitores
                                 </a>
                             </td>
                         </tr>

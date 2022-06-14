@@ -36,7 +36,7 @@
                     </tr>
 
                     @foreach($periodos as $periodo)
-                        <tr>
+                        <tr class="text-center">
                             <td>{{ $periodo->year }}</td>
                             <td style="white-space: nowrap;">{{ $periodo->period }}</td>
                             <td>{{ $periodo->status }}</td>
@@ -60,7 +60,7 @@
                             <td>{{ $periodo->end_date_requisitions }}</td>
                             <td>{{ $periodo->start_date_enrollments }}</td>
                             <td>{{ $periodo->end_date_enrollments }}</td>
-                            <td class="text-center">
+                            <td>
                                 <a class="text-dark text-decoration-none"
                                     data-toggle="tooltip" data-placement="top"
                                     title="Editar"

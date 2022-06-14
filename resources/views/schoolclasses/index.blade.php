@@ -59,7 +59,7 @@
                         <th>Departamento</th>
                         <th>Tipo da Turma</th>
                         <th>Horários</th>
-                        <th>Prof(a)</th>
+                        <th>Professor(es)</th>
                         <th>Início</th>
                         <th>Fim</th>
                         <th>Monitores eleitos</th>
@@ -81,13 +81,19 @@
                                 @endforeach
                             </td>
                             <td style="white-space: nowrap;">
-                                @foreach($turma->instructors as $instrutor)
-                                    {{ $instrutor->nompes }} <br/>
+                                @foreach($turma->instructors as $instructor)
+                                    {{ $instructor->getPronounTreatment() . $instructor->getNomAbrev()}} <br/>
                                 @endforeach
                             </td>
                             <td>{{ $turma->dtainitur }}</td>
                             <td>{{ $turma->dtafimtur }}</td>
-                            <td><a href="/schoolclasses/{{$turma->id}}/electedTutors" class="btn btn-outline-dark btn-sm">Monitores</a></td>
+                            <td class="text-center">
+                                @if($turma->selections()->exists())
+                                    <a href="/schoolclasses/{{$turma->id}}/electedTutors" class="btn btn-outline-dark btn-sm">Monitores</a>
+                                @else
+                                    Nenhum Monitor
+                                @endif
+                            </td>
                             @if(Auth::user()->hasPermissionTo('editar turma') || Auth::user()->hasPermissionTo('deletar turma'))
                             <td class="text-center" style="white-space: nowrap;">
                                 @if(Auth::user()->hasPermissionTo('editar turma'))

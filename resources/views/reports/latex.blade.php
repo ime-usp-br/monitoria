@@ -146,7 +146,7 @@ Foram selecionados {!! $schoolterm->schoolclasses()->withCount('selections')->ge
     {!! $schoolclass->codtur !!} & 
     {!! $schoolclass->nomdis !!} &     
     \href{mailto:{!! nomeAbrev($schoolclass->requisition->instructor->codema) !!}}{{!! nomeAbrev($schoolclass->requisition->instructor->nompes) !!}}  & 
-    \makecell[l]{@foreach($schoolclass->selections as $selection) \href{mailto:{!! nomeAbrev($selection->student->codema) !!}}{{!! nomeAbrev($selection->student->nompes) !!}}\\ @endforeach}
+    \makecell[l]{@foreach($schoolclass->selections as $selection) \href{mailto:{!! nomeAbrev($selection->student->codema) !!}}{{!! nomeAbrev($selection->student->nompes) !!}} {!! $selection->enrollment->voluntario ? "(Voluntário)" : "" !!}\\ @endforeach}
     \\ 
     \midrule
 @endforeach

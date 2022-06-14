@@ -117,3 +117,11 @@ input[type=file].custom-form-input:hover::file-selector-button {
   font-weight: bold;
   text-shadow: 1px 1px 0 #fff;
 }
+
+table th {
+  text-align: center;
+}
+
+.table td, .table th {
+  vertical-align: middle;
+} 
