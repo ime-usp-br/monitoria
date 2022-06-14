@@ -35,7 +35,7 @@ class NotifySelectStudent extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        $subject = "[Sistema de Monitoria] Vocẽ foi selecionado como monitor da disciplina ".$this->schoolclass->coddis." 
+        $subject = "[Sistema de Monitoria] Você foi selecionado como monitor da disciplina ".$this->schoolclass->coddis." 
                     turma ".$this->schoolclass->codtur;
         return $this->view('emails.student')
                     ->subject($subject);
