@@ -21,6 +21,11 @@ $submenuConfig = [
         'url' => config('app.url') . '/schoolclasses',
         'can' => 'visualizar turma',
     ],
+    [
+        'text' => 'Monitores',
+        'url' => config('app.url') . '/tutors',
+        'can' => 'visualizar monitores',
+    ],
 ];
 
 $menu = [

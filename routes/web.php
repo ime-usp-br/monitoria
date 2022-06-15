@@ -15,6 +15,7 @@ use App\Http\Controllers\MonitorController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\FrequencyController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\TutorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,3 +69,5 @@ Route::resource('frequencies', FrequencyController::class);
 
 Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 Route::post('/reports/make', [ReportController::class, 'make'])->name('reports.make');
+
+Route::get('/tutors', [TutorController::class, 'index'])->name('tutors.index'); 
