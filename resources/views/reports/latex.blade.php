@@ -66,7 +66,8 @@ No mesmo semestre foram solicitados {!! $schoolterm->schoolclasses->sum('requisi
 {!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAE');})->get()->sum('requisition.requested_number') !!} do Departamento de Estatística,
 {!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAT');})->get()->sum('requisition.requested_number') !!} do Departamento de Matemática.
 
-Foram feitas {!! $schoolterm->schoolclasses()->withCount('enrollments')->get()->sum('enrollments_count') !!} inscrições nas vagas de monitoria por parte dos alunos, sendo 
+Foram feitas {!! $schoolterm->schoolclasses()->withCount('enrollments')->get()->sum('enrollments_count') !!} inscrições nas vagas de monitoria por parte de  
+{!! count(App\Models\Student::whereHas('enrollments', function($query) use($schoolterm) {return $query->whereHas('schoolclass', function($query2) use($schoolterm) {return $query2->whereBelongsTo($schoolterm);});})->get()) !!} alunos, sendo 
 {!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAC');})->withCount('enrollments')->get()->sum('enrollments_count') !!}  do Departamento de Ciência da Computação, 
 {!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAP');})->withCount('enrollments')->get()->sum('enrollments_count') !!} do Departamento de Matemática Aplicada,
 {!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAE');})->withCount('enrollments')->get()->sum('enrollments_count') !!} do Departamento de Estatística,
@@ -145,8 +146,8 @@ Foram selecionados {!! $schoolterm->schoolclasses()->withCount('selections')->ge
     {!! $schoolclass->coddis !!} & 
     {!! $schoolclass->codtur !!} & 
     {!! $schoolclass->nomdis !!} &     
-    \href{mailto:{!! nomeAbrev($schoolclass->requisition->instructor->codema) !!}}{{!! nomeAbrev($schoolclass->requisition->instructor->nompes) !!}}  & 
-    \makecell[l]{@foreach($schoolclass->selections as $selection) \href{mailto:{!! nomeAbrev($selection->student->codema) !!}}{{!! nomeAbrev($selection->student->nompes) !!}} {!! $selection->enrollment->voluntario ? "(Voluntário)" : "" !!}\\ @endforeach}
+    \href{mailto:{!! $schoolclass->requisition->instructor->codema !!}}{{!! $schoolclass->requisition->instructor->getNomAbrev()!!}}  & 
+    \makecell[l]{@foreach($schoolclass->selections as $selection) \href{mailto:{!! $selection->student->codema !!}}{{!! $selection->student->getNomAbrev() !!}} {!! $selection->enrollment->voluntario ? "(Voluntário)" : "" !!}\\ @endforeach}
     \\ 
     \midrule
 @endforeach
@@ -185,8 +186,8 @@ Foram selecionados {!! $schoolterm->schoolclasses()->withCount('selections')->ge
     {!! $schoolclass->coddis !!} & 
     {!! $schoolclass->codtur !!} & 
     {!! $schoolclass->nomdis !!} &   
-    \href{mailto:{!! nomeAbrev($schoolclass->requisition->instructor->codema) !!}}{{!! nomeAbrev($schoolclass->requisition->instructor->nompes) !!}}  & 
-    \makecell[l]{@foreach($schoolclass->selections as $selection) \href{mailto:{!! nomeAbrev($selection->student->codema) !!}}{{!! nomeAbrev($selection->student->nompes) !!}}\\ @endforeach}
+    \href{mailto:{!! $schoolclass->requisition->instructor->codema !!}}{{!! $schoolclass->requisition->instructor->getNomAbrev()!!}}  & 
+    \makecell[l]{@foreach($schoolclass->selections as $selection) \href{mailto:{!! $selection->student->codema !!}}{{!! $selection->student->getNomAbrev() !!}} {!! $selection->enrollment->voluntario ? "(Voluntário)" : "" !!}\\ @endforeach}
     \\ 
     \midrule
 @endforeach
@@ -225,8 +226,8 @@ Foram selecionados {!! $schoolterm->schoolclasses()->withCount('selections')->ge
     {!! $schoolclass->coddis !!} & 
     {!! $schoolclass->codtur !!} & 
     {!! $schoolclass->nomdis !!} &   
-    \href{mailto:{!! nomeAbrev($schoolclass->requisition->instructor->codema) !!}}{{!! nomeAbrev($schoolclass->requisition->instructor->nompes) !!}}  & 
-    \makecell[l]{@foreach($schoolclass->selections as $selection) \href{mailto:{!! nomeAbrev($selection->student->codema) !!}}{{!! nomeAbrev($selection->student->nompes) !!}}\\ @endforeach}
+    \href{mailto:{!! $schoolclass->requisition->instructor->codema !!}}{{!! $schoolclass->requisition->instructor->getNomAbrev()!!}}  & 
+    \makecell[l]{@foreach($schoolclass->selections as $selection) \href{mailto:{!! $selection->student->codema !!}}{{!! $selection->student->getNomAbrev() !!}} {!! $selection->enrollment->voluntario ? "(Voluntário)" : "" !!}\\ @endforeach}
     \\ 
     \midrule
 @endforeach
@@ -265,8 +266,8 @@ Foram selecionados {!! $schoolterm->schoolclasses()->withCount('selections')->ge
     {!! $schoolclass->coddis !!} & 
     {!! $schoolclass->codtur !!} & 
     {!! $schoolclass->nomdis !!} &   
-    \href{mailto:{!! nomeAbrev($schoolclass->requisition->instructor->codema) !!}}{{!! nomeAbrev($schoolclass->requisition->instructor->nompes) !!}}  & 
-    \makecell[l]{@foreach($schoolclass->selections as $selection) \href{mailto:{!! nomeAbrev($selection->student->codema) !!}}{{!! nomeAbrev($selection->student->nompes) !!}}\\ @endforeach}
+    \href{mailto:{!! $schoolclass->requisition->instructor->codema !!}}{{!! $schoolclass->requisition->instructor->getNomAbrev()!!}}  & 
+    \makecell[l]{@foreach($schoolclass->selections as $selection) \href{mailto:{!! $selection->student->codema !!}}{{!! $selection->student->getNomAbrev() !!}} {!! $selection->enrollment->voluntario ? "(Voluntário)" : "" !!}\\ @endforeach}
     \\ 
     \midrule
 @endforeach
@@ -274,25 +275,3 @@ Foram selecionados {!! $schoolterm->schoolclasses()->withCount('selections')->ge
 \end{footnotesize}
 
 \end{document}
-
-@php
-function nomeAbrev($nometodo){
-
-$pattern = '/ de | do | dos | da | das | e /i';
-$nome = preg_replace($pattern,' ',$nometodo);
-$nome = explode(' ', $nome);
-
-$nomes_meio = ' ';
-
-if(count($nome) > 2){
-   for($x=1;$x<count($nome)-1;$x++){
-      $nomes_meio .= $nome[$x][0].". ";
-   }
-}
-
-$nomeabreviado = array_shift($nome).$nomes_meio.array_pop($nome);
-
-return $nomeabreviado;
-
-}
-@endphp
