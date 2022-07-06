@@ -8,10 +8,18 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Turmas</h1>
- 
+            @if($schoolterm)
+                <h4 class='text-center mb-5'>{{ $schoolterm->period . ' de ' . $schoolterm->year }}</h4>
+            @endif
+
+            @if(Auth::user()->hasRole('Membro Comissão'))
+                <h4 class='text-center mb-5'>Departamento de {{ App\Models\Instructor::where(['codpes'=>Auth::user()->codpes])->first()->department->nomset }}</h4>
+            @endif
+
             <div id="progressbar-div">
             </div>
             <br>
+            @include('schoolclasses.modals.chooseSchoolTerm')
             @include('schoolclasses.modals.import')
             @include('schoolclasses.modals.addSchoolClass')
             <p class="text-right">
@@ -26,6 +34,16 @@
                         Cadastrar
                     </a>
                 @endif
+
+                <a  id="btn-chooseSchoolTermModal"
+                    class="btn btn-primary"
+                    data-toggle="modal"
+                    data-target="#chooseSchoolTermModal"
+                    title="Escolher Semestre" 
+                >
+                    Escolher Semestre
+                </a>
+                
                 @if(Auth::user()->hasPermissionTo('importar turmas do replicado'))
                     <a  id="btn-importModal"
                         class="btn btn-primary"

@@ -21,7 +21,7 @@ class TutorController extends Controller
             $schoolterm = SchoolTerm::getOpenSchoolTerm();
         }
 
-        $selections = Selection::whereHas('schoolclass.schoolterm', function($query) use($schoolterm) {return $query->where('id', $schoolterm->id);})->get();
+        $selections = $schoolterm ? Selection::whereHas('schoolclass.schoolterm', function($query) use($schoolterm) {return $query->where('id', $schoolterm->id);})->get() : [];
 
         return view('tutors.index', compact(['selections', 'schoolterm']));
     }

@@ -17,6 +17,7 @@ use App\Models\Selection;
 use App\Models\Student;
 use App\Models\Frequency;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\IndexSchoolClassRequest;
 use Illuminate\Http\Request;
 use Uspdev\Replicado\Pessoa;
 use Session;
@@ -29,21 +30,32 @@ class SchoolClassController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(IndexSchoolClassRequest $request)
     {
         if(!Gate::allows('visualizar turma')){
             abort(403);
-        }elseif(Auth::user()->hasRole('Docente')){
-            $turmas = SchoolClass::whereHas('instructors', function($query) { 
-                $query->where('instructors.codpes', Auth::user()->codpes); 
-            })->get();
-        }else{
-            $turmas = SchoolClass::all();
         }
 
-        $schoolterms = SchoolTerm::all();
+        $validated = $request->validated();
 
-        return view('schoolclasses.index', compact(['turmas', 'schoolterms']));
+        if(isset($validated['periodoId'])){
+            $schoolterm = SchoolTerm::find($validated['periodoId']);
+        }else{
+            $schoolterm = SchoolTerm::getOpenSchoolTerm();
+        }
+        
+        if(Auth::user()->hasRole('Docente') && !Auth::user()->hasRole("Membro Comissão")){
+            $turmas = $schoolterm ? SchoolClass::whereHas('instructors', function($query) { 
+                return $query->where('instructors.codpes', Auth::user()->codpes); 
+            })->whereBelongsTo($schoolterm)->get() : [];
+        }elseif(Auth::user()->hasRole("Membro Comissão")){
+            $turmas = $schoolterm ? SchoolClass::whereBelongsTo($schoolterm)
+                ->whereBelongsTo(Instructor::where(['codpes'=>Auth::user()->codpes])->first()->department)->get() : [];
+        }else{
+            $turmas = $schoolterm ? SchoolClass::whereBelongsTo($schoolterm)->get() : [];
+        }
+
+        return view('schoolclasses.index', compact(['turmas', 'schoolterm']));
     }
 
     /**
@@ -239,17 +251,13 @@ class SchoolClassController extends Controller
         }
 
         $validated = $request->validated();
-        
-        $coddis = $validated['coddis'];
 
-        $turmas = new SchoolClass;
-        $turmas = $turmas->when($coddis, function ($query) use ($coddis) {
-            return $query->where('coddis', $coddis);
-        })->get();
+        $schoolterm = array_key_exists('periodoId', $validated) ? SchoolTerm::find($validated['periodoId']) : [];
 
-        $schoolterms = SchoolTerm::all();
+        $turmas = $schoolterm ? SchoolClass::whereBelongsTo($schoolterm)
+                         ->where('coddis', $validated['coddis'])->get() : [];
 
-        return view('schoolclasses.index', compact(['turmas', 'schoolterms']));
+        return view('schoolclasses.index', compact(['turmas', 'schoolterm']));
     }
 
     public function enrollments(SchoolClass $schoolclass)
