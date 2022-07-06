@@ -36,7 +36,7 @@ class StoreSchoolClassRequest extends FormRequest
             'horarios.*.diasmnocp' => 'required|in:seg,ter,qua,qui,sex,sab,dom',
             'horarios.*.horent' => 'required|date_format:H:i|before:horarios.*.horsai',
             'horarios.*.horsai' => 'required|date_format:H:i',
-            'instrutores' => 'sometimes|array',
+            'instrutores' => 'required|array',
             'instrutores.*.codpes' => 'required|numeric',
         ];
 

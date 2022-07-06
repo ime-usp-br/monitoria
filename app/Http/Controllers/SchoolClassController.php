@@ -105,11 +105,9 @@ class SchoolClassController extends Controller
             $schoolclass->schoolterm()->associate($schoolTerm);
             $schoolclass->save();
 
-            if(array_key_exists('instrutores', $validated)){
-                foreach($validated['instrutores'] as $instructor){
-                    $schoolclass->instructors()->attach(Instructor::firstOrCreate(Instructor::getFromReplicadoByCodpes($instructor['codpes'])));
-                }
-            }   
+            foreach($validated['instrutores'] as $instructor){
+                $schoolclass->instructors()->attach(Instructor::firstOrCreate(Instructor::getFromReplicadoByCodpes($instructor['codpes'])));
+            }
 
             if(array_key_exists('horarios', $validated)){
                 foreach($validated['horarios'] as $classSchedule){
@@ -117,8 +115,21 @@ class SchoolClassController extends Controller
                 }
             }
             $schoolclass->save();
+        }elseif(!$schoolclass->instructors()->exists()){
+            foreach($validated['instrutores'] as $instructor){
+                $schoolclass->instructors()->attach(Instructor::firstOrCreate(Instructor::getFromReplicadoByCodpes($instructor['codpes'])));
+            }
+    
+            $schoolclass->classschedules()->detach();
+            if(array_key_exists('horarios', $validated)){
+                foreach($validated['horarios'] as $classSchedule){
+                    $schoolclass->classschedules()->attach(ClassSchedule::firstOrCreate($classSchedule));
+                }
+            }
+    
+            $schoolclass->update($validated);            
         }else{
-            Session::flash("alert-warning", "Já existe uma turma cadastrada com esse código da turma e código da disciplina");
+            Session::flash("alert-warning", "Já existe uma turma cadastrada com esse código de turma e código de disciplina");
             return back();
         }
 
@@ -169,12 +180,10 @@ class SchoolClassController extends Controller
         $validated = $request->validated();
 
         $schoolclass->instructors()->detach();
-        if(array_key_exists('instrutores', $validated)){
-            foreach($validated['instrutores'] as $instructor){
-                $nompes = Pessoa::obterNome($instructor['codpes']);
-                $instructor['nompes'] = $nompes;
-                $schoolclass->instructors()->attach(Instructor::firstOrCreate($instructor));
-            }
+        foreach($validated['instrutores'] as $instructor){
+            $nompes = Pessoa::obterNome($instructor['codpes']);
+            $instructor['nompes'] = $nompes;
+            $schoolclass->instructors()->attach(Instructor::firstOrCreate($instructor));
         }
 
         $schoolclass->classschedules()->detach();
