@@ -58,13 +58,15 @@ class SchoolRecordController extends Controller
 
         $validated = $request->validated();
 
-        $path = $validated['file']->store(Auth::user()->codpes);
+        $schoolterm = SchoolTerm::getSchoolTermInEnrollmentPeriod();
+
+        $path = $validated['file']->store($schoolterm->year . $schoolterm->period[0]);
 
         $historico = new SchoolRecord;
 
         $historico->file_path = $path;
 
-        $historico->schoolterm()->associate(SchoolTerm::getSchoolTermInEnrollmentPeriod());
+        $historico->schoolterm()->associate($schoolterm);
         $historico->student()->associate(Student::where(['codpes'=>Auth::user()->codpes])->first());
 
         $historico->save();

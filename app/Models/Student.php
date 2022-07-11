@@ -56,9 +56,9 @@ class Student extends Model
         $nomes_meio = ' ';
         
         if(count($nome) > 2){
-        for($x=1;$x<count($nome)-1;$x++){
-            $nomes_meio .= $nome[$x][0].". ";
-        }
+            for($x=1;$x<count($nome)-1;$x++){
+                $nomes_meio .= $nome[$x][0].". ";
+            }
         }
         
         $nomeabreviado = array_shift($nome).$nomes_meio.array_pop($nome);
