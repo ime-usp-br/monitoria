@@ -33,7 +33,7 @@ class SelectionController extends Controller
 
         if(Auth::user()->hasRole(['Secretaria', 'Administrador', 'Presidente de Comissão'])){
             $solicitacoes = Requisition::whereHas('schoolclass', function($q) use($periodoLetivo){
-                return $q->whereBelongsTo($periodoLetivo);})->get();
+                return $q->whereBelongsTo($periodoLetivo);})->get()->sortBy('schoolclass.department_id');
         }elseif(Auth::user()->hasRole('Membro Comissão')){
             $docente = Instructor::where(['codpes'=>Auth::user()->codpes])->first();
 
