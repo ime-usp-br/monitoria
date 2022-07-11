@@ -31,16 +31,16 @@ class SelectionController extends Controller
 
         $periodoLetivo = SchoolTerm::getOpenSchoolTerm();
 
-        if(Auth::user()->hasRole('Membro Comissão')){
+        if(Auth::user()->hasRole(['Secretaria', 'Administrador', 'Presidente de Comissão'])){
+            $solicitacoes = Requisition::whereHas('schoolclass', function($q) use($periodoLetivo){
+                return $q->whereBelongsTo($periodoLetivo);})->get();
+        }elseif(Auth::user()->hasRole('Membro Comissão')){
             $docente = Instructor::where(['codpes'=>Auth::user()->codpes])->first();
 
             $departamento = $docente->department;
 
             $solicitacoes = Requisition::whereHas('schoolclass', function($q) use($departamento, $periodoLetivo){
                 return $q->whereBelongsTo($departamento)->whereBelongsTo($periodoLetivo);})->get();
-        }elseif(Auth::user()->hasRole(['Secretaria', 'Administrador'])){
-            $solicitacoes = Requisition::whereHas('schoolclass', function($q) use($periodoLetivo){
-                return $q->whereBelongsTo($periodoLetivo);})->get();
         }
 
         return view('selections.index', compact('solicitacoes'));

@@ -8,10 +8,10 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Seleção de Monitores</h1>
-            @if(Auth::user()->hasRole('Membro Comissão'))
+            @if(Auth::user()->hasRole(['Secretaria', 'Administrador', 'Presidente de Comissão']))
+                <h4 class='text-center mb-5'>Todos Departamentos</h4>
+            @elseif(Auth::user()->hasRole('Membro Comissão'))
                 <h4 class='text-center mb-5'>Departamento de {{ App\Models\Instructor::where(['codpes'=>Auth::user()->codpes])->first()->department->nomset }}</h4>
-            @elseif(Auth::user()->hasRole(['Secretaria', 'Administrador']))
-
             @endif
 
             @if (count($solicitacoes) > 0)
