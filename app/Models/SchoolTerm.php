@@ -48,22 +48,22 @@ class SchoolTerm extends Model
 
     public function setStartDateRequisitionsAttribute($value)
     {
-        $this->attributes['start_date_requisitions'] = Carbon::createFromFormat('d/m/Y', $value);
+        $this->attributes['start_date_requisitions'] = Carbon::createFromFormat('d/m/Y', $value)->startOfDay();
     }
 
     public function setEndDateRequisitionsAttribute($value)
     {
-        $this->attributes['end_date_requisitions'] = Carbon::createFromFormat('d/m/Y', $value);
+        $this->attributes['end_date_requisitions'] = Carbon::createFromFormat('d/m/Y', $value)->endOfDay();
     }
 
     public function setStartDateEnrollmentsAttribute($value)
     {
-        $this->attributes['start_date_enrollments'] = Carbon::createFromFormat('d/m/Y', $value);
+        $this->attributes['start_date_enrollments'] = Carbon::createFromFormat('d/m/Y', $value)->startOfDay();
     }
 
     public function setEndDateEnrollmentsAttribute($value)
     {
-        $this->attributes['end_date_enrollments'] = Carbon::createFromFormat('d/m/Y', $value);
+        $this->attributes['end_date_enrollments'] = Carbon::createFromFormat('d/m/Y', $value)->endOfDay();
     }
 
     public function getStartedAtAttribute($value)
