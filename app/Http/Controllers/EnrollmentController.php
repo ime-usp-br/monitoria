@@ -21,7 +21,10 @@ class EnrollmentController extends Controller
      */
     public function index()
     {
-        if(!Auth::user()->hasRole('Aluno')){
+        if(!Auth::user()){
+            Session::flash('alert-warning', 'Antes de se inscrever você precisa fazer login');
+            return redirect('/');
+        }elseif(!Auth::user()->hasRole('Aluno')){
             abort(403);
         }elseif(!SchoolTerm::isEnrollmentPeriod()){
             Session::flash('alert-warning', 'Período de inscrições encerrado');
