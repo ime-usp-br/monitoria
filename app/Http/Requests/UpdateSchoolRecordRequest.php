@@ -13,7 +13,7 @@ class UpdateSchoolRecordRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +23,10 @@ class UpdateSchoolRecordRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
+        $rules  = [
+        "file" => "required|mimetypes:application/pdf|max:1000"
         ];
+
+        return $rules;
     }
 }

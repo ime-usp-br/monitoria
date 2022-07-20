@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Models\SchoolRecord;
 use App\Models\SchoolTerm;
 use App\Models\Student;
+use Session;
 use Auth;
 
 class SchoolRecordController extends Controller
@@ -105,7 +106,26 @@ class SchoolRecordController extends Controller
      */
     public function update(UpdateSchoolRecordRequest $request, SchoolRecord $schoolRecord)
     {
-        //
+        if(!Auth::user()->hasRole('Aluno')){
+            abort(403);
+        }elseif(!SchoolTerm::isEnrollmentPeriod()){
+            Session::flash('alert-warning', 'Período de inscrições encerrado');
+            return redirect('/');
+        }
+
+        $validated = $request->validated();
+
+        $schoolterm = SchoolTerm::getSchoolTermInEnrollmentPeriod();
+
+        $path = $validated['file']->store($schoolterm->year . $schoolterm->period[0]);
+
+        $schoolRecord->file_path = $path;
+
+        $schoolRecord->save();
+
+        Session::flash('alert-success', 'Histórico atualizado com sucesso');
+        
+        return redirect(route('enrollments.index'));
     }
 
     /**
