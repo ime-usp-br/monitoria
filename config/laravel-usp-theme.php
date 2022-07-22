@@ -55,7 +55,7 @@ $menu = [
     [
         'text' => 'Ver Todos Inscritos',
         'url' => config('app.url') . '/enrollments/showAll',
-        'can' => 'visuzalizar todos inscritos',
+        'can' => 'visualizar todos inscritos',
     ],
     [
         'text' => 'Disparar E-mails',
