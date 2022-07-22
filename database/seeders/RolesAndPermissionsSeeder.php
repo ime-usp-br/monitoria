@@ -107,7 +107,8 @@ class RolesAndPermissionsSeeder extends Seeder
         
         Role::firstOrCreate(['name' => 'Monitor']);
 
-        Role::firstOrCreate(['name' => 'Presidente de Comissão']);
+        Role::firstOrCreate(['name' => 'Presidente de Comissão'])
+            ->givePermissionTo('visualizar todos inscritos');
 
         Role::firstOrCreate(['name' => 'Vice Presidente de Comissão'])
             ->givePermissionTo('visualizar todos inscritos');
