@@ -195,7 +195,7 @@ class EnrollmentController extends Controller
         $schoolterm = SchoolTerm::getOpenSchoolTerm();
 
         $alunos = Student::whereHas("enrollments.schoolclass", function($query)use($schoolterm){
-            $query->whereBelongsTo($schoolterm);})->get();
+            $query->whereBelongsTo($schoolterm);})->get()->sortBy("nompes");
 
         return view('enrollments.showAll', compact(['alunos', 'schoolterm']));
     }
