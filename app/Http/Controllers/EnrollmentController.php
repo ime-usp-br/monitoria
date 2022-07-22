@@ -9,6 +9,7 @@ use App\Models\Enrollment;
 use App\Models\Student;
 use App\Models\SchoolClass;
 use App\Models\SchoolTerm;
+use Illuminate\Support\Facades\Gate;
 use Auth;
 use Session;
 
@@ -183,5 +184,19 @@ class EnrollmentController extends Controller
         $enrollment->delete();
 
         return redirect('/enrollments');
+    }
+
+    public function showAll()
+    {
+        if(!Gate::allows('visualizar todos inscritos')){
+            abort(403);
+        }
+
+        $schoolterm = SchoolTerm::getOpenSchoolTerm();
+
+        $alunos = Student::whereHas("enrollments.schoolclass", function($query)use($schoolterm){
+            $query->whereBelongsTo($schoolterm);})->get();
+
+        return view('enrollments.showAll', compact(['alunos', 'schoolterm']));
     }
 }

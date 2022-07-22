@@ -51,6 +51,7 @@ Route::resource('requisitions', RequisitionController::class);
 
 Route::resource('students', StudentController::class);
 
+Route::get('/enrollments/showAll', [EnrollmentController::class, 'showAll'])->name('enrollments.showAll');
 Route::resource('enrollments', EnrollmentController::class);
 
 Route::post('/schoolrecords/download', [SchoolRecordController::class, 'download'])->name('schoolrecords.download');

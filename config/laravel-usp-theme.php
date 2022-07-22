@@ -53,6 +53,11 @@ $menu = [
         'can' => 'Selecionar monitor',
     ],
     [
+        'text' => 'Ver Todos Inscritos',
+        'url' => config('app.url') . '/enrollments/showAll',
+        'can' => 'visuzalizar todos inscritos',
+    ],
+    [
         'text' => 'Disparar E-mails',
         'url' => config('app.url') . '/emails',
         'can' => 'Disparar emails',
