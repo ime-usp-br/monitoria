@@ -64,6 +64,7 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'visualizar todos inscritos']);
 
         Role::firstOrCreate(['name' => 'Secretaria'])
+            ->givePermissionTo('visualizar todos inscritos')
             ->givePermissionTo('visualizar menu de configuração')
             ->givePermissionTo('editar usuario')
             ->givePermissionTo('visualizar periodo letivo')
@@ -114,6 +115,7 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('visualizar todos inscritos');
 
         Role::firstOrCreate(['name' => 'Membro Comissão'])
+            ->givePermissionTo('visualizar todos inscritos')
             ->givePermissionTo('Selecionar monitor')
             ->givePermissionTo('Preterir monitor')
             ->givePermissionTo('gerar relatorio')
