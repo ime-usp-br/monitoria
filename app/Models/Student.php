@@ -144,4 +144,21 @@ class Student extends Model
 
         return array_values($res);
     }
+
+    public function getTelefonesFromReplicado()
+    {
+        $query = " SELECT TP.codddi, TP.codddd, TP.numtel, TP.tiptelpes";
+        $query .= " FROM TELEFPESSOA AS TP";
+        $query .= " WHERE TP.codpes=:codpes";
+        $query .= " AND (TP.tiptelpes=:residencial OR TP.tiptelpes=:celular)";
+        $param = [
+            "codpes"=>$this->codpes,
+            "residencial"=>"residencial",
+            "celular"=>"celular"
+        ];
+
+        $res = array_unique(DB::fetchAll($query, $param),SORT_REGULAR);
+
+        return $res;
+    }
 }

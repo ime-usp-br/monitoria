@@ -20,6 +20,10 @@
                         <th>E-mail</th>
                         <th>Histórico Escolar</th>
                         <th>Inscrito nas Turmas</th>
+                        <th>Disponibilidade de dia</th>
+                        <th>Disponibilidade de noite</th>
+                        <th>Preferência pelo período</th>
+                        <th>Telefone</th>
                     </tr>
 
                     @foreach($alunos as $aluno)
@@ -46,6 +50,41 @@
                                     @else
                                         {{ $inscricao->schoolclass->coddis." T.".substr($inscricao->schoolclass->codtur,-2,2) }} <br/>
                                     @endif
+                                @endforeach
+                            </td>
+                            @php
+                                $disp_dia_array = $aluno->enrollments()->whereHas("schoolclass", function($query)use($schoolterm){$query->whereBelongsTo($schoolterm);})->get()->pluck("disponibilidade_diurno")->unique()->toarray();
+                            @endphp
+                            <td style="text-align: center">
+                                @if(count($disp_dia_array)>1)
+                                    Depende<br>da Vaga
+                                @else
+                                    {!! $disp_dia_array[0] ? "Sim" : "Não" !!}
+                                @endif
+                            </td>
+                            @php
+                                $disp_noite_array = $aluno->enrollments()->whereHas("schoolclass", function($query)use($schoolterm){$query->whereBelongsTo($schoolterm);})->get()->pluck("disponibilidade_noturno")->unique()->toarray();
+                            @endphp
+                            <td style="text-align: center">
+                                @if(count($disp_noite_array)>1)
+                                    Depende<br>da Vaga
+                                @else
+                                    {!! $disp_noite_array[0] ? "Sim" : "Não" !!}
+                                @endif
+                            </td>
+                            @php
+                                $pref_hor_array = $aluno->enrollments()->whereHas("schoolclass", function($query)use($schoolterm){$query->whereBelongsTo($schoolterm);})->get()->pluck("preferencia_horario")->unique()->toarray();
+                            @endphp
+                            <td style="text-align: center">
+                                @if(count($pref_hor_array)>1)
+                                    Depende<br>da Vaga
+                                @else
+                                    {!! $pref_hor_array[0] !!}
+                                @endif
+                            </td>
+                            <td style="white-space: nowrap;">
+                                @foreach($aluno->getTelefonesFromReplicado() as $tel)
+                                    {!! "+".$tel['codddi']." (".$tel['codddd'].") ".$tel['numtel'] !!}<br>
                                 @endforeach
                             </td>
                         </tr>
