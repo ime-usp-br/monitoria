@@ -9,6 +9,7 @@ use App\Models\Enrollment;
 use App\Models\Student;
 use App\Models\SchoolClass;
 use App\Models\SchoolTerm;
+use App\Models\Scholarship;
 use Illuminate\Support\Facades\Gate;
 use Auth;
 use Session;
@@ -98,8 +99,15 @@ class EnrollmentController extends Controller
         $validated = $request->validated();
 
         $validated['student_id'] = Student::where(['codpes'=>Auth::user()->codpes])->first()->id;
+
+        $scholarships = array_key_exists('scholarships', $validated) ? $validated['scholarships'] : [];
+        unset($validated['scholarships']);
         
-        $inscricao = Enrollment::create($validated);
+        $enrollment = Enrollment::create($validated);
+
+        foreach($scholarships as $scholarship_id){
+            $enrollment->others_scholarships()->attach(Scholarship::find($scholarship_id));
+        }
 
         return redirect('/enrollments');
     }
@@ -160,6 +168,15 @@ class EnrollmentController extends Controller
         $validated['disponibilidade_diurno'] = isset($validated['disponibilidade_diurno']) ? 1 : 0;
 
         $validated['disponibilidade_noturno'] = isset($validated['disponibilidade_noturno']) ? 1 : 0;
+
+        $enrollment->others_scholarships()->detach();
+
+        $scholarships = array_key_exists('scholarships', $validated) ? $validated['scholarships'] : [];
+        unset($validated['scholarships']);
+
+        foreach($scholarships as $scholarship_id){
+            $enrollment->others_scholarships()->attach(Scholarship::find($scholarship_id));
+        }
 
         $enrollment->update($validated);
 

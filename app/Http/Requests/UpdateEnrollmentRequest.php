@@ -29,6 +29,8 @@ class UpdateEnrollmentRequest extends FormRequest
             'voluntario' => 'sometimes|bool',
             'observacoes' => 'nullable',
             'preferencia_horario' => 'required',
+            'scholarships' => 'sometimes|array',
+            'scholarships.*' => 'required|numeric|exists:App\Models\Scholarship,id',
         ];
 
         return $rules;

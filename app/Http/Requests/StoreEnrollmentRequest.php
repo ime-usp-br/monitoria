@@ -30,6 +30,8 @@ class StoreEnrollmentRequest extends FormRequest
             'voluntario' => 'sometimes|bool',
             'observacoes' => 'nullable|max:255',
             'preferencia_horario' => 'required',
+            'scholarships' => 'sometimes|array',
+            'scholarships.*' => 'required|numeric|exists:App\Models\Scholarship,id',
         ];
 
         return $rules;
