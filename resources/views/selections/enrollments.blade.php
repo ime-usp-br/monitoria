@@ -19,11 +19,12 @@
                     <tr class="text-center">
                         <th>Sigla da Disciplina</th>
                         <th>Horários</th>
-                        <th>{{ $turma->requisition->instructor->getPronounTreatment() == "Prof. Dr. " ? "Professor solicitante" : "Professora solicitante" }}</th>
+                        <th>Professor(a) solicitante</th>
                         <th>N.° de Monitores Solicitados</th>
                         <th>Atividades atribuidas</th>
                         <th>Prioridade</th>
                         <th>Alunos indicados</th>
+                        <th>Outras<br>Bolsas<br>Solicitadas</th>
                     </tr>
 
                     <tr class="text-center">
@@ -33,7 +34,7 @@
                                 {{ $horario->diasmnocp . ' ' . $horario->horent . ' ' . $horario->horsai }} <br/>
                             @endforeach
                         </td>
-                        <td style="white-space: nowrap;">{{ $turma->requisition->instructor->getPronounTreatment() . $turma->requisition->instructor->nompes}}</td>
+                        <td style="white-space: nowrap;">{{ $turma->requisition->instructor->nompes}}</td>
                         <td>{{$turma->requisition->requested_number}}</td>
                         <td class="text-left"  style="white-space: nowrap;">
                             @foreach($turma->requisition->activities as $atividade)
@@ -47,6 +48,11 @@
                                     {{ $indicacao->student->nompes }} <br/>
                                 @endforeach
                             @endif
+                        </td>
+                        <td class="text-left" style="white-space: nowrap;">
+                            @foreach($turma->requisition->others_scholarships as $scholarship)
+                                {{ $scholarship->name }} <br/>
+                            @endforeach
                         </td>
                     </tr>
                 </table> <br/>
@@ -84,6 +90,7 @@
                         <th>Disponibilidade para trabalhar de noite</th>
                         <th>Preferência de trabalhar no período</th>
                         <th>Voluntário</th>
+                        <th>Outras<br>Bolsas</th>
                         <th>Observações</th>
                         <th>Aluno indicado</th>
                         <th>Eleito</th>
@@ -110,6 +117,11 @@
                             <td>{{ $inscricao->disponibilidade_noturno ? 'Sim' : 'Não'}}</td>
                             <td>{{ $inscricao->preferencia_horario }}</td>
                             <td>{{ $inscricao->voluntario ? 'Sim' : 'Não'}}</td>
+                            <td class="text-left" style="white-space: nowrap;">
+                                @foreach($inscricao->others_scholarships as $scholarship)
+                                    {{ $scholarship->name }} <br/>
+                                @endforeach
+                            </td>
                             <td class="text-left">{{ $inscricao->observacoes }}</td>
                             <td>
                                 @if($turma->requisition)

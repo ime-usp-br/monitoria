@@ -23,6 +23,7 @@
                         <th>Disponibilidade de dia</th>
                         <th>Disponibilidade de noite</th>
                         <th>Preferência pelo período</th>
+                        <th>Outras<br>Bolsas</th>
                         <th>Telefone</th>
                     </tr>
 
@@ -81,6 +82,19 @@
                                 @else
                                     {!! $pref_hor_array[0] !!}
                                 @endif
+                            </td>
+                            <td class="text-left" style="white-space: nowrap;">
+                                @php
+                                $enrollments = $aluno->enrollments()->whereHas("schoolclass", function($query)use($schoolterm){$query->whereBelongsTo($schoolterm);})->get();
+                                $scholarships = [];
+                                foreach($enrollments as $enrollment){
+                                    $scholarships = array_merge($scholarships,$enrollment->others_scholarships->pluck("name")->toArray());
+                                }
+                                $scholarships = array_unique($scholarships);
+                                @endphp
+                                @foreach($scholarships as $scholarship)
+                                    {{ $scholarship }} <br/>
+                                @endforeach
                             </td>
                             <td style="white-space: nowrap;">
                                 @foreach($aluno->getTelefonesFromReplicado() as $tel)

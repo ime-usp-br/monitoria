@@ -12,6 +12,7 @@ use App\Models\Instructor;
 use App\Models\Activity;
 use App\Models\Recommendation;
 use App\Models\Student;
+use App\Models\Scholarship;
 use Illuminate\Support\Facades\Gate;
 use Auth;
 use Session;
@@ -84,6 +85,9 @@ class RequisitionController extends Controller
         $recommendations = array_key_exists('recommendations', $validated) ? $validated['recommendations'] : [];
         unset($validated['recommendations']);
 
+        $scholarships = array_key_exists('scholarships', $validated) ? $validated['scholarships'] : [];
+        unset($validated['scholarships']);
+
         $validated['instructor_id'] = Instructor::where(['codpes'=>Auth::user()->codpes])->first()->id;
 
         $requisition = Requisition::create($validated);
@@ -97,6 +101,10 @@ class RequisitionController extends Controller
                 'student_id'=>Student::firstOrCreate(Student::getFromReplicadoByCodpes($recommendation['codpes']))->id,
                 'requisition_id'=>$requisition->id
             ]);
+        }
+
+        foreach($scholarships as $scholarship_id){
+            $requisition->others_scholarships()->attach(Scholarship::find($scholarship_id));
         }
 
         return redirect('/requisitions');
@@ -160,6 +168,9 @@ class RequisitionController extends Controller
         $recommendations = array_key_exists('recommendations', $validated) ? $validated['recommendations'] : [];
         unset($validated['recommendations']);
 
+        $scholarships = array_key_exists('scholarships', $validated) ? $validated['scholarships'] : [];
+        unset($validated['scholarships']);
+
         $requisition->activities()->detach();
         foreach($activities as $act){
             $requisition->activities()->attach(Activity::firstOrCreate(['description'=>$act]));
@@ -171,6 +182,11 @@ class RequisitionController extends Controller
                 'student_id'=>Student::firstOrCreate(Student::getFromReplicadoByCodpes($recommendation['codpes']))->id,
                 'requisition_id'=>$requisition->id
             ]);
+        }
+
+        $requisition->others_scholarships()->detach();
+        foreach($scholarships as $scholarship_id){
+            $requisition->others_scholarships()->attach(Scholarship::find($scholarship_id));
         }
 
         $requisition->update($validated);

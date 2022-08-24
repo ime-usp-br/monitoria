@@ -43,6 +43,17 @@ class Requisition extends Model
         return $this->hasMany(Selection::class);
     }
 
+    public function others_scholarships()
+    {
+        return $this->morphToMany(
+            Scholarship::class,
+            'model',
+            'model_has_scholarships',
+            'model_id',
+            'scholarship_id',
+        );
+    }
+
     public function isStudentRecommended(Student $student)
     {
         return $this->recommendations()->whereBelongsTo($student)->first() ? 1 : 0 ;

@@ -30,6 +30,8 @@ class UpdateRequisitionRequest extends FormRequest
             'recommendations.*.codpes' => 'required|numeric',
             'activities' => 'required|array',
             'activities.*' => 'required|in:Atendimento a alunos,Correção de listas de exercícios,Fiscalização de provas',
+            'scholarships' => 'sometimes|array',
+            'scholarships.*' => 'required|numeric|exists:App\Models\Scholarship,id',
         ];
 
         return $rules;

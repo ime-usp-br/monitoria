@@ -1,62 +1,62 @@
 <div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-5 text-lg-right">
+    <div class="col-12 col-md-6 text-lg-right">
         <label >Unidade: </label>
     </div>
-    <div class="col-12 col-md-5">
+    <div class="col-12 col-md-6">
         <a >{{ $turma->department->nomund }} </a>
     </div>
 </div>
 
 <div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-5 text-lg-right">
+    <div class="col-12 col-md-6 text-lg-right">
         <label >Departamento: </label>
     </div>
-    <div class="col-12 col-md-5">
+    <div class="col-12 col-md-6">
         <a >{{ $turma->department->nomset }} </a>
     </div>
 </div>
 
 <div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-5 text-lg-right">
+    <div class="col-12 col-md-6 text-lg-right">
         <label >Nome do Professor: </label>
     </div>
-    <div class="col-12 col-md-5">
+    <div class="col-12 col-md-6">
         <a >{{ Auth::user()->name }} </a>
     </div>
 </div>
 
 <div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-5 text-lg-right">
+    <div class="col-12 col-md-6 text-lg-right">
         <label >Disciplina: </label>
     </div>
-    <div class="col-12 col-md-5">
+    <div class="col-12 col-md-6">
         <a >{{ $turma->nomdis }} </a>
     </div>
 </div>
 
 <div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-5 text-lg-right">
+    <div class="col-12 col-md-6 text-lg-right">
         <label >Sigla: </label>
     </div>
-    <div class="col-12 col-md-5">
+    <div class="col-12 col-md-6">
         <a >{{ $turma->coddis }} </a>
     </div>
 </div>
 
 <div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-5 text-lg-right">
+    <div class="col-12 col-md-6 text-lg-right">
         <label >Turma: </label>
     </div>
-    <div class="col-12 col-md-5">
+    <div class="col-12 col-md-6">
         <a >{{ $turma->codtur }} </a>
     </div>
 </div>
 
 <div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-5 text-lg-right">
+    <div class="col-12 col-md-6 text-lg-right">
         <label >Horários:</label>
     </div>
-    <div class="col-12 col-md-5">
+    <div class="col-12 col-md-6">
         @foreach($turma->classschedules as $horario)
             <label id="label-horario-{{$horario->id}}" class="font-weight-normal">{{ $horario->diasmnocp . ' ' . $horario->horent . ' ' . $horario->horsai }}</label> 
             <br/>
@@ -65,7 +65,7 @@
 </div>
 
 <div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-5 text-lg-right">
+    <div class="col-12 col-md-6 text-lg-right">
         <label for="requested_number">Número de monitores solicitados: </label>
     </div>
     <div class="col-3 col-md-1">
@@ -78,10 +78,10 @@
 @include('requisitions.modals.addRecommendation')
 
 <div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-5 text-lg-right">
+    <div class="col-12 col-md-6 text-lg-right">
         <label >Indicar aluno(s):</label>
     </div>
-    <div class="col-12 col-md-5">
+    <div class="col-12 col-md-6">
         @if($turma->requisition)
             @foreach($turma->requisition->recommendations as $indicacao)
                 <div id="indicacao-{{ $indicacao->id }}">
@@ -119,10 +119,10 @@
 </div>
 
 <div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-5 text-lg-right">
+    <div class="col-12 col-md-6 text-lg-right">
         <label for="nomdis">Atividade(s) que pretende atribuir ao(s) monitor(es):</label>
     </div>
-    <div class="col-12 col-md-5">
+    <div class="col-12 col-md-6">
         @foreach(['Atendimento a alunos',
                   'Correção de listas de exercícios',
                   'Fiscalização de provas'] as $activity)
@@ -136,10 +136,10 @@
 </div>
 
 <div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-5 text-lg-right">
+    <div class="col-12 col-md-6 text-lg-right">
         <label for="nomdis">De acordo com a sua avaliação, o trabalho do monitor nesta disciplina é:</label>
     </div>
-    <div class="col-12 col-md-5">
+    <div class="col-12 col-md-6">
         <select id="priority" name="priority" class="custom-form-control">
             <option value=""></option>
             @foreach([3=>'Imprescindivel',
@@ -151,9 +151,26 @@
     </div>
 </div>
 
+<div class="row custom-form-group align-items-center">
+    <div class="col-12 col-md-6 text-lg-right">
+        <label for="voluntario">Realizou outros pedidos de bolsa para monitoria além deste?<br> Em caso afirmativo, informe quais.</label>
+    </div>
+    <div class="col-12 col-md-6">
+        <div>
+            @foreach(App\Models\Scholarship::all() as $scholarship)
+                <div>
+                    <input class="checkbox" type="checkbox" name="scholarships[]"
+                    value={{ $scholarship->id }} {{ $turma->requisition ? ($turma->requisition->others_scholarships()->where("id",$scholarship->id)->exists() ? 'checked' : '') : '' }}/>
+                    <a>{{ $scholarship->name }}</a>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+
+
 <div class="row">
-    <div class="col-4 d-none d-lg-block"></div>
-    <div class="col-md-12 col-lg-6">
+    <div class="col-md-12 text-center">
         <button type="submit" class="btn btn-outline-dark">
             {{ $buttonText }}
         </button>
