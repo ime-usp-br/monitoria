@@ -131,7 +131,9 @@ class SchoolTermController extends Controller
             }
         }
 
-        $validated['public_notice_file_path'] = $validated['public_notice']->store($validated['year'] . $validated['period'][0]);
+        if(in_array("public_notice",array_keys($validated))){
+            $validated['public_notice_file_path'] = $validated['public_notice']->store($validated['year'] . $validated['period'][0]);
+        }
 
         $schoolterm->update($validated);
 
