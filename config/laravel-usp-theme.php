@@ -21,6 +21,11 @@ $submenuConfig = [
         'url' => config('app.url') . '/schoolclasses',
         'can' => 'visualizar turma',
     ],
+    [
+        'text' => 'Monitores',
+        'url' => config('app.url') . '/tutors',
+        'can' => 'visualizar monitores',
+    ],
 ];
 
 $menu = [
@@ -46,6 +51,11 @@ $menu = [
         'text' => 'Selecionar Monitores',
         'url' => config('app.url') . '/selections',
         'can' => 'Selecionar monitor',
+    ],
+    [
+        'text' => 'Ver Todos Inscritos',
+        'url' => config('app.url') . '/enrollments/showAll',
+        'can' => 'visualizar todos inscritos',
     ],
     [
         'text' => 'Disparar E-mails',

@@ -47,6 +47,25 @@ class Student extends Model
         return $this->hasMany(Frequency::class);
     }
 
+    public function getNomAbrev()
+    {
+        $pattern = '/ de | do | dos | da | das | e /i';
+        $nome = preg_replace($pattern,' ',$this->nompes);
+        $nome = explode(' ', $nome);
+        
+        $nomes_meio = ' ';
+        
+        if(count($nome) > 2){
+            for($x=1;$x<count($nome)-1;$x++){
+                $nomes_meio .= $nome[$x][0].". ";
+            }
+        }
+        
+        $nomeabreviado = array_shift($nome).$nomes_meio.array_pop($nome);
+        
+        return $nomeabreviado;
+    }
+
     public function hasSelectionInOpenSchoolTerm()
     {
         return $this->getSelectionFromOpenSchoolTerm() ? 1 : 0;
@@ -124,5 +143,22 @@ class Student extends Model
         }
 
         return array_values($res);
+    }
+
+    public function getTelefonesFromReplicado()
+    {
+        $query = " SELECT TP.codddi, TP.codddd, TP.numtel, TP.tiptelpes";
+        $query .= " FROM TELEFPESSOA AS TP";
+        $query .= " WHERE TP.codpes=:codpes";
+        $query .= " AND (TP.tiptelpes=:residencial OR TP.tiptelpes=:celular)";
+        $param = [
+            "codpes"=>$this->codpes,
+            "residencial"=>"residencial",
+            "celular"=>"celular"
+        ];
+
+        $res = array_unique(DB::fetchAll($query, $param),SORT_REGULAR);
+
+        return $res;
     }
 }

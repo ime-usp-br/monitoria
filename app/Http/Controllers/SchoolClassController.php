@@ -17,6 +17,7 @@ use App\Models\Selection;
 use App\Models\Student;
 use App\Models\Frequency;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\IndexSchoolClassRequest;
 use Illuminate\Http\Request;
 use Uspdev\Replicado\Pessoa;
 use Session;
@@ -29,21 +30,32 @@ class SchoolClassController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(IndexSchoolClassRequest $request)
     {
         if(!Gate::allows('visualizar turma')){
             abort(403);
-        }elseif(Auth::user()->hasRole('Docente')){
-            $turmas = SchoolClass::whereHas('instructors', function($query) { 
-                $query->where('instructors.codpes', Auth::user()->codpes); 
-            })->get();
-        }else{
-            $turmas = SchoolClass::all();
         }
 
-        $schoolterms = SchoolTerm::all();
+        $validated = $request->validated();
 
-        return view('schoolclasses.index', compact(['turmas', 'schoolterms']));
+        if(isset($validated['periodoId'])){
+            $schoolterm = SchoolTerm::find($validated['periodoId']);
+        }else{
+            $schoolterm = SchoolTerm::getOpenSchoolTerm();
+        }
+        
+        if(Auth::user()->hasRole('Docente') && !Auth::user()->hasRole("Membro Comissão")){
+            $turmas = $schoolterm ? SchoolClass::whereHas('instructors', function($query) { 
+                return $query->where('instructors.codpes', Auth::user()->codpes); 
+            })->whereBelongsTo($schoolterm)->get() : [];
+        }elseif(Auth::user()->hasRole("Membro Comissão")){
+            $turmas = $schoolterm ? SchoolClass::whereBelongsTo($schoolterm)
+                ->whereBelongsTo(Instructor::where(['codpes'=>Auth::user()->codpes])->first()->department)->get() : [];
+        }else{
+            $turmas = $schoolterm ? SchoolClass::whereBelongsTo($schoolterm)->get() : [];
+        }
+
+        return view('schoolclasses.index', compact(['turmas', 'schoolterm']));
     }
 
     /**
@@ -93,11 +105,9 @@ class SchoolClassController extends Controller
             $schoolclass->schoolterm()->associate($schoolTerm);
             $schoolclass->save();
 
-            if(array_key_exists('instrutores', $validated)){
-                foreach($validated['instrutores'] as $instructor){
-                    $schoolclass->instructors()->attach(Instructor::firstOrCreate(Instructor::getFromReplicadoByCodpes($instructor['codpes'])));
-                }
-            }   
+            foreach($validated['instrutores'] as $instructor){
+                $schoolclass->instructors()->attach(Instructor::firstOrCreate(Instructor::getFromReplicadoByCodpes($instructor['codpes'])));
+            }
 
             if(array_key_exists('horarios', $validated)){
                 foreach($validated['horarios'] as $classSchedule){
@@ -105,8 +115,21 @@ class SchoolClassController extends Controller
                 }
             }
             $schoolclass->save();
+        }elseif(!$schoolclass->instructors()->exists()){
+            foreach($validated['instrutores'] as $instructor){
+                $schoolclass->instructors()->attach(Instructor::firstOrCreate(Instructor::getFromReplicadoByCodpes($instructor['codpes'])));
+            }
+    
+            $schoolclass->classschedules()->detach();
+            if(array_key_exists('horarios', $validated)){
+                foreach($validated['horarios'] as $classSchedule){
+                    $schoolclass->classschedules()->attach(ClassSchedule::firstOrCreate($classSchedule));
+                }
+            }
+    
+            $schoolclass->update($validated);            
         }else{
-            Session::flash("alert-warning", "Já existe uma turma cadastrada com esse código da turma e código da disciplina");
+            Session::flash("alert-warning", "Já existe uma turma cadastrada com esse código de turma e código de disciplina");
             return back();
         }
 
@@ -157,12 +180,10 @@ class SchoolClassController extends Controller
         $validated = $request->validated();
 
         $schoolclass->instructors()->detach();
-        if(array_key_exists('instrutores', $validated)){
-            foreach($validated['instrutores'] as $instructor){
-                $nompes = Pessoa::obterNome($instructor['codpes']);
-                $instructor['nompes'] = $nompes;
-                $schoolclass->instructors()->attach(Instructor::firstOrCreate($instructor));
-            }
+        foreach($validated['instrutores'] as $instructor){
+            $nompes = Pessoa::obterNome($instructor['codpes']);
+            $instructor['nompes'] = $nompes;
+            $schoolclass->instructors()->attach(Instructor::firstOrCreate($instructor));
         }
 
         $schoolclass->classschedules()->detach();
@@ -239,17 +260,13 @@ class SchoolClassController extends Controller
         }
 
         $validated = $request->validated();
-        
-        $coddis = $validated['coddis'];
 
-        $turmas = new SchoolClass;
-        $turmas = $turmas->when($coddis, function ($query) use ($coddis) {
-            return $query->where('coddis', $coddis);
-        })->get();
+        $schoolterm = array_key_exists('periodoId', $validated) ? SchoolTerm::find($validated['periodoId']) : [];
 
-        $schoolterms = SchoolTerm::all();
+        $turmas = $schoolterm ? SchoolClass::whereBelongsTo($schoolterm)
+                         ->where('coddis', $validated['coddis'])->get() : [];
 
-        return view('schoolclasses.index', compact(['turmas', 'schoolterms']));
+        return view('schoolclasses.index', compact(['turmas', 'schoolterm']));
     }
 
     public function enrollments(SchoolClass $schoolclass)

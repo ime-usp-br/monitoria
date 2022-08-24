@@ -16,6 +16,18 @@
                     O período de solicitação de monitores está aberto, portanto, você pode se inscrever em turmas sem vagas.
                 </p>
 
+                <form method='post' action="{{ route('schoolRecords.update', $estudante->getSchoolRecordFromOpenSchoolTerm()) }}" enctype='multipart/form-data' >
+                    @csrf
+                    @method('patch')
+                    <div class="text-right" style="height: 50px;">
+                        <input  class="custom-form-input" type='file' name='file' >
+                        <button class="btn btn-primary" type='submit' name='submit' >
+                            <i class="fas fa-file-upload"></i>
+                            Reenviar histórico escolar
+                        </button>
+                    </div>
+                </form>
+
                 <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
                     <tr>
                         <th>Sigla da Disciplina</th>

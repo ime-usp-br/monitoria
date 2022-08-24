@@ -28,7 +28,7 @@ class StoreEnrollmentRequest extends FormRequest
             'disponibilidade_diurno' => 'sometimes|bool',
             'disponibilidade_noturno' => 'sometimes|bool',
             'voluntario' => 'sometimes|bool',
-            'observacoes' => 'nullable',
+            'observacoes' => 'nullable|max:255',
             'preferencia_horario' => 'required',
         ];
 

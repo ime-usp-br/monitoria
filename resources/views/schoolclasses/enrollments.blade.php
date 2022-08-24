@@ -8,11 +8,23 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Alunos Inscritos</h1>
+            <h2 class='text-center mb-5'>
+                Departamento de {{ $turma->department->nomset }}
+            </h2>
             <h4 class='text-center mb-5'>
-                <b>Departamento de {{ $turma->department->nomset }}</b> <br>
-                <b>Disciplina:</b>  {{ $turma->nomdis }} <br>
-                <b>Turma:</b> {{ $turma->codtur }}
+                <b>Disciplina:</b>  {{ $turma->nomdis }} <b>Turma:</b> {{ $turma->codtur }}
             </h4>
+
+            <p class="text-right">
+                <a class="btn btn-primary"
+                    data-toggle="tooltip" data-placement="top"
+                    title="Voltar"
+                    href="{{ url()->previous() }}"
+                >
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar
+                </a>
+            </p>
 
             @if (count($turma->enrollments) > 0)
                 <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
@@ -49,7 +61,7 @@
                             <td class="text-center">{{ $inscricao->preferencia_horario }}</td>
                             <td class="text-center">{{ $inscricao->voluntario ? 'Sim' : 'Não'}}</td>
                             <td class="text-center">{{ $inscricao->observacoes }}</td>
-                            <td>
+                            <td class="text-center">
                                 @if($turma->requisition)
                                     {{ $turma->requisition->isStudentRecommended($inscricao->student) ? 'Sim' : 'Não' }} <br/>
                                 @endif

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateSchoolRecordRequest extends FormRequest
+class IndexTutorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +23,8 @@ class UpdateSchoolRecordRequest extends FormRequest
      */
     public function rules()
     {
-        $rules  = [
-        "file" => "required|mimetypes:application/pdf|max:1000"
+        $rules = [
+            'periodoId' => 'sometimes|numeric',
         ];
 
         return $rules;

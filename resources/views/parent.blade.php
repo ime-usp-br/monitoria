@@ -4,6 +4,7 @@
   @parent
   <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
   <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/datatables.min.css"/>
 @endsection
 
 @section('javascripts_bottom')
@@ -14,6 +15,7 @@
   <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="{{ asset('js/datepicker-pt-BR.js') }}"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/datatables.min.js"></script>
 @endsection
 
 

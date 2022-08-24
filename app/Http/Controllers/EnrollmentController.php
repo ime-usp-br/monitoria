@@ -9,6 +9,7 @@ use App\Models\Enrollment;
 use App\Models\Student;
 use App\Models\SchoolClass;
 use App\Models\SchoolTerm;
+use Illuminate\Support\Facades\Gate;
 use Auth;
 use Session;
 
@@ -21,7 +22,10 @@ class EnrollmentController extends Controller
      */
     public function index()
     {
-        if(!Auth::user()->hasRole('Aluno')){
+        if(!Auth::user()){
+            Session::flash('alert-warning', 'Antes de se inscrever você precisa fazer login');
+            return redirect('/');
+        }elseif(!Auth::user()->hasRole('Aluno')){
             abort(403);
         }elseif(!SchoolTerm::isEnrollmentPeriod()){
             Session::flash('alert-warning', 'Período de inscrições encerrado');
@@ -180,5 +184,19 @@ class EnrollmentController extends Controller
         $enrollment->delete();
 
         return redirect('/enrollments');
+    }
+
+    public function showAll()
+    {
+        if(!Gate::allows('visualizar todos inscritos')){
+            abort(403);
+        }
+
+        $schoolterm = SchoolTerm::getOpenSchoolTerm();
+
+        $alunos = Student::whereHas("enrollments.schoolclass", function($query)use($schoolterm){
+            $query->whereBelongsTo($schoolterm);})->get()->sortBy("nompes");
+
+        return view('enrollments.showAll', compact(['alunos', 'schoolterm']));
     }
 }

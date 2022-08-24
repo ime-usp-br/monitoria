@@ -59,7 +59,12 @@ class RolesAndPermissionsSeeder extends Seeder
 
         Permission::firstOrCreate(['name' => 'gerar relatorio']);
 
+        Permission::firstOrCreate(['name' => 'visualizar monitores']);
+
+        Permission::firstOrCreate(['name' => 'visualizar todos inscritos']);
+
         Role::firstOrCreate(['name' => 'Secretaria'])
+            ->givePermissionTo('visualizar todos inscritos')
             ->givePermissionTo('visualizar menu de configuração')
             ->givePermissionTo('editar usuario')
             ->givePermissionTo('visualizar periodo letivo')
@@ -79,6 +84,7 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('Disparar emails')
             ->givePermissionTo('registrar frequencia')
             ->givePermissionTo('gerar relatorio')
+            ->givePermissionTo('visualizar monitores')
             ->givePermissionTo('baixar histórico escolar');
 
         Role::firstOrCreate(['name' => 'Docente'])
@@ -102,14 +108,18 @@ class RolesAndPermissionsSeeder extends Seeder
         
         Role::firstOrCreate(['name' => 'Monitor']);
 
-        Role::firstOrCreate(['name' => 'Presidente de Comissão']);
+        Role::firstOrCreate(['name' => 'Presidente de Comissão'])
+            ->givePermissionTo('visualizar todos inscritos');
 
-        Role::firstOrCreate(['name' => 'Vice Presidente de Comissão']);
+        Role::firstOrCreate(['name' => 'Vice Presidente de Comissão'])
+            ->givePermissionTo('visualizar todos inscritos');
 
         Role::firstOrCreate(['name' => 'Membro Comissão'])
+            ->givePermissionTo('visualizar todos inscritos')
             ->givePermissionTo('Selecionar monitor')
             ->givePermissionTo('Preterir monitor')
             ->givePermissionTo('gerar relatorio')
+            ->givePermissionTo('visualizar monitores')
             ->givePermissionTo('baixar histórico escolar');
 
         Role::firstOrCreate(['name' => 'Administrador'])

@@ -40,8 +40,9 @@
                                         data-toggle="tooltip" data-placement="top"
                                         title="Solicitações"
                                         href="{{ route('instructors.requisitions', $docente) }}"
+                                        class="btn btn-outline-dark btn-sm"
                                     >
-                                        Ver Solicitações
+                                        Solicitações
                                     </a>
                                 @else
                                     Nenhuma Solicitação

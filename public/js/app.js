@@ -267,6 +267,12 @@
         buttonText: '<i class="far fa-calendar"></i>',
       });
       $('.custom-datepicker').datepicker('option', $.datepicker.regional["pt-BR"]);
+      $('#table_id').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf'
+        ]
+      });
     });
     
     /***/ }),

@@ -31,16 +31,16 @@ class SelectionController extends Controller
 
         $periodoLetivo = SchoolTerm::getOpenSchoolTerm();
 
-        if(Auth::user()->hasRole('Membro Comissão')){
+        if(Auth::user()->hasRole(['Secretaria', 'Administrador', 'Presidente de Comissão'])){
+            $solicitacoes = Requisition::whereHas('schoolclass', function($q) use($periodoLetivo){
+                return $q->whereBelongsTo($periodoLetivo);})->get()->sortBy('schoolclass.department.nomabvset');
+        }elseif(Auth::user()->hasRole('Membro Comissão')){
             $docente = Instructor::where(['codpes'=>Auth::user()->codpes])->first();
 
             $departamento = $docente->department;
 
             $solicitacoes = Requisition::whereHas('schoolclass', function($q) use($departamento, $periodoLetivo){
                 return $q->whereBelongsTo($departamento)->whereBelongsTo($periodoLetivo);})->get();
-        }elseif(Auth::user()->hasRole(['Secretaria', 'Administrador'])){
-            $solicitacoes = Requisition::whereHas('schoolclass', function($q) use($periodoLetivo){
-                return $q->whereBelongsTo($periodoLetivo);})->get();
         }
 
         return view('selections.index', compact('solicitacoes'));
@@ -77,6 +77,13 @@ class SelectionController extends Controller
         $validated['requisition_id'] = $inscricao->schoolclass->requisition->id;
         $validated['codpescad'] = Auth::user()->codpes;
 
+        if($inscricao->student->selections()
+                              ->whereHas('schoolclass.schoolterm', function ($query) {return $query->where(['status'=>'Aberto']);})
+                              ->where('school_class_id', '!=', $inscricao->schoolclass->id)->exists()){
+            Session::flash('alert-warning', 'Aluno já foi eleito monitor de outra turma.');
+            return back();
+        }
+        
         if(Auth::user()->hasRole('Membro Comissão')){
             $docente = Instructor::where(['codpes'=>Auth::user()->codpes])->first();
             if($inscricao->schoolclass->department == $docente->department){
