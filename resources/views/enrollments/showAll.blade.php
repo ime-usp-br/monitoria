@@ -19,7 +19,7 @@
                         <th>Nome</th>
                         <th>E-mail</th>
                         <th>Histórico Escolar</th>
-                        <th>Inscrito nas Turmas</th>
+                        <th>Inscrito nas Disciplinas</th>
                         <th>Disponibilidade de dia</th>
                         <th>Disponibilidade de noite</th>
                         <th>Preferência pelo período</th>
@@ -45,12 +45,13 @@
                                 </form> 
                             </td>
                             <td style="white-space: nowrap;text-align: center">
-                                @foreach($aluno->enrollments()->whereHas("schoolclass", function($query)use($schoolterm){$query->whereBelongsTo($schoolterm);})->get() as $inscricao)
-                                    @if($inscricao->schoolclass->requisition()->exists())
-                                        <a href="{{ route('selections.enrollments', $inscricao->schoolclass) }}">{{ $inscricao->schoolclass->coddis." T.".substr($inscricao->schoolclass->codtur,-2,2) }}</a> <br/>
-                                    @else
-                                        {{ $inscricao->schoolclass->coddis." T.".substr($inscricao->schoolclass->codtur,-2,2) }} <br/>
-                                    @endif
+                                @php
+                                    $disciplines = App\Models\SchoolClass::whereBelongsTo($schoolterm)->whereHas("enrollments",function($query)use($aluno){
+                                        $query->whereBelongsTo($aluno);
+                                    })->pluck("coddis")->unique()->toArray();
+                                @endphp
+                                @foreach($disciplines as $coddis)
+                                    {{ $coddis }} <br/>
                                 @endforeach
                             </td>
                             @php

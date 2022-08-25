@@ -41,14 +41,10 @@ class EnrollmentController extends Controller
         
         $turmas = SchoolClass::whereInEnrollmentPeriod()->whereHas('enrollments', function($query) use ($estudante){
                     return $query->where(['student_id'=>$estudante->id]);
-                })->union(
-                  SchoolClass::whereInEnrollmentPeriod()->whereDoesntHave('enrollments', function($query) use ($estudante){
+                })->get();
+        $turmas = $turmas->merge(SchoolClass::whereInEnrollmentPeriod()->whereDoesntHave('enrollments', function($query) use ($estudante){
                     return $query->where(['student_id'=>$estudante->id]);
-                })->whereHas('requisition'))
-                ->union(
-                  SchoolClass::whereInEnrollmentPeriod()->whereDoesntHave('enrollments', function($query) use ($estudante){
-                    return $query->where(['student_id'=>$estudante->id]);
-                })->whereDoesntHave('requisition'))->get();
+                })->orderBy("coddis")->get());
 
         return view('enrollments.index', compact(['turmas', 'estudante']));
     }
@@ -71,7 +67,11 @@ class EnrollmentController extends Controller
         
         $estudante = Student::where(['codpes'=>Auth::user()->codpes])->first();
 
-        if(count($estudante->enrollments)>=SchoolTerm::getSchoolTermInEnrollmentPeriod()->max_enrollments){
+        $schoolterm = SchoolTerm::getSchoolTermInEnrollmentPeriod();
+
+        if(SchoolClass::whereBelongsTo($schoolterm)->whereHas("enrollments", 
+                    function($query)use($estudante){$query->whereBelongsTo($estudante);})
+                ->pluck("coddis")->unique()->count()>=$schoolterm->max_enrollments){
             Session::flash('alert-warning', 'Você excedeu o número máximo de inscrições');
             return redirect('/enrollments');
         }
@@ -102,12 +102,19 @@ class EnrollmentController extends Controller
 
         $scholarships = array_key_exists('scholarships', $validated) ? $validated['scholarships'] : [];
         unset($validated['scholarships']);
-        
-        $enrollment = Enrollment::create($validated);
 
-        foreach($scholarships as $scholarship_id){
-            $enrollment->others_scholarships()->attach(Scholarship::find($scholarship_id));
+        $schoolterm = SchoolTerm::getSchoolTermInEnrollmentPeriod();
+        
+        foreach(SchoolClass::whereBelongsTo($schoolterm)->where("coddis",SchoolClass::find($validated["school_class_id"])->coddis)->get() as $schoolclass){
+            $validated["school_class_id"] = $schoolclass->id;
+
+            $enrollment = Enrollment::create($validated);
+
+            foreach($scholarships as $scholarship_id){
+                $enrollment->others_scholarships()->attach(Scholarship::find($scholarship_id));
+            }
         }
+
 
         return redirect('/enrollments');
     }
@@ -169,16 +176,27 @@ class EnrollmentController extends Controller
 
         $validated['disponibilidade_noturno'] = isset($validated['disponibilidade_noturno']) ? 1 : 0;
 
-        $enrollment->others_scholarships()->detach();
-
         $scholarships = array_key_exists('scholarships', $validated) ? $validated['scholarships'] : [];
         unset($validated['scholarships']);
 
-        foreach($scholarships as $scholarship_id){
-            $enrollment->others_scholarships()->attach(Scholarship::find($scholarship_id));
-        }
+        $schoolterm = SchoolTerm::getSchoolTermInEnrollmentPeriod();
 
-        $enrollment->update($validated);
+        $enrollments = Enrollment::whereHas("schoolclass", function($query)use($enrollment,$schoolterm){
+            $query->whereBelongsTo($schoolterm)->where("coddis",$enrollment->schoolclass->coddis);})
+        ->whereHas("student", function($query)use($enrollment){
+            $query->where("id", $enrollment->student->id);})->get();
+
+        foreach($enrollments as $e){
+            $e->others_scholarships()->detach();
+
+            foreach($scholarships as $scholarship_id){
+                $e->others_scholarships()->attach(Scholarship::find($scholarship_id));
+            }
+
+            $validated["school_class_id"] = $e->schoolclass->id;
+
+            $e->update($validated);
+        }
 
         return redirect('/enrollments');
     }
@@ -198,7 +216,12 @@ class EnrollmentController extends Controller
             return redirect('/');
         } 
         
-        $enrollment->delete();
+        Enrollment::whereHas("schoolclass", function($query)use($enrollment){
+                $query->whereBelongsTo($enrollment->schoolclass->schoolterm)
+                    ->where("coddis",$enrollment->schoolclass->coddis);
+            })
+            ->whereHas("student", function($query)use($enrollment){
+                $query->where("id", $enrollment->student->id);})->delete();
 
         return redirect('/enrollments');
     }

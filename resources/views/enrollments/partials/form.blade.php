@@ -1,60 +1,20 @@
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
-        <label >Unidade: </label>
-    </div>
-    <div class="col-12 col-md-6">
-        <a >{{ $turma->department->nomund ?? $inscricao->schoolclass->department->nomund }} </a>
-    </div>
+
+<div class="d-flex justify-content-center">
+<div class="col-md-8 my-3">
+<table class="table table-bordered table-striped table-hover" style="font-size:15px;">
+    <tr>
+        <th>Sigla da Disciplina</th>
+        <th>Nome da Disciplina</th>
+    </tr>
+
+    <tr>
+        <td style="text-align: center">{{ $turma->coddis ?? $inscricao->schoolclass->coddis }}</td>
+        <td style="text-align: center">{{ $turma->nomdis ?? $inscricao->schoolclass->nomdis }}</td>
+    </tr>
+</table>
+</div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
-        <label >Departamento: </label>
-    </div>
-    <div class="col-12 col-md-6">
-        <a >{{ $turma->department->nomset ?? $inscricao->schoolclass->department->nomset }} </a>
-    </div>
-</div>
-
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
-        <label >Disciplina: </label>
-    </div>
-    <div class="col-12 col-md-6">
-        <a >{{ $turma->nomdis ?? $inscricao->schoolclass->nomdis }} </a>
-    </div>
-</div>
-
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
-        <label >Sigla: </label>
-    </div>
-    <div class="col-12 col-md-6">
-        <a >{{ $turma->coddis ?? $inscricao->schoolclass->coddis }} </a>
-    </div>
-</div>
-
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
-        <label >Turma: </label>
-    </div>
-    <div class="col-12 col-md-6">
-        <a >{{ $turma->codtur ?? $inscricao->schoolclass->codtur }} </a>
-    </div>
-</div>
-
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
-        <label >Horários:</label>
-    </div>
-    <div class="col-12 col-md-6">
-        @php $horarios = $turma->classschedules ?? $inscricao->schoolclass->classschedules @endphp
-        @foreach($horarios as $horario)
-            <label id="label-horario-{{$horario->id}}" class="font-weight-normal">{{ $horario->diasmnocp . ' ' . $horario->horent . ' ' . $horario->horsai }}</label> 
-            <br/>
-        @endforeach
-    </div>
-</div>
 
 <div class="row custom-form-group align-items-center">
     <div class="col-12 col-md-6 text-lg-right">
