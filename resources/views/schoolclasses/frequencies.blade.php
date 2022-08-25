@@ -8,9 +8,10 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Registro de Frequência</h1>
-            <h3 class='text-center mb-5'>
-                <b>Nome:</b> {{$monitor->nompes}} <b>N.° USP:</b> {{$monitor->codpes}}
-            </h3>
+            <h4 class='text-center mb-5'>{{ $turma->schoolterm->period . ' de ' . $turma->schoolterm->year }}</h4>
+            <h4 class='text-center mb-5'>
+                <b>Monitor(a):</b> {{$monitor->nompes}} <b>N.° USP:</b> {{$monitor->codpes}}
+            </h4>
             <h4 class='text-center mb-5'>
                 <b>Disciplina:</b>  {{ $turma->nomdis }} <b>Turma:</b> {{ $turma->codtur }}
             </h4>
@@ -20,28 +21,21 @@
                     <div class="col-md-6">
                         <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
                             <tr class="text-center">
-                                <th>Ano</th>
                                 <th>Mês</th>
-                                <th>Frequência</th>
+                                <th>Presente</th>
                                 <th></th>
                             </tr>
 
-                            @foreach($monitor->frequencies()->whereHas('schoolclass', function($query) use($turma){ 
-                                return $query->where('id', $turma->id);})->get() as $frequencia)
+                            @foreach($monitor->frequencies()->whereBelongsTo($turma)->get() as $frequencia)
                                 <tr class="text-center" style="font-size:12px;">
-                                    <td>{{ $frequencia->created_at->format('Y') }}</td>
                                     <td>{{ $frequencia->month }}</td>
                                     <td>{{ $frequencia->registered ? 'Sim' : 'Não' }}</td>
 
-                                    <form action="/frequencies/{{$frequencia->id}}" method="POST">
-                                        @csrf
-                                        @method('patch')
-                                        @if($frequencia->registered)
-                                            <td style="width: 150px;"><button type="submit" class="btn btn-outline-danger btn-sm">Desmarcar</button></td>
-                                        @else  
-                                            <td style="width: 150px;"><button type="submit" class="btn btn-outline-success btn-sm">Registrar</button></td>
-                                        @endif
-                                    </form>
+                                    @if($frequencia->registered)
+                                        <td style="width: 150px;"><a href="{{ \Illuminate\Support\Facades\URL::signedRoute('frequencies.update',['frequency'=>$frequencia->id]) }}" class="btn btn-outline-danger btn-sm">Desmarcar</a></td>
+                                    @else  
+                                        <td style="width: 150px;"><a href="{{ \Illuminate\Support\Facades\URL::signedRoute('frequencies.update',['frequency'=>$frequencia->id]) }}" class="btn btn-outline-success btn-sm">Registrar</a></td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </table>

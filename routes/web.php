@@ -66,7 +66,7 @@ Route::get('/monitor/getimportschoolclassesjob', [MonitorController::class, 'get
 Route::get('/emails', [EmailController::class, 'index'])->name('emails.index');
 Route::post('/emails/dispatch', [EmailController::class, 'dispatchForAll'])->name('emails.dispatch');
 
-Route::resource('frequencies', FrequencyController::class);
+Route::get('frequencies/{frequency}', [FrequencyController::class,"update"])->name('frequencies.update');;
 
 Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 Route::post('/reports/make', [ReportController::class, 'make'])->name('reports.make');

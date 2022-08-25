@@ -72,9 +72,15 @@ class FrequencyController extends Controller
      */
     public function update(UpdateFrequencyRequest $request, Frequency $frequency)
     {
-        if(!Gate::allows('registrar frequencia')){
-            abort(403);
-        }elseif(Auth::user()->hasRole("Docente") && !$frequency->schoolclass->isInstructor(Auth::user()->codpes)){
+        if($request->has("signature")){
+            if(!$request->hasValidSignature()){
+                abort(403);
+            }
+        }elseif(Auth::check()){
+            if(!$schoolclass->isInstructor(Auth::user()->codpes)){
+                abort(403);
+            }
+        }else{
             abort(403);
         }
 

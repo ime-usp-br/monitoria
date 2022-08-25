@@ -234,6 +234,11 @@ class EnrollmentController extends Controller
 
         $schoolterm = SchoolTerm::getOpenSchoolTerm();
 
+        if(!$schoolterm){
+            Session::flash('alert-warning', 'Não foi encontrado um periodo letivo com status em aberto.');
+            return back();
+        }
+
         $alunos = Student::whereHas("enrollments.schoolclass", function($query)use($schoolterm){
             $query->whereBelongsTo($schoolterm);})->get()->sortBy("nompes");
 

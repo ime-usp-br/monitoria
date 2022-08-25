@@ -21,6 +21,11 @@ class TutorController extends Controller
             $schoolterm = SchoolTerm::getOpenSchoolTerm();
         }
 
+        if(!$schoolterm){
+            Session::flash('alert-warning', 'Não foi encontrado um periodo letivo.');
+            return back();
+        }
+
         $selections = $schoolterm ? Selection::whereHas('schoolclass.schoolterm', function($query) use($schoolterm) {return $query->where('id', $schoolterm->id);})->get() : [];
 
         return view('tutors.index', compact(['selections', 'schoolterm']));

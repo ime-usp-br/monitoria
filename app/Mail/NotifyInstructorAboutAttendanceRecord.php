@@ -18,14 +18,14 @@ class NotifyInstructorAboutAttendanceRecord extends Mailable
      *
      * @return void
      */
-    public function __construct($schoolclass, $student, $month, $year, $period, $link)
+    public function __construct($frequency, $link)
     {
-        $this->schoolclass = $schoolclass;
-        $this->instructor = $schoolclass->requisition->instructor;
-        $this->student = $student;
-        $this->month = $month;
-        $this->year = $year;
-        $this->period = $period;
+        $this->schoolclass = $frequency->schoolclass;
+        $this->instructor = $frequency->schoolclass->requisition->instructor;
+        $this->student = $frequency->student;
+        $this->month = $frequency->month;
+        $this->year = $frequency->schoolclass->schoolterm->year;
+        $this->period = $frequency->schoolclass->schoolterm->period;
         $this->link = $link;
     }
 

@@ -14,6 +14,7 @@ use App\Models\SchoolTerm;
 use App\Models\SchoolClass;
 use App\Models\Enrollment;
 use App\Models\Student;
+use App\Models\Frequency;
 use Session;
 
 class SelectionController extends Controller
@@ -29,18 +30,23 @@ class SelectionController extends Controller
             abort(403);
         }
 
-        $periodoLetivo = SchoolTerm::getOpenSchoolTerm();
+        $schoolterm = SchoolTerm::getOpenSchoolTerm();
+
+        if(!$schoolterm){
+            Session::flash('alert-warning', 'Não foi encontrado um periodo letivo com status em aberto.');
+            return back();
+        }
 
         if(Auth::user()->hasRole(['Secretaria', 'Administrador', 'Presidente de Comissão'])){
-            $solicitacoes = Requisition::whereHas('schoolclass', function($q) use($periodoLetivo){
-                return $q->whereBelongsTo($periodoLetivo);})->get()->sortBy('schoolclass.department.nomabvset');
+            $solicitacoes = Requisition::whereHas('schoolclass', function($q) use($schoolterm){
+                return $q->whereBelongsTo($schoolterm);})->get()->sortBy('schoolclass.department.nomabvset');
         }elseif(Auth::user()->hasRole('Membro Comissão')){
             $docente = Instructor::where(['codpes'=>Auth::user()->codpes])->first();
 
             $departamento = $docente->department;
 
-            $solicitacoes = Requisition::whereHas('schoolclass', function($q) use($departamento, $periodoLetivo){
-                return $q->whereBelongsTo($departamento)->whereBelongsTo($periodoLetivo);})->get();
+            $solicitacoes = Requisition::whereHas('schoolclass', function($q) use($departamento, $schoolterm){
+                return $q->whereBelongsTo($departamento)->whereBelongsTo($schoolterm);})->get();
         }
 
         return view('selections.index', compact('solicitacoes'));
@@ -77,6 +83,13 @@ class SelectionController extends Controller
         $validated['requisition_id'] = $inscricao->schoolclass->requisition->id;
         $validated['codpescad'] = Auth::user()->codpes;
 
+        $schoolterm = SchoolTerm::getOpenSchoolTerm();
+
+        if(!$schoolterm){
+            Session::flash('alert-warning', 'Não foi encontrado um periodo letivo com status em aberto.');
+            return back();
+        }
+
         if($inscricao->student->selections()
                               ->whereHas('schoolclass.schoolterm', function ($query) {return $query->where(['status'=>'Aberto']);})
                               ->where('school_class_id', '!=', $inscricao->schoolclass->id)->exists()){
@@ -84,15 +97,17 @@ class SelectionController extends Controller
             return back();
         }
         
-        if(Auth::user()->hasRole('Membro Comissão')){
+        if(Auth::user()->hasRole(['Secretaria', 'Administrador','Presidente de Comissão'])){
+            $selecao = Selection::firstOrCreate($validated);
+            Frequency::createFromSelection($selecao);
+        }elseif(Auth::user()->hasRole('Membro Comissão')){
             $docente = Instructor::where(['codpes'=>Auth::user()->codpes])->first();
             if($inscricao->schoolclass->department == $docente->department){
                 $selecao = Selection::firstOrCreate($validated);
+                Frequency::createFromSelection($selecao);
             }else{
                 abort(403);
             }
-        }elseif(Auth::user()->hasRole(['Secretaria', 'Administrador'])){
-            $selecao = Selection::firstOrCreate($validated);
         }else{
             abort(403);
         }
@@ -146,15 +161,17 @@ class SelectionController extends Controller
             abort(403);
         }
 
-        if(Auth::user()->hasRole('Membro Comissão')){
+        if(Auth::user()->hasRole(['Secretaria', 'Administrador','Presidente de Comissão'])){
+            Frequency::whereBelongsTo($selection->student)->whereBelongsTo($selection->schoolclass)->delete();
+            $selection->delete();
+        }elseif(Auth::user()->hasRole('Membro Comissão')){
             $docente = Instructor::where(['codpes'=>Auth::user()->codpes])->first();
             if($selection->schoolclass->department == $docente->department){
+                Frequency::whereBelongsTo($selection->student)->whereBelongsTo($selection->schoolclass)->delete();
                 $selection->delete();
             }else{
                 abort(403);
             }
-        }elseif(Auth::user()->hasRole(['Secretaria', 'Administrador'])){
-            $selection->delete();
         }else{
             abort(403);
         }

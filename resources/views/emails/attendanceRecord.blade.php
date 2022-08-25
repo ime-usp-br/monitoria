@@ -3,12 +3,12 @@
         <p>A{{ $instructor->getPronounTreatment() == 'Prof. Dr. ' ? 'o' : ''}} {{ $instructor->getPronounTreatment() }} {{ $instructor->nompes }},</p>
         <p></p>
         <p>
-            Informamos que já é possível <a href="{{ $link }}">registrar a frequência do monitor</a> <strong>{{$student->nompes}}</strong> da disciplina <strong>{{$schoolclass->nomdis}}</strong> turma <strong>{{$schoolclass->codtur}}</strong> referente ao mês {{$month}} do {{$period}} de {{$year}}.
+            Informamos que já é possível <a href="{{ $link }}">registrar a frequência do monitor</a> <strong>{{$student->nompes}}</strong> da disciplina <strong>{{$schoolclass->nomdis}}</strong> turma <strong>{{$schoolclass->codtur}}</strong> referente ao mês {{$month}} de {{$year}}.
         </p>
         <p></p> <br>
         <p>Lembretes:</p>
         <p>
-            Cadastrar mensalmente a frequência de seu aluno-monitor no Sistema de Monitoria entre os dias 25 e o último dia do mês vigente, durante 
+            Cadastrar mensalmente a frequência de seu aluno-monitor no Sistema de Monitoria entre os dias 20 e o último dia do mês vigente, durante 
             o período de duração da monitoria;
         </p>
         <p>

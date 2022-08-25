@@ -23,29 +23,16 @@ class Kernel extends ConsoleKernel
      //* * * * * cd /home/dev/Desktop/estagio/monitoria && php artisan schedule:run >> /dev/null 2>&1
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(function() {
-            $data_atual = date('Y-m-d H:i:s');
-            $periodo = SchoolTerm::where('started_at', '<=', $data_atual)
-                                    ->where('finished_at', '>=', $data_atual)
-                                    ->select('*')
-                                    ->get();
-            
-            $turmas = $periodo[0]->schoolclasses;
-    
-            foreach($turmas as $turma){
-                $eleicoes = $turma->selections;
-                foreach($eleicoes as $eleicao){
-                    $frequencia = new Frequency();
-                    $frequencia->student_id = $eleicao->student->id;
-                    $frequencia->school_class_id = $turma->id;
-                    $frequencia->month = date("m");
-                    $frequencia->save();
-                    Mail::to($eleicao->requisition->instructor->codema)->send(new NotifyInstructorAboutAttendanceRecord($turma, 
-                        $eleicao->student, $frequencia->month, $periodo[0]->year, $periodo[0]->period,
-                        URL::signedRoute('schoolclasses.showFrequencies', ['schoolclass'=>$turma->id,'tutor'=>$eleicao->student->id])));
-                }
+        $schedule->call(function() {            
+            $frequencies = Frequency::whereHas("schoolclass.schoolterm", function($query){
+                    $query->where("year",date("Y"));})
+                ->where("month",date("m"))->get();
+
+            foreach($frequencies as $frequency){
+                Mail::to($frequency->schoolclass->requisition->instructor->codema)->send(new NotifyInstructorAboutAttendanceRecord($frequency,
+                    URL::signedRoute('schoolclasses.showFrequencies', ['schoolclass'=>$frequency->schoolclass->id,'tutor'=>$frequency->student->id])));
             }
-        })->monthlyOn(20, '08:00');
+        })->monthlyOn(25, '10:17');
     }
 
     /**
