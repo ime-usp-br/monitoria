@@ -16,6 +16,7 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\FrequencyController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TutorController;
+use App\Http\Controllers\CertificateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,3 +73,6 @@ Route::get('/reports', [ReportController::class, 'index'])->name('reports.index'
 Route::post('/reports/make', [ReportController::class, 'make'])->name('reports.make');
 
 Route::get('/tutors', [TutorController::class, 'index'])->name('tutors.index'); 
+
+Route::get('/certificates', [CertificateController::class, 'index'])->name('certificates.index');
+Route::get('/certificates/make/{selection}', [CertificateController::class, 'make'])->name('certificates.make');

@@ -20,7 +20,9 @@ class Selection extends Model
         'enrollment_id',
         'requisition_id',
         'selecionado_sem_inscricao',
-        'codpescad',
+        'codpescad',# Código da Pessoal que Cadastrou
+        'dtafimvin',# Data Fim Vinculo
+        'sitatl',# Situação Atual - Ativo, Concluido e Cancelado 
     ];
 
     public function student()

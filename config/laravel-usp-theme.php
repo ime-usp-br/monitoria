@@ -67,6 +67,11 @@ $menu = [
         'url' => config('app.url') . '/reports',
         'can' => 'gerar relatorio',
     ],
+    [
+        'text' => 'Emitir Atestado',
+        'url' => config('app.url') . '/certificates',
+        'can' => 'Emitir Atestado',
+    ],
 ];
 
 $right_menu = [

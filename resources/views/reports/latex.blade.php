@@ -25,12 +25,12 @@
   
 \begin{minipage}{0.3\textwidth}
 \begin{figure}[H]
- \includegraphics[scale=0.2]{{!! base_path() . "/logo_ime.jpg" !!}}
+ \includegraphics[scale=0.2]{{!! base_path() . "/storage/app/images/logo_ime.jpg" !!}}
 \end{figure}
 \end{minipage} \hfill
 \begin{minipage}{0.2\textwidth}
 \begin{figure}[H]
- \includegraphics[scale=0.55]{{!! base_path() . "/logo_usp.jpg" !!}}
+ \includegraphics[scale=0.55]{{!! base_path() . "/storage/app/images/logo_usp.jpg" !!}}
 \end{figure}
 \end{minipage}\\[8cm]
      

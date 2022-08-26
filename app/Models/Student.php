@@ -161,4 +161,18 @@ class Student extends Model
 
         return $res;
     }
+
+    public function getSexo()
+    {
+        $query = " SELECT P.sexpes";
+        $query .= " FROM PESSOA AS P";
+        $query .= " WHERE P.codpes = :codpes";
+        $param = [
+            'codpes' => $this->codpes,
+        ];
+
+        $res = DB::fetchAll($query, $param)[0];
+
+        return $res['sexpes'];
+    }
 }
