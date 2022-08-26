@@ -1,13 +1,13 @@
 @extends('parent')
 
-@section('title', 'Monitores Eleitos')
+@section('title', 'Monitores')
 
 @section('content')
 @parent
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <h1 class='text-center mb-5'>Monitores Eleitos</h1>
+            <h1 class='text-center mb-5'>Monitores</h1>
             <h2 class='text-center mb-5'>
                 Departamento de {{ $turma->department->nomset }}<br>
             </h2>

@@ -307,7 +307,8 @@ class SchoolClassController extends Controller
             }
         }elseif(Auth::check()){
             if(!$schoolclass->isInstructor(Auth::user()->codpes)){
-                abort(403);
+                Session::flash("alert-warning", "Você não é responsável por este monitor.");
+                return back();
             }
         }else{
             abort(403);

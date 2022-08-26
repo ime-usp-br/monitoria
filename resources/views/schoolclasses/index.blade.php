@@ -75,12 +75,9 @@
                         <th>Código da Disciplina</th>
                         <th>Nome da Disciplina</th>
                         <th>Departamento</th>
-                        <th>Tipo da Turma</th>
                         <th>Horários</th>
                         <th>Professor(es)</th>
-                        <th>Início</th>
-                        <th>Fim</th>
-                        <th>Monitores eleitos</th>
+                        <th>Monitores</th>
                         @if(Auth::user()->hasPermissionTo('editar turma') || Auth::user()->hasPermissionTo('deletar turma'))
                             <th></th>
                         @endif
@@ -88,11 +85,10 @@
 
                     @foreach($turmas as $turma)
                         <tr style="font-size:12px;">
-                            <td>{{ $turma->codtur }}</td>
-                            <td>{{ $turma->coddis }}</td>
+                            <td class="text-center">{{ $turma->codtur }}</td>
+                            <td class="text-center">{{ $turma->coddis }}</td>
                             <td>{{ $turma->nomdis }}</td>
                             <td style="text-align: center">{{ $turma->department->nomabvset }}</td>
-                            <td>{{ $turma->tiptur }}</td>
                             <td style="white-space: nowrap;">
                                 @foreach($turma->classschedules as $horario)
                                     {{ $horario->diasmnocp . ' ' . $horario->horent . ' ' . $horario->horsai }} <br/>
@@ -103,8 +99,6 @@
                                     {{ $instructor->getPronounTreatment() . $instructor->getNomAbrev()}} <br/>
                                 @endforeach
                             </td>
-                            <td>{{ $turma->dtainitur }}</td>
-                            <td>{{ $turma->dtafimtur }}</td>
                             <td class="text-center">
                                 @if($turma->selections()->exists())
                                     <a href="/schoolclasses/{{$turma->id}}/electedTutors" class="btn btn-outline-dark btn-sm">Monitores</a>

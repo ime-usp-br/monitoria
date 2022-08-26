@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\StoreFrequencyRequest;
 use App\Http\Requests\UpdateFrequencyRequest;
 use App\Models\Frequency;
 use Auth;
-use Illuminate\Support\Facades\Gate;
+use Session;
 
 class FrequencyController extends Controller
 {
@@ -82,6 +83,11 @@ class FrequencyController extends Controller
             }
         }else{
             abort(403);
+        }
+
+        if($frequency->month>date("m")){
+            Session::flash('alert-warning', 'Você ainda não pode registrar a frequência do mês '.$frequency->month.'.');
+            return back();
         }
 
         $frequency->registered  = !$frequency->registered;

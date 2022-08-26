@@ -8,7 +8,9 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Monitores</h1>
-            @if(Auth::user()->hasRole('Membro Comissão'))
+            @if(Auth::user()->hasRole(["Administrador", "Secretaria", "Presidente de Comissão"]))
+                <h4 class='text-center mb-5'>Todos Departamentos</h4>
+            @elseif(Auth::user()->hasRole('Membro Comissão'))
                 <h4 class='text-center mb-5'>Departamento de {{ App\Models\Instructor::where(['codpes'=>Auth::user()->codpes])->first()->department->nomset }}</h4>
             @endif
 
@@ -35,7 +37,7 @@
                         <th class="text-center" rowspan="2" style="vertical-align: middle;">Monitor</th>
                         <th class="text-center" rowspan="2" style="vertical-align: middle;">Email</th>
                         <th class="text-center" rowspan="2" style="vertical-align: middle;">Voluntário</th>
-                        <th class="text-center" colspan="5">Frequência</th>
+                        <th class="text-center" colspan="6">Frequência</th>
                     </tr>
                     <tr class="text-center">
                         @if($schoolterm->period == "1° Semestre")
@@ -44,12 +46,14 @@
                             <th>Maio</th>
                             <th>Jun</th>
                             <th>Jul</th>
+                            <th></th>
                         @elseif($schoolterm->period == "2° Semestre")
                             <th>Ago</th>
                             <th>Set</th>
                             <th>Out</th>
                             <th>Nov</th>
                             <th>Dez</th>
+                            <th></th>
                         @endif
                     </tr>
                     </thead>
@@ -65,7 +69,8 @@
                             @foreach(range(3,7) as $month)
                                 <td>{{ $selection->student->frequencies()->where(['school_class_id'=>$selection->schoolclass->id, 'month'=>($schoolterm->period == '1° Semestre' ? $month : $month+5)])->exists() ? 
                                         $selection->student->frequencies()->where(['school_class_id'=>$selection->schoolclass->id, 'month'=>($schoolterm->period == '1° Semestre' ? $month : $month+5)])->first()->registered ? 'S' : 'N' : 'N' }}</td>
-                            @endforeach                
+                            @endforeach        
+                            <td class="text-center"><a href="{{ route('schoolclasses.showFrequencies',['schoolclass'=>$selection->schoolclass->id,'tutor'=>$selection->student->id]) }}" class="btn btn-outline-dark btn-sm">Registrar</a></td>        
                         </tr>
                     @endforeach
 
