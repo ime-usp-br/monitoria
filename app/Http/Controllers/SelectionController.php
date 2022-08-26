@@ -82,6 +82,7 @@ class SelectionController extends Controller
         $validated['school_class_id'] = $inscricao->schoolclass->id;
         $validated['requisition_id'] = $inscricao->schoolclass->requisition->id;
         $validated['codpescad'] = Auth::user()->codpes;
+        $validated['sitatl'] = "Ativo";
 
         $schoolterm = SchoolTerm::getOpenSchoolTerm();
 
