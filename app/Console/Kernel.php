@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
                 Mail::to($frequency->schoolclass->requisition->instructor->codema)->send(new NotifyInstructorAboutAttendanceRecord($frequency,
                     URL::signedRoute('schoolclasses.showFrequencies', ['schoolclass'=>$frequency->schoolclass->id,'tutor'=>$frequency->student->id])));
             }
-        })->monthlyOn(25, '10:17');
+        })->monthlyOn(20, '08:00');
     }
 
     /**

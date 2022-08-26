@@ -29,12 +29,12 @@ class Frequency extends Model
         return $this->belongsTo(SchoolClass::class, "school_class_id");
     }
 
-    public function createFromSelection(Selection $selection)
+    public static function createFromSelection(Selection $selection)
     {
         $months = $selection->schoolclass->schoolterm->period == "1° Semestre" ? [3,4,5,6,7] : [8,9,10,11,12];
 
         $frequencies = [];
-        
+
         foreach($months as $month){
             $frequency = new Frequency;
 
