@@ -7,20 +7,25 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\SchoolClass;
+use App\Models\MailTemplate;
+use Illuminate\Support\Facades\Blade;
+use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 class NotifyInstructorAboutSelectAssistant extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $schoolclass;
+    public $schoolclass, $instructor, $mailtemplate;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(SchoolClass $schoolclass)
+    public function __construct(SchoolClass $schoolclass, MailTemplate $mailtemplate)
     {
         $this->schoolclass = $schoolclass;
+        $this->instructor = $schoolclass->requisition->instructor;
+        $this->mailtemplate = $mailtemplate;
         $this->afterCommit();
     }
 
@@ -31,10 +36,31 @@ class NotifyInstructorAboutSelectAssistant extends Mailable implements ShouldQue
      */
     public function build()
     {
+        $cssToInlineStyles = new CssToInlineStyles();
+
         $plural = count($this->schoolclass->selections) > 1 ? 1 : 0;
-        $subject = "[Sistema de Monitoria] Monitor".($plural ? 'es' : '')." selecionado".($plural ? 's' : '')." 
-                    para disciplina ".$this->schoolclass->coddis." turma ".$this->schoolclass->codtur;
-        return $this->view('emails.instructor')
+
+        $subject = Blade::render(
+            html_entity_decode($this->mailtemplate->subject),
+            [
+                "schoolclass"=>$this->schoolclass,
+                "instructor"=>$this->instructor,
+                "plural"=>$plural,
+            ]
+        );
+        
+        $body = Blade::render(
+            html_entity_decode($this->mailtemplate->body),
+            [
+                "schoolclass"=>$this->schoolclass,
+                "instructor"=>$this->instructor,
+                "plural"=>$plural,
+            ]
+        );
+
+        $css = file_get_contents(base_path() . '/public/css/mail.css');
+
+        return $this->html($cssToInlineStyles->convert($body, $css))
                     ->subject($subject);
     }
 }

@@ -17,6 +17,7 @@ use App\Http\Controllers\FrequencyController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TutorController;
 use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\MailTemplateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,3 +77,8 @@ Route::get('/tutors', [TutorController::class, 'index'])->name('tutors.index');
 
 Route::get('/certificates', [CertificateController::class, 'index'])->name('certificates.index');
 Route::get('/certificates/make/{selection}', [CertificateController::class, 'make'])->name('certificates.make');
+
+Route::post('/mailtemplates/test', [MailTemplateController::class, 'test'])->name('mailtemplates.test');
+Route::get('/mailtemplates/activate/{mailtemplate}', [MailTemplateController::class, 'activate'])->name('mailtemplates.activate');
+Route::get('/mailtemplates/deactivate/{mailtemplate}', [MailTemplateController::class, 'deactivate'])->name('mailtemplates.deactivate');
+Route::resource('mailtemplates', MailTemplateController::class);

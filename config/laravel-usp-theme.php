@@ -26,6 +26,11 @@ $submenuConfig = [
         'url' => config('app.url') . '/tutors',
         'can' => 'visualizar monitores',
     ],
+    [
+        'text' => 'E-mails',
+        'url' => config('app.url') . '/mailtemplates',
+        'can' => 'Editar E-mails',
+    ],
 ];
 
 $menu = [

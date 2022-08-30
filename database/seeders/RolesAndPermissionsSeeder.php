@@ -65,6 +65,8 @@ class RolesAndPermissionsSeeder extends Seeder
 
         Permission::firstOrCreate(['name' => 'Emitir Atestado']);
 
+        Permission::firstOrCreate(['name' => 'Editar E-mails']);
+
         Role::firstOrCreate(['name' => 'Secretaria'])
             ->givePermissionTo('visualizar todos inscritos')
             ->givePermissionTo('visualizar menu de configuração')
@@ -87,6 +89,7 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('registrar frequencia')
             ->givePermissionTo('gerar relatorio')
             ->givePermissionTo('visualizar monitores')
+            ->givePermissionTo('Editar E-mails')
             ->givePermissionTo('baixar histórico escolar');
 
         Role::firstOrCreate(['name' => 'Docente'])
