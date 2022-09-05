@@ -162,6 +162,13 @@ class SelectionController extends Controller
             abort(403);
         }
 
+        $hasPresence = Frequency::whereBelongsTo($selection->student)->whereBelongsTo($selection->schoolclass)->where("registered", true)->exists();
+
+        if($hasPresence){
+            Session::flash('alert-warning', 'Não é possível preterir o aluno, pois existe registro de presença na monitoria. Efetue o desligamento do aluno no menu Monitores->Desligamento.');
+            return back();
+        }
+
         if(Auth::user()->hasRole(['Secretaria', 'Administrador','Presidente de Comissão'])){
             Frequency::whereBelongsTo($selection->student)->whereBelongsTo($selection->schoolclass)->delete();
             $selection->delete();

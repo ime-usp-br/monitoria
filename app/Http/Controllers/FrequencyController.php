@@ -84,9 +84,10 @@ class FrequencyController extends Controller
         }else{
             abort(403);
         }
+        $meses = [1=>"janeiro", 2=>"fevereiro", 3=>"março", 4=>"abril", 5=>"maio", 6=>"junho", 7=>"julho", 8=>"agosto", 9=>"setembro", 10=>"outubro", 11=>"novembro", 12=>"dezembro"];
 
-        if($frequency->month>date("m")){
-            Session::flash('alert-warning', 'Você ainda não pode registrar a frequência do mês '.$frequency->month.'.');
+        if($frequency->month>date("m") or ($frequency->month==date("m") and date("d")<20)){
+            Session::flash('alert-warning', 'A frequência de '.$meses[$frequency->month].' só será liberada apartir do dia 20/'.$frequency->month.'.');
             return back();
         }
 
