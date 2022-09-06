@@ -1,5 +1,5 @@
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label >Unidade: </label>
     </div>
     <div class="col-12 col-md-6">
@@ -7,8 +7,8 @@
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label >Departamento: </label>
     </div>
     <div class="col-12 col-md-6">
@@ -16,8 +16,8 @@
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label >Nome do Professor: </label>
     </div>
     <div class="col-12 col-md-6">
@@ -25,8 +25,8 @@
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label >Disciplina: </label>
     </div>
     <div class="col-12 col-md-6">
@@ -34,8 +34,8 @@
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label >Sigla: </label>
     </div>
     <div class="col-12 col-md-6">
@@ -43,8 +43,8 @@
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label >Turma: </label>
     </div>
     <div class="col-12 col-md-6">
@@ -52,8 +52,8 @@
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label >Horários:</label>
     </div>
     <div class="col-12 col-md-6">
@@ -64,12 +64,12 @@
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label for="requested_number">Número de monitores solicitados: </label>
     </div>
-    <div class="col-3 col-md-1">
-        <input class="custom-form-control" type="number" name="requested_number" id="requested_number"
+    <div class="col-12 col-md-6">
+        <input class="custom-form-control" style="max-width:70px;"  type="number" name="requested_number" id="requested_number"
             value="{{ $turma->requisition->requested_number ?? '1' }}"
         />
     </div>
@@ -77,8 +77,8 @@
 
 @include('requisitions.modals.addRecommendation')
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label >Indicar aluno(s):</label>
     </div>
     <div class="col-12 col-md-6">
@@ -118,8 +118,8 @@
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label for="nomdis">Atividade(s) que pretende atribuir ao(s) monitor(es):</label>
     </div>
     <div class="col-12 col-md-6">
@@ -135,8 +135,8 @@
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label for="nomdis">De acordo com a sua avaliação, o trabalho do monitor nesta disciplina é:</label>
     </div>
     <div class="col-12 col-md-6">
@@ -151,8 +151,8 @@
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label for="voluntario">Realizou outros pedidos de bolsa para monitoria além deste?<br> Em caso afirmativo, informe quais.</label>
     </div>
     <div class="col-12 col-md-6">
@@ -169,11 +169,13 @@
 </div>
 
 
-<div class="row">
-    <div class="col-md-12 text-center">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-sm-6 text-center text-sm-right my-1">
         <button type="submit" class="btn btn-outline-dark">
             {{ $buttonText }}
         </button>
+    </div>
+    <div class="col-sm-6 text-center text-sm-left my-1">
         <a class="btn btn-outline-dark"
             href="{{ route('requisitions.index') }}"
         >

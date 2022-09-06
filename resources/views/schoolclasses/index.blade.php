@@ -4,8 +4,8 @@
 
 @section('content')
 @parent
-<div class="container">
-    <div class="row justify-content-center">
+<div id="layout_conteudo">
+    <div class="justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Turmas</h1>
             @if($schoolterm)
@@ -25,7 +25,7 @@
             <p class="text-right">
                 @if(Auth::user()->hasPermissionTo('criar turma'))
                     <a  id="btn-addModal"
-                        class="btn btn-primary"
+                        class="btn btn-outline-primary"
                         data-toggle="modal"
                         data-target="#addSchoolClassModal"
                         title="Cadastrar" 
@@ -36,7 +36,7 @@
                 @endif
 
                 <a  id="btn-chooseSchoolTermModal"
-                    class="btn btn-primary"
+                    class="btn btn-outline-primary"
                     data-toggle="modal"
                     data-target="#chooseSchoolTermModal"
                     title="Escolher Semestre" 
@@ -46,7 +46,7 @@
                 
                 @if(Auth::user()->hasPermissionTo('importar turmas do replicado'))
                     <a  id="btn-importModal"
-                        class="btn btn-primary"
+                        class="btn btn-outline-primary"
                         data-toggle="modal"
                         data-target="#importSchoolClassModal"
                         title="Importar" 
@@ -57,7 +57,7 @@
                 @endif
                 @if(Auth::user()->hasPermissionTo('buscar turmas'))
                     <a  id="btn-searchModal" 
-                        class="btn btn-primary" 
+                        class="btn btn-outline-primary" 
                         data-toggle="modal" 
                         data-target="#schoolclassesSearchModal"
                     >

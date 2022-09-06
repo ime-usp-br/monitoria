@@ -4,8 +4,8 @@
 
 @section('content')
 @parent
-<div class="container">
-    <div class="row justify-content-center">
+<div id="layout_conteudo">
+    <div class="justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Disciplinas com inscrições abertas</h1>
 
@@ -16,7 +16,7 @@
                     @method('patch')
                     <div class="text-right" style="height: 50px;">
                         <input  class="custom-form-input" type='file' name='file' >
-                        <button class="btn btn-primary" type='submit' name='submit' >
+                        <button class="btn btn-outline-primary" type='submit' name='submit' >
                             <i class="fas fa-file-upload"></i>
                             Reenviar histórico escolar
                         </button>

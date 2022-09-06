@@ -4,10 +4,10 @@
 
 @section('content')
 @parent
-<div class="container">
-    <div class="row justify-content-center">
+<div id="layout_conteudo">
+    <div class="justify-content-center">
         <div class="col-md-12">
-            <h1 class='text-center mb-5'>Turmas com Monitores Eleitos</h1>
+            <h1 class='text-center mb-5'>Comunicar Resultado das Seleções</h1>
 
             <form method="POST"
                 action="{{ route('emails.dispatch') }}"
@@ -15,11 +15,11 @@
             @csrf
             
             <p class="text-right">
-                <button id="btn-dispatchEmails"type="button" class="btn btn-primary" value=0>
+                <button id="btn-dispatchEmails"type="button" class="btn btn-outline-primary" value=0>
                     <i class="icon-check"></i>
                     Marcar Todos
                 </button>
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-outline-primary">
                     <i class="fas fa-envelope"></i>
                     Disparar e-mails
                 </button>

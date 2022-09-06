@@ -148,4 +148,13 @@ class UserController extends Controller
         $usuarios = $usuarios->get();
         return view('users.index', compact('usuarios', 'roles'));
     }
+
+    public function loginas()
+    {
+        if(!Gate::allows('editar usuario')){
+            abort(403);
+        }
+
+        return view("users.loginas");
+    }
 }

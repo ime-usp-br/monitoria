@@ -4,14 +4,14 @@
 
 @section('content')
 @parent
-<div class="container">
-    <div class="row justify-content-center">
+<div id="layout_conteudo">
+    <div class="justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>E-mails</h1>
 
             @include('mailtemplates.modals.testTemplate')
             <p class="text-right">
-                <a  class="btn btn-primary my-1"
+                <a  class="btn btn-outline-primary my-1"
                     title="Cadastrar Novo Modelo" 
                     href="{{ route('mailtemplates.create') }}"
                 >
@@ -19,7 +19,7 @@
                     Cadastrar Novo Modelo
                 </a>
                 <a  id="btn-addTestTemplateModal"
-                    class="btn btn-primary my-1"
+                    class="btn btn-outline-primary my-1"
                     data-toggle="modal"
                     data-target="#testTemplateModal"
                     title="Enviar E-mail de Teste" 

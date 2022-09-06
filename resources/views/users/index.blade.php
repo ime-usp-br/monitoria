@@ -4,20 +4,13 @@
 
 @section('content')
 @parent
-<div class="container">
-    <div class="row justify-content-center">
+<div id="layout_conteudo">
+    <div class="justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Usuários</h1>
 
             <p class="text-right">
-                <a class="btn btn-primary"
-                    title="Logar como"
-                    href="{{ route('SenhaunicaLoginAsForm')}}"
-                >
-                    <i class="fas fa-sign-in-alt"></i>
-                    Logar Como
-                </a>
-                <button class="btn btn-primary" id="btn-search" data-toggle="modal" data-target="#usersSearchModal">
+                <button class="btn btn-outline-primary" id="btn-search" data-toggle="modal" data-target="#usersSearchModal">
                     <i class="fas fa-search"></i>
                     Buscar
                 </button>

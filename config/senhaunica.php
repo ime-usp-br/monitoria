@@ -21,7 +21,7 @@ return [
 
     // define as rotas para o gerenciador de usuários interno, dentro de prefix
     // se vazio, desabilita a rota de gerenciamento de usuários interna
-    'userRoutes' => 'users',
+    'userRoutes' => 'usuarios',
 
     // se true, habilita botão para remover usuário (destroy)
     'destroyUser' => true,

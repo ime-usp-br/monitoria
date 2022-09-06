@@ -1,6 +1,6 @@
 
 <div class="d-flex justify-content-center">
-<div class="col-md-8 my-3">
+<div class="col-12 col-lg-8 my-3">
 <table class="table table-bordered table-striped table-hover" style="font-size:15px;">
     <tr>
         <th>Sigla da Disciplina</th>
@@ -16,8 +16,8 @@
 </div>
 
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label for="disponibilidade_diurno">Disponibilidade para trabalhar de dia:</label>
     </div>
     <div class="col-12 col-md-6">
@@ -29,8 +29,8 @@
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label for="disponibilidade_noturno">Disponibilidade para trabalhar de noite:</label>
     </div>
     <div class="col-12 col-md-6">
@@ -42,12 +42,12 @@
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label for="preferencia_horario">Preferência de trabalhar no período*:</label>
     </div>
-    <div class="col-12 col-md-2">
-        <select id="preferencia_horario" name="preferencia_horario" class="custom-form-control">
+    <div class="col-12 col-md-6">
+        <select id="preferencia_horario" name="preferencia_horario" class="custom-form-control" style="max-width:200px;">
             <option value=""></option>
             @foreach(['Diurno',
                       'Noturno',
@@ -59,8 +59,8 @@
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label for="voluntario">Aceita ser monitor voluntário (sem bolsa):</label>
     </div>
     <div class="col-12 col-md-6">
@@ -72,8 +72,8 @@
 </div>
 
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label for="voluntario">Se inscreveu em outros programas de monitoria?<br> Em caso afirmativo, informe quais.</label>
     </div>
     <div class="col-12 col-md-6">
@@ -89,22 +89,24 @@
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label for="observacoes">Observações:</label>
     </div>
     <div class="col-12 col-md-6">
         <div>
-            <textarea class="custom-form-control" type="checkbox" name="observacoes">{{ isset($inscricao) ? $inscricao->observacoes : '' }}</textarea>
+            <textarea class="custom-form-control" type="checkbox" name="observacoes" style="max-width:400px;height:200px">{{ isset($inscricao) ? $inscricao->observacoes : '' }}</textarea>
         </div>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-12 text-center">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-sm-6 text-center text-sm-right my-1">
         <button type="submit" class="btn btn-outline-dark">
             {{ $buttonText }}
         </button>
+    </div>
+    <div class="col-sm-6 text-center text-sm-left my-1">
         <a class="btn btn-outline-dark"
             href="{{ route('enrollments.index') }}"
         >

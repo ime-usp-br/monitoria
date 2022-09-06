@@ -30,8 +30,9 @@ use App\Http\Controllers\MailTemplateController;
 |
 */
 
-Route::get('/', [MainController::class, 'index']);
+Route::get('/', [MainController::class, 'index'])->name("home");
 
+Route::get('/users/loginas', [UserController::class, 'loginas'])->name("users.loginas");
 Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
 Route::resource('users', UserController::class);
 
@@ -51,6 +52,7 @@ Route::resource('instructors', InstructorController::class);
 
 Route::resource('requisitions', RequisitionController::class);
 
+Route::get('/students/test', [StudentController::class, 'test'])->name("students.test");
 Route::resource('students', StudentController::class);
 
 Route::get('/enrollments/showAll', [EnrollmentController::class, 'showAll'])->name('enrollments.showAll');

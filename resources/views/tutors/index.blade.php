@@ -4,8 +4,8 @@
 
 @section('content')
 @parent
-<div class="container">
-    <div class="row justify-content-center">
+<div id="layout_conteudo">
+    <div class="justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Monitores</h1>
             @if(Auth::user()->hasRole(["Administrador", "Secretaria", "Presidente de Comissão"]))
@@ -18,7 +18,7 @@
 
             <p class="text-right">
                 <a  id="btn-chooseSchoolTermModal"
-                    class="btn btn-primary"
+                    class="btn btn-outline-primary"
                     data-toggle="modal"
                     data-target="#chooseSchoolTermModal"
                     title="Escolher Semestre" 
