@@ -10,6 +10,7 @@ use App\Models\Student;
 use App\Models\SchoolClass;
 use App\Models\SchoolTerm;
 use App\Models\Scholarship;
+use App\Models\Selection;
 use Illuminate\Support\Facades\Gate;
 use Auth;
 use Session;
@@ -215,12 +216,27 @@ class EnrollmentController extends Controller
             Session::flash('alert-warning', 'Período de inscrições encerrado');
             return redirect('/');
         } 
+
+        $enrollments = Enrollment::whereHas("schoolclass", function($query)use($enrollment){
+            $query->whereBelongsTo($enrollment->schoolclass->schoolterm)
+                ->where("coddis",$enrollment->schoolclass->coddis);
+        })->whereHas("student", function($query)use($enrollment){
+            $query->where("id", $enrollment->student->id);})->get();
         
+        $hasSelection = Selection::whereHas("enrollment", function($query)use($enrollments){
+            $query->whereIn("id", $enrollments->pluck("id")->toArray());
+        })->exists();
+
+        if($hasSelection){
+            Session::flash('alert-warning', 'Você foi selecionado como monitor de uma turma dessa disciplina. 
+                Caso queira desistir comunique a comissão de monitoria.');
+            return back();
+        }
+
         Enrollment::whereHas("schoolclass", function($query)use($enrollment){
                 $query->whereBelongsTo($enrollment->schoolclass->schoolterm)
                     ->where("coddis",$enrollment->schoolclass->coddis);
-            })
-            ->whereHas("student", function($query)use($enrollment){
+            })->whereHas("student", function($query)use($enrollment){
                 $query->where("id", $enrollment->student->id);})->delete();
 
         return redirect('/enrollments');
