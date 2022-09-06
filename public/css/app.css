@@ -149,8 +149,8 @@ table th {
 }
 
 #layout_conteudo {
-  padding-left: 181px;
   padding-top: 10px;
+  overflow:auto;
 }
 
 #my_web_cabecalho {

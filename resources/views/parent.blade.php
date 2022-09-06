@@ -2,7 +2,7 @@
 
 @section('styles')
   @parent
-  <link rel="stylesheet" href="{{ asset('css/app.css').'?version=1' }}" />
+  <link rel="stylesheet" href="{{ asset('css/app.css').'?version=2' }}" />
   <link rel="stylesheet" href="{{ asset('css/listmenu_v.css').'?version=1' }}" />
   <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/datatables.min.css"/>
@@ -57,6 +57,16 @@
           @can("visualizar turmas")
               <li>
                   <a href="{{ route('schoolclasses.index') }}">Turmas</a>
+              </li>
+          @endcan
+          @can("visualizar monitores")
+              <li>
+                  <a href="{{ route('tutors.index') }}">Monitores</a>
+              </li>
+          @endcan
+          @can("Editar E-mails")
+              <li>
+                  <a href="{{ route('mailtemplates.index') }}">E-mails</a>
               </li>
           @endcan
           <li>
