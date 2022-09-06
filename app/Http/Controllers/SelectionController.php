@@ -165,7 +165,7 @@ class SelectionController extends Controller
         $hasPresence = Frequency::whereBelongsTo($selection->student)->whereBelongsTo($selection->schoolclass)->where("registered", true)->exists();
 
         if($hasPresence){
-            Session::flash('alert-warning', 'Não é possível preterir o aluno, pois existe registro de presença na monitoria. Efetue o desligamento do aluno no menu Monitores->Desligamento.');
+            Session::flash('alert-warning', 'Não é possível preterir o aluno, pois existe registro de presença na monitoria. Efetue o desligamento do aluno no menu Monitores.');
             return back();
         }
 

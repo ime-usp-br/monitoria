@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\StoreFrequencyRequest;
 use App\Http\Requests\UpdateFrequencyRequest;
 use App\Models\Frequency;
+use App\Models\Selection;
 use Auth;
 use Session;
 
@@ -84,6 +85,14 @@ class FrequencyController extends Controller
         }else{
             abort(403);
         }
+
+        $selection = Selection::whereBelongsTo($frequency->schoolclass)->whereBelongsTo($frequency->student)->first();
+
+        if($selection->sitatl != "Ativo"){
+            Session::flash('alert-warning', 'Esta monitoria encontra-se com status '.$selection->sitatl.'.');
+            return back();  
+        }
+        
         $meses = [1=>"janeiro", 2=>"fevereiro", 3=>"março", 4=>"abril", 5=>"maio", 6=>"junho", 7=>"julho", 8=>"agosto", 9=>"setembro", 10=>"outubro", 11=>"novembro", 12=>"dezembro"];
 
         if($frequency->month>date("m") or ($frequency->month==date("m") and date("d")<20)){

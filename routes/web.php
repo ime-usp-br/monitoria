@@ -75,6 +75,7 @@ Route::get('frequencies/{frequency}', [FrequencyController::class,"update"])->na
 Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 Route::post('/reports/make', [ReportController::class, 'make'])->name('reports.make');
 
+Route::patch('/tutors/revoke/{selection}', [TutorController::class, 'revoke'])->name('tutors.revoke'); 
 Route::get('/tutors', [TutorController::class, 'index'])->name('tutors.index'); 
 
 Route::get('/certificates', [CertificateController::class, 'index'])->name('certificates.index');

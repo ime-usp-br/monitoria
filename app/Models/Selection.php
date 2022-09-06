@@ -8,6 +8,7 @@ use App\Models\Student;
 use App\Models\SchoolClass;
 use App\Models\Enrollment;
 use App\Models\Requisition;
+use Carbon\Carbon;
 
 
 class Selection extends Model
@@ -22,8 +23,23 @@ class Selection extends Model
         'selecionado_sem_inscricao',
         'codpescad',# Código da Pessoal que Cadastrou
         'dtafimvin',# Data Fim Vinculo
-        'sitatl',# Situação Atual - Ativo, Concluido e Cancelado 
+        'sitatl',# Situação Atual - Ativo, Concluido e Desligado 
+        'motdes',# Motivo do Desligamento
     ];
+
+    protected $casts = [
+        'dtafimvin' => 'date:d/m/Y',
+    ];
+
+    public function setDtafimvinAttribute($value)
+    {
+        $this->attributes['dtafimvin'] = Carbon::createFromFormat('d/m/Y', $value);
+    }
+
+    public function getDtafimvinAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('d/m/Y') : '';
+    }
 
     public function student()
     {
