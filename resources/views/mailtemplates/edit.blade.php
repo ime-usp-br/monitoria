@@ -16,6 +16,7 @@
                 Os campos assinalados com * são de preenchimento obrigatório.
             </p>
 
+            @include('mailtemplates.modals.instructionsForUse')
             <form method="POST"
                 action="{{ route('mailtemplates.update', $mailtemplate) }}"
             >

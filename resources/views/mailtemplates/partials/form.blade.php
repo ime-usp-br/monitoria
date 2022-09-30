@@ -95,6 +95,14 @@
 <div class="custom-form-group align-items-center">
     <div class="col-md-12 text-lg-left">
         <label for="body">Corpo*:</label>
+        <a  class="link" style="cursor: pointer;"
+            data-toggle="modal"
+            data-target="#instructionsForUseModal"
+            title="Instruções de uso do e-mail" 
+        >
+            <i class="icon-code"></i>
+            Instruções de Uso
+        </a>
     </div>
     <div class="col-md-12">
         <textarea class="custom-form-control" name="body" id="bodymailtemplate">{{ old('body') ?? $mailtemplate->body ?? ''}}</textarea>
