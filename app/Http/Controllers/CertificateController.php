@@ -13,8 +13,14 @@ class CertificateController extends Controller
 {
     public function index()
     {
-        if(!Auth::user()->hasRole("Aluno")){
-            abort(403);
+        if(Auth::check()){
+            if(!Auth::user()->hasRole("Aluno")){
+                if(Selection::whereHas("student", function($query){$query->where("codpes",Auth::user()->codpes);})->get()->isEmpty()){
+                    abort(403);
+                }
+            }
+        }else{
+            return redirect("login");
         }
         
         $selections = Selection::whereBelongsTo(Student::where("codpes", Auth::user()->codpes)->first())
@@ -30,9 +36,7 @@ class CertificateController extends Controller
 
     public function make(Selection $selection)
     {
-        if(!Auth::user()->hasRole("Aluno")){
-            abort(403);
-        }elseif($selection->student_id != Student::where("codpes", Auth::user()->codpes)->first()->id){
+        if($selection->student_id != Student::where("codpes", Auth::user()->codpes)->first()->id){
             abort(403);
         }
         

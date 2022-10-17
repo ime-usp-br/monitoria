@@ -85,3 +85,6 @@ Route::post('/mailtemplates/test', [MailTemplateController::class, 'test'])->nam
 Route::get('/mailtemplates/activate/{mailtemplate}', [MailTemplateController::class, 'activate'])->name('mailtemplates.activate');
 Route::get('/mailtemplates/deactivate/{mailtemplate}', [MailTemplateController::class, 'deactivate'])->name('mailtemplates.deactivate');
 Route::resource('mailtemplates', MailTemplateController::class);
+
+Route::get('/olddb', [MainController::class, "olddbIndex"])->name('olddb.index');
+Route::post('/olddb/import', [MainController::class, "olddbImport"])->name('olddb.import');

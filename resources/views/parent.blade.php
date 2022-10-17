@@ -69,6 +69,11 @@
                   <a href="{{ route('mailtemplates.index') }}">E-mails</a>
               </li>
           @endcan
+          @if(Auth::user()->hasRole("Administrador"))
+              <li>
+                  <a href="{{ route('olddb.index') }}">DB Antigo</a>
+              </li>
+          @endif
           <li>
               <form style="padding:0px;" action="{{ route('logout') }}" method="POST" id="logout_form2">
                   @csrf
@@ -76,7 +81,7 @@
               </form>
           </li>
       </ul>
-      @canany([
+      @if(Auth::user()->hasRole([
             "criar solicitação de monitor",
             "fazer inscrição",
             "Selecionar monitor",
@@ -84,7 +89,7 @@
             "Disparar emails",
             "gerar relatorio",
             "Emitir Atestado",
-        ])
+        ]) or App\Models\Selection::whereHas("student", function($query){$query->where("codpes",Auth::user()->codpes);})->get()->isNotEmpty())
       <ul id="menulateral" class="menulist mt-1">
           <li class="menuHeader">Ações</li>
           @can("criar solicitação de monitor")
@@ -117,13 +122,13 @@
                   <a href="{{ route('reports.index') }}">Relatório</a>
               </li>
           @endcan
-          @can("Emitir Atestado")
+          @if(App\Models\Selection::whereHas("student", function($query){$query->where("codpes",Auth::user()->codpes);})->get()->isNotEmpty())
               <li>
                   <a href="{{ route('certificates.index') }}">Emitir Atestado</a>
               </li>
-          @endcan
+          @endif
       </ul>
-      @endcanany
+      @endif
   </div>
 @endif
 <div id="layout_conteudo">
@@ -131,7 +136,7 @@
         <div class="alert alert-danger">
             <ul>
                 @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
+                    <li>{!! $error !!}</li>
                 @endforeach
             </ul>
         </div>
@@ -139,7 +144,7 @@
     <div class="flash-message">
     @foreach (['danger', 'warning', 'success', 'info'] as $msg)
         @if(Session::has('alert-' . $msg))
-        <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }}</p>
+        <p class="alert alert-{{ $msg }}">{!! Session::get('alert-' . $msg) !!}</p>
         <?php Session::forget('alert-' . $msg) ?>
         @endif
     @endforeach

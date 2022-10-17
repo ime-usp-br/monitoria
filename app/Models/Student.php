@@ -119,7 +119,24 @@ class Student extends Model
 
         $res = array_unique(DB::fetchAll($query, $param),SORT_REGULAR);
 
-        return $res[0];
+
+        if(!$res){
+            $query = " SELECT P.codpes, P.nompes, EP.codema";
+            $query .= " FROM PESSOA AS P, EMAILPESSOA as EP";
+            $query .= " WHERE P.codpes = :codpes";
+            $query .= " AND EP.codpes = :codpes";
+            $param = [
+                'codpes' => $codpes,
+            ];
+
+            $res = array_unique(DB::fetchAll($query, $param),SORT_REGULAR);
+        }
+
+        if($res){
+            return $res[0];
+        }else{
+            return [];
+        }
     }
     
     public static function getFromReplicadoByNompes($nompes)
