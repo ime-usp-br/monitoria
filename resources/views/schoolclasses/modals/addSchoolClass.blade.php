@@ -16,7 +16,7 @@
                     <div class="col-12 col-md-5">
 
                         <select id="periodoId" name="periodoId" class="custom-form-control">
-                            @foreach(App\Models\SchoolTerm::all() as $schoolterm)
+                            @foreach(App\Models\SchoolTerm::all()->sortBy(["year","period"]) as $schoolterm)
                                 <option value={{ $schoolterm->id }}>{{ $schoolterm->year . " " . $schoolterm->period }}</option>
                             @endforeach
                         </select>
