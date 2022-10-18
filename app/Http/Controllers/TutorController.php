@@ -23,6 +23,10 @@ class TutorController extends Controller
             $schoolterm = SchoolTerm::find($validated['periodoId']);
         }else{
             $schoolterm = SchoolTerm::getOpenSchoolTerm();
+
+            if(!$schoolterm){
+                $schoolterm = SchoolTerm::getLatest();
+            }
         }
 
         if(!$schoolterm){

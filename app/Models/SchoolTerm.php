@@ -135,4 +135,11 @@ class SchoolTerm extends Model
     {
         return SchoolTerm::where(['status'=>'Aberto'])->first();
     }
+
+    public static function getLatest()
+    {
+        $year = SchoolTerm::max("year");
+        $period = SchoolTerm::where("year",$year)->max("period");
+        return SchoolTerm::where(["year"=>$year,"period"=>$period])->first();
+    } 
 }
