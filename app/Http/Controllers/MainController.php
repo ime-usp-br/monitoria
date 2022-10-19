@@ -14,6 +14,7 @@ use App\Models\Enrollment;
 use App\Models\Selection;
 use App\Models\ClassSchedule;
 use App\Models\Activity;
+use App\Models\SelfEvaluation;
 use Session;
 use Auth;
 
@@ -59,9 +60,23 @@ class MainController extends Controller
 
         $data = [];
         foreach(explode("\n", $validated["file"]->get()) as $line){
-            $cols = explode(",", $line);
-            if(count($cols) == 7){
-                array_push($data,["monitor_codpes"=>$cols[0], "professor_codpes"=>$cols[1], "coddis"=>$cols[2], "ano"=>$cols[3], "semestre"=>$cols[4], "frequencia_meses"=>$cols[5], "voluntario"=>$cols[6]]);
+            $cols = explode(";", $line);
+            if(count($cols) == 13){
+                array_push($data,[  
+                    "monitor_codpes"=>$cols[0], 
+                    "professor_codpes"=>$cols[1], 
+                    "coddis"=>$cols[2], 
+                    "ano"=>$cols[3], 
+                    "semestre"=>$cols[4], 
+                    "frequencia_meses"=>$cols[5], 
+                    "voluntario"=>$cols[6], 
+                    "student_amount"=>$cols[7], 
+                    "homework_amount"=>$cols[8], 
+                    "secondary_activity"=>$cols[9], 
+                    "workload"=>$cols[10], 
+                    "workload_reason"=>$cols[11], 
+                    "comments"=>$cols[12]
+                ]);
             }
         }
         $errors = "";
@@ -84,12 +99,17 @@ class MainController extends Controller
                     "end_date_enrollments"=>$line["semestre"] ? "30/07/".$line["ano"] : "30/02/".$line["ano"],
                 ]
             );
-            
+
             $turma = SchoolClass::getFromReplicadoOldDB($st, $line["professor_codpes"], $line["coddis"]);
 
             if($turma){
+                $docente = Instructor::firstOrCreate(Instructor::getFromReplicadoByCodpes($line["professor_codpes"]));
+
                 $schoolclass = SchoolClass::where("coddis",$turma["coddis"])
-                                            ->where("codtur",$turma["codtur"])->first();
+                                            ->whereBelongsTo($st)
+                                            ->whereHas("instructors", function($query)use($docente){
+                                                $query->where("codpes", $docente->codpes);
+                                            })->first();
     
                 if(!$schoolclass){
                     $schoolclass = new SchoolClass;
@@ -112,7 +132,7 @@ class MainController extends Controller
 
                 $requisition = Requisition::firstOrCreate([
                         "school_class_id"=>$schoolclass->id,
-                        'instructor_id'=>Instructor::firstOrCreate(Instructor::getFromReplicadoByCodpes($line["professor_codpes"]))->id,
+                        'instructor_id'=>$docente->id,
                         'requested_number'=>1,
                         'priority'=>1,
                     ]);
@@ -124,24 +144,26 @@ class MainController extends Controller
 
                 $monitor = Student::firstOrCreate(Student::getFromReplicadoByCodpes($line["monitor_codpes"]));
 
-                $enrollment = Enrollment::firstOrCreate([
+                $enrollment = Enrollment::updateOrCreate([
                         'school_class_id'=>$schoolclass->id,
                         'student_id'=>$monitor->id,
                         'voluntario'=>$line["voluntario"],
                         'disponibilidade_diurno'=>1,
                         'disponibilidade_noturno'=>1,
                         'preferencia_horario'=>'Indiferente',
+                    ],[
                         'observacoes'=>"Inscrição importada do antigo sistema de monitoria em ".date("d/m/Y"),
                     ]);
 
-                $selection = Selection::firstOrCreate([
+                $selection = Selection::updateOrCreate([
                         'student_id'=>$monitor->id,
                         'school_class_id'=>$schoolclass->id,
                         'enrollment_id'=>$enrollment->id,
                         'requisition_id'=>$requisition->id,
                         'selecionado_sem_inscricao'=>0,
-                        'codpescad'=>Auth::user()->codpes,
                         'sitatl'=>"Concluido"
+                    ],[
+                        'codpescad'=>Auth::user()->codpes,
                     ]);
                 
                 $meses = explode("-", $line["frequencia_meses"]);
@@ -153,6 +175,18 @@ class MainController extends Controller
                             'month'=>$mes,
                             'registered'=>1,
                         ]);
+                }
+
+                if($line["student_amount"] and $line["homework_amount"] and $line["workload"]){
+                    $se = SelfEvaluation::firstOrCreate([
+                        'selection_id'=>$selection->id,
+                        'student_amount'=>$line["student_amount"],
+                        'homework_amount'=>$line["homework_amount"],
+                        'secondary_activity'=>$line["secondary_activity"],
+                        'workload'=>$line["workload"],
+                        'workload_reason'=>$line["workload_reason"],
+                        'comments'=>$line["comments"],
+                    ]);
                 }
             }else{
                 $errors .= json_encode($line);

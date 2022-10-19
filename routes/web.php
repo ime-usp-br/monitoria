@@ -18,6 +18,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TutorController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\MailTemplateController;
+use App\Http\Controllers\SelfEvaluationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,3 +89,5 @@ Route::resource('mailtemplates', MailTemplateController::class);
 
 Route::get('/olddb', [MainController::class, "olddbIndex"])->name('olddb.index');
 Route::post('/olddb/import', [MainController::class, "olddbImport"])->name('olddb.import');
+
+Route::resource('selfevaluations', SelfEvaluationController::class);

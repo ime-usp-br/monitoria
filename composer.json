@@ -13,6 +13,7 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "romanzipp/laravel-queue-monitor": "^2.3",
+        "staudenmeir/belongs-to-through": "^2.5",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
         "uspdev/laravel-usp-theme": "dev-master",
         "uspdev/replicado": "^1.10",

@@ -13,7 +13,7 @@
 
             <div class="alert alert-info rounded-0">
                 <b>Atenção:</b>
-                O arquivo deve estar em formato csv, com as colunas separadas por virgula, seguindo a seguinte ordem: 
+                O arquivo deve estar em formato csv, com as colunas separadas por ponto e virgula, seguindo a seguinte ordem: 
 
                     <ul>
                         <li>
@@ -32,10 +32,28 @@
                             quinta coluna com o semestre sendo "0" para 1° semestre e "1" para 2° semestre,
                         </li>
                         <li>
-                            sexta coluna com os meses em que foi resgistrada a frequencia Ex: "8,9,10,11",
+                            sexta coluna com os meses em que foi resgistrada a frequencia Ex: "8-9-10-11",
                         </li>
                         <li>
-                            ultima coluna com a informação se a monitoria foi voluntaria também no formato 0/1.
+                            setima coluna com a informação se a monitoria foi voluntaria também no formato 0/1.
+                        </li>
+                        <li>
+                            oitava coluna com o numero de estudantes atendidos nas monitorias.
+                        </li>
+                        <li>
+                            nona coluna com listas de exercicios corrigidas por mes.
+                        </li>
+                        <li>
+                            decima primeira coluna com descrição das atividades extras.
+                        </li>
+                        <li>
+                            decima segunda coluna com o que o monitor achou do trabalho, sendo 0=ótimo, 1=bom e 2=regular.
+                        </li>
+                        <li>
+                            decima terceira coluna com justificativa da nota que o monitor deu ao trabalho
+                        </li>
+                        <li>
+                            decima quarta coluna com observações, sugestoes e reclamações do monitor.
                         </li>
                     </ul>
 

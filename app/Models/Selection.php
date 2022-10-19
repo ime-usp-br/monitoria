@@ -8,6 +8,7 @@ use App\Models\Student;
 use App\Models\SchoolClass;
 use App\Models\Enrollment;
 use App\Models\Requisition;
+use App\Models\SelfEvaluation;
 use Carbon\Carbon;
 
 
@@ -59,5 +60,10 @@ class Selection extends Model
     public function requisition()
     {
         return $this->belongsTo(Requisition::class);
+    }
+
+    public function selfevaluation()
+    {
+        return $this->hasOne(SelfEvaluation::class);
     }
 }

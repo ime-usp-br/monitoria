@@ -38,10 +38,10 @@
                         <th class="text-center" rowspan="2" style="vertical-align: middle;">Monitor</th>
                         <th class="text-center" rowspan="2" style="vertical-align: middle;">Email</th>
                         <th class="text-center" rowspan="2" style="vertical-align: middle;">Situação</th>
-                        <th class="text-center" rowspan="2" style="vertical-align: middle;">Sigla da Disciplina</th>
-                        <th class="text-center" rowspan="2" style="vertical-align: middle;">Código da Turma</th>
+                        <th class="text-center" rowspan="2" style="vertical-align: middle;">Sigla da<br>Disciplina</th>
                         <th class="text-center" rowspan="2" style="vertical-align: middle;">Nome da Disciplina</th>
                         <th class="text-center" rowspan="2" style="vertical-align: middle;">Voluntário</th>
+                        <th class="text-center" rowspan="2" style="vertical-align: middle;">Auto<br>Avaliação</th>
                         <th class="text-center" colspan="6">Frequência</th>
                     </tr>
                     <tr class="text-center">
@@ -81,9 +81,18 @@
                             <td class="text-left">{{ $selection->student->codema }}</td>
                             <td>{{ $selection->sitatl }}</td>
                             <td>{{ $selection->schoolclass->coddis }}</td>
-                            <td>{{ $selection->schoolclass->codtur }}</td>
                             <td class="text-left">{{ $selection->schoolclass->nomdis }}</td>
                             <td class="text-center">{{ $selection->enrollment->voluntario ? 'Sim' : 'Não'}}</td>
+                            <td>
+                                @if($selection->selfevaluation)
+                                    <a  href="{{ route('selfevaluations.show',$selection->selfevaluation) }}" 
+                                        class="btn btn-outline-dark btn-sm">
+                                        Visualizar
+                                    </a>
+                                @else
+                                    Pendente
+                                @endif
+                            </td>
                             @foreach(range(3,7) as $month)
                                 <td>{{ $selection->student->frequencies()->where(['school_class_id'=>$selection->schoolclass->id, 'month'=>($schoolterm->period == '1° Semestre' ? $month : $month+5)])->exists() ? 
                                         $selection->student->frequencies()->where(['school_class_id'=>$selection->schoolclass->id, 'month'=>($schoolterm->period == '1° Semestre' ? $month : $month+5)])->first()->registered ? 'S' : 'N' : 'N' }}</td>

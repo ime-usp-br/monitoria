@@ -69,6 +69,11 @@
                   <a href="{{ route('mailtemplates.index') }}">E-mails</a>
               </li>
           @endcan
+          @can("Visualizar auto avaliações")
+              <li>
+                  <a href="{{ route('selfevaluations.index') }}">Auto Avaliações</a>
+              </li>
+          @endcan
           @if(Auth::user()->hasRole("Administrador"))
               <li>
                   <a href="{{ route('olddb.index') }}">DB Antigo</a>
