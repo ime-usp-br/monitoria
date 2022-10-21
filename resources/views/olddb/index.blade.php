@@ -10,6 +10,10 @@
             <h1 class='h5 font-weight-bold my-3 text-center'>
                 Carregar dados do sistema antigo
             </h1>
+
+            <div id="msg-top">
+            </div>
+
             <div class="alert alert-info rounded-0">
                 <b>Atenção:</b>
                 O arquivo deve estar em formato csv, com as colunas separadas por ponto e virgula, seguindo a seguinte ordem: 
@@ -73,6 +77,12 @@
 
                 </div>
             <br>
+
+            <div id="progressbar-div">
+            </div>
+
+            <br>
+
             <form method='post' action="{{ route('olddb.import') }}" enctype='multipart/form-data' >
                 @csrf
                 <div class="text-center" style="height: 50px;">
@@ -82,8 +92,65 @@
                     Importar CSV
                 </button>
                 </div>
-            </form>
+            </form>        
+        
         </div>
+
+
+
     </div>
 </div>
+@endsection
+
+@section('javascripts_bottom')
+@parent
+<script>
+$( function() {       
+    function progress() {
+        $.ajax({
+            url: window.location.origin+'/monitor/getImportOldDBJob',
+            dataType: 'json',
+            success: function success(json){
+                if('progress' in json){
+                    if(!json["data"] && !json['failed']){
+                        if(document.getElementById('progressbar')){
+                            $( "#progressbar" ).progressbar( "value", json['progress'] );
+                        }else if(json['progress'] != 100){
+                            document.getElementById("btn-importfile").disabled = true;
+                            $('#progressbar-div').append("<div id='progressbar'><div class='progress-label'></div></div>");
+                            var progressbar = $( "#progressbar" ),
+                            progressLabel = $( ".progress-label" );
+                            progressbar.progressbar({
+                                value: false,
+                                change: function() {
+                                    progressLabel.text( progressbar.progressbar( "value" ) + "%" );
+                                },
+                                complete: function() {
+                                    document.getElementById("btn-importfile").disabled = false;
+                                    $( "#progressbar" ).remove();
+                                    $('#msg-top').empty();
+                                    $('#msg-top').append("<p id='success-message' class='alert alert-success'>Os dados foram importados com sucesso.</p>");
+                                }
+                            });
+                        }
+                    }else if((json["data"]) && (JSON.parse(json["data"])["status"] == "failed") && !(document.getElementById('error-message-bottom'))){
+                        document.getElementById("btn-importfile").disabled = false;
+                        $( "#progressbar" ).remove();
+                        var failed_lines = JSON.parse(json["data"])["linhas_com_erros"];
+                        $('#msg-top').empty();
+                        $('#msg-top').append("<p id='error-message' class='alert alert-danger'>Ocorram alguns erros na importação iniciada em "+json['started_at_exact']+". Linhas do arquivo que não foram possíveis a importação: "+failed_lines+"</p>");
+                    }else if(json['failed']){
+                        document.getElementById("btn-importfile").disabled = false;
+                        $( "#progressbar" ).remove();
+                        $('#msg-top').empty();
+                        $('#msg-top').append("<p id='error-message' class='alert alert-danger'>Não foi possivel importar os dados iniciada em "+json['started_at_exact']+". Falha critica.</p>");
+                    }
+                }
+                var timeouthandle = setTimeout( progress, 1000);
+            }
+        });
+    }        
+    setTimeout( progress, 50 );
+});
+</script>
 @endsection

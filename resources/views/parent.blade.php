@@ -59,6 +59,11 @@
                   <a href="{{ route('schoolclasses.index') }}">Turmas</a>
               </li>
           @endcan
+          @can("visualizar docente")
+              <li>
+                  <a href="{{ route('instructors.index') }}">Docentes</a>
+              </li>
+          @endcan
           @can("visualizar monitores")
               <li>
                   <a href="{{ route('tutors.index') }}">Monitores</a>

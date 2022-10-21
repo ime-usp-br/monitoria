@@ -20,6 +20,7 @@ use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\MailTemplateController;
 use App\Http\Controllers\SelfEvaluationController;
 use App\Http\Controllers\InstructorEvaluationController;
+use App\Http\Controllers\OldDBController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,9 +89,11 @@ Route::get('/mailtemplates/activate/{mailtemplate}', [MailTemplateController::cl
 Route::get('/mailtemplates/deactivate/{mailtemplate}', [MailTemplateController::class, 'deactivate'])->name('mailtemplates.deactivate');
 Route::resource('mailtemplates', MailTemplateController::class);
 
-Route::get('/olddb', [MainController::class, "olddbIndex"])->name('olddb.index');
-Route::post('/olddb/import', [MainController::class, "olddbImport"])->name('olddb.import');
+Route::get('/olddb', [OldDBController::class, "index"])->name('olddb.index');
+Route::post('/olddb/import', [OldDBController::class, "import"])->name('olddb.import');
 
 Route::resource('selfevaluations', SelfEvaluationController::class);
 
 Route::resource('instructorevaluations', InstructorEvaluationController::class);
+
+Route::get('/monitor/getImportOldDBJob', [MonitorController::class, 'getImportOldDBJob']);
