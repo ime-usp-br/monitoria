@@ -15,6 +15,7 @@ use App\Models\Selection;
 use App\Models\ClassSchedule;
 use App\Models\Activity;
 use App\Models\SelfEvaluation;
+use App\Models\InstructorEvaluation;
 use Session;
 use Auth;
 
@@ -61,7 +62,7 @@ class MainController extends Controller
         $data = [];
         foreach(explode("\n", $validated["file"]->get()) as $line){
             $cols = explode(";", $line);
-            if(count($cols) == 13){
+            if(count($cols) == 18){
                 array_push($data,[  
                     "monitor_codpes"=>$cols[0], 
                     "professor_codpes"=>$cols[1], 
@@ -75,7 +76,12 @@ class MainController extends Controller
                     "secondary_activity"=>$cols[9], 
                     "workload"=>$cols[10], 
                     "workload_reason"=>$cols[11], 
-                    "comments"=>$cols[12]
+                    "comments"=>$cols[12],
+                    "ease_of_contact"=>$cols[13], 
+                    "efficiency"=>$cols[14], 
+                    "reliability"=>$cols[15], 
+                    "overall"=>$cols[16], 
+                    "comments_ie"=>$cols[17], 
                 ]);
             }
         }
@@ -177,7 +183,7 @@ class MainController extends Controller
                         ]);
                 }
 
-                if($line["student_amount"] and $line["homework_amount"] and $line["workload"]){
+                if($line["student_amount"]!=null and $line["homework_amount"]!=null and $line["workload"]!=null){
                     $se = SelfEvaluation::firstOrCreate([
                         'selection_id'=>$selection->id,
                         'student_amount'=>$line["student_amount"],
@@ -186,6 +192,17 @@ class MainController extends Controller
                         'workload'=>$line["workload"],
                         'workload_reason'=>$line["workload_reason"],
                         'comments'=>$line["comments"],
+                    ]);
+                }
+
+                if($line["ease_of_contact"]!=null and $line["efficiency"]!=null and $line["reliability"]!=null and $line["overall"]!=null ){
+                    $ie = InstructorEvaluation::firstOrCreate([
+                        'selection_id'=>$selection->id,
+                        'ease_of_contact'=>$line["ease_of_contact"],
+                        'efficiency'=>$line["efficiency"],
+                        'reliability'=>$line["reliability"],
+                        'overall'=>$line["overall"],
+                        'comments'=>$line["comments_ie"],
                     ]);
                 }
             }else{

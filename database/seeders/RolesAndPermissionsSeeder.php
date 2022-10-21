@@ -69,6 +69,8 @@ class RolesAndPermissionsSeeder extends Seeder
 
         Permission::firstOrCreate(['name' => 'Visualizar auto avaliações']);
 
+        Permission::firstOrCreate(['name' => 'Visualizar avaliações dos docentes']);
+
         Role::firstOrCreate(['name' => 'Secretaria'])
             ->givePermissionTo('visualizar todos inscritos')
             ->givePermissionTo('visualizar menu de configuração')
@@ -93,6 +95,7 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('visualizar monitores')
             ->givePermissionTo('Editar E-mails')
             ->givePermissionTo('Visualizar auto avaliações')
+            ->givePermissionTo('Visualizar avaliações dos docentes')
             ->givePermissionTo('baixar histórico escolar');
 
         Role::firstOrCreate(['name' => 'Docente'])
@@ -120,10 +123,12 @@ class RolesAndPermissionsSeeder extends Seeder
 
         Role::firstOrCreate(['name' => 'Presidente de Comissão'])
             ->givePermissionTo('Visualizar auto avaliações')
+            ->givePermissionTo('Visualizar avaliações dos docentes')
             ->givePermissionTo('visualizar todos inscritos');
 
         Role::firstOrCreate(['name' => 'Vice Presidente de Comissão'])
             ->givePermissionTo('Visualizar auto avaliações')
+            ->givePermissionTo('Visualizar avaliações dos docentes')
             ->givePermissionTo('visualizar todos inscritos');
 
         Role::firstOrCreate(['name' => 'Membro Comissão'])
@@ -133,6 +138,7 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('Preterir monitor')
             ->givePermissionTo('gerar relatorio')
             ->givePermissionTo('visualizar monitores')
+            ->givePermissionTo('Visualizar avaliações dos docentes')
             ->givePermissionTo('baixar histórico escolar');
 
         Role::firstOrCreate(['name' => 'Administrador'])

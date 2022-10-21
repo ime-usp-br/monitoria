@@ -176,7 +176,7 @@ class SchoolClass extends Model
 
     public static function getFromReplicadoOldDB(SchoolTerm $st, $instructor_codpes, $coddis)
     {
-        $codtur = $st->year . ($st == "1° Semestre" ? "1" : "2") . '%';
+        $codtur = $st->year . ($st->period == "1° Semestre" ? "1" : "2") . '%';
 
         $query = " SELECT T.codtur, T.coddis, D.nomdis, T.dtainitur, T.dtafimtur, T.tiptur, DC.pfxdisval";
         $query .= " FROM TURMAGR AS T, DISCIPLINAGR AS D, DISCIPGRCODIGO AS DC";

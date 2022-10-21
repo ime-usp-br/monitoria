@@ -8,20 +8,26 @@ use App\Models\Selection;
 use App\Models\Student;
 use App\Models\SchoolClass;
 use App\Models\SchoolTerm;
+use App\Models\Instructor;
+use App\Models\Requisition;
 
-class SelfEvaluation extends Model
+class InstructorEvaluation extends Model
 {
     use HasFactory;
     use \Znck\Eloquent\Traits\BelongsToThrough;
 
+    protected $eval_as_string = [
+        0=>"Ótimo",
+        1=>'Bom',
+        2=>'Regular'
+    ];
 
     protected $fillable = [
         'selection_id',
-        'student_amount',
-        'homework_amount',
-        'secondary_activity',
-        'workload',
-        'workload_reason',
+        'ease_of_contact',
+        'efficiency',
+        'reliability',
+        'overall',
         'comments',
     ];
 
@@ -45,10 +51,28 @@ class SelfEvaluation extends Model
         return $this->belongsToThrough(SchoolTerm::class, [SchoolClass::class, Selection::class]);
     }
 
-    public function getWorkloadAsString()
+    public function instructor()
     {
-        $workloadAsString = [0=>"Pesado", 1=>"Razoável", 2=>"Leve"];
+        return $this->belongsToThrough(Instructor::class, [Requisition::class, Selection::class]);
+    }
 
-        return $workloadAsString[$this->workload];
+    public function getEaseOfContactAsString()
+    {
+        return $this->eval_as_string[$this->ease_of_contact];
+    }
+
+    public function getEfficiencyAsString()
+    {
+        return $this->eval_as_string[$this->efficiency];
+    }
+
+    public function getReliabilityAsString()
+    {
+        return $this->eval_as_string[$this->reliability];
+    }
+
+    public function getOverallAsString()
+    {
+        return $this->eval_as_string[$this->overall];
     }
 }

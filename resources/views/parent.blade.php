@@ -74,9 +74,14 @@
                   <a href="{{ route('selfevaluations.index') }}">Auto Avaliações</a>
               </li>
           @endcan
+          @can("Visualizar avaliações dos docentes")
+              <li>
+                  <a href="{{ route('instructorevaluations.index') }}">Avaliações dos Docentes</a>
+              </li>
+          @endcan
           @if(Auth::user()->hasRole("Administrador"))
               <li>
-                  <a href="{{ route('olddb.index') }}">DB Antigo</a>
+                  <a href="{{ route('olddb.index') }}">Importar DB Antigo</a>
               </li>
           @endif
           <li>

@@ -8,9 +8,8 @@
     <div class="justify-content-center">
         <div class="col-md-12">
             <h1 class='h5 font-weight-bold my-3 text-center'>
-                Carregar dados do sistema antigo da monitoria
+                Carregar dados do sistema antigo
             </h1>
-
             <div class="alert alert-info rounded-0">
                 <b>Atenção:</b>
                 O arquivo deve estar em formato csv, com as colunas separadas por ponto e virgula, seguindo a seguinte ordem: 
@@ -44,16 +43,31 @@
                             nona coluna com listas de exercicios corrigidas por mes.
                         </li>
                         <li>
-                            decima primeira coluna com descrição das atividades extras.
+                            decima coluna com descrição das atividades extras.
                         </li>
                         <li>
-                            decima segunda coluna com o que o monitor achou do trabalho, sendo 0=ótimo, 1=bom e 2=regular.
+                            decima primeira coluna com o que o monitor achou do trabalho, sendo 0=ótimo, 1=bom e 2=regular.
                         </li>
                         <li>
-                            decima terceira coluna com justificativa da nota que o monitor deu ao trabalho
+                            decima segunda coluna com justificativa da nota que o monitor deu ao trabalho.
                         </li>
                         <li>
-                            decima quarta coluna com observações, sugestoes e reclamações do monitor.
+                            decima terceira coluna com observações, sugestoes e reclamações do monitor.
+                        </li>
+                        <li>
+                            decima quarta coluna com a facilidade de contato atribuida ao monitor pelo docente no formato 0,1 ou 2.
+                        </li>
+                        <li>
+                            decima quinta coluna com a eficiência atribuida ao monitor pelo docente no formato 0,1 ou 2.
+                        </li>
+                        <li>
+                            decima sexta coluna com a confiabilidade atribuida ao monitor pelo docente no formato 0,1 ou 2.
+                        </li>
+                        <li>
+                            decima setima coluna com a nota no geral atribuida ao monitor pelo docente no formato 0,1 ou 2.
+                        </li>
+                        <li>
+                            decima oitava coluna com os comentários do docente.
                         </li>
                     </ul>
 
@@ -63,7 +77,7 @@
                 @csrf
                 <div class="text-center" style="height: 50px;">
                 <input  class="custom-form-input" type='file' name='file' >
-                <button class="btn btn-outline-primary" type='submit' name='submit' >
+                <button id="btn-importfile" class="btn btn-outline-primary" type='submit' name='submit' >
                     <i class="fas fa-file-upload"></i>
                     Importar CSV
                 </button>

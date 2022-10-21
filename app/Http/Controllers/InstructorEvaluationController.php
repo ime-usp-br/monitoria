@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreSelfEvaluationRequest;
-use App\Http\Requests\UpdateSelfEvaluationRequest;
-use App\Http\Requests\IndexSelfEvaluationRequest;
-use App\Models\SelfEvaluation;
+use App\Http\Requests\StoreInstructorEvaluationRequest;
+use App\Http\Requests\UpdateInstructorEvaluationRequest;
+use App\Http\Requests\IndexInstructorEvaluationRequest;
+use App\Models\InstructorEvaluation;
 use App\Models\SchoolTerm;
 use Auth;
 use Gate;
 use Session;
 
-class SelfEvaluationController extends Controller
+class InstructorEvaluationController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(IndexSelfEvaluationRequest $request)
+    public function index(IndexInstructorEvaluationRequest $request)
     {
         if(Auth::check()){
-            if(!Gate::allows('Visualizar auto avaliações')){
+            if(!Gate::allows('Visualizar avaliações dos docentes')){
                 abort(403);
             }
         }else{
@@ -45,11 +45,11 @@ class SelfEvaluationController extends Controller
             return back();
         }
 
-        $ses = SelfEvaluation::whereHas("schoolterm", function($query)use($schoolterm){
+        $ies = InstructorEvaluation::whereHas("schoolterm", function($query)use($schoolterm){
             $query->where(["year"=>$schoolterm->year,"period"=>$schoolterm->period]);
-        })->get();
+        })->get()->sortBy("instructor.nompes");
 
-        return view("selfevaluations.index", compact(["ses", "schoolterm"]));
+        return view("instructorevaluations.index", compact(["ies", "schoolterm"]));
     }
 
     /**
@@ -65,10 +65,10 @@ class SelfEvaluationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreSelfEvaluationRequest  $request
+     * @param  \App\Http\Requests\StoreInstructorEvaluationRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreSelfEvaluationRequest $request)
+    public function store(StoreInstructorEvaluationRequest $request)
     {
         //
     }
@@ -76,21 +76,29 @@ class SelfEvaluationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\SelfEvaluation  $selfEvaluation
+     * @param  \App\Models\InstructorEvaluation  $instructorEvaluation
      * @return \Illuminate\Http\Response
      */
-    public function show(SelfEvaluation $selfevaluation)
+    public function show(InstructorEvaluation $instructorevaluation)
     {
-        return view("selfevaluations.show", ["se"=>$selfevaluation]);
+        if(Auth::check()){
+            if(!Gate::allows('Visualizar avaliações dos docentes')){
+                abort(403);
+            }
+        }else{
+            return redirect("login");
+        }
+
+        return view("instructorevaluations.show", ["ie"=>$instructorevaluation]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\SelfEvaluation  $selfEvaluation
+     * @param  \App\Models\InstructorEvaluation  $instructorEvaluation
      * @return \Illuminate\Http\Response
      */
-    public function edit(SelfEvaluation $selfEvaluation)
+    public function edit(InstructorEvaluation $instructorEvaluation)
     {
         //
     }
@@ -98,11 +106,11 @@ class SelfEvaluationController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateSelfEvaluationRequest  $request
-     * @param  \App\Models\SelfEvaluation  $selfEvaluation
+     * @param  \App\Http\Requests\UpdateInstructorEvaluationRequest  $request
+     * @param  \App\Models\InstructorEvaluation  $instructorEvaluation
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateSelfEvaluationRequest $request, SelfEvaluation $selfEvaluation)
+    public function update(UpdateInstructorEvaluationRequest $request, InstructorEvaluation $instructorEvaluation)
     {
         //
     }
@@ -110,10 +118,10 @@ class SelfEvaluationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\SelfEvaluation  $selfEvaluation
+     * @param  \App\Models\InstructorEvaluation  $instructorEvaluation
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SelfEvaluation $selfEvaluation)
+    public function destroy(InstructorEvaluation $instructorEvaluation)
     {
         //
     }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSelfEvaluationsTable extends Migration
+class CreateInstructorEvaluationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateSelfEvaluationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('self_evaluations', function (Blueprint $table) {
+        Schema::create('instructor_evaluations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('selection_id');
-            $table->unsignedInteger("student_amount");
-            $table->unsignedInteger("homework_amount");
-            $table->text("secondary_activity")->nullable();
-            $table->unsignedInteger("workload");
-            $table->text("workload_reason")->nullable();
+            $table->unsignedTinyInteger("ease_of_contact");
+            $table->unsignedTinyInteger("efficiency");
+            $table->unsignedTinyInteger("reliability");
+            $table->unsignedTinyInteger("overall");
             $table->text("comments")->nullable();
             $table->timestamps();
         });
@@ -33,6 +32,6 @@ class CreateSelfEvaluationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('self_evaluations');
+        Schema::dropIfExists('instructor_evaluations');
     }
 }
