@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateSelfEvaluationRequest extends FormRequest
+class CreateSelfEvaluationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,13 +23,10 @@ class UpdateSelfEvaluationRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'student_amount'=>'required|integer',
-            'homework_amount'=>'required|integer',
-            'secondary_activity'=>'sometimes',
-            'workload'=>'required|integer',
-            'workload_reason'=>'sometimes',
-            'comments'=>'sometimes',
+        $rules = [
+            'selectionID' => 'required|numeric',
         ];
+
+        return $rules;
     }
 }

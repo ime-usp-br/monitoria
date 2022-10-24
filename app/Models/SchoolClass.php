@@ -153,7 +153,7 @@ class SchoolClass extends Model
         $query .= " AND M.codpes = :codpes";
         $param = [
             'codpes' => $instructor->codpes,
-            'codtur' => $st->year . ($st == "1° Semestre" ? "1" : "2") . '%',
+            'codtur' => $st->year . ($st->period == "1° Semestre" ? "1" : "2") . '%',
         ];
 
         return array_column(array_unique(DB::fetchAll($query, $param),SORT_REGULAR), "coddis");

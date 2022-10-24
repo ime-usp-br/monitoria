@@ -95,7 +95,7 @@
                                 <label>Atividades além do atendimento aos alunos e correção de listas de exercícios:</label>
                             </div>
                             <div class="col-lg-auto">
-                                {{ $se->secondary_activity }}
+                                {!! $se->secondary_activity !!}
                             </div>
                         </div>
                     </div>
@@ -108,7 +108,7 @@
                             </div>
                             @if($se->workload_reason)
                                 <div class="col-lg-auto">
-                                    {{ $se->workload_reason }}
+                                    {!! $se->workload_reason !!}
                                 </div>
                             @endif
                         </div>
@@ -123,7 +123,7 @@
                             </div>
                             @if($se->comments)
                                 <div class="col-lg-auto">
-                                    {{ $se->comments }}
+                                    {!! $se->comments !!}
                                 </div>
                             @endif
                         </div>

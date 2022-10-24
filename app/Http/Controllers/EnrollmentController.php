@@ -251,7 +251,11 @@ class EnrollmentController extends Controller
         $schoolterm = SchoolTerm::getOpenSchoolTerm();
 
         if(!$schoolterm){
-            Session::flash('alert-warning', 'Não foi encontrado um periodo letivo com status em aberto.');
+            $schoolterm = SchoolTerm::getLatest();
+        }
+
+        if(!$schoolterm){
+            Session::flash('alert-warning', 'Não foi encontrado um periodo letivo.');
             return back();
         }
 

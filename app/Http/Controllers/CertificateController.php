@@ -24,7 +24,7 @@ class CertificateController extends Controller
         }
         
         $selections = Selection::whereBelongsTo(Student::where("codpes", Auth::user()->codpes)->first())
-            ->where("sitatl", "Concluido")->get();
+            ->where("sitatl", "Concluido")->get()->sortBy(["schoolclass.schoolterm.year", "schoolclass.schoolterm.period"])->reverse();
 
         if($selections->isEmpty()){
             Session::flash("alert-warning", "Você não concluiu nenhuma monitoria.");

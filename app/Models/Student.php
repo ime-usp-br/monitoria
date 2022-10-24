@@ -82,9 +82,10 @@ class Student extends Model
 
     public function getSchoolRecordFromOpenSchoolTerm()
     {
-        return $this->schoolrecords()->whereHas('schoolterm', function($query){
+        $record = $this->schoolrecords()->whereHas('schoolterm', function($query){
                         $query->where('status','=', 'Aberto');
                     })->first();
+        return $record ? $record->file_path : "";
     }
 
     public function hasEnrollmentInEnrollmentPeriod()
@@ -137,6 +138,18 @@ class Student extends Model
         }else{
             return [];
         }
+    }
+
+    public static function teste()
+    {
+        $query = " SELECT P.codpes, P.nompes";
+        $query .= " FROM PESSOA AS P";
+        $query .= " WHERE P.nompes LIKE :nompes";
+        $param = [
+            'nompes' => "%Daniela%Miranda%",
+        ];
+
+        return array_unique(DB::fetchAll($query, $param),SORT_REGULAR);
     }
     
     public static function getFromReplicadoByNompes($nompes)

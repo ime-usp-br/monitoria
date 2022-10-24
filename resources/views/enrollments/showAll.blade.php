@@ -35,7 +35,7 @@
                             <td style="text-align: center">
                                 <form method="POST" action="{{ route('schoolrecords.download') }}" target="_blank">
                                     @csrf
-                                    <input type='hidden' name='path' value="{{ $aluno->getSchoolRecordFromOpenSchoolTerm()->file_path }}">
+                                    <input type='hidden' name='path' value="{{ $aluno->getSchoolRecordFromOpenSchoolTerm() }}">
                                     <button class="btn btn-link"
                                         data-toggle="tooltip" data-placement="top"
                                         title="Baixar Histórico Escolar"

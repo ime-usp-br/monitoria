@@ -24,7 +24,7 @@
                             <td>{{ $selection->schoolclass->coddis }}</td>
                             <td class="text-left">{{ $selection->schoolclass->nomdis }}</td>
                             <td class="text-left">{{ $selection->requisition->instructor->nompes }}</td>   
-                            <td class="text-left">{{ $selection->schoolclass->schoolterm->period." de ".$selection->schoolclass->schoolterm->year }}</td>   
+                            <td>{{ $selection->schoolclass->schoolterm->period." de ".$selection->schoolclass->schoolterm->year }}</td>   
                             @php
                                 $instructor = $selection->requisition->instructor;
                                 $st = $selection->schoolclass->schoolterm;

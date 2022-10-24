@@ -26,7 +26,7 @@ class ProcessImportOldDB implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, IsMonitored;
 
-    public $timeout = 999;
+    public $timeout = 9999;
 
     public $file, $codpescad;
 

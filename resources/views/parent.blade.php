@@ -96,7 +96,7 @@
               </form>
           </li>
       </ul>
-      @if(Auth::user()->hasRole([
+      @if(Auth::user()->hasAnyPermission([
             "criar solicitação de monitor",
             "fazer inscrição",
             "Selecionar monitor",
@@ -117,6 +117,11 @@
                   <a href="{{ route('enrollments.index') }}">Fazer Inscrição</a>
               </li>
           @endcan
+          @if(Auth::user()->hasRole("Aluno"))
+              <li>
+                  <a href="{{ route('selfevaluations.studentIndex') }}">Auto Avaliação</a>
+              </li>
+          @endif
           @can("Selecionar monitor")
               <li>
                   <a href="{{ route('selections.index') }}">Selecionar Monitores</a>

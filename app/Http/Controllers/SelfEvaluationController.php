@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSelfEvaluationRequest;
 use App\Http\Requests\UpdateSelfEvaluationRequest;
 use App\Http\Requests\IndexSelfEvaluationRequest;
+use App\Http\Requests\CreateSelfEvaluationRequest;
 use App\Models\SelfEvaluation;
 use App\Models\SchoolTerm;
+use App\Models\Selection;
+use App\Models\Student;
 use Auth;
 use Gate;
 use Session;
@@ -52,14 +55,62 @@ class SelfEvaluationController extends Controller
         return view("selfevaluations.index", compact(["ses", "schoolterm"]));
     }
 
+    public function studentIndex()
+    {
+        if(Auth::check()){
+            if(!Auth::user()->hasRole(["Aluno"])){
+                abort(403);
+            }
+        }else{
+            return redirect("login");
+        }
+
+        $selections = Selection::whereBelongsTo(Student::where("codpes", Auth::user()->codpes)->first())
+                                ->whereHas("selfevaluation")->union(
+                                        Selection::whereBelongsTo(Student::where("codpes", Auth::user()->codpes)->first())
+                                                    ->whereHas("schoolclass", function($query){
+                                                        $query->whereHas("schoolterm", function($query2){
+                                                            $query2->where("id", SchoolTerm::getSchoolTermInEvaluationPeriod()->id ?? "");
+                                                        });
+                                                    })
+                                    )
+                                ->get()->sortBy(["schoolclass.schoolterm.year", "schoolclass.schoolterm.period"])->reverse();
+
+        return view("selfevaluations.studentIndex", compact("selections"));
+
+    }
+
+
+
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(CreateSelfEvaluationRequest $request)
     {
-        //
+        if(Auth::check()){
+            if(!Auth::user()->hasRole(["Aluno"])){
+                abort(403);
+            }
+        }else{
+            return redirect("login");
+        }
+
+        $validated = $request->validated();
+
+        $selection = Selection::find($validated["selectionID"]);
+
+        if(!$selection){
+            Session::flash('alert-warning', 'Monitoria não encontrada.');
+            return redirect("/");
+        }elseif($selection->student->codpes != Auth::user()->codpes){
+            Session::flash('alert-warning', 'Essa monitoria não pertence a você.');
+            return redirect("/");
+        }
+
+        return view("selfevaluations.create", compact("selection"));
+        
     }
 
     /**
@@ -70,7 +121,32 @@ class SelfEvaluationController extends Controller
      */
     public function store(StoreSelfEvaluationRequest $request)
     {
-        //
+        if(Auth::check()){
+            if(!Auth::user()->hasRole(["Aluno"])){
+                abort(403);
+            }
+        }else{
+            return redirect("login");
+        }
+
+        $validated = $request->validated();
+
+        $selection = Selection::find($validated["selection_id"]);
+
+        if(!$selection){
+            Session::flash('alert-warning', 'Monitoria não encontrada.');
+            return redirect("/");
+        }elseif($selection->student->codpes != Auth::user()->codpes){
+            Session::flash('alert-warning', 'Essa monitoria não pertence a você.');
+            return redirect("/");
+        }
+
+        SelfEvaluation::updateOrCreate(["selection_id"=>$selection->id],$validated);
+
+        return redirect(route("selfevaluations.studentIndex"));
+
+
+
     }
 
     /**
@@ -81,6 +157,18 @@ class SelfEvaluationController extends Controller
      */
     public function show(SelfEvaluation $selfevaluation)
     {
+        if(Auth::check()){
+            if(Auth::user()->hasRole("Aluno")){
+                if($selfevaluation->student->codpes =! Auth::user()->codpes){
+                    abort(403);
+                }
+            }elseif(!Gate::allows('Visualizar auto avaliações')){
+                abort(403);
+            }
+        }else{
+            return redirect("login");
+        }
+
         return view("selfevaluations.show", ["se"=>$selfevaluation]);
     }
 
@@ -90,9 +178,22 @@ class SelfEvaluationController extends Controller
      * @param  \App\Models\SelfEvaluation  $selfEvaluation
      * @return \Illuminate\Http\Response
      */
-    public function edit(SelfEvaluation $selfEvaluation)
+    public function edit(SelfEvaluation $selfevaluation)
     {
-        //
+        if(Auth::check()){
+            if(!Auth::user()->hasRole(["Aluno"])){
+                abort(403);
+            }
+        }else{
+            return redirect("login");
+        }
+
+        if($selfevaluation->student->codpes != Auth::user()->codpes){
+            Session::flash('alert-warning', 'Essa monitoria não pertence a você.');
+            return redirect("/");
+        }
+        
+        return view("selfevaluations.edit", ["selection"=>$selfevaluation->selection]);
     }
 
     /**
@@ -102,9 +203,21 @@ class SelfEvaluationController extends Controller
      * @param  \App\Models\SelfEvaluation  $selfEvaluation
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateSelfEvaluationRequest $request, SelfEvaluation $selfEvaluation)
+    public function update(UpdateSelfEvaluationRequest $request, SelfEvaluation $selfevaluation)
     {
-        //
+        if(Auth::check()){
+            if(!Auth::user()->hasRole(["Aluno"])){
+                abort(403);
+            }
+        }else{
+            return redirect("login");
+        }
+
+        $validated = $request->validated();
+
+        $selfevaluation->update($validated);
+        
+        return redirect(route("selfevaluations.studentIndex"));
     }
 
     /**

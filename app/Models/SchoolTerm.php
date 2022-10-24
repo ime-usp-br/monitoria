@@ -119,6 +119,11 @@ class SchoolTerm extends Model
             ->where('end_date_enrollments', '>=', now())->first() ? 1 : 0;
     }
 
+    public static function isEvaluationPeriod()
+    {
+        return SchoolTerm::where('evaluation_period', "Aberto")->first() ? 1 : 0;
+    }
+
     public static function getSchoolTermInRequisitionPeriod()
     {
         return SchoolTerm::where('start_date_requisitions', '<=', now())
@@ -129,6 +134,11 @@ class SchoolTerm extends Model
     {
         return SchoolTerm::where('start_date_enrollments', '<=', now())
         ->where('end_date_enrollments', '>=', now())->first();
+    }
+
+    public static function getSchoolTermInEvaluationPeriod()
+    {
+        return SchoolTerm::where(['evaluation_period'=>'Aberto'])->first();
     }
 
     public static function getOpenSchoolTerm()
