@@ -4,7 +4,7 @@
             <div class="modal-header">
                 <h4 class="modal-title">Escolher outro Semestre</h4>
             </div>
-            <form id="chooseSchoolTermForm" action="{{ route('schoolclasses.index') }}" method="GET"
+            <form id="chooseSchoolTermForm" action="{{ route('enrollments.showAll') }}" method="GET"
             enctype="multipart/form-data"
             >
 

@@ -11,6 +11,20 @@
 
             <h4 class='text-center mb-5'>{{ $schoolterm->period . ' de ' . $schoolterm->year }}</h4>
 
+
+            @include('enrollments.modals.chooseSchoolTerm')
+
+            <p class="text-right">
+                <a  id="btn-chooseSchoolTermModal"
+                    class="btn btn-outline-primary"
+                    data-toggle="modal"
+                    data-target="#chooseSchoolTermModal"
+                    title="Escolher Semestre" 
+                >
+                    Escolher Semestre
+                </a>
+            </p>
+
             @if (count($alunos) > 0)
 
                 <table class="table table-bordered table-striped table-hover" style="font-size:12px;">

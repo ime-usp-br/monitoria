@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreEnrollmentRequest;
 use App\Http\Requests\UpdateEnrollmentRequest;
 use App\Http\Requests\CreateEnrollmentRequest;
+use App\Http\Requests\ShowAllEnrollmentRequest;
 use App\Models\Enrollment;
 use App\Models\Student;
 use App\Models\SchoolClass;
@@ -242,16 +243,22 @@ class EnrollmentController extends Controller
         return redirect('/enrollments');
     }
 
-    public function showAll()
+    public function showAll(ShowAllEnrollmentRequest $request)
     {
         if(!Gate::allows('visualizar todos inscritos')){
             abort(403);
         }
 
-        $schoolterm = SchoolTerm::getOpenSchoolTerm();
+        $validated = $request->validated();
 
-        if(!$schoolterm){
-            $schoolterm = SchoolTerm::getLatest();
+        if(isset($validated['periodoId'])){
+            $schoolterm = SchoolTerm::find($validated['periodoId']);
+        }else{
+            $schoolterm = SchoolTerm::getOpenSchoolTerm();
+
+            if(!$schoolterm){
+                $schoolterm = SchoolTerm::getLatest();
+            }
         }
 
         if(!$schoolterm){
