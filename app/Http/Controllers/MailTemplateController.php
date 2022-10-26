@@ -203,16 +203,31 @@ class MailTemplateController extends Controller
         if($mailtemplate->mail_class == "NotifyInstructorAboutAttendanceRecord"){
             $frequency = Frequency::latest()->first();
 
+            if(!$frequency){
+                Session::flash('alert-warning', 'Não foi encontrada nenhuma frequência para ser usada de exemplo.');
+                return back();
+            }
+
             Mail::to($validated["email"])->send(new NotifyInstructorAboutAttendanceRecord($frequency,
                 URL::signedRoute('schoolclasses.showFrequencies', ['schoolclass'=>$frequency->schoolclass->id,'tutor'=>$frequency->student->id]), $mailtemplate));
             
         }elseif($mailtemplate->mail_class == "NotifyInstructorAboutSelectAssistant"){
             $selection = Selection::latest()->first();
 
+            if(!$selection){
+                Session::flash('alert-warning', 'Não foi encontrado nenhum monitor para ser usado de exemplo.');
+                return back();
+            }
+
             Mail::to($validated["email"])->send(new NotifyInstructorAboutSelectAssistant($selection->schoolclass, $mailtemplate));
             
         }elseif($mailtemplate->mail_class == "NotifySelectStudent"){
             $selection = Selection::latest()->first();
+
+            if(!$selection){
+                Session::flash('alert-warning', 'Não foi encontrado nenhum monitor para ser usado de exemplo.');
+                return back();
+            }
 
             Mail::to($validated["email"])->send(new NotifySelectStudent($selection->student, $selection->schoolclass, $mailtemplate));
         }
