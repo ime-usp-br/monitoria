@@ -1,6 +1,6 @@
 @extends('parent')
 
-@section('title', 'Cadastrar Auto Avaliação')
+@section('title', 'Editar Avaliação de Monitor')
 
 @section('content')
 @parent
@@ -8,19 +8,17 @@
     <div class="row">
         <div class="col-12">
             <h1 class='text-center'>
-                Cadastrar Auto Avaliação
+                Editar Avaliação de Monitor
             </h1>
 
             <h4 class='text-center mb-5'>{{ $selection->schoolclass->schoolterm->period . ' de ' . $selection->schoolclass->schoolterm->year }}</h4>
 
             <form method="POST"
-                action="{{ route('selfevaluations.store') }}"
+                action="{{ route('instructorevaluations.update', $selection->instructorevaluation) }}"
             >
                 @csrf
-                <input name="selection_id" value="{{$selection->id}}" type="hidden">
-                <input name="selection_hash" value="{{ Illuminate\Support\Facades\Hash::make(json_encode($selection->toArray())) }}" type="hidden">
-
-                @include('selfevaluations.partials.form', ['buttonText' => 'Cadastrar'])
+                @method("patch")
+                @include('instructorevaluations.partials.form', ['buttonText' => 'Editar'])
             </form>
         </div>
     </div>

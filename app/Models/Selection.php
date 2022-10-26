@@ -66,4 +66,9 @@ class Selection extends Model
     {
         return $this->hasOne(SelfEvaluation::class);
     }
+
+    public function instructorevaluation()
+    {
+        return $this->hasOne(InstructorEvaluation::class);
+    }
 }

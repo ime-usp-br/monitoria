@@ -139,18 +139,6 @@ class Student extends Model
             return [];
         }
     }
-
-    public static function teste()
-    {
-        $query = " SELECT P.codpes, P.nompes";
-        $query .= " FROM PESSOA AS P";
-        $query .= " WHERE P.nompes LIKE :nompes";
-        $param = [
-            'nompes' => "%Daniela%Miranda%",
-        ];
-
-        return array_unique(DB::fetchAll($query, $param),SORT_REGULAR);
-    }
     
     public static function getFromReplicadoByNompes($nompes)
     {

@@ -6,10 +6,12 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Models\SchoolTerm;
 use App\Models\Frequency;
+use App\Models\Selection;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NotifyInstructorAboutAttendanceRecord;
 use App\Mail\NotifyInstructorAboutSelectAssistant;
 use App\Mail\NotifySelectStudent;
+use App\Mail\NotifyStudentAboutSelfEvaluation;
 use \Illuminate\Support\Facades\URL;
 use App\Models\MailTemplate;
 use App\Models\SchoolClass;
@@ -65,6 +67,24 @@ class Kernel extends ConsoleKernel
                 foreach($schoolclass->selections as $selection){
                     Mail::to($selection->student->codema)->send(new NotifySelectStudent($selection->student, $schoolclass, $mailtemplate));
                 }
+            }
+        }elseif($mailtemplate->mail_class == "NotifyStudentAboutSelfEvaluation"){
+            $selections = Selection::whereHas("schoolclass.schoolterm", function($query){
+                $query->where("id", SchoolTerm::getSchoolTermInEvaluationPeriod()->id ?? "");
+            })->doesntHave("selfevaluation")->get();
+
+            foreach($selections as $selection){
+                Mail::to($selection->student->codema)->send(new NotifyStudentAboutSelfEvaluation($selection,
+                URL::signedRoute('selfevaluations.create', ['selectionID'=>$selection->id]), $mailtemplate));
+            }
+        }elseif($mailtemplate->mail_class == "NotifyInstructorAboutEvaluation"){
+            $selections = Selection::whereHas("schoolclass.schoolterm", function($query){
+                $query->where("id", SchoolTerm::getSchoolTermInEvaluationPeriod()->id ?? "");
+            })->doesntHave("instructorevaluation")->get();
+
+            foreach($selections as $selection){
+                Mail::to($selection->requisition->instructor->codema)->send(new NotifyStudentAboutSelfEvaluation($selection,
+                URL::signedRoute('instructorevaluations.create', ['selectionID'=>$selection->id]), $mailtemplate));
             }
         }
     }

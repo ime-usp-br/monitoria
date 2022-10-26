@@ -23,6 +23,8 @@
                         "E-mail enviado aos professores ao final do processo de seleção"=>"NotifyInstructorAboutSelectAssistant",
                         "E-mail enviado aos monitores ao final do processo de seleção"=>"NotifySelectStudent",
                         "E-mail enviado aos professores sobre o registro de frequência dos monitores"=>"NotifyInstructorAboutAttendanceRecord",
+                        "E-mail enviado aos monitores sobre a auto avaliação"=>"NotifyStudentAboutSelfEvaluation",
+                        "E-mail enviado aos professores sobre a avaliação dos monitores"=>"NotifyInstructorAboutEvaluation",
                      ] as $key=>$value)
                 <option value='{"description":"{{$key}}","mail_class":"{{$value}}"}' {{ ( $mailtemplate->mail_class === $value) ? 'selected' : ''}}>{{ $key }}</option>
             @endforeach

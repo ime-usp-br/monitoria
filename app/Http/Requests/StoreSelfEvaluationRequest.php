@@ -25,6 +25,7 @@ class StoreSelfEvaluationRequest extends FormRequest
     {
         return [
             'selection_id'=>'required|integer',
+            'selection_hash'=>'required',
             'student_amount'=>'required|integer',
             'homework_amount'=>'required|integer',
             'secondary_activity'=>'sometimes',

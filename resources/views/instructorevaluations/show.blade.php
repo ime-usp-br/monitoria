@@ -111,7 +111,7 @@
                                 <label>{{ $ie->comments ? "Comentários" : "Não foram feitos comentários" }}:</label>
                             </div>
                             <div class="col-lg-auto">
-                                {{ $ie->comments }}
+                                {!! $ie->comments !!}
                             </div>
                         </div>
                     </div>

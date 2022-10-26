@@ -6,6 +6,7 @@ use App\Http\Requests\StoreSelfEvaluationRequest;
 use App\Http\Requests\UpdateSelfEvaluationRequest;
 use App\Http\Requests\IndexSelfEvaluationRequest;
 use App\Http\Requests\CreateSelfEvaluationRequest;
+use Illuminate\Support\Facades\Hash;
 use App\Models\SelfEvaluation;
 use App\Models\SchoolTerm;
 use App\Models\Selection;
@@ -89,7 +90,11 @@ class SelfEvaluationController extends Controller
      */
     public function create(CreateSelfEvaluationRequest $request)
     {
-        if(Auth::check()){
+        if($request->has("signature")){
+            if(!$request->hasValidSignature()){
+                abort(403);
+            }
+        }elseif(Auth::check()){
             if(!Auth::user()->hasRole(["Aluno"])){
                 abort(403);
             }
@@ -104,9 +109,14 @@ class SelfEvaluationController extends Controller
         if(!$selection){
             Session::flash('alert-warning', 'Monitoria não encontrada.');
             return redirect("/");
-        }elseif($selection->student->codpes != Auth::user()->codpes){
-            Session::flash('alert-warning', 'Essa monitoria não pertence a você.');
+        }elseif($selection->schoolclass->schoolterm->evaluation_period != "Aberto"){
+            Session::flash('alert-warning', 'Período de avaliação encerrado.');
             return redirect("/");
+        }elseif(Auth::check()){
+            if($selection->student->codpes != Auth::user()->codpes){
+                Session::flash('alert-warning', 'Essa monitoria não pertence a você.');
+                return redirect("/");
+            }
         }
 
         return view("selfevaluations.create", compact("selection"));
@@ -121,14 +131,6 @@ class SelfEvaluationController extends Controller
      */
     public function store(StoreSelfEvaluationRequest $request)
     {
-        if(Auth::check()){
-            if(!Auth::user()->hasRole(["Aluno"])){
-                abort(403);
-            }
-        }else{
-            return redirect("login");
-        }
-
         $validated = $request->validated();
 
         $selection = Selection::find($validated["selection_id"]);
@@ -136,17 +138,26 @@ class SelfEvaluationController extends Controller
         if(!$selection){
             Session::flash('alert-warning', 'Monitoria não encontrada.');
             return redirect("/");
-        }elseif($selection->student->codpes != Auth::user()->codpes){
+        }elseif(Auth::check()){
+            if($selection->student->codpes != Auth::user()->codpes){
+                Session::flash('alert-warning', 'Essa monitoria não pertence a você.');
+                return redirect("/");
+            }
+        }elseif(!Hash::check(json_encode($selection->toArray()),$validated["selection_hash"])){
             Session::flash('alert-warning', 'Essa monitoria não pertence a você.');
             return redirect("/");
         }
 
         SelfEvaluation::updateOrCreate(["selection_id"=>$selection->id],$validated);
 
+        Session::flash('alert-success', 'Avaliação cadastrada com sucesso.');
+
+        if(!Auth::check()){
+            return redirect("/");
+
+        }
+
         return redirect(route("selfevaluations.studentIndex"));
-
-
-
     }
 
     /**

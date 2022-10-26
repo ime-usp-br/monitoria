@@ -16,7 +16,7 @@ class InstructorEvaluation extends Model
     use HasFactory;
     use \Znck\Eloquent\Traits\BelongsToThrough;
 
-    protected $eval_as_string = [
+    public static $eval_as_string = [
         0=>"Ótimo",
         1=>'Bom',
         2=>'Regular'
@@ -58,21 +58,21 @@ class InstructorEvaluation extends Model
 
     public function getEaseOfContactAsString()
     {
-        return $this->eval_as_string[$this->ease_of_contact];
+        return InstructorEvaluation::$eval_as_string[$this->ease_of_contact];
     }
 
     public function getEfficiencyAsString()
     {
-        return $this->eval_as_string[$this->efficiency];
+        return InstructorEvaluation::$eval_as_string[$this->efficiency];
     }
 
     public function getReliabilityAsString()
     {
-        return $this->eval_as_string[$this->reliability];
+        return InstructorEvaluation::$eval_as_string[$this->reliability];
     }
 
     public function getOverallAsString()
     {
-        return $this->eval_as_string[$this->overall];
+        return InstructorEvaluation::$eval_as_string[$this->overall];
     }
 }

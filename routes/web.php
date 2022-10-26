@@ -49,6 +49,7 @@ Route::get('/schoolclasses/{schoolclass}/electedTutors', [SchoolClassController:
 Route::get('/schoolclasses/{schoolclass}/electedTutors/{tutor}/frequencies', [SchoolClassController::class, 'showFrequencies'])->name('schoolclasses.showFrequencies');
 Route::resource('schoolclasses', SchoolClassController::class);
 
+Route::get("/instructors/evaluations", [InstructorEvaluationController::class, "instructorIndex"])->name("instructorevaluations.instructorIndex");
 Route::get('/instructors/{instructor}/requisitions', [InstructorController::class, 'requisitions'])->name('instructors.requisitions');
 Route::get('/instructors/search', [InstructorController::class, 'search'])->name('instructors.search');
 Route::resource('instructors', InstructorController::class);

@@ -25,11 +25,12 @@ class StoreInstructorEvaluationRequest extends FormRequest
     {
         return [
             'selection_id'=>'required|integer',
+            'selection_hash'=>'required',
             'ease_of_contact'=>'required|in:0,1,2',
             'efficiency'=>'required|in:0,1,2',
             'reliability'=>'required|in:0,1,2',
             'overall'=>'required|in:0,1,2',
-            'comments'=>'sometimes|max:512',
+            'comments'=>'sometimes|max:65536',
         ];
     }
 }

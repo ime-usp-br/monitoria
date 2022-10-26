@@ -122,6 +122,11 @@
                   <a href="{{ route('selfevaluations.studentIndex') }}">Auto Avaliação</a>
               </li>
           @endif
+          @if(Auth::user()->hasRole("Docente"))
+              <li>
+                  <a href="{{ route('instructorevaluations.instructorIndex') }}">Avaliações dos Monitores</a>
+              </li>
+          @endif
           @can("Selecionar monitor")
               <li>
                   <a href="{{ route('selections.index') }}">Selecionar Monitores</a>
