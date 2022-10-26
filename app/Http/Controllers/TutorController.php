@@ -62,6 +62,11 @@ class TutorController extends Controller
 
     public function revoke(RevokeTutoringRequest $request, Selection $selection)
     {
+        if($selection->sitatl != "Ativo"){
+            Session::flash('alert-warning', 'Esta monitoria encontra-se com status '.$selection->sitatl.'.');
+            return back();  
+        }
+
         $validated = $request->validated();
 
         $selection->sitatl = "Desligado";
