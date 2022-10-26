@@ -19,6 +19,7 @@ class Requisition extends Model
         'school_class_id',
         'requested_number',
         'priority',
+        'comments',
     ];
 
     public function instructor(){

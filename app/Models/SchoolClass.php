@@ -136,6 +136,14 @@ class SchoolClass extends Model
         }
     }
 
+    public function isRequisitionPeriod()
+    {
+        $start = Carbon::createFromFormat('d/m/Y', $this->schoolterm->start_date_requisitions)->startOfDay();
+        $end = Carbon::createFromFormat('d/m/Y', $this->schoolterm->end_date_requisitions)->endOfDay();
+
+        return ($start <= now() and $end >= now());
+    }
+
     public function isInstructor($codpes){
         foreach($this->instructors as $instructor){
             if($instructor->codpes == $codpes){

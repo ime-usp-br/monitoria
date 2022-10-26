@@ -54,7 +54,7 @@ class RequisitionController extends Controller
         $turma = SchoolClass::find($validated['school_class_id']);
 
         if($turma->isInstructor(Auth::user()->codpes)){
-            if($turma->isSchoolTermOpen()){
+            if($turma->isRequisitionPeriod()){
                 return view('requisitions.create', compact('turma'));
             }else{
                 Session::flash('alert-warning', 'Período de solicitação de monitores encerrado');
@@ -135,7 +135,7 @@ class RequisitionController extends Controller
 
         $turma = $requisition->schoolclass;
         if($turma->isInstructor(Auth::user()->codpes)){
-            if($turma->isSchoolTermOpen()){
+            if($turma->isRequisitionPeriod()){
                 return view('requisitions.edit', compact('turma'));
             }else{
                 Session::flash('alert-warning', 'Período de solicitação de monitores encerrado');
@@ -188,7 +188,7 @@ class RequisitionController extends Controller
         foreach($scholarships as $scholarship_id){
             $requisition->others_scholarships()->attach(Scholarship::find($scholarship_id));
         }
-
+        
         $requisition->update($validated);
 
         return redirect('/requisitions');

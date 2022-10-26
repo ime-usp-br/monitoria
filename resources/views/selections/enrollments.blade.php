@@ -12,28 +12,21 @@
                 Departamento de {{ $turma->department->nomset }}<br>
             </h2>
             <h4 class='text-center mb-5'>
-                <b>Disciplina:</b>  {{ $turma->nomdis }} <b>Turma:</b> {{ $turma->codtur }}
+                <b>Disciplina:</b>  {{ $turma->coddis }} - {{ $turma->nomdis }} <b>Turma:</b> {{ $turma->codtur }}
             </h4>
 
             <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
                     <tr class="text-center">
-                        <th>Sigla da Disciplina</th>
-                        <th>Horários</th>
                         <th>Professor(a) solicitante</th>
                         <th>N.° de Monitores Solicitados</th>
                         <th>Atividades atribuidas</th>
                         <th>Prioridade</th>
                         <th>Alunos indicados</th>
                         <th>Outras<br>Bolsas<br>Solicitadas</th>
+                        <th>Comentários</th>
                     </tr>
 
                     <tr class="text-center">
-                        <td>{{ $turma->coddis }}</td>
-                        <td style="white-space: nowrap;">
-                            @foreach($turma->classschedules as $horario)
-                                {{ $horario->diasmnocp . ' ' . $horario->horent . ' ' . $horario->horsai }} <br/>
-                            @endforeach
-                        </td>
                         <td style="white-space: nowrap;">{{ $turma->requisition->instructor->nompes}}</td>
                         <td>{{$turma->requisition->requested_number}}</td>
                         <td class="text-left"  style="white-space: nowrap;">
@@ -54,6 +47,7 @@
                                 {{ $scholarship->name }} <br/>
                             @endforeach
                         </td>
+                        <td class="text-left">{!! $turma->requisition->comments !!}</td>
                     </tr>
                 </table> <br/>
 

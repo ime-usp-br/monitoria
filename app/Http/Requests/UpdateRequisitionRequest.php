@@ -32,6 +32,7 @@ class UpdateRequisitionRequest extends FormRequest
             'activities.*' => 'required|in:Atendimento a alunos,Correção de listas de exercícios,Fiscalização de provas',
             'scholarships' => 'sometimes|array',
             'scholarships.*' => 'required|numeric|exists:App\Models\Scholarship,id',
+            'comments' => 'sometimes',
         ];
 
         return $rules;
