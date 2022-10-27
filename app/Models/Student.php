@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Selection;
 use App\Models\Recommendation;
 use App\Models\Frequency;
+use App\Models\Course;
 
 class Student extends Model
 {
@@ -45,6 +46,11 @@ class Student extends Model
     public function frequencies()
     {
         return $this->hasMany(Frequency::class);
+    }
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class);
     }
 
     public function getNomAbrev()
@@ -192,5 +198,30 @@ class Student extends Model
         $res = DB::fetchAll($query, $param)[0];
 
         return $res['sexpes'];
+    }
+
+    // Função usada para pegar o vinculo em determinado periodo, util para dados importados do sistema antigo 
+    public function getVinculoFromReplicadoAtSchoolTerm(SchoolTerm $st)
+    {
+        $query = " SELECT VP.tipvin";
+        $query .= " FROM VINCULOPESSOAUSP AS VP";
+        $query .= " WHERE VP.codpes = :codpes";
+        $query .= " AND VP.dtainivin <= convert(datetime, '".$st->started_at."', 103)";
+        $query .= " AND (VP.dtafimvin IS NULL OR VP.dtafimvin >= convert(datetime, '".$st->started_at."', 103))";
+        $param = [
+            'codpes' => $this->codpes,
+        ];
+
+        $res = array_unique(DB::fetchAll($query, $param),SORT_REGULAR);
+
+        $tipvin =  array_column($res, "tipvin");
+
+        if(in_array("ALUNOPOS", $tipvin)){
+            return "PósGraduação";
+        }elseif(in_array("ALUNOGR", $tipvin)){
+            return "Graduação";
+        }else{        
+            return null; 
+        }
     }
 }

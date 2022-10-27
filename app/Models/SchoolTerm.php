@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\SchoolClass;
 use App\Models\SchoolRecord;
+use App\Models\Course;
 use Carbon\Carbon;
 
 class SchoolTerm extends Model
@@ -104,6 +105,11 @@ class SchoolTerm extends Model
     public function schoolrecords()
     {
         return $this->hasMany(SchoolRecord::class);
+    }
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class);
     }
 
     public static function isRequisitionPeriod()

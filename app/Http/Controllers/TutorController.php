@@ -38,18 +38,18 @@ class TutorController extends Controller
             if(Auth::user()->hasRole(["Administrador", "Secretaria", "Presidente de Comissão"])){
                 $selections = Selection::whereHas("schoolclass", function($query)use($schoolterm){
                     $query->whereBelongsTo($schoolterm);
-                })->orderBy("created_at")->get();
+                })->get()->sortBy("student.nompes");
             }elseif(Auth::user()->hasRole("Membro Comissão")){
                 $selections = Selection::whereHas("schoolclass", function($query)use($schoolterm){
                     $query->whereBelongsTo(Instructor::where("codpes",Auth::user()->codpes)->first()->department)
                         ->whereBelongsTo($schoolterm);
-                })->orderBy("created_at")->get();
+                    })->get()->sortBy("student.nompes");
             }elseif(Auth::user()->hasRole("Docente")){
                 $selections = Selection::whereHas("schoolclass", function($query)use($schoolterm){
                     $query->whereBelongsTo($schoolterm);
                 })->whereHas("requisition", function($query){
                     $query->whereBelongsTo(Instructor::where("codpes", Auth::user()->codpes)->first());
-                })->orderBy("created_at")->get();
+                })->get()->sortBy("student.nompes");
             }else{
                 abort(403);
             }

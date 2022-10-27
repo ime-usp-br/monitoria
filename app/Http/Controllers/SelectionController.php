@@ -15,6 +15,7 @@ use App\Models\SchoolClass;
 use App\Models\Enrollment;
 use App\Models\Student;
 use App\Models\Frequency;
+use App\Models\Course;
 use Session;
 
 class SelectionController extends Controller
@@ -83,6 +84,12 @@ class SelectionController extends Controller
         $validated['requisition_id'] = $inscricao->schoolclass->requisition->id;
         $validated['codpescad'] = Auth::user()->codpes;
         $validated['sitatl'] = "Ativo";
+
+        $course = Course::getCourseFromReplicado($inscricao->student, $inscricao->schoolclass->schoolterm);
+
+        if($course){
+            Course::updateOrCreate(["student_id"=>$inscricao->student->id,"schoolterm_id"=>$inscricao->schoolclass->schoolterm->id],$course);
+        }
 
         $schoolterm = SchoolTerm::getOpenSchoolTerm();
 

@@ -37,6 +37,7 @@
                         <th class="text-center" rowspan="2" style="vertical-align: middle;"></th>
                         <th class="text-center" rowspan="2" style="vertical-align: middle;">Monitor</th>
                         <th class="text-center" rowspan="2" style="vertical-align: middle;">Email</th>
+                        <th class="text-center" rowspan="2" style="vertical-align: middle;">Curso</th>
                         <th class="text-center" rowspan="2" style="vertical-align: middle;">Situação</th>
                         <th class="text-center" rowspan="2" style="vertical-align: middle;">Sigla da<br>Disciplina</th>
                         <th class="text-center" rowspan="2" style="vertical-align: middle;">Nome da Disciplina</th>
@@ -79,6 +80,7 @@
                             </td>
                             <td class="text-left">{{ $selection->student->nompes }}</td>
                             <td class="text-left">{{ $selection->student->codema }}</td>
+                            <td class="text-left">{{ $selection->student->courses()->whereBelongsTo($selection->schoolclass->schoolterm)->first()->nomcur ?? "Não Encontrado" }}</td>
                             <td>{{ $selection->sitatl }}</td>
                             <td>{{ $selection->schoolclass->coddis }}</td>
                             <td class="text-left">{{ $selection->schoolclass->nomdis }}</td>
