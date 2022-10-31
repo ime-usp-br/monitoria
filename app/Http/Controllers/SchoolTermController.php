@@ -24,8 +24,7 @@ class SchoolTermController extends Controller
             abort(403);
         }
 
-        $periodos = SchoolTerm::orderBy('year')
-        ->orderBy('period')->get();
+        $periodos = SchoolTerm::all()->sortBy(["year","period"])->reverse();
 
         return view('schoolterms.index', compact('periodos'));
     }

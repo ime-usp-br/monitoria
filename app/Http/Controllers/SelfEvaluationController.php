@@ -109,7 +109,7 @@ class SelfEvaluationController extends Controller
         if(!$selection){
             Session::flash('alert-warning', 'Monitoria não encontrada.');
             return redirect("/");
-        }elseif($selection->schoolclass->schoolterm->evaluation_period != "Aberto"){
+        }elseif(!$selection->schoolclass->schoolterm->isInEvaluationPeriod()){
             Session::flash('alert-warning', 'Período de avaliação encerrado.');
             return redirect("/");
         }elseif(Auth::check()){

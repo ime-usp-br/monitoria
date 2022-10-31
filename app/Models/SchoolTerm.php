@@ -17,7 +17,6 @@ class SchoolTerm extends Model
         'year',
         'period',
         'status',
-        'evaluation_period',
         'max_enrollments',
         'public_notice_file_path',
         'started_at',
@@ -26,6 +25,8 @@ class SchoolTerm extends Model
         'end_date_requisitions',
         'start_date_enrollments',
         'end_date_enrollments',
+        'start_date_evaluations',
+        'end_date_evaluations',
     ];
 
     protected $casts = [
@@ -35,16 +36,28 @@ class SchoolTerm extends Model
         'end_date_requisitions' => 'date:d/m/Y',
         'start_date_enrollments' => 'date:d/m/Y',
         'end_date_enrollments' => 'date:d/m/Y',
+        'start_date_evaluations' => 'date:d/m/Y',
+        'end_date_evaluations' => 'date:d/m/Y',
     ];    
 
     public function setStartedAtAttribute($value)
     {
-        $this->attributes['started_at'] = Carbon::createFromFormat('d/m/Y', $value);
+        $this->attributes['started_at'] = Carbon::createFromFormat('d/m/Y', $value)->startOfDay();
     }
 
     public function setFinishedAtAttribute($value)
     {
-        $this->attributes['finished_at'] = Carbon::createFromFormat('d/m/Y', $value);
+        $this->attributes['finished_at'] = Carbon::createFromFormat('d/m/Y', $value)->endOfDay();
+    }
+
+    public function setStartDateEvaluationsAttribute($value)
+    {
+        $this->attributes['start_date_evaluations'] = Carbon::createFromFormat('d/m/Y', $value)->startOfDay();
+    }
+
+    public function setEndDateEvaluationsAttribute($value)
+    {
+        $this->attributes['end_date_evaluations'] = Carbon::createFromFormat('d/m/Y', $value)->endOfDay();
     }
 
     public function setStartDateRequisitionsAttribute($value)
@@ -73,6 +86,16 @@ class SchoolTerm extends Model
     }
 
     public function getFinishedAtAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('d/m/Y') : '';
+    }
+
+    public function getStartDateEvaluationsAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('d/m/Y') : '';
+    }
+
+    public function getEndDateEvaluationsAttribute($value)
     {
         return $value ? Carbon::parse($value)->format('d/m/Y') : '';
     }
@@ -116,7 +139,6 @@ class SchoolTerm extends Model
     {
         return SchoolTerm::where('start_date_requisitions', '<=', now())
             ->where('end_date_requisitions', '>=', now())->first() ? 1 : 0;
-        
     }
 
     public static function isEnrollmentPeriod()
@@ -127,7 +149,14 @@ class SchoolTerm extends Model
 
     public static function isEvaluationPeriod()
     {
-        return SchoolTerm::where('evaluation_period', "Aberto")->first() ? 1 : 0;
+        return SchoolTerm::where('start_date_evaluations', '<=', now())
+            ->where('end_date_evaluations', '>=', now())->first() ? 1 : 0;
+    }
+
+    public function isInEvaluationPeriod()
+    {
+        return (Carbon::createFromFormat('d/m/Y', $this->start_date_evaluations) <= now() and
+                Carbon::createFromFormat('d/m/Y', $this->end_date_evaluations) >= now()) ? 1 : 0;
     }
 
     public static function getSchoolTermInRequisitionPeriod()
@@ -144,7 +173,8 @@ class SchoolTerm extends Model
 
     public static function getSchoolTermInEvaluationPeriod()
     {
-        return SchoolTerm::where(['evaluation_period'=>'Aberto'])->first();
+        return SchoolTerm::where('start_date_evaluations', '<=', now())
+        ->where('end_date_evaluations', '>=', now())->first();
     }
 
     public static function getOpenSchoolTerm()

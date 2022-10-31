@@ -52,26 +52,6 @@
 
 <div class="row custom-form-group align-items-center">
     <div class="col-12 col-md-6 text-md-right">
-        <label for="evaluation_period">Período de avaliação *</label>
-    </div>
-    <div class="col-12 col-md-6">
-        <select class="custom-form-control" style="max-width:200px;" type="text" name="evaluation_period"
-            id="evaluation_period"
-        >
-            <option value="" {{ ( $periodo->evaluation_period) ? '' : 'selected'}}></option>
-
-            @foreach ([
-                        'Aberto',
-                        'Fechado'
-                     ] as $evaluation_period)
-                <option value="{{ $evaluation_period }}" {{ ( $periodo->evaluation_period === $evaluation_period) ? 'selected' : ''}}>{{ $evaluation_period }}</option>
-            @endforeach
-        </select>
-    </div>
-</div>
-
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-md-6 text-md-right">
         <label for="max_enrollments">Maxímo de inscrições por aluno *</label>
     </div>
     <div class="col-12 col-md-6">
@@ -103,6 +83,32 @@
         <input class="custom-form-control custom-datepicker" style="max-width:200px;"
             type="text" name="finished_at" id="finished_at" autocomplete="off"
             value="{{  old('finished_at') ?? $periodo->finished_at ?? ''}}"
+        />
+    </div>
+</div>
+
+<div class="row custom-form-group align-items-center">
+    <div class="col-12 col-md-6 text-md-right">
+        <label for="start_date_evaluations">Data inicial de avaliação *</label>
+    </div>
+
+    <div class="col-12 col-md-6" style="white-space: nowrap;">
+        <input class="custom-form-control custom-datepicker" style="max-width:200px;"
+            type="text" name="start_date_evaluations" id="start_date_evaluations" autocomplete="off"
+            value="{{ old('start_date_evaluations') ?? $periodo->start_date_evaluations ?? ''}}"
+        />
+    </div>
+</div>
+
+<div class="row custom-form-group align-items-center">
+    <div class="col-12 col-md-6 text-md-right">
+        <label for="end_date_evaluations">Data final de avaliação *</label>
+    </div>
+
+    <div class="col-12 col-md-6" style="white-space: nowrap;">
+        <input class="custom-form-control custom-datepicker" style="max-width:200px;"
+            type="text" name="end_date_evaluations" id="end_date_evaluations" autocomplete="off"
+            value="{{  old('end_date_evaluations') ?? $periodo->end_date_evaluations ?? ''}}"
         />
     </div>
 </div>

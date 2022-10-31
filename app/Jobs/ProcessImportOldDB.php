@@ -122,7 +122,6 @@ class ProcessImportOldDB implements ShouldQueue
                 ],
                 [
                     "status"=>"Fechado",
-                    "evaluation_period"=>"Fechado",
                     "max_enrollments"=>4,
                     "started_at"=>$line["semestre"] ? "01/08/".$line["ano"] : "01/03/".$line["ano"],
                     "finished_at"=>$line["semestre"] ? "15/12/".$line["ano"] : "15/06/".$line["ano"],
@@ -130,6 +129,8 @@ class ProcessImportOldDB implements ShouldQueue
                     "end_date_requisitions"=>$line["semestre"] ? "30/07/".$line["ano"] : "30/02/".$line["ano"],
                     "start_date_enrollments"=>$line["semestre"] ? "01/07/".$line["ano"] : "01/02/".$line["ano"],
                     "end_date_enrollments"=>$line["semestre"] ? "30/07/".$line["ano"] : "30/02/".$line["ano"],
+                    "start_date_evaluations"=>$line["semestre"] ? "25/11/".$line["ano"] : "25/05/".$line["ano"],
+                    "end_date_evaluations"=>$line["semestre"] ? "15/12/".$line["ano"] : "15/06/".$line["ano"],
                 ]
             );
 
