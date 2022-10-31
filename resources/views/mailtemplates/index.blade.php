@@ -44,11 +44,24 @@
                             <td style="text-align: center">{{ $mailtemplate->name }}</td>
                             <td>{{ $mailtemplate->description }}</td>
                             <td style="text-align: center">
-                                {{ $mailtemplate->sending_frequency }}
                                 @if($mailtemplate->sending_frequency == "Única")
-                                    {{  " - " .$mailtemplate->sending_date . " às " .$mailtemplate->sending_hour }}
+                                    {{  "Única - " .$mailtemplate->sending_date . " às " .$mailtemplate->sending_hour }}
                                 @elseif($mailtemplate->sending_frequency == "Mensal")
-                                    {{  " - Dia " .$mailtemplate->sending_date . " às " .$mailtemplate->sending_hour }}
+                                    {{  "Mensal - Dia " .$mailtemplate->sending_date . " às " .$mailtemplate->sending_hour }}
+                                @elseif($mailtemplate->sending_frequency == "Inicio do período de avaliação")
+                                    @if($mailtemplate->sending_date==0)
+                                        {{  "Primeiro dia do período de avaliação às " .$mailtemplate->sending_hour }}
+                                    @else
+                                        {{  $mailtemplate->sending_date ." dia".( $mailtemplate->sending_date > 1 ? "s" : "" )." após o inicio do período de avaliação às " .$mailtemplate->sending_hour }}
+                                    @endif
+                                @elseif($mailtemplate->sending_frequency == "Final do período de avaliação")
+                                    @if($mailtemplate->sending_date==0)
+                                        {{  "Ultimo dia do período de avaliação às " .$mailtemplate->sending_hour }}
+                                    @else
+                                        {{  $mailtemplate->sending_date ." dia".( $mailtemplate->sending_date > 1 ? "s" : "" )." antes do fim do período de avaliação às " .$mailtemplate->sending_hour }}
+                                    @endif
+                                @else
+                                    {{ $mailtemplate->sending_frequency }}
                                 @endif
 
                             </td>

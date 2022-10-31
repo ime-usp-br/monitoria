@@ -28,7 +28,7 @@ class UpdateMailTemplateRequest extends FormRequest
             'description_and_mail_class' => 'required',
             'subject' => 'required|max:256',
             'body' => 'required|max:8192',
-            'sending_frequency' => 'required|in:Manual,Única,Mensal',
+            'sending_frequency' => 'required',
             'sending_date' => 'required_unless:sending_frequency,Manual',
             'sending_hour' => 'required_unless:sending_frequency,Manual',
         ];

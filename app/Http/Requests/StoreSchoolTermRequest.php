@@ -35,7 +35,7 @@ class StoreSchoolTermRequest extends FormRequest
             'end_date_requisitions' => 'required|date_format:d/m/Y',
             'start_date_enrollments' => 'required|date_format:d/m/Y|before:end_date_enrollments',
             'end_date_enrollments' => 'required|date_format:d/m/Y',
-            'start_date_evaluations' => 'required|date_format:d/m/Y|before:end_date_enrollments',
+            'start_date_evaluations' => 'required|date_format:d/m/Y|before:end_date_evaluations',
             'end_date_evaluations' => 'required|date_format:d/m/Y',
         ];
 

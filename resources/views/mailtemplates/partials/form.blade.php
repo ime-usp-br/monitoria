@@ -33,11 +33,11 @@
 </div>
 
 <div class="row custom-form-group">
-    <div class="col-md-3">
+    <div class="col-md">
         <div class="col-md-12 text-lg-left">
             <label for="sending_frequency">Frequência de envio*:</label>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-10">
             <select class="custom-form-control" type="text" name="sending_frequency" id="sending_frequency"
             >
                     <option value="" {{ ($mailtemplate->sending_frequency) ? '' : 'selected'}}></option>
@@ -46,40 +46,54 @@
                             "Manual",
                             "Única",
                             "Mensal",
+                            "Inicio do período de avaliação",
+                            "Final do período de avaliação"
                         ] as $frequency)
                     <option value='{{$frequency}}' {{ ( $mailtemplate->sending_frequency === $frequency) ? 'selected' : ''}}>{{ $frequency }}</option>
                 @endforeach
             </select>
         </div>
     </div>
-    <div id="date-div" class="col-md-3">
+    <div id="date-div" class="col-md">
         @if($mailtemplate->sending_frequency == "Única")
-            <div class="col-md-12 text-lg-left">
+            <div class="col-12 text-left">
                 <label for="sending_date">Data*:</label>
             </div>
-            <div class="col-md-8">
-                <input  class="custom-form-control custom-datepicker" name="sending_date" autocomplete="off" value="{{ $mailtemplate->sending_date }}">
+            <div class="col-12">
+                <input  class="custom-form-control custom-datepicker" style="max-width:130px" name="sending_date" autocomplete="off" value="{{ $mailtemplate->sending_date }}">
             </div>
         @elseif($mailtemplate->sending_frequency == "Mensal")
-            <div class="col-md-12 text-lg-left">
+            <div class="col-12 text-left">
                 <label for="sending_date">Dia*:</label>
             </div>
-            <div class="col-md-8">
-                <input  class="custom-form-control" name="sending_date" value="{{ $mailtemplate->sending_date }}">
+            <div class="col-12">
+                <input  class="custom-form-control" style="max-width:80px" type="number" min="1" max="31" name="sending_date" value="{{ $mailtemplate->sending_date }}">
+            </div>
+        @elseif($mailtemplate->sending_frequency == "Inicio do período de avaliação")
+            <div class="col-12 text-left">
+                <label for="sending_date">Dias após o inicio do período*:</label>
+            </div>
+            <div class="col-12">
+                <input  class="custom-form-control" style="max-width:80px" type="number" min="0" name="sending_date" value="{{ $mailtemplate->sending_date }}">
+            </div>
+        @elseif($mailtemplate->sending_frequency == "Final do período de avaliação")
+            <div class="col-12 text-left">
+                <label for="sending_date">Dias antes do final do período*:</label>
+            </div>
+            <div class="col-12">
+                <input  class="custom-form-control" style="max-width:80px" type="number" min="0" name="sending_date" value="{{ $mailtemplate->sending_date }}">
             </div>
         @endif
     </div>
-    <div id="hour-div" class="col-md-3">
-        @if($mailtemplate->sending_frequency == "Única" or $mailtemplate->sending_frequency == "Mensal")
-            <div class="col-md-12 text-lg-left">
+    <div id="hour-div" class="col-md">
+        @if($mailtemplate->sending_frequency != "Manual")
+            <div class="col-12 text-left">
                 <label for="sending_hour">Hora*:</label>
             </div>
-            <div class="col-md-6">
-                <input class="custom-form-control" name="sending_hour" type="time" value="{{ $mailtemplate->sending_hour }}">
+            <div class="col-12">
+                <input class="custom-form-control" style="max-width:100px" name="sending_hour" type="time" value="{{ $mailtemplate->sending_hour }}">
             </div>
         @endif
-    </div>
-    <div class="col-md-3">
     </div>
 </div>
 

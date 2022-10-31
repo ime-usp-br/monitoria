@@ -40,31 +40,41 @@
         $("#date-div").empty();
         $("#hour-div").empty();
         if(value=="Única"){
-            datediv.append('<div class="col-md-12 text-lg-left">'+
+            datediv.append('<div class="col-12 text-left">'+
                             '<label for="sending_date">Data*:</label>'+
                            '</div>'+
-                           '<div class="col-md-8">'+
-                            '<input  class="custom-form-control custom-datepicker" name="sending_date" autocomplete="off">'+
+                           '<div class="col-12">'+
+                            '<input  class="custom-form-control custom-datepicker" style="max-width:130px" name="sending_date" autocomplete="off">'+
                            '</div>');
-            hourdiv.append('<div class="col-md-12 text-lg-left">'+
-                            '<label for="sending_hour">Hora*:</label>'+
-                           '</div>'+
-                           '<div class="col-md-6">'+
-                            '<input class="custom-form-control" name="sending_hour" type="time">'+
-                            '</div>');
             $('.custom-datepicker').datepicker({showOn: 'both',buttonText: '<i class="far fa-calendar"></i>'});
         }else if(value=="Mensal"){
-            datediv.append('<div class="col-md-12 text-lg-left">'+
+            datediv.append('<div class="col-12 text-left">'+
                             '<label for="sending_date">Dia*:</label>'+
                            '</div>'+
-                           '<div class="col-md-4">'+
-                            '<input  class="custom-form-control" name="sending_date">'+
+                           '<div class="col-12">'+
+                            '<input  class="custom-form-control" style="max-width:80px" type="number" min="1" max="31" name="sending_date">'+
                            '</div>');
-            hourdiv.append('<div class="col-md-12 text-lg-left">'+
+        }else if(value=="Inicio do período de avaliação"){
+            datediv.append('<div class="col-12 text-left">'+
+                            '<label for="sending_date">Dias após o inicio do período*:</label>'+
+                           '</div>'+
+                           '<div class="col-12">'+
+                            '<input  class="custom-form-control" style="max-width:80px" type="number" min="0" name="sending_date" value="0">'+
+                           '</div>');
+        }else if(value=="Final do período de avaliação"){
+            datediv.append('<div class="col-12 text-left">'+
+                            '<label for="sending_date">Dias antes do final do período*:</label>'+
+                           '</div>'+
+                           '<div class="col-12">'+
+                            '<input  class="custom-form-control" style="max-width:80px" type="number" min="0" name="sending_date" value="0">'+
+                           '</div>');
+        }
+        if(value!="Manual"){
+            hourdiv.append('<div class="col-12 text-left">'+
                             '<label for="sending_hour">Hora*:</label>'+
                            '</div>'+
-                           '<div class="col-md-6">'+
-                            '<input  class="custom-form-control" name="sending_hour" type="time">'+
+                           '<div class="col-12">'+
+                            '<input  class="custom-form-control" style="max-width:100px" name="sending_hour" type="time">'+
                            '</div>');
         }
     });
