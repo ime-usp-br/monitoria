@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\NotifyInstructorAboutAttendanceRecord;
 use App\Mail\NotifyInstructorAboutSelectAssistant;
 use App\Mail\NotifySelectStudent;
+use App\Mail\NotifyStudentAboutSelfEvaluation;
+use App\Mail\NotifyInstructorAboutEvaluation;
 use \Illuminate\Support\Facades\URL;
 use Session;
 
@@ -230,6 +232,26 @@ class MailTemplateController extends Controller
             }
 
             Mail::to($validated["email"])->send(new NotifySelectStudent($selection->student, $selection->schoolclass, $mailtemplate));
+        }elseif($mailtemplate->mail_class == "NotifyStudentAboutSelfEvaluation"){
+            $selection = Selection::latest()->first();
+
+            if(!$selection){
+                Session::flash('alert-warning', 'Não foi encontrado nenhum monitor para ser usado de exemplo.');
+                return back();
+            }
+
+            Mail::to($validated["email"])->send(new NotifyStudentAboutSelfEvaluation($selection,
+            URL::signedRoute('selfevaluations.create', ['selectionID'=>$selection->id]), $mailtemplate));
+        }elseif($mailtemplate->mail_class == "NotifyInstructorAboutEvaluation"){
+            $selection = Selection::latest()->first();
+
+            if(!$selection){
+                Session::flash('alert-warning', 'Não foi encontrado nenhum monitor para ser usado de exemplo.');
+                return back();
+            }
+
+            Mail::to($validated["email"])->send(new NotifyStudentAboutSelfEvaluation($selection,
+            URL::signedRoute('instructorevaluations.create', ['selectionID'=>$selection->id]), $mailtemplate));
         }
 
         Session::flash('alert-info', 'O e-mail de teste foi enviado com sucesso.');

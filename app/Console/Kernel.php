@@ -12,6 +12,7 @@ use App\Mail\NotifyInstructorAboutAttendanceRecord;
 use App\Mail\NotifyInstructorAboutSelectAssistant;
 use App\Mail\NotifySelectStudent;
 use App\Mail\NotifyStudentAboutSelfEvaluation;
+use App\Mail\NotifyInstructorAboutEvaluation;
 use \Illuminate\Support\Facades\URL;
 use App\Models\MailTemplate;
 use App\Models\SchoolClass;
@@ -83,7 +84,7 @@ class Kernel extends ConsoleKernel
             })->doesntHave("instructorevaluation")->get();
 
             foreach($selections as $selection){
-                Mail::to($selection->requisition->instructor->codema)->send(new NotifyStudentAboutSelfEvaluation($selection,
+                Mail::to($selection->requisition->instructor->codema)->send(new NotifyInstructorAboutEvaluation($selection,
                 URL::signedRoute('instructorevaluations.create', ['selectionID'=>$selection->id]), $mailtemplate));
             }
         }
