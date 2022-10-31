@@ -138,7 +138,7 @@ $( function() {
                         $( "#progressbar" ).remove();
                         var failed_lines = JSON.parse(json["data"])["linhas_com_erros"];
                         $('#msg-top').empty();
-                        $('#msg-top').append("<p id='error-message' class='alert alert-danger'>Ocorram alguns erros na importação iniciada em "+json['started_at_exact']+". Linhas do arquivo que não foram possíveis a importação: "+failed_lines+"</p>");
+                        $('#msg-top').append("<p id='error-message' class='alert alert-danger'>Ocorreram alguns erros na importação iniciada em "+json['started_at_exact']+". Linhas do arquivo que não foram possíveis a importação: "+failed_lines+"</p>");
                     }else if(json['failed']){
                         document.getElementById("btn-importfile").disabled = false;
                         $( "#progressbar" ).remove();

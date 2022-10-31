@@ -62,6 +62,14 @@ class TutorController extends Controller
 
     public function revoke(RevokeTutoringRequest $request, Selection $selection)
     {
+        if(Auth::check()){
+            if(!Auth::user()->hasRole(["Secretaria", "Administrador"])){
+                abort(403);
+            }
+        }else{
+            return redirect("login");
+        }
+
         if($selection->sitatl != "Ativo"){
             Session::flash('alert-warning', 'Esta monitoria encontra-se com status '.$selection->sitatl.'.');
             return back();  
