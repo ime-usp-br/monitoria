@@ -17,7 +17,7 @@
                     <div class="col-12 col-md-5">
 
                         <select id="periodoId" name="periodoId" class="custom-form-control">
-                            @foreach($schoolterms as $schoolterm)
+                            @foreach($schoolterms->sortBy(["year","period"])->reverse() as $schoolterm)
                                 <option value={{ $schoolterm->id }}>{{ $schoolterm->year . " " . $schoolterm->period }}</option>
                             @endforeach
                         </select>
