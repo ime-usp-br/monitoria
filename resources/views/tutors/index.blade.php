@@ -43,7 +43,7 @@
                         <th class="text-center" rowspan="2" style="vertical-align: middle;">Nome da Disciplina</th>
                         <th class="text-center" rowspan="2" style="vertical-align: middle;">Voluntário</th>
                         <th class="text-center" rowspan="2" style="vertical-align: middle;">Auto<br>Avaliação</th>
-                        <th class="text-center" colspan="6">Frequência</th>
+                        <th class="text-center" colspan="5">Frequência</th>
                     </tr>
                     <tr class="text-center">
                         @if($schoolterm->period == "1° Semestre")
@@ -51,14 +51,12 @@
                             <th>Abr</th>
                             <th>Maio</th>
                             <th>Jun</th>
-                            <th>Jul</th>
                             <th></th>
                         @elseif($schoolterm->period == "2° Semestre")
                             <th>Ago</th>
                             <th>Set</th>
                             <th>Out</th>
                             <th>Nov</th>
-                            <th>Dez</th>
                             <th></th>
                         @endif
                     </tr>
@@ -95,7 +93,7 @@
                                     Pendente
                                 @endif
                             </td>
-                            @foreach(range(3,7) as $month)
+                            @foreach(range(3,6) as $month)
                                 <td>{{ $selection->student->frequencies()->where(['school_class_id'=>$selection->schoolclass->id, 'month'=>($schoolterm->period == '1° Semestre' ? $month : $month+5)])->exists() ? 
                                         $selection->student->frequencies()->where(['school_class_id'=>$selection->schoolclass->id, 'month'=>($schoolterm->period == '1° Semestre' ? $month : $month+5)])->first()->registered ? 'S' : 'N' : 'N' }}</td>
                             @endforeach        

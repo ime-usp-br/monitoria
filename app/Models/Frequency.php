@@ -31,7 +31,7 @@ class Frequency extends Model
 
     public static function createFromSelection(Selection $selection)
     {
-        $months = $selection->schoolclass->schoolterm->period == "1° Semestre" ? [3,4,5,6,7] : [8,9,10,11,12];
+        $months = $selection->schoolclass->schoolterm->period == "1° Semestre" ? [3,4,5,6] : [8,9,10,11];
 
         $frequencies = [];
 
