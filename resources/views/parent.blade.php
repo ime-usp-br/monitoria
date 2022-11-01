@@ -54,7 +54,7 @@
                   </ul>
               </li>
           @endcan
-          @can("visualizar turmas")
+          @can("visualizar turma")
               <li>
                   <a href="{{ route('schoolclasses.index') }}">Turmas</a>
               </li>
