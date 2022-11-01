@@ -63,6 +63,24 @@ class Kernel extends ConsoleKernel
                 }
             }
         }
+
+        $schoolterms = SchoolTerm::where("finished_at", ">=", now())->get();
+
+        foreach($schoolterms as $st){
+            $schedule->call(function () use ($st){
+                $selections = Selection::whereHas("schoolclass", function($query)use($st){
+                    $query->whereBelongsTo($st);
+                })->where("sitatl", "Ativo")->get();
+
+                foreach($selections as $selection){
+                    $selection->sitatl = "Concluido";
+                    $selection->save();
+                }
+            })->when(function () use ($st){
+                return  date("d/m/Y") == $st->finished_at and 
+                        date("H:i") == "23:59";
+            })->description("Fechamento do ".$st->period." de ".$st->year." no dia ".$st->finished_at." às 23:59");
+        }
     }
 
     protected function sendEmail(MailTemplate $mailtemplate)
