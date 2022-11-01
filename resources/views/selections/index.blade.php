@@ -40,11 +40,9 @@
                             <td class="text-left" style="white-space: nowrap;">{{ $solicitacao->instructor->getPronounTreatment() . $solicitacao->instructor->nompes}}</td>
                             <td>{{$solicitacao->requested_number}}</td>
                             <td class="text-left" style="white-space: nowrap;">
-                                @if($solicitacao->schoolclass->selections)
-                                    @foreach($solicitacao->schoolclass->selections as $selecionado)
-                                        <b>{{$selecionado->student->nompes}}</b> <br/>
-                                    @endforeach
-                                @endif
+                                @foreach($solicitacao->schoolclass->selections()->where("sitatl", "!=", "Desligado")->get() as $selecionado)
+                                    <b>{{$selecionado->student->nompes}}</b> <br/>
+                                @endforeach
                             </td>
                             <td>
                                 <a class='btn btn-outline-dark btn-sm'

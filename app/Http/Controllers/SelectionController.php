@@ -79,6 +79,13 @@ class SelectionController extends Controller
 
         $inscricao = Enrollment::find($validated['enrollment_id']);
 
+        if($inscricao->selection){
+            Frequency::whereBelongsTo($inscricao->selection->student)->whereBelongsTo($inscricao->selection->schoolclass)->delete();
+            $inscricao->selection->selfevaluation()->delete();
+            $inscricao->selection->instructorevaluation()->delete();
+            $inscricao->selection->delete();
+        }
+
         $validated['student_id'] = $inscricao->student->id;
         $validated['school_class_id'] = $inscricao->schoolclass->id;
         $validated['requisition_id'] = $inscricao->schoolclass->requisition->id;

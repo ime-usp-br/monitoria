@@ -116,23 +116,42 @@
                                     {{ $scholarship->name }} <br/>
                                 @endforeach
                             </td>
-                            <td class="text-left">{{ $inscricao->observacoes }}</td>
+                            <td class="text-left">
+                                @if($inscricao->selection)
+                                    @if($inscricao->selection->sitatl == "Desligado")
+                                        {{ $inscricao->student->getSexo() == "F" ? "Esta aluna foi eleita monitora desta disciplina, mas foi desligada" : 
+                                            "Este aluno foi eleito monitor desta disciplina, mas foi desligado" }}
+                                        {{ " em ".$inscricao->selection->dtafimvin." por ".$inscricao->selection->motdes."."}}<br>
+                                    @endif
+                                @endif
+                                {{ $inscricao->observacoes }}
+                            </td>
                             <td>
                                 @if($turma->requisition)
                                     {{ $turma->requisition->isStudentRecommended($inscricao->student) ? 'Sim' : 'Não' }} <br/>
                                 @endif
                             </td>
                             <td>
-                                <b>{{ $inscricao->selection ? 'Sim' : 'Não' }}</b> 
+                                <b>{{ $inscricao->selection ? ( $inscricao->selection->sitatl != "Desligado" ? "Sim" : "Não" ) : 'Não' }}</b> 
                             </td>
                             <td style="text-decoration-skip: all;">
                                 
-                                @if($inscricao->selection)
-                                    <form method="POST" action="{{ route('selections.destroy', $inscricao->selection) }}">
-                                        @method('delete')
-                                        @csrf
-                                        <button class='btn btn-outline-danger btn-sm'> Preterir Monitor</button>
-                                    </form>
+                                @if($inscricao->selection)                                            
+                                    @if($inscricao->selection->sitatl == "Desligado")
+                                        <form method="POST"
+                                            action="{{ route('selections.store') }}"
+                                        >
+                                            <input name="enrollment_id" value="{{$inscricao->id}}" type="hidden">
+                                            @csrf
+                                            <button class='btn btn-outline-dark btn-sm'> Elerger Monitor Novamente</button>
+                                        </form>
+                                    @else
+                                        <form method="POST" action="{{ route('selections.destroy', $inscricao->selection) }}">
+                                            @method('delete')
+                                            @csrf
+                                            <button class='btn btn-outline-danger btn-sm'> Preterir Monitor</button>
+                                        </form>
+                                    @endif
                                 @elseif($inscricao->hasOtherSelectionInOpenSchoolTerm())
                                     Já foi eleito monitor da turma 
                                     {{ $inscricao->student->getSelectionFromOpenSchoolTerm()->schoolclass->codtur }} da disciplina 
