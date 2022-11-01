@@ -26,7 +26,7 @@ class UpdateSchoolTermRequest extends FormRequest
         $rules = [
             'year' => 'required|numeric',
             'period' => 'required|in:1° Semestre,2° Semestre',
-            'status' => 'required|in:Aberto,Aberto para inscrições,Fechado',
+            'status' => 'required|in:Aberto,Fechado',
             'max_enrollments' => 'required|numeric|gt:0',
             "public_notice" => "sometimes|mimetypes:application/pdf|max:1000",
             'started_at' => 'required|date_format:d/m/Y|before:finished_at',

@@ -41,7 +41,6 @@
 
             @foreach ([
                         'Aberto',
-                        'Aberto para inscrições',
                         'Fechado'
                      ] as $status)
                 <option value="{{ $status }}" {{ ( $periodo->status === $status) ? 'selected' : ''}}>{{ $status }}</option>
