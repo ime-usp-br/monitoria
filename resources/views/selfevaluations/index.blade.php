@@ -7,7 +7,7 @@
 <div id="layout_conteudo">
     <div class="justify-content-center">
         <div class="col-12">
-            <h1 class='text-center mb-5'>Auto Avaliações</h1>
+            <h1 class='text-center mb-5'>Relatórios das Atividades Desenvolvidas</h1>
 
             @if($schoolterm)
                 <h4 class='text-center mb-5'>{{ $schoolterm->period . ' de ' . $schoolterm->year }}</h4>

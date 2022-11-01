@@ -7,7 +7,7 @@
 <div id="layout_conteudo">
     <div class="justify-content-center">
         <div class="col-md-12">
-            <h1 class='text-center mb-5'>Auto Avaliações</h1>
+            <h1 class='text-center mb-5'>Relatórios das Atividades Desenvolvidas</h1>
 
             @if (count($selections) > 0)
                 <table class="table table-bordered table-striped table-hover" style="font-size:12px;">

@@ -7,7 +7,7 @@
 <div id="layout_conteudo">
     <div class="justify-content-center">
         <div class="col-12">
-            <h1 class='text-center mb-5'>Auto Avaliação</h1>
+            <h1 class='text-center mb-5'>Relatório das Atividades Desenvolvidas</h1>
 
             <h4 class='text-center mb-5'>{{ $se->schoolclass->schoolterm->period . ' de ' . $se->schoolclass->schoolterm->year }}</h4>
 
