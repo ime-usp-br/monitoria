@@ -209,31 +209,40 @@ class SelectionController extends Controller
 
         $turma = $schoolclass;
 
-        $inscricoes = $schoolclass->enrollments()->whereHas('selection')
-                                                 ->whereDoesntHave('student.selections.schoolclass', function ($query) use ($turma){
-                                                     return $query->where('id', '!=', $turma->id);
-                                                 })
-            ->union(
-                $schoolclass->enrollments()->whereDoesntHave('selection')
-                            ->whereDoesntHave('student.selections.schoolclass', function ($query) use ($turma){
-                                return $query->where('id', '!=', $turma->id);
-                            })
-                            ->whereHas('student.recommendations.requisition', function ($query) use ($turma){
-                                return $query->whereBelongsTo($turma);
-                            }))
-            ->union(
-                $schoolclass->enrollments()->whereDoesnthave('selection')
-                            ->whereDoesntHave('student.recommendations.requisition', function ($query) use ($turma){
-                                return $query->whereBelongsTo($turma);
-                            })
-                            ->whereDoesntHave('student.selections.schoolclass', function ($query) use ($turma){
-                                return $query->where('id', '!=', $turma->id);
-                            }))
-            ->union(
-                $schoolclass->enrollments()->whereHas('student.selections.schoolclass', function ($query) use ($turma){
-                                return $query->where('id', '!=', $turma->id);
-                            })
-            )->get();
+        $inscricoes = $schoolclass->enrollments;
+
+        $inscricoes = $inscricoes->sort(function($a,$b){
+            if($a->selection and !$b->selection){
+                return 1;
+            }elseif(!$a->selection and $b->selection){
+                return -1;
+            }
+
+            if($a->student->hasSelectionInOpenSchoolTerm() and !$b->student->hasSelectionInOpenSchoolTerm()){
+                return -1;
+            }elseif(!$a->student->hasSelectionInOpenSchoolTerm() and $b->student->hasSelectionInOpenSchoolTerm()){
+                return 1;
+            }
+
+            if($a->schoolclass->requisition->recommendations){
+                $aIsRecommended = $a->schoolclass->requisition->recommendations()->whereHas("student",function($query)use($a){
+                    $query->where("codpes",$a->student->codpes);
+                })->first();
+                $bIsRecommended = $b->schoolclass->requisition->recommendations()->whereHas("student",function($query)use($b){
+                    $query->where("codpes",$b->student->codpes);
+                })->first();
+
+                if($aIsRecommended and !$bIsRecommended){
+                    return 1;
+                }elseif(!$aIsRecommended and $bIsRecommended){
+                    return -1;
+                }
+            }
+            /*
+            if(!$a->student->hasSelectionInOpenSchoolTerm() and $b->student->hasSelectionInOpenSchoolTerm()){
+                return 1;
+            }*/
+        })->reverse();
 
         return view('selections.enrollments', compact(['turma', 'inscricoes']));
     }
