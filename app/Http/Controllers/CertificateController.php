@@ -24,10 +24,10 @@ class CertificateController extends Controller
         }
         
         $selections = Selection::whereBelongsTo(Student::where("codpes", Auth::user()->codpes)->first())
-            ->where("sitatl", "Concluido")->get()->sortBy(["schoolclass.schoolterm.year", "schoolclass.schoolterm.period"])->reverse();
+            ->where("sitatl", "!=", "Desligado")->get()->sortBy(["schoolclass.schoolterm.year", "schoolclass.schoolterm.period"])->reverse();
 
         if($selections->isEmpty()){
-            Session::flash("alert-warning", "Você não concluiu nenhuma monitoria.");
+            Session::flash("alert-warning", "Você não realizou nenhuma monitoria.");
             return back();
         }
 
@@ -36,12 +36,22 @@ class CertificateController extends Controller
 
     public function make(Selection $selection)
     {
-        if($selection->student_id != Student::where("codpes", Auth::user()->codpes)->first()->id){
-            abort(403);
+        if(Auth::check()){
+            if($selection->student_id != Student::where("codpes", Auth::user()->codpes)->first()->id){
+                abort(403);
+            }
+        }else{
+            return redirect("login");
         }
-        
-        return (new LaraTeX('certificates.latex'))->with([
-            'selection' => $selection,
-        ])->download('atestado.pdf');
+
+        if($selection->sitatl == "Concluido"){
+            return (new LaraTeX('certificates.completed'))->with([
+                'selection' => $selection,
+            ])->download('atestado.pdf');
+        }elseif($selection->sitatl == "Ativo"){
+            return (new LaraTeX('certificates.ongoing'))->with([
+                'selection' => $selection,
+            ])->download('atestado.pdf');
+        }
     }
 }

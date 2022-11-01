@@ -30,7 +30,7 @@
                                 $st = $selection->schoolclass->schoolterm;
                                 $label = "";
                                 if(!in_array($selection->schoolclass->coddis, App\Models\SchoolClass::getDisciplinesFromReplicadoBySchoolTermAndInstructor($st, $instructor))){
-                                    $label = "Os dados desta monitoria foram importados do antigo sistema. No processo de importação foi constatado que ".( $instructor->getSexo() == "M" ? "o Prof. " : "a Profa. ");
+                                    $label = "Foi constatado que ".( $instructor->getSexo() == "M" ? "o Prof. " : "a Profa. ");
                                     $label .= explode(" ", $instructor->nompes)[0]." não ministrou a disciplina ".$selection->schoolclass->coddis." no ".$st->period." de ".$st->year.".";
                                     $label .= " Isto se deve provavelmente a algum erro na solicitação da vaga de monitoria. Caso você precise que o atestado seja corrigido entre em contato com a secretaria de monitoria.";
                                 }
