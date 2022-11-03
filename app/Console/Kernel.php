@@ -88,6 +88,8 @@ class Kernel extends ConsoleKernel
         if($mailtemplate->mail_class == "NotifyInstructorAboutAttendanceRecord"){
             $frequencies = Frequency::whereHas("schoolclass.schoolterm", function($query){
                 $query->where("year",date("Y"));
+            })->whereHas("schoolclass.selections", function($query){
+                $query->where("sitatl","Ativo");
             })->where("month", date("m"))->where("registered",false)->get();
 
             foreach($frequencies as $frequency){

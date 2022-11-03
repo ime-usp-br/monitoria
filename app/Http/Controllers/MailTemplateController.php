@@ -203,7 +203,9 @@ class MailTemplateController extends Controller
         $mailtemplate = MailTemplate::find($validated["mailtemplate_id"]);
 
         if($mailtemplate->mail_class == "NotifyInstructorAboutAttendanceRecord"){
-            $frequency = Frequency::latest()->first();
+            $frequency = Frequency::whereHas("schoolclass.selections", function($query){
+                $query->where("sitatl","Ativo");
+            })->first() ?? Frequency::first();
 
             if(!$frequency){
                 Session::flash('alert-warning', 'Não foi encontrada nenhuma frequência para ser usada de exemplo.');
