@@ -82,7 +82,42 @@
                             <td>{{ $selection->sitatl }}</td>
                             <td>{{ $selection->schoolclass->coddis }}</td>
                             <td class="text-left">{{ $selection->schoolclass->nomdis }}</td>
-                            <td class="text-center">{{ $selection->enrollment->voluntario ? 'Sim' : 'Não'}}</td>
+                            <td class="text-center" style="white-space: nowrap;">
+                                @if($selection->enrollment->voluntario)
+                                    @if($selection->sitatl == "Ativo")
+                                        <form id="revokeForm" method="POST" 
+                                        enctype="multipart/form-data" action="{{ route('tutors.turnintononvolunteer',$selection) }}"
+                                        >
+                                            @csrf
+                                            @method("PATCH")
+
+                                            <div class="d-inline">
+                                                Sim
+                                                <button class="btn btn-outline-warning btn-sm" type="submit">Mudar</button>
+                                            </div>
+                                            
+                                        </form>
+                                    @else
+                                        Sim
+                                    @endif
+                                @else
+                                    @if($selection->sitatl == "Ativo")
+                                        <form id="revokeForm" method="POST"
+                                        enctype="multipart/form-data" action="{{ route('tutors.turnintovolunteer',$selection) }}"
+                                        >
+                                            @csrf
+                                            @method("PATCH")
+                                                                        
+                                            <div class="d-inline">
+                                                Não
+                                                <button class="btn btn-outline-info btn-sm" type="submit">Mudar</button>
+                                            </div>
+                                        </form>
+                                    @else
+                                        Não
+                                    @endif
+                                @endif
+                            </td>
                             <td>
                                 @if($selection->selfevaluation)
                                     <a  href="{{ route('selfevaluations.show',$selection->selfevaluation) }}" 

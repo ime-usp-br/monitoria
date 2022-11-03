@@ -86,7 +86,49 @@ class TutorController extends Controller
         Session::flash('alert-info', 'Monitor desligado com sucesso.');
 
         return back();
+    }
 
+    public function turnIntoVolunteer(Selection $selection)
+    {
+        if(Auth::check()){
+            if(!Auth::user()->hasRole(["Secretaria", "Administrador"])){
+                abort(403);
+            }
+        }else{
+            return redirect("login");
+        }
+
+        if($selection->sitatl == "Ativo"){
+            $selection->enrollment->voluntario = 1;
+            $selection->enrollment->save();
+    
+            Session::flash('alert-success',  ($selection->student->getSexo() == "F" ? "A monitora " : "O monitor ").$selection->student->nompes." passou a ser voluntári".($selection->student->getSexo() == "F" ? "a." : "o." ));
+            return back();
+        }else{
+            Session::flash('alert-warning', 'Esta monitoria encontra-se com status '.$selection->sitatl.'.');
+            return back();
+        }
+    }
+
+    public function turnIntoNonVolunteer(Selection $selection)
+    {
+        if(Auth::check()){
+            if(!Auth::user()->hasRole(["Secretaria", "Administrador"])){
+                abort(403);
+            }
+        }else{
+            return redirect("login");
+        }
+        if($selection->sitatl == "Ativo"){
+            $selection->enrollment->voluntario = 0;
+            $selection->enrollment->save();
+    
+            Session::flash('alert-success', ($selection->student->getSexo() == "F" ? "A monitora " : "O monitor " ).$selection->student->nompes." deixou de ser voluntári".($selection->student->getSexo() == "F" ? "a." : "o." ));
+            return back();
+        }else{
+            Session::flash('alert-warning', 'Esta monitoria encontra-se com status '.$selection->sitatl.'.');
+            return back();
+        }
 
     }
 }
