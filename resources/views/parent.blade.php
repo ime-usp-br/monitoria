@@ -64,6 +64,11 @@
                   <a href="{{ route('instructors.index') }}">Docentes</a>
               </li>
           @endcan
+          @can("visualizar todos inscritos")
+              <li>
+                  <a href="{{ route('enrollments.showAll') }}">Inscritos</a>
+              </li>
+          @endcan
           @can("visualizar monitores")
               <li>
                   <a href="{{ route('tutors.index') }}">Monitores</a>
@@ -104,7 +109,6 @@
             "criar solicitação de monitor",
             "fazer inscrição",
             "Selecionar monitor",
-            "visualizar todos inscritos",
             "Disparar emails",
             "gerar relatorio",
             "Emitir Atestado",
@@ -134,11 +138,6 @@
           @can("Selecionar monitor")
               <li>
                   <a href="{{ route('selections.index') }}">Selecionar Monitores</a>
-              </li>
-          @endcan
-          @can("visualizar todos inscritos")
-              <li>
-                  <a href="{{ route('enrollments.showAll') }}">Ver Todos Inscritos</a>
               </li>
           @endcan
           @can("Disparar emails")
