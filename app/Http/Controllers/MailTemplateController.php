@@ -211,7 +211,7 @@ class MailTemplateController extends Controller
             }
 
             Mail::to($validated["email"])->send(new NotifyInstructorAboutAttendanceRecord($frequency,
-                URL::signedRoute('schoolclasses.showFrequencies', ['schoolclass'=>$frequency->schoolclass->id,'tutor'=>$frequency->student->id]), $mailtemplate));
+                URL::signedRoute('frequencies.show', ['schoolclass'=>$frequency->schoolclass->id,'tutor'=>$frequency->student->id]), $mailtemplate));
             
         }elseif($mailtemplate->mail_class == "NotifyInstructorAboutSelectAssistant"){
             $selection = Selection::latest()->first();

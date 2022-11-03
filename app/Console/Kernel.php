@@ -92,7 +92,7 @@ class Kernel extends ConsoleKernel
 
             foreach($frequencies as $frequency){
                 Mail::to($frequency->schoolclass->requisition->instructor->codema)->send(new NotifyInstructorAboutAttendanceRecord($frequency,
-                    URL::signedRoute('schoolclasses.showFrequencies', ['schoolclass'=>$frequency->schoolclass->id,'tutor'=>$frequency->student->id]), $mailtemplate));
+                    URL::signedRoute('frequencies.show', ['schoolclass'=>$frequency->schoolclass->id,'tutor'=>$frequency->student->id]), $mailtemplate));
             }
         }elseif($mailtemplate->mail_class == "NotifyInstructorAboutSelectAssistant"){
             $schoolclasses = SchoolClass::whereInOpenSchoolTerm()->whereHas('selections')->get();

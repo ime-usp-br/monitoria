@@ -46,7 +46,6 @@ Route::get('/schoolclasses/{schoolclass}/enrollments', [SchoolClassController::c
 Route::get('/schoolclasses/search', [SchoolClassController::class, 'search'])->name('schoolclasses.search');
 Route::patch('/schoolclasses/import', [SchoolClassController::class, 'import'])->name('schoolclasses.import');
 Route::get('/schoolclasses/{schoolclass}/electedTutors', [SchoolClassController::class, 'electedTutors'])->name('schoolclasses.electedTutors');
-Route::get('/schoolclasses/{schoolclass}/electedTutors/{tutor}/frequencies', [SchoolClassController::class, 'showFrequencies'])->name('schoolclasses.showFrequencies');
 Route::resource('schoolclasses', SchoolClassController::class);
 
 Route::get("/instructors/evaluations", [InstructorEvaluationController::class, "instructorIndex"])->name("instructorevaluations.instructorIndex");
@@ -75,7 +74,9 @@ Route::get('/monitor/getimportschoolclassesjob', [MonitorController::class, 'get
 Route::get('/emails', [EmailController::class, 'index'])->name('emails.index');
 Route::post('/emails/dispatch', [EmailController::class, 'dispatchForAll'])->name('emails.dispatch');
 
-Route::get('frequencies/{frequency}', [FrequencyController::class,"update"])->name('frequencies.update');;
+Route::get('/frequencies/{schoolclass}/{tutor}', [FrequencyController::class, 'show'])->name('frequencies.show');
+Route::get('frequencies/{frequency}', [FrequencyController::class,"update"])->name('frequencies.update');
+Route::get('frequencies', [FrequencyController::class,"index"])->name('frequencies.index');
 
 Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 Route::post('/reports/make', [ReportController::class, 'make'])->name('reports.make');

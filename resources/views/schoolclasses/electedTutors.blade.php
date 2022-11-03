@@ -52,7 +52,7 @@
                             <td class="text-center">
                                 {{ $eleicao->requisition->isStudentRecommended($eleicao->student) ? 'Sim' : 'Não' }} <br/>
                             </td>
-                            <td class="text-center"><a href="/schoolclasses/{{$turma->id}}/electedTutors/{{$eleicao->student->id}}/frequencies" class="btn btn-outline-dark btn-sm">Registrar frequência</a></td>
+                            <td class="text-center"><a href="{{ route('frequencies.show',['schoolclass'=>$eleicao->schoolclass->id,'tutor'=>$eleicao->student->id]) }}" class="btn btn-outline-dark btn-sm">Registrar frequência</a></td>
                         </tr>
                     @endforeach
                 </table>

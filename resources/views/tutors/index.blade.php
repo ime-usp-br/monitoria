@@ -51,13 +51,11 @@
                             <th>Abr</th>
                             <th>Maio</th>
                             <th>Jun</th>
-                            <th></th>
                         @elseif($schoolterm->period == "2° Semestre")
                             <th>Ago</th>
                             <th>Set</th>
                             <th>Out</th>
                             <th>Nov</th>
-                            <th></th>
                         @endif
                     </tr>
                     </thead>
@@ -66,10 +64,10 @@
                         <tr class="text-center">
                             <td>
                                 <button  id="btn-revokeModal"
-                                    class="btn btn-outline-dark btn-sm"
+                                    class="btn btn-outline-danger btn-sm"
                                     data-toggle="modal"
                                     data-target="#revokeModal"
-                                    title="Cadastrar" 
+                                    title="Desligar Monitor" 
                                     href="{{ route('tutors.revoke', $selection) }}"
                                     {{ $selection->sitatl == "Desligado" ? 'disabled' : '' }}
                                 >
@@ -93,7 +91,7 @@
 
                                             <div class="d-inline">
                                                 Sim
-                                                <button class="btn btn-outline-warning btn-sm" type="submit">Mudar</button>
+                                                <button class="btn btn-outline-warning btn-sm" title="Remunerar Monitor" type="submit">Mudar</button>
                                             </div>
                                             
                                         </form>
@@ -110,7 +108,7 @@
                                                                         
                                             <div class="d-inline">
                                                 Não
-                                                <button class="btn btn-outline-info btn-sm" type="submit">Mudar</button>
+                                                <button class="btn btn-outline-info btn-sm" title="Tornar Monitor Voluntário" type="submit">Mudar</button>
                                             </div>
                                         </form>
                                     @else
@@ -132,7 +130,6 @@
                                 <td>{{ $selection->student->frequencies()->where(['school_class_id'=>$selection->schoolclass->id, 'month'=>($schoolterm->period == '1° Semestre' ? $month : $month+5)])->exists() ? 
                                         $selection->student->frequencies()->where(['school_class_id'=>$selection->schoolclass->id, 'month'=>($schoolterm->period == '1° Semestre' ? $month : $month+5)])->first()->registered ? 'S' : 'N' : 'N' }}</td>
                             @endforeach        
-                            <td class="text-center"><a href="{{ route('schoolclasses.showFrequencies',['schoolclass'=>$selection->schoolclass->id,'tutor'=>$selection->student->id]) }}" class="btn btn-outline-dark btn-sm">Registrar</a></td>        
                         </tr>
                     @endforeach
 

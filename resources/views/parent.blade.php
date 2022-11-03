@@ -132,6 +132,11 @@
           @endif
           @if(Auth::user()->hasRole("Docente"))
               <li>
+                  <a href="{{ route('frequencies.index') }}">Registrar Frequências</a>
+              </li>
+          @endif
+          @if(Auth::user()->hasRole("Docente"))
+              <li>
                   <a href="{{ route('instructorevaluations.instructorIndex') }}">Avaliações dos Monitores</a>
               </li>
           @endif

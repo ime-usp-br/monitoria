@@ -108,7 +108,6 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('visualizar solicitação de monitor')
             ->givePermissionTo('criar solicitação de monitor')
             ->givePermissionTo('registrar frequencia')
-            ->givePermissionTo('visualizar monitores')
             ->givePermissionTo('editar solicitação de monitor');
 
         Role::firstOrCreate(['name' => 'Aluno'])

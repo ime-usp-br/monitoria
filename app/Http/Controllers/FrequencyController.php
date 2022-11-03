@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\StoreFrequencyRequest;
 use App\Http\Requests\UpdateFrequencyRequest;
+use Illuminate\Http\Request;
 use App\Models\Frequency;
 use App\Models\Selection;
+use App\Models\SchoolClass;
+use App\Models\Student;
+use App\Models\SchoolTerm;
 use Auth;
 use Session;
 
@@ -19,7 +23,33 @@ class FrequencyController extends Controller
      */
     public function index()
     {
-        //
+        if(Auth::check()){
+            if(!Auth::user()->hasRole(["Docente"])){
+                abort(403);
+            }
+        }else{
+            return redirect("login");
+        }
+
+        $schoolterm = SchoolTerm::getOpenSchoolTerm();
+
+        if(!$schoolterm){
+            $schoolterm = SchoolTerm::getLatest();
+        }
+    
+
+        if(!$schoolterm){
+            Session::flash('alert-warning', 'Não foi encontrado um periodo letivo.');
+            return back();
+        }
+
+        $selections = Selection::where("sitatl", "Ativo")->whereHas("requisition.instructor", function($query){
+                            $query->where("codpes",Auth::user()->codpes);
+                        })->whereHas("schoolclass", function($query)use($schoolterm){
+                            $query->whereBelongsTo($schoolterm);
+                        })->get()->sortBy("student.nompes");
+
+        return view("frequencies.index", compact(["schoolterm","selections"]));
     }
 
     /**
@@ -49,10 +79,31 @@ class FrequencyController extends Controller
      * @param  \App\Models\Frequency  $frequency
      * @return \Illuminate\Http\Response
      */
-    public function show(Frequency $frequency)
+    public function show(SchoolClass $schoolclass, Student $tutor, Request $request)
     {
-        //
+        if($request->has("signature")){
+            if(!$request->hasValidSignature()){
+                abort(403);
+            }
+        }elseif(Auth::check()){
+            if(!$schoolclass->isInstructor(Auth::user()->codpes)){
+                Session::flash("alert-warning", "Você não ministra esta disciplina.");
+                return back();
+            }elseif($schoolclass->selections()->whereHas("student", function($query)use($tutor){$query->where("codpes", $tutor->codpes);})->get()->isEmpty()){
+                Session::flash("alert-warning", "Este monitor não pertence a disciplina ".$schoolclass->coddis.".");
+                return back();
+            }
+        }else{
+            abort(403);
+        }
+
+        return view('frequencies.show', [
+            'monitor' => $tutor,
+            'turma' => $schoolclass,
+            'signature' =>$request->signature,
+        ]);
     }
+
 
     /**
      * Show the form for editing the specified resource.

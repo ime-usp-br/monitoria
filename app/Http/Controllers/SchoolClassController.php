@@ -302,27 +302,4 @@ class SchoolClassController extends Controller
         ]);
         
     }
-
-    public function showFrequencies(SchoolClass $schoolclass, Student $tutor, Request $request)
-    {
-        if($request->has("signature")){
-            if(!$request->hasValidSignature()){
-                abort(403);
-            }
-        }elseif(Auth::check()){
-            if(!$schoolclass->isInstructor(Auth::user()->codpes)){
-                Session::flash("alert-warning", "Você não é responsável por este monitor.");
-                return back();
-            }
-        }else{
-            abort(403);
-        }
-
-        return view('schoolclasses.frequencies', [
-            'monitor' => $tutor,
-            'turma' => $schoolclass,
-            'signature' =>$request->signature,
-        ]);
-
-    }
 }
