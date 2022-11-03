@@ -8,23 +8,52 @@
     <div class="justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Atestado de Monitoria</h1>
+            
+            @if(Auth::user()->hasRole(["Secretaria", "Administrador"]))
+                <h4 class='text-center mb-5'>{{ $schoolterm->period . ' de ' . $schoolterm->year }}</h4>
+
+                @include('certificates.modals.chooseSchoolTerm')
+
+                <p class="text-right">
+                    <a  id="btn-chooseSchoolTermModal"
+                        class="btn btn-outline-primary"
+                        data-toggle="modal"
+                        data-target="#chooseSchoolTermModal"
+                        title="Escolher Semestre" 
+                    >
+                        Escolher Semestre
+                    </a>
+                </p>
+            @endif
 
             @if (count($selections) > 0)
                 <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
                     <tr>
+                        @if(Auth::user()->hasRole(["Secretaria", "Administrador"]))
+                            <th class="text-center" style="vertical-align: middle;">Monitor(a)</th>
+                            <th class="text-center" style="vertical-align: middle;">N° USP do<br>Monitor(a)</th>
+                        @endif
                         <th class="text-center" style="vertical-align: middle;">Sigla da Disciplina</th>
                         <th class="text-center" style="vertical-align: middle;">Nome da Disciplina</th>
                         <th class="text-center" style="vertical-align: middle;">Professor(a)</th>
-                        <th class="text-center" style="vertical-align: middle;">Semestre</th>
+                        @if(!Auth::user()->hasRole(["Secretaria", "Administrador"]))
+                            <th class="text-center" style="vertical-align: middle;">Semestre</th>
+                        @endif
                         <th class="text-center" style="vertical-align: middle;">Observações</th>
                         <th></th>
                     </tr>
                     @foreach($selections as $selection)
                         <tr class="text-center">
+                            @if(Auth::user()->hasRole(["Secretaria", "Administrador"]))
+                                <td class="text-left">{{ $selection->student->nompes }}</td>
+                                <td>{{ $selection->student->codpes }}</td>
+                            @endif
                             <td>{{ $selection->schoolclass->coddis }}</td>
                             <td class="text-left">{{ $selection->schoolclass->nomdis }}</td>
                             <td class="text-left">{{ $selection->requisition->instructor->nompes }}</td>   
-                            <td>{{ $selection->schoolclass->schoolterm->period." de ".$selection->schoolclass->schoolterm->year }}</td>   
+                            @if(!Auth::user()->hasRole(["Secretaria", "Administrador"]))
+                                <td>{{ $selection->schoolclass->schoolterm->period." de ".$selection->schoolclass->schoolterm->year }}</td>  
+                            @endif 
                             @php
                                 $instructor = $selection->requisition->instructor;
                                 $st = $selection->schoolclass->schoolterm;

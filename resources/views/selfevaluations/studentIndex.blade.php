@@ -44,7 +44,16 @@
                                             </form>
                                         @endif
                                     @endif
+                                @else
+                                    @if(!$selection->selfevaluation)
+                                        @if($selection->sitatl == "Concluido")
+                                            Monitoria concluida sem relatório de Atividades
+                                        @elseif($selection->sitatl == "Ativo")
+                                            Período de avaliação de {{ $selection->schoolclass->schoolterm->start_date_evaluations." à ".$selection->schoolclass->schoolterm->end_date_evaluations}}
+                                        @endif
+                                    @endif
                                 @endif
+
                             </td>
                         </tr>
                     @endforeach

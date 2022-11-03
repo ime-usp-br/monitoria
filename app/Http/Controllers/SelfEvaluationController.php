@@ -67,15 +67,7 @@ class SelfEvaluationController extends Controller
         }
 
         $selections = Selection::whereBelongsTo(Student::where("codpes", Auth::user()->codpes)->first())
-                                ->whereHas("selfevaluation")->union(
-                                        Selection::whereBelongsTo(Student::where("codpes", Auth::user()->codpes)->first())
-                                                    ->whereHas("schoolclass", function($query){
-                                                        $query->whereHas("schoolterm", function($query2){
-                                                            $query2->where("id", SchoolTerm::getSchoolTermInEvaluationPeriod()->id ?? "");
-                                                        });
-                                                    })
-                                    )
-                                ->get()->sortBy(["schoolclass.schoolterm.year", "schoolclass.schoolterm.period"])->reverse();
+            ->where("sitatl","!=","Desligado")->get()->sortBy(["schoolclass.schoolterm.year", "schoolclass.schoolterm.period"])->reverse();
 
         return view("selfevaluations.studentIndex", compact("selections"));
 

@@ -67,13 +67,8 @@ class InstructorEvaluationController extends Controller
 
         $selections = Selection::whereHas("requisition.instructor", function($query){
                             $query->where("codpes",Auth::user()->codpes);
-                        })->whereHas("instructorevaluation")->union(
-                            Selection::whereHas("requisition.instructor", function($query){
-                                $query->where("codpes",Auth::user()->codpes);
-                            })->whereHas("schoolclass.schoolterm", function($query){
-                                $query->where("id", SchoolTerm::getSchoolTermInEvaluationPeriod()->id ?? "");
-                            })
-                        )->get()->sortBy(["schoolclass.schoolterm.year", "schoolclass.schoolterm.period"])->reverse();
+                        })->where("sitatl","!=","Desligado")->get()
+                        ->sortBy(["schoolclass.schoolterm.year", "schoolclass.schoolterm.period"])->reverse();
 
         return view("instructorevaluations.instructorIndex",compact("selections"));
     }

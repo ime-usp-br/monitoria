@@ -96,6 +96,7 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('Editar E-mails')
             ->givePermissionTo('Visualizar auto avaliações')
             ->givePermissionTo('Visualizar avaliações dos docentes')
+            ->givePermissionTo('Emitir Atestado')
             ->givePermissionTo('baixar histórico escolar');
 
         Role::firstOrCreate(['name' => 'Docente'])

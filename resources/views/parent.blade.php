@@ -96,6 +96,10 @@
               </form>
           </li>
       </ul>
+      @php
+            $hasSelection = App\Models\Selection::whereHas("student", function($query){$query->where("codpes",Auth::user()->codpes);})->get()->isNotEmpty();
+      @endphp
+
       @if(Auth::user()->hasAnyPermission([
             "criar solicitação de monitor",
             "fazer inscrição",
@@ -104,7 +108,7 @@
             "Disparar emails",
             "gerar relatorio",
             "Emitir Atestado",
-        ]) or App\Models\Selection::whereHas("student", function($query){$query->where("codpes",Auth::user()->codpes);})->get()->isNotEmpty())
+        ]) or $hasSelection)
       <ul id="menulateral" class="menulist mt-1">
           <li class="menuHeader">Ações</li>
           @can("criar solicitação de monitor")
@@ -144,10 +148,10 @@
           @endcan
           @can("gerar relatorio")
               <li>
-                  <a href="{{ route('reports.index') }}">Relatório</a>
+                  <a href="{{ route('reports.index') }}">Emitir Relatório</a>
               </li>
           @endcan
-          @if(App\Models\Selection::whereHas("student", function($query){$query->where("codpes",Auth::user()->codpes);})->get()->isNotEmpty())
+          @if($hasSelection or Auth::user()->can("Emitir Atestado"))
               <li>
                   <a href="{{ route('certificates.index') }}">Emitir Atestado</a>
               </li>

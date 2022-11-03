@@ -238,10 +238,6 @@ class SelectionController extends Controller
                     return -1;
                 }
             }
-            /*
-            if(!$a->student->hasSelectionInOpenSchoolTerm() and $b->student->hasSelectionInOpenSchoolTerm()){
-                return 1;
-            }*/
         })->reverse();
 
         return view('selections.enrollments', compact(['turma', 'inscricoes']));
