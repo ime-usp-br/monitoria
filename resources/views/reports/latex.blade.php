@@ -115,6 +115,22 @@ Foram selecionados {!! $schoolterm->schoolclasses()->withCount('selections')->wh
     \end{center}
 \end{table}
 
+@if(\Storage::disk("local")->has("graphs/monitorias_pie_".$schoolterm->year.$schoolterm->period[0].".jpg"))
+
+O gráfico de pizza abaixo mostra a proporção de Graduandos e Pós-Graduandos do IME e de outras unidades.
+    \begin{figure}[H]
+    \includegraphics[scale=0.6]{{!! base_path() . "/storage/app/graphs/monitorias_pie_".$schoolterm->year.$schoolterm->period[0].".jpg" !!}}
+    \end{figure}
+@endif
+
+@if(\Storage::disk("local")->has("graphs/monitorias_por_departamento.jpg"))
+
+A figura abaixo mostra a relação de monitorias dos departamentos ao longo do tempo.
+    \begin{figure}[H]
+    \includegraphics[scale=0.6]{{!! base_path() . "/storage/app/graphs/monitorias_por_departamento.jpg" !!}}
+    \end{figure}
+@endif
+
 \pagebreak
 
 @if(App\Models\Selection::whereHas("schoolclass", function($query)use($schoolterm){$query->whereBelongsTo($schoolterm);})->where("sitatl","!=","Desligado")->get()->isNotEmpty())
