@@ -1,7 +1,7 @@
 try:
     import sys
     import matplotlib.pyplot as plt
-    #import seaborn as sns
+    import seaborn as sns
     import pandas as pd
     import pymysql
     import sqlalchemy as db
@@ -9,7 +9,7 @@ try:
     import os
 
     load_dotenv()
-    #sns.set()
+    sns.set()
 
     st_id = sys.argv[1]
 

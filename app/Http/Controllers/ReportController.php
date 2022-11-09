@@ -28,7 +28,7 @@ class ReportController extends Controller
 
         $validated = $request->validated();
 
-        $p = new Process(["/usr/bin/python3", base_path()."/app/Scripts/Python/create_graphs.py", $validated['periodoId']]);
+        $p = new Process([env("PYTHON_CMD", "/usr/bin/python3"), base_path()."/app/Scripts/Python/create_graphs.py", $validated['periodoId']]);
         $p->run();
 
         return (new LaraTeX('reports.latex'))->with([
