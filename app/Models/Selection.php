@@ -9,12 +9,14 @@ use App\Models\SchoolClass;
 use App\Models\Enrollment;
 use App\Models\Requisition;
 use App\Models\SelfEvaluation;
+use App\Models\SchoolTerm;
 use Carbon\Carbon;
 
 
 class Selection extends Model
 {
     use HasFactory;
+    use \Znck\Eloquent\Traits\BelongsToThrough;
 
     protected $fillable = [
         'student_id',
@@ -70,5 +72,10 @@ class Selection extends Model
     public function instructorevaluation()
     {
         return $this->hasOne(InstructorEvaluation::class);
+    }
+
+    public function schoolterm()
+    {
+        return $this->belongsToThrough(SchoolTerm::class, SchoolClass::class);
     }
 }

@@ -58,26 +58,26 @@ No {!! $schoolterm->period !!} de {!! $schoolterm->year !!} foram cadastradas no
 {!! $schoolterm->schoolclasses->count() !!} turmas, sendo 
 {!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAC');})->count() !!} do Departamento de Ciência da Computação, 
 {!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAP');})->count() !!} do Departamento de Matemática Aplicada,
-{!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAE');})->count() !!} do Departamento de Estatística,
+{!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAE');})->count() !!} do Departamento de Estatística e 
 {!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAT');})->count() !!} do Departamento de Matemática.
 
 No mesmo semestre foram solicitados {!! $schoolterm->schoolclasses->sum('requisition.requested_number') !!} monitores pelos docentes, sendo 
 {!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAC');})->get()->sum('requisition.requested_number') !!} do Departamento de Ciência da Computação, 
 {!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAP');})->get()->sum('requisition.requested_number') !!} do Departamento de Matemática Aplicada,
-{!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAE');})->get()->sum('requisition.requested_number') !!} do Departamento de Estatística,
+{!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAE');})->get()->sum('requisition.requested_number') !!} do Departamento de Estatística e 
 {!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAT');})->get()->sum('requisition.requested_number') !!} do Departamento de Matemática.
 
 Foram feitas {!! $schoolterm->schoolclasses()->withCount('enrollments')->get()->sum('enrollments_count') !!} inscrições nas vagas de monitoria por parte de  
 {!! count(App\Models\Student::whereHas('enrollments', function($query) use($schoolterm) {return $query->whereHas('schoolclass', function($query2) use($schoolterm) {return $query2->whereBelongsTo($schoolterm);});})->get()) !!} alunos, sendo 
 {!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAC');})->withCount('enrollments')->get()->sum('enrollments_count') !!}  do Departamento de Ciência da Computação, 
 {!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAP');})->withCount('enrollments')->get()->sum('enrollments_count') !!} do Departamento de Matemática Aplicada,
-{!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAE');})->withCount('enrollments')->get()->sum('enrollments_count') !!} do Departamento de Estatística,
+{!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAE');})->withCount('enrollments')->get()->sum('enrollments_count') !!} do Departamento de Estatística e 
 {!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAT');})->withCount('enrollments')->get()->sum('enrollments_count') !!} do Departamento de Matemática.
 
 Foram selecionados {!! $schoolterm->schoolclasses()->withCount('selections')->whereHas("selections", function($query){$query->where("sitatl","!=","Desligado");})->get()->sum('selections_count') !!} monitores no total, sendo
 {!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAC');})->withCount('selections')->whereHas("selections", function($query){$query->where("sitatl","!=","Desligado");})->get()->sum('selections_count') !!}  do Departamento de Ciência da Computação, 
 {!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAP');})->withCount('selections')->whereHas("selections", function($query){$query->where("sitatl","!=","Desligado");})->get()->sum('selections_count') !!} do Departamento de Matemática Aplicada,
-{!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAE');})->withCount('selections')->whereHas("selections", function($query){$query->where("sitatl","!=","Desligado");})->get()->sum('selections_count') !!} do Departamento de Estatística,
+{!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAE');})->withCount('selections')->whereHas("selections", function($query){$query->where("sitatl","!=","Desligado");})->get()->sum('selections_count') !!} do Departamento de Estatística e 
 {!! $schoolterm->schoolclasses()->whereHas('department', function ($query) { return $query->where('nomabvset', 'MAT');})->withCount('selections')->whereHas("selections", function($query){$query->where("sitatl","!=","Desligado");})->get()->sum('selections_count') !!} do Departamento de Matemática.
 
 \begin{table}[h]
@@ -114,14 +114,94 @@ Foram selecionados {!! $schoolterm->schoolclasses()->withCount('selections')->wh
         \end{tabular}
     \end{center}
 \end{table}
+@php
+    $courses = $schoolterm->getTutorsCourses();
+    $tutors = $schoolterm->tutors;
+@endphp
+@if($courses->isNotEmpty() and $tutors->isNotEmpty())
+    @php
+        $pos = $courses->filter(function($course){
+            if(str_contains($course->nomcur, "Doutorado") or str_contains($course->nomcur, "Mestrado")){
+                return true;
+            }else{
+                return false;
+            }
+        });
+        $grad = $courses->filter(function($course){
+            if(!str_contains($course->nomcur, "Doutorado") and !str_contains($course->nomcur, "Mestrado")){
+                return true;
+            }else{
+                return false;
+            }
+        });
+        $label = "Dos ".$tutors->count()." monitores ";
+        if($tutors->count()!=$courses->count()){
+            $label .= "foi possível encontrar o curso de ".$courses->count()." deles, onde ";
+        }
+        if($grad and !$pos){
+            $label .= "todos são alunos de graduação. ";
+        }elseif(!$grad and $pos){
+            $label .= "todos são alunos de pós graduação. ";
+        }else{
+            $label .= $grad->count()." são alunos de graduação e ".$pos->count()." são alunos de pós-graduação. ";
+        }
 
-@if(\Storage::disk("local")->has("graphs/monitorias_pie_".$schoolterm->year.$schoolterm->period[0].".jpg"))
+        if($grad){
+            $grad_grouped_by_course = $grad->groupBy(["nomcur"])->map(function($group){return collect($group)->count();})->sort()->reverse();
+            $label .= "Os monitores alunos de graduação ". ( $grad_grouped_by_course->count() > 1 ? "estão distribuidos em ".$grad_grouped_by_course->count()." cursos em que os mais frequentes são " : "são do curso " );
+            $i = min(2, $grad_grouped_by_course->count()-1);
+            $first = true;
+            foreach($grad_grouped_by_course as $nomcur=>$n){
+                if(!$first){
+                    if($i!=0){
+                        $label .= ", ";
+                    }else{
+                        $label .= " e ";
+                    }
+                }
+                $label .= $nomcur." com ".$n.( $n > 1 ? " monitores" : " monitor");
+                $first = false;
+                if($i == 0){
+                    $label .= ". ";
+                    break;
+                }else{
+                    $i -= 1;
+                }
+            }
+        }
+        if($pos){
+            $pos_grouped_by_course = $pos->groupBy(["nomcur"])->map(function($group){return collect($group)->count();})->sort()->reverse();
+            $label .= "Os monitores alunos de pós-graduação ". ( $pos_grouped_by_course->count() > 1 ? "estão distribuidos em ".$pos_grouped_by_course->count()." cursos em que os mais frequentes são " : "são do curso " );
+            $i = min(2, $pos_grouped_by_course->count()-1);
+            $first = true;
+            foreach($pos_grouped_by_course as $nomcur=>$n){
+                if(!$first){
+                    if($i!=0){
+                        $label .= ", ";
+                    }else{
+                        $label .= " e ";
+                    }
+                }
+                $label .= $nomcur." com ".$n.( $n > 1 ? " monitores" : " monitor");
+                $first = false;
+                if($i == 0){
+                    $label .= ". ";
+                    break;
+                }else{
+                    $i -= 1;
+                }
+            }
+        }
+    @endphp
+   {!! $label !!}
 
-O gráfico de pizza abaixo mostra a proporção de Graduandos e Pós-Graduandos do IME e de outras unidades.
-    \begin{figure}[H]
-    \includegraphics[scale=0.6]{{!! base_path() . "/storage/app/graphs/monitorias_pie_".$schoolterm->year.$schoolterm->period[0].".jpg" !!}}
-    \end{figure}
+    @if(\Storage::disk("local")->has("graphs/monitorias_pie_".$schoolterm->year.$schoolterm->period[0].".jpg"))
+        \begin{figure}[H]
+        \includegraphics[scale=0.6]{{!! base_path() . "/storage/app/graphs/monitorias_pie_".$schoolterm->year.$schoolterm->period[0].".jpg" !!}}
+        \end{figure}
+    @endif
 @endif
+
 
 @if(\Storage::disk("local")->has("graphs/monitorias_por_departamento.jpg"))
 

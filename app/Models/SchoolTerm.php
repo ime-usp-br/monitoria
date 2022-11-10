@@ -4,14 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
 use App\Models\SchoolClass;
 use App\Models\SchoolRecord;
 use App\Models\Course;
+use App\Models\Selection;
 use Carbon\Carbon;
 
 class SchoolTerm extends Model
 {
     use HasFactory;
+    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
     protected $fillable = [
         'year',
@@ -133,6 +136,29 @@ class SchoolTerm extends Model
     public function courses()
     {
         return $this->hasMany(Course::class);
+    }
+
+    public function selections()
+    {
+        return $this->hasManyThrough(Selection::class, SchoolClass::class);
+    }
+
+    public function tutors()
+    {
+        return $this->hasManyDeepFromRelations($this->selections(), (new Selection())->student())->where("selections.sitatl","!=","Desligado");
+    }
+
+    public function getTutorsCourses()
+    {
+        $courses = [];
+        foreach($this->tutors as $tutor){
+            $course = $tutor->courses()->whereBelongsTo($this)->first();
+            if($course){
+                array_push($courses, $tutor->courses()->whereBelongsTo($this)->first());
+            }
+        }
+        return new Collection($courses);
+
     }
 
     public static function isRequisitionPeriod()
