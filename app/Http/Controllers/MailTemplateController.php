@@ -202,7 +202,7 @@ class MailTemplateController extends Controller
 
     public function test(TestMailTemplateRequest $request)
     {
-        if(!Gate::allows('Editar E-mails')){
+        if(!Gate::allows('Disparar emails')){
             abort(403);
         }
 

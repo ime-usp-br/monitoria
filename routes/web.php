@@ -72,7 +72,14 @@ Route::resource('selections', SelectionController::class);
 Route::get('/monitor/getimportschoolclassesjob', [MonitorController::class, 'getImportSchoolClassesJob']);
 
 Route::get('/emails', [EmailController::class, 'index'])->name('emails.index');
-Route::post('/emails/dispatch', [EmailController::class, 'dispatchForAll'])->name('emails.dispatch');
+Route::get('/emails/selections', [EmailController::class, 'indexSelections'])->name('emails.indexSelections');
+Route::get('/emails/attendanceRecords', [EmailController::class, 'indexAttendanceRecords'])->name('emails.indexAttendanceRecords');
+Route::get('/emails/selfEvaluations', [EmailController::class, 'indexSelfEvaluations'])->name('emails.indexSelfEvaluations');
+Route::get('/emails/instructorEvaluations', [EmailController::class, 'indexInstructorEvaluations'])->name('emails.indexInstructorEvaluations');
+Route::post('/emails/triggerSelections', [EmailController::class, 'triggerSelections'])->name('emails.triggerSelections');
+Route::post('/emails/triggerAttendanceRecords', [EmailController::class, 'triggerAttendanceRecords'])->name('emails.triggerAttendanceRecords');
+Route::post('/emails/triggerSelfEvaluations', [EmailController::class, 'triggerSelfEvaluations'])->name('emails.triggerSelfEvaluations');
+Route::post('/emails/triggerInstructorEvaluations', [EmailController::class, 'triggerInstructorEvaluations'])->name('emails.triggerInstructorEvaluations');
 
 Route::get('/frequencies/{schoolclass}/{tutor}', [FrequencyController::class, 'show'])->name('frequencies.show');
 Route::get('frequencies/{frequency}', [FrequencyController::class,"update"])->name('frequencies.update');

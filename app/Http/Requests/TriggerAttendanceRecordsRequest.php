@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DispatchEmailsRequest extends FormRequest
+class TriggerAttendanceRecordsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,8 @@ class DispatchEmailsRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'school_classes_id' => 'required|array',
-            'school_classes_id.*' => 'required|numeric',
+            'frequencies_id' => 'required|array',
+            'frequencies_id.*' => 'required|numeric',
         ];
 
         return $rules;
