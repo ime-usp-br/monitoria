@@ -131,6 +131,14 @@ class MailTemplateController extends Controller
             Session::flash('alert-warning', 'Já existe um modelo com esse nome.');
             return back();
         }
+        
+        if(MailTemplate::where("mail_class", $validated["mail_class"])
+                ->where("id","!=", $mailtemplate->id)
+                ->where("active",true)->where("sending_frequency", "Manual")->exists() and
+                $validated["sending_frequency"] == "Manual"){
+            Session::flash('alert-warning', 'Já existe um modelo ativo com essa aplicação para disparo manual.');
+            return back();
+        }
 
         if($validated["sending_frequency"]=="Manual"){
             $validated["sending_date"] = null;
