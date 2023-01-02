@@ -20,7 +20,7 @@
                         <select id="periodoId" name="periodoId" class="custom-form-control">
                                 <option value="" selected></option>
                             @foreach(App\Models\SchoolTerm::all()->sortBy(["year","period"])->reverse() as $st)
-                                <option value={{ $schoolterm->id }}>{{ $schoolterm->year . " " . $schoolterm->period }}</option>
+                                <option value={{ $st->id }}>{{ $st->year . " " . $st->period }}</option>
                             @endforeach
                         </select>
                     </div>

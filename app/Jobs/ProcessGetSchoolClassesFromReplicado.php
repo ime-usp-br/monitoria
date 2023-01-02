@@ -58,7 +58,8 @@ class ProcessGetSchoolClassesFromReplicado implements ShouldQueue
                 $schoolclass->save();
         
                 foreach($turma['instructors'] as $instructor){
-                    $schoolclass->instructors()->attach(Instructor::firstOrCreate(Instructor::getFromReplicadoByCodpes($instructor["codpes"])));
+                    $docente = Instructor::getFromReplicadoByCodpes($instructor["codpes"]);
+                    $schoolclass->instructors()->attach(Instructor::updateOrCreate(["nompes"=>$docente["nompes"],"codpes"=>$docente["codpes"]],["codema"=>$docente["codema"],"department_id"=>$docente["department_id"]]));
                 }
         
                 foreach($turma['class_schedules'] as $classSchedule){
