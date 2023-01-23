@@ -47,7 +47,7 @@
                             <td class="text-center">
                                 <form method="POST" action="{{ route('schoolrecords.download') }}" target="_blank">
                                     @csrf
-                                    <input type='hidden' name='path' value="{{ $inscricao->student->getSchoolRecordFromOpenSchoolTerm() }}">
+                                    <input type='hidden' name='path' value="{{ $inscricao->student->getSchoolRecordFromOpenSchoolTerm()->file_path }}">
                                     <button class="btn btn-link"
                                         data-toggle="tooltip" data-placement="top"
                                         title="Download"

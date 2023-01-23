@@ -91,7 +91,7 @@ class Student extends Model
         $record = $this->schoolrecords()->whereHas('schoolterm', function($query){
                         $query->where('status','=', 'Aberto');
                     })->first();
-        return $record ? $record->file_path : "";
+        return $record;
     }
 
     public function hasEnrollmentInEnrollmentPeriod()
