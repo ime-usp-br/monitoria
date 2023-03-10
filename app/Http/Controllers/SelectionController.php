@@ -278,6 +278,8 @@ class SelectionController extends Controller
         ]);
 
         $validated['enrollment_id'] = $inscricao->id;
+        
+        $validated['sitatl'] = "Ativo";
 
         $validated['requisition_id'] = SchoolClass::where(['id'=>$validated['school_class_id']])->first()->requisition->id;
 
