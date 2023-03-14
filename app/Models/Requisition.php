@@ -19,6 +19,7 @@ class Requisition extends Model
         'school_class_id',
         'requested_number',
         'priority',
+        'comments',
     ];
 
     public function instructor(){
@@ -41,6 +42,17 @@ class Requisition extends Model
     public function selections()
     {
         return $this->hasMany(Selection::class);
+    }
+
+    public function others_scholarships()
+    {
+        return $this->morphToMany(
+            Scholarship::class,
+            'model',
+            'model_has_scholarships',
+            'model_id',
+            'scholarship_id',
+        );
     }
 
     public function isStudentRecommended(Student $student)

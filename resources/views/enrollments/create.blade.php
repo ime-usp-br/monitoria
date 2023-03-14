@@ -4,13 +4,13 @@
 
 @section('content')
 @parent
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-12">
-            <h1 class='h5 font-weight-bold my-3 text-center'>
+        <div class="col-12">
+            <h1 class='text-center'>
                 Concurso Interno de Monitores<br>
                 Ficha de Inscrição
-            </h1>
+            </h3>
 
             <form method="POST"
                 action="{{ route('enrollments.store') }}"

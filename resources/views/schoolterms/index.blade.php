@@ -4,13 +4,13 @@
 
 @section('content')
 @parent
-<div class="container">
-    <div class="row justify-content-center">
+<div id="layout_conteudo">
+    <div class="justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Período Letivo</h1>
 
             <p class="text-right">
-                <a class="btn btn-primary" href="{{ route('schoolterms.create') }}">
+                <a class="btn btn-outline-primary" href="{{ route('schoolterms.create') }}">
                     <i class="fas fa-plus-circle"></i>
                     Cadastrar período letivo
                 </a>
@@ -23,15 +23,16 @@
                         <th>Ano</th>
                         <th>Período</th>
                         <th>Estado</th>
-                        <th>Período de avaliação</th>
-                        <th>Maxímo de inscrições por aluno</th>
+                        <th>Maxímo de<br> inscrições por<br> aluno</th>
                         <th>Edital</th>
                         <th>Data inícial</th>
                         <th>Data final</th>
-                        <th>Data inicial dos pedidos pelos docentes</th>
-                        <th>Data final dos pedidos pelos docentes</th>
-                        <th>Data inicial das inscrições pelos alunos</th>
-                        <th>Data final das inscrições pelos alunos</th>
+                        <th>Data inícial<br> de avaliação</th>
+                        <th>Data final<br> de avaliação</th>
+                        <th>Data inicial<br> dos pedidos<br> pelos docentes</th>
+                        <th>Data final<br> dos pedidos<br> pelos docentes</th>
+                        <th>Data inicial<br> das inscrições<br> pelos alunos</th>
+                        <th>Data final<br> das inscrições<br> pelos alunos</th>
                         <th></th>
                     </tr>
 
@@ -40,7 +41,6 @@
                             <td>{{ $periodo->year }}</td>
                             <td style="white-space: nowrap;">{{ $periodo->period }}</td>
                             <td>{{ $periodo->status }}</td>
-                            <td>{{ $periodo->evaluation_period }}</td>
                             <td>{{ $periodo->max_enrollments }}</td>
                             <td>
                                 <form method="POST" action="{{ route('schoolterms.download') }}" target="_blank">
@@ -56,6 +56,8 @@
                             </td>
                             <td>{{ $periodo->started_at }}</td>
                             <td>{{ $periodo->finished_at }}</td>
+                            <td>{{ $periodo->start_date_evaluations }}</td>
+                            <td>{{ $periodo->end_date_evaluations }}</td>
                             <td>{{ $periodo->start_date_requisitions }}</td>
                             <td>{{ $periodo->end_date_requisitions }}</td>
                             <td>{{ $periodo->start_date_enrollments }}</td>

@@ -13,7 +13,11 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "romanzipp/laravel-queue-monitor": "^2.3",
-        "uspdev/laravel-usp-theme": "^2.4",
+        "staudenmeir/belongs-to-through": "^2.5",
+        "staudenmeir/eloquent-has-many-deep": "^1.7",
+        "symfony/process": "^5.4",
+        "tijsverkoyen/css-to-inline-styles": "^2.2",
+        "uspdev/laravel-usp-theme": "dev-master",
         "uspdev/replicado": "^1.10",
         "uspdev/senhaunica-socialite": "^4.3"
     },
@@ -64,5 +68,11 @@
         "sort-packages": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ayrtonnotrya/laravel-usp-theme.git"
+        }
+    ]
 }

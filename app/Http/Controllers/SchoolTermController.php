@@ -24,8 +24,7 @@ class SchoolTermController extends Controller
             abort(403);
         }
 
-        $periodos = SchoolTerm::orderBy('year')
-        ->orderBy('period')->get();
+        $periodos = SchoolTerm::all()->sortBy(["year","period"])->reverse();
 
         return view('schoolterms.index', compact('periodos'));
     }
@@ -131,7 +130,9 @@ class SchoolTermController extends Controller
             }
         }
 
-        $validated['public_notice_file_path'] = $validated['public_notice']->store($validated['year'] . $validated['period'][0]);
+        if(in_array("public_notice",array_keys($validated))){
+            $validated['public_notice_file_path'] = $validated['public_notice']->store($validated['year'] . $validated['period'][0]);
+        }
 
         $schoolterm->update($validated);
 

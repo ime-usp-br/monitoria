@@ -12,6 +12,7 @@ use App\Models\Instructor;
 use App\Models\Activity;
 use App\Models\Recommendation;
 use App\Models\Student;
+use App\Models\Scholarship;
 use Illuminate\Support\Facades\Gate;
 use Auth;
 use Session;
@@ -25,9 +26,20 @@ class RequisitionController extends Controller
      */
     public function index()
     {
-        if(!Gate::allows('visualizar solicitação de monitor')){
+        if(!Auth::user()){
+            return redirect('/login');
+        }elseif(!Auth::user()->hasRole('Docente')){
             abort(403);
-        }
+        }elseif(!SchoolTerm::getOpenSchoolTerm()){
+            Session::flash('alert-warning', 'Período letivo fechado');
+            return redirect('/');
+        }elseif(!SchoolTerm::isRequisitionPeriod()){
+            Session::flash('alert-warning', 'Período de solicitação de monitores encerrado');
+            return redirect('/');
+        }elseif(SchoolTerm::getOpenSchoolTerm()->id != SchoolTerm::getSchoolTermInEnrollmentPeriod()->id){
+            Session::flash('alert-warning', 'Período letivo aberto é diferente do periodo letivo com solicitação de monitores abertas, favor informar a secretaria de monitoria.');
+            return redirect('/');
+        } 
 
         $turmas = SchoolClass::whereInRequisitionPeriod()->whereHas('instructors', function($query) { 
             $query->where('instructors.codpes', Auth::user()->codpes); 
@@ -53,7 +65,7 @@ class RequisitionController extends Controller
         $turma = SchoolClass::find($validated['school_class_id']);
 
         if($turma->isInstructor(Auth::user()->codpes)){
-            if($turma->isSchoolTermOpen()){
+            if($turma->isRequisitionPeriod()){
                 return view('requisitions.create', compact('turma'));
             }else{
                 Session::flash('alert-warning', 'Período de solicitação de monitores encerrado');
@@ -84,6 +96,9 @@ class RequisitionController extends Controller
         $recommendations = array_key_exists('recommendations', $validated) ? $validated['recommendations'] : [];
         unset($validated['recommendations']);
 
+        $scholarships = array_key_exists('scholarships', $validated) ? $validated['scholarships'] : [];
+        unset($validated['scholarships']);
+
         $validated['instructor_id'] = Instructor::where(['codpes'=>Auth::user()->codpes])->first()->id;
 
         $requisition = Requisition::create($validated);
@@ -97,6 +112,10 @@ class RequisitionController extends Controller
                 'student_id'=>Student::firstOrCreate(Student::getFromReplicadoByCodpes($recommendation['codpes']))->id,
                 'requisition_id'=>$requisition->id
             ]);
+        }
+
+        foreach($scholarships as $scholarship_id){
+            $requisition->others_scholarships()->attach(Scholarship::find($scholarship_id));
         }
 
         return redirect('/requisitions');
@@ -127,7 +146,7 @@ class RequisitionController extends Controller
 
         $turma = $requisition->schoolclass;
         if($turma->isInstructor(Auth::user()->codpes)){
-            if($turma->isSchoolTermOpen()){
+            if($turma->isRequisitionPeriod()){
                 return view('requisitions.edit', compact('turma'));
             }else{
                 Session::flash('alert-warning', 'Período de solicitação de monitores encerrado');
@@ -160,6 +179,9 @@ class RequisitionController extends Controller
         $recommendations = array_key_exists('recommendations', $validated) ? $validated['recommendations'] : [];
         unset($validated['recommendations']);
 
+        $scholarships = array_key_exists('scholarships', $validated) ? $validated['scholarships'] : [];
+        unset($validated['scholarships']);
+
         $requisition->activities()->detach();
         foreach($activities as $act){
             $requisition->activities()->attach(Activity::firstOrCreate(['description'=>$act]));
@@ -173,6 +195,11 @@ class RequisitionController extends Controller
             ]);
         }
 
+        $requisition->others_scholarships()->detach();
+        foreach($scholarships as $scholarship_id){
+            $requisition->others_scholarships()->attach(Scholarship::find($scholarship_id));
+        }
+        
         $requisition->update($validated);
 
         return redirect('/requisitions');

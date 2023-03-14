@@ -5,10 +5,10 @@
 @section('content')
 @parent
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-12">
-            <h1 class='h5 font-weight-bold my-3'>Cadastrar período letivo</h1>
+        <div class="col-12">
+            <h1 class='text-center'>Cadastrar Período Letivo</h1>
 
             <p class="alert alert-info rounded-0">
                 <b>Atenção:</b>

@@ -1,53 +1,53 @@
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-4 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label for="codtur">Código da Turma {{ $buttonText === "Cadastrar" ? "*":"" }}</label>
     </div>
-    <div class="col-12 col-md-5">
-        <input class="custom-form-control" type="text" name="codtur" id="codtur"
+    <div class="col-12 col-md-6">
+        <input class="custom-form-control" style="max-width:200px;" type="text" name="codtur" id="codtur"
             value="{{ old('codtur') ?? $turma->codtur ?? ''}}"" {{ $buttonText === "Editar" ? "disabled":"" }}
         />
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-4 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label for="coddis">Código da Disciplina {{ $buttonText === "Cadastrar" ? "*":"" }}</label>
     </div>
-    <div class="col-12 col-md-5">
-        <input class="custom-form-control" type="text" name="coddis" id="coddis"
+    <div class="col-12 col-md-6">
+        <input class="custom-form-control" style="max-width:200px;" type="text" name="coddis" id="coddis"
             value="{{ old('coddis') ?? $turma->coddis ?? ''}}" {{ $buttonText === "Editar" ? "disabled":"" }}
         />
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-4 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label for="nomdis">Nome da Disciplina {{ $buttonText === "Cadastrar" ? "*":"" }}</label>
     </div>
-    <div class="col-12 col-md-5">
-        <input class="custom-form-control" type="text" name="nomdis" id="nomdis"
+    <div class="col-12 col-md-6">
+        <input class="custom-form-control" style="max-width:520px;" type="text" name="nomdis" id="nomdis"
             value="{{ old('nomdis') ?? $turma->nomdis ?? ''}}" {{ $buttonText === "Editar" ? "disabled":"" }}
         />
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-4 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label for="tiptur">Tipo da Turma {{ $buttonText === "Cadastrar" ? "*":"" }}</label>
     </div>
-    <div class="col-12 col-md-5">
-        <input class="custom-form-control" type="text" name="tiptur" id="tiptur"
+    <div class="col-12 col-md-6">
+        <input class="custom-form-control" style="max-width:200px;" type="text" name="tiptur" id="tiptur"
             value="{{ old('tiptur') ?? $turma->tiptur ?? ''}}" {{ $buttonText === "Editar" ? "disabled":"" }}
         />
     </div>
 </div>
 @if ($buttonText === "Cadastrar")
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-4 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label for="department_id" >Departamento *</label>
     </div>
-    <div class="col-12 col-md-5">        
-        <select id="department_id" name="department_id" class="custom-form-control">
+    <div class="col-12 col-md-6">        
+        <select id="department_id" name="department_id" class="custom-form-control" style="max-width:520px;">
                 <option value="" {{ old('department_id') ? '' : 'selected'}}></option>
             @foreach(App\Models\Department::where('sglund', 'IME')->get() as $department)
                 <option value={{ $department->id }} {{ old('department_id') == $department->id ? 'selected' : ''}}>Departamento de {{ $department->nomset }}</option>
@@ -56,11 +56,11 @@
     </div>
 </div>
 @endif
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-4 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label >Horários</label>
     </div>
-    <div class="col-12 col-md-5">
+    <div class="col-12 col-md-6">
         <span id="count-classSchedule" value=0>
         @foreach($turma->classschedules as $horario)
             <div id="horario-{{ $horario->id }}">
@@ -98,11 +98,11 @@
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-4 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label >Prof(a)</label>
     </div>
-    <div class="col-12 col-md-5">
+    <div class="col-12 col-md-6">
         @foreach($turma->instructors as $instrutor)
             <div id="instrutor-{{ $instrutor->id }}">
                 <input id="instrutores[{{$instrutor->id}}][codpes]" name="instrutores[{{$instrutor->id}}][codpes]" type="hidden" value="{{ $instrutor->codpes }}">
@@ -137,26 +137,26 @@
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-4 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label for="dtainitur">Início *</label>
     </div>
 
-    <div class="col-12 col-md-5">
-        <input class="custom-form-control custom-datepicker"
+    <div class="col-12 col-md-6" style="white-space: nowrap;">
+        <input class="custom-form-control custom-datepicker" style="max-width:200px;"
             type="text" name="dtainitur" id="dtainitur" autocomplete="off"
             value="{{ old('dtainitur') ?? $turma->dtainitur ?? ''}}"
         />
     </div>
 </div>
 
-<div class="row custom-form-group align-items-center">
-    <div class="col-12 col-lg-4 text-lg-right">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-12 col-md-6 text-md-right">
         <label for="dtafimtur">Fim *</label>
     </div>
 
-    <div class="col-12 col-md-5">
-        <input class="custom-form-control custom-datepicker"
+    <div class="col-12 col-md-6" style="white-space: nowrap;">
+        <input class="custom-form-control custom-datepicker" style="max-width:200px;"
             type="text" name="dtafimtur" id="dtafimtur" autocomplete="off"
             value="{{ old('dtafimtur') ?? $turma->dtafimtur ?? ''}}"
         />
@@ -164,12 +164,13 @@
 </div>
 
 
-<div class="row">
-    <div class="col-4 d-none d-lg-block"></div>
-    <div class="col-md-12 col-lg-6">
+<div class="row custom-form-group justify-content-center">
+    <div class="col-sm-6 text-center text-sm-right my-1">
         <button type="submit" class="btn btn-outline-dark">
             {{ $buttonText }}
         </button>
+    </div>
+    <div class="col-sm-6 text-center text-sm-left my-1">
         <a class="btn btn-outline-dark"
             href="{{ route('schoolclasses.index') }}"
         >

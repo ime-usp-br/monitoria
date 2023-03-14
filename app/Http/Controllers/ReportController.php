@@ -7,6 +7,7 @@ use Ismaelw\LaraTeX\LaraTeX;
 use App\Models\SchoolTerm;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\MakeReportRequest;
+use Symfony\Component\Process\Process;
 
 class ReportController extends Controller
 {
@@ -26,6 +27,9 @@ class ReportController extends Controller
         }
 
         $validated = $request->validated();
+
+        $p = new Process([env("PYTHON_CMD", "/usr/bin/python3"), base_path()."/app/Scripts/Python/create_graphs.py", $validated['periodoId']]);
+        $p->run();
 
         return (new LaraTeX('reports.latex'))->with([
             'schoolterm' => SchoolTerm::find($validated['periodoId']),

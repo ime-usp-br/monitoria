@@ -59,8 +59,9 @@ table.ui-datepicker-calendar {border-collapse: separate;}
 }
 
 input[type=file].custom-form-input::file-selector-button {
-  background-color: #007bff;
-	color: white;
+  border-color:  #007bff;
+  background-color: white;
+	color: #007bff;
   display: inline-block;
   font-weight: 400;
   text-align: center;
@@ -69,7 +70,7 @@ input[type=file].custom-form-input::file-selector-button {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  border: 1px solid transparent;
+  border: 1px solid;
   padding: 0.375rem 0.75rem;
   font-size: 1rem;
   line-height: 1.5;
@@ -101,9 +102,9 @@ input[type=file].custom-form-input2:hover::file-selector-button {
 }  
 
 input[type=file].custom-form-input:hover::file-selector-button {
-  background-color: #0069d9;
-  border-color: #0062cc;
-	color: white;
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
 }  
 
 .ui-progressbar {
@@ -125,3 +126,59 @@ table th {
 .table td, .table th {
   vertical-align: middle;
 } 
+
+.ui-menu .ui-menu-item-wrapper{
+  padding:5px;
+}
+
+.ui-menu .ui-state-active{
+  background-color:#D6D6D6;
+  border-width:0px;
+  border-color:#7D7D7D;
+  border-style:solid;
+  font:normal 10px Verdana;
+  color:#000000;
+  text-decoration:none;	
+  cursor:pointer;cursor:hand;
+}
+
+#layout_menu {
+	width: 170px;
+	float: left;
+	padding-top: 10px;
+}
+
+#layout_conteudo {
+  padding-top: 10px;
+  overflow:auto;
+}
+
+#my_web_cabecalho {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	text-align: left;
+	width: 90%;
+	border-bottom: solid;
+	border-bottom-width: thin;
+	border-bottom-color: #666666;
+	padding-bottom: 4px;
+	margin-bottom: 4px;
+}
+
+#my_web_cabecalho_descricao {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	padding-bottom: 10px;
+}
+
+.ui-datepicker-trigger{
+  right: 25px;
+  position: relative;
+  
+}
+
+@media (max-width: 992px) {
+  .lg-pb-3 {
+    padding-bottom: 1rem !important;
+  }
+}

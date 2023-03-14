@@ -4,14 +4,14 @@
 
 @section('content')
 @parent
-<div class="container">
-    <div class="row justify-content-center">
+<div id="layout_conteudo">
+    <div class="justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Solicitações de Monitores</h1>
             <h4 class='text-center mb-5'>{{ $docente->getPronountreatment() . $docente->nompes }}</h4>
 
             <p class="text-right">
-                <a class="btn btn-primary"
+                <a class="btn btn-outline-primary"
                     data-toggle="tooltip" data-placement="top"
                     title="Voltar"
                     href="{{ route('instructors.index') }}"
@@ -22,7 +22,7 @@
             </p>
 
             @if (count($docente->getRequests()) > 0)
-                <table class="table table-bordered table-striped table-hover" style="font-size:10px;">
+                <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
                     <tr class="text-center">
                         <th>Sigla da Disciplina</th>
                         <th>Código da Turma</th>
@@ -31,6 +31,7 @@
                         <th>Atividades atribuidas</th>
                         <th>Prioridade</th>
                         <th>Alunos indicados</th>
+                        <th>Comentários</th>
                         <th>Inscritos</th>
                         <th>Monitores eleitos</th>
                     </tr>
@@ -54,6 +55,7 @@
                                     @endforeach
                                 @endif
                             </td>
+                            <td class="text-left">{!! $solicitacao->comments !!}</td>
                             <td class="text-center">
                                 @if($solicitacao->schoolclass->enrollments()->exists())
                                     <a href="{{ route('schoolclasses.enrollments', $solicitacao->schoolclass) }}" class="btn btn-outline-dark btn-sm">Inscritos</a>

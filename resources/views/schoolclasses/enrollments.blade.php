@@ -4,8 +4,8 @@
 
 @section('content')
 @parent
-<div class="container">
-    <div class="row justify-content-center">
+<div id="layout_conteudo">
+    <div class="justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Alunos Inscritos</h1>
             <h2 class='text-center mb-5'>
@@ -16,7 +16,7 @@
             </h4>
 
             <p class="text-right">
-                <a class="btn btn-primary"
+                <a class="btn btn-outline-primary"
                     data-toggle="tooltip" data-placement="top"
                     title="Voltar"
                     href="{{ url()->previous() }}"
@@ -45,16 +45,20 @@
                             <td class="text-center">{{ $inscricao->student->codpes }}</td>
                             <td style="white-space: nowrap;">{{ $inscricao->student->nompes }}</td>
                             <td class="text-center">
-                                <form method="POST" action="{{ route('schoolrecords.download') }}" target="_blank">
-                                    @csrf
-                                    <input type='hidden' name='path' value="{{ $inscricao->student->getSchoolRecordFromOpenSchoolTerm()->file_path }}">
-                                    <button class="btn btn-link"
-                                        data-toggle="tooltip" data-placement="top"
-                                        title="Download"
-                                    >
-                                        Download
-                                    </button>
-                                </form>                            
+                                @if($inscricao->student->schoolrecords()->whereBelongsTo($inscricao->schoolclass->schoolterm)->first())
+                                    <form method="POST" action="{{ route('schoolrecords.download') }}" target="_blank">
+                                        @csrf
+                                        <input type='hidden' name='path' value="{{ $inscricao->student->schoolrecords()->whereBelongsTo($inscricao->schoolclass->schoolterm)->first()->file_path }}">
+                                        <button class="btn btn-link"
+                                            data-toggle="tooltip" data-placement="top"
+                                            title="Download"
+                                        >
+                                            Download
+                                        </button>
+                                    </form> 
+                                @else
+                                    Não Encontrado
+                                @endif                           
                             </td>
                             <td class="text-center">{{ $inscricao->disponibilidade_diurno ? 'Sim' : 'Não'}}</td>
                             <td class="text-center">{{ $inscricao->disponibilidade_noturno ? 'Sim' : 'Não'}}</td>

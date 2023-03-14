@@ -4,24 +4,19 @@
 
 @section('content')
 @parent
-<div class="container">
-    <div class="row justify-content-center">
+<div id="layout_conteudo">
+    <div class="justify-content-center">
         <div class="col-md-12">
-            <h1 class='text-center mb-5'>Turmas com inscrições abertas</h1>
+            <h1 class='text-center mb-5'>Disciplinas com inscrições abertas</h1>
 
             @if (count($turmas) > 0)
-
-                <p class="alert alert-info rounded-0">
-                    <b>Atenção:</b>
-                    O período de solicitação de monitores está aberto, portanto, você pode se inscrever em turmas sem vagas.
-                </p>
 
                 <form method='post' action="{{ route('schoolRecords.update', $estudante->getSchoolRecordFromOpenSchoolTerm()) }}" enctype='multipart/form-data' >
                     @csrf
                     @method('patch')
                     <div class="text-right" style="height: 50px;">
                         <input  class="custom-form-input" type='file' name='file' >
-                        <button class="btn btn-primary" type='submit' name='submit' >
+                        <button class="btn btn-outline-primary" type='submit' name='submit' >
                             <i class="fas fa-file-upload"></i>
                             Reenviar histórico escolar
                         </button>
@@ -31,41 +26,20 @@
                 <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
                     <tr>
                         <th>Sigla da Disciplina</th>
-                        <th>Código da Turma</th>
                         <th>Nome da Disciplina</th>
                         <th>Departamento</th>
-                        <th>Tipo da Turma</th>
-                        <th>Horários</th>
-                        <th>Prof(a)</th>
-                        <th>Vagas</th>
                         <th>Inscrito</th>
                         <th></th>
                     </tr>
 
-                    @foreach($turmas as $turma)
+                    @foreach($turmas->pluck("coddis")->unique()->toArray() as $coddis)
+                        @php
+                            $turma = $turmas->where("coddis", $coddis)->first();
+                        @endphp
                         <tr style="font-size:12px;">
-                            <td>{{ $turma->coddis }}</td>
-                            <td>{{ $turma->codtur }}</td>
+                            <td style="text-align: center">{{ $turma->coddis }}</td>
                             <td>{{ $turma->nomdis }}</td>
-                            <td style="text-align: center">{{ $turma->department->nomabvset }}</td>
-                            <td>{{ $turma->tiptur }}</td>
-                            <td style="white-space: nowrap;">
-                                @foreach($turma->classschedules as $horario)
-                                    {{ $horario->diasmnocp . ' ' . $horario->horent . ' ' . $horario->horsai }} <br/>
-                                @endforeach
-                            </td>
-                            <td style="white-space: nowrap;">
-                                @foreach($turma->instructors as $instrutor)
-                                    {{ $instrutor->nompes }} <br/>
-                                @endforeach
-                            </td>
-                            <td class="text-center">
-                                @if($turma->requisition)
-                                    {{ $turma->requisition->requested_number }}
-                                @else
-                                    0
-                                @endif
-                            </td>
+                            <td style="text-align: center">{{ $turma->department->nomabvset == "450" ? "Interdepartamental" : $turma->department->nomabvset }}</td>
                             @if($turma->isStudentEnrolled($estudante))
                                 <td style="text-align: center">Sim</td>
                                 <td >

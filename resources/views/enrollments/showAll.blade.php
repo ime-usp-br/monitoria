@@ -4,12 +4,26 @@
 
 @section('content')
 @parent
-<div class="container">
-    <div class="row justify-content-center">
+<div id="layout_conteudo">
+    <div class="justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Alunos Inscritos</h1>
 
             <h4 class='text-center mb-5'>{{ $schoolterm->period . ' de ' . $schoolterm->year }}</h4>
+
+
+            @include('enrollments.modals.chooseSchoolTerm')
+
+            <p class="text-right">
+                <a  id="btn-chooseSchoolTermModal"
+                    class="btn btn-outline-primary"
+                    data-toggle="modal"
+                    data-target="#chooseSchoolTermModal"
+                    title="Escolher Semestre" 
+                >
+                    Escolher Semestre
+                </a>
+            </p>
 
             @if (count($alunos) > 0)
 
@@ -19,10 +33,11 @@
                         <th>Nome</th>
                         <th>E-mail</th>
                         <th>Histórico Escolar</th>
-                        <th>Inscrito nas Turmas</th>
+                        <th>Inscrito nas Disciplinas</th>
                         <th>Disponibilidade de dia</th>
                         <th>Disponibilidade de noite</th>
                         <th>Preferência pelo período</th>
+                        <th>Outras<br>Bolsas</th>
                         <th>Telefone</th>
                     </tr>
 
@@ -44,12 +59,13 @@
                                 </form> 
                             </td>
                             <td style="white-space: nowrap;text-align: center">
-                                @foreach($aluno->enrollments()->whereHas("schoolclass", function($query)use($schoolterm){$query->whereBelongsTo($schoolterm);})->get() as $inscricao)
-                                    @if($inscricao->schoolclass->requisition()->exists())
-                                        <a href="{{ route('selections.enrollments', $inscricao->schoolclass) }}">{{ $inscricao->schoolclass->coddis." T.".substr($inscricao->schoolclass->codtur,-2,2) }}</a> <br/>
-                                    @else
-                                        {{ $inscricao->schoolclass->coddis." T.".substr($inscricao->schoolclass->codtur,-2,2) }} <br/>
-                                    @endif
+                                @php
+                                    $disciplines = App\Models\SchoolClass::whereBelongsTo($schoolterm)->whereHas("enrollments",function($query)use($aluno){
+                                        $query->whereBelongsTo($aluno);
+                                    })->pluck("coddis")->unique()->toArray();
+                                @endphp
+                                @foreach($disciplines as $coddis)
+                                    {{ $coddis }} <br/>
                                 @endforeach
                             </td>
                             @php
@@ -81,6 +97,19 @@
                                 @else
                                     {!! $pref_hor_array[0] !!}
                                 @endif
+                            </td>
+                            <td class="text-left" style="white-space: nowrap;">
+                                @php
+                                $enrollments = $aluno->enrollments()->whereHas("schoolclass", function($query)use($schoolterm){$query->whereBelongsTo($schoolterm);})->get();
+                                $scholarships = [];
+                                foreach($enrollments as $enrollment){
+                                    $scholarships = array_merge($scholarships,$enrollment->others_scholarships->pluck("name")->toArray());
+                                }
+                                $scholarships = array_unique($scholarships);
+                                @endphp
+                                @foreach($scholarships as $scholarship)
+                                    {{ $scholarship }} <br/>
+                                @endforeach
                             </td>
                             <td style="white-space: nowrap;">
                                 @foreach($aluno->getTelefonesFromReplicado() as $tel)
