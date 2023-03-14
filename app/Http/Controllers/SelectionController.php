@@ -50,7 +50,7 @@ class SelectionController extends Controller
                 return $q->whereBelongsTo($departamento)->whereBelongsTo($schoolterm);})->get();
         }
 
-        return view('selections.index', compact('solicitacoes'));
+        return view('selections.index', compact(['solicitacoes','schoolterm']));
     }
 
     /**

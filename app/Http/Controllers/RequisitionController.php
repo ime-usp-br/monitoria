@@ -26,9 +26,20 @@ class RequisitionController extends Controller
      */
     public function index()
     {
-        if(!Gate::allows('visualizar solicitação de monitor')){
+        if(!Auth::user()){
+            return redirect('/login');
+        }elseif(!Auth::user()->hasRole('Docente')){
             abort(403);
-        }
+        }elseif(!SchoolTerm::getOpenSchoolTerm()){
+            Session::flash('alert-warning', 'Período letivo fechado');
+            return redirect('/');
+        }elseif(!SchoolTerm::isRequisitionPeriod()){
+            Session::flash('alert-warning', 'Período de solicitação de monitores encerrado');
+            return redirect('/');
+        }elseif(SchoolTerm::getOpenSchoolTerm()->id != SchoolTerm::getSchoolTermInEnrollmentPeriod()->id){
+            Session::flash('alert-warning', 'Período letivo aberto é diferente do periodo letivo com solicitação de monitores abertas, favor informar a secretaria de monitoria.');
+            return redirect('/');
+        } 
 
         $turmas = SchoolClass::whereInRequisitionPeriod()->whereHas('instructors', function($query) { 
             $query->where('instructors.codpes', Auth::user()->codpes); 

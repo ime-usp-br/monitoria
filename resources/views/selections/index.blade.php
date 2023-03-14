@@ -7,12 +7,14 @@
 <div id="layout_conteudo">
     <div class="justify-content-center">
         <div class="col-md-12">
-            <h1 class='text-center mb-5'>Seleção de Monitores</h1>
+            <h1 class='text-center mb-3'>Seleção de Monitores</h1>
             @if(Auth::user()->hasRole(['Secretaria', 'Administrador', 'Presidente de Comissão']))
-                <h4 class='text-center mb-5'>Todos Departamentos</h4>
+                <h4 class='text-center'>Todos Departamentos</h4>
             @elseif(Auth::user()->hasRole('Membro Comissão'))
-                <h4 class='text-center mb-5'>Departamento de {{ App\Models\Instructor::where(['codpes'=>Auth::user()->codpes])->first()->department->nomset }}</h4>
+                <h4 class='text-center'>Departamento de {{ App\Models\Instructor::where(['codpes'=>Auth::user()->codpes])->first()->department->nomset }}</h4>
             @endif
+
+            <h4 class='text-center mb-5'>{{ $schoolterm->period . ' de ' . $schoolterm->year }}</h4>
 
             @if (count($solicitacoes) > 0)
                 <table class="table table-bordered table-striped table-hover" style="font-size:12px;">

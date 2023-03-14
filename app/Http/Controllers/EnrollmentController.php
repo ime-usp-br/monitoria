@@ -33,6 +33,12 @@ class EnrollmentController extends Controller
         }elseif(!SchoolTerm::isEnrollmentPeriod()){
             Session::flash('alert-warning', 'Período de inscrições encerrado');
             return redirect('/');
+        }elseif(!SchoolTerm::getOpenSchoolTerm()){
+            Session::flash('alert-warning', 'Período letivo fechado');
+            return redirect('/');
+        }elseif(SchoolTerm::getOpenSchoolTerm()->id != SchoolTerm::getSchoolTermInEnrollmentPeriod()->id){
+            Session::flash('alert-warning', 'Período letivo aberto é diferente do periodo letivo com inscrições abertas, favor informar a secretaria de monitoria.');
+            return redirect('/');
         }                                 
 
         $estudante = Student::where(['codpes'=>Auth::user()->codpes])->first();
