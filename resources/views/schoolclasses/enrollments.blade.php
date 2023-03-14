@@ -45,16 +45,20 @@
                             <td class="text-center">{{ $inscricao->student->codpes }}</td>
                             <td style="white-space: nowrap;">{{ $inscricao->student->nompes }}</td>
                             <td class="text-center">
-                                <form method="POST" action="{{ route('schoolrecords.download') }}" target="_blank">
-                                    @csrf
-                                    <input type='hidden' name='path' value="{{ $inscricao->student->schoolrecords()->whereBelongsTo($inscricao->schoolclass->schoolterm)->first()->file_path }}">
-                                    <button class="btn btn-link"
-                                        data-toggle="tooltip" data-placement="top"
-                                        title="Download"
-                                    >
-                                        Download
-                                    </button>
-                                </form>                            
+                                @if($inscricao->student->schoolrecords()->whereBelongsTo($inscricao->schoolclass->schoolterm)->first())
+                                    <form method="POST" action="{{ route('schoolrecords.download') }}" target="_blank">
+                                        @csrf
+                                        <input type='hidden' name='path' value="{{ $inscricao->student->schoolrecords()->whereBelongsTo($inscricao->schoolclass->schoolterm)->first()->file_path }}">
+                                        <button class="btn btn-link"
+                                            data-toggle="tooltip" data-placement="top"
+                                            title="Download"
+                                        >
+                                            Download
+                                        </button>
+                                    </form> 
+                                @else
+                                    Não Encontrado
+                                @endif                           
                             </td>
                             <td class="text-center">{{ $inscricao->disponibilidade_diurno ? 'Sim' : 'Não'}}</td>
                             <td class="text-center">{{ $inscricao->disponibilidade_noturno ? 'Sim' : 'Não'}}</td>
