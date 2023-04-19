@@ -23,7 +23,7 @@
                 @method('patch')
                 @csrf
 
-                @include('schoolterms.partials.form', ['buttonText' => 'Editar'])
+                @include('schoolterms.partials.form', ['buttonText' => 'Salvar'])
             </form>
         </div>
     </div>

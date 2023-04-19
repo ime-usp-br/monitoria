@@ -22,7 +22,7 @@
             >
                 @csrf
                 @method("patch")
-                @include('mailtemplates.partials.form', ['buttonText' => 'Editar'])
+                @include('mailtemplates.partials.form', ['buttonText' => 'Salvar'])
             </form>
 
         </div>

@@ -17,7 +17,7 @@
                 @method('patch')
                 @csrf
 
-                @include('enrollments.partials.form', ['buttonText' => 'Editar'])
+                @include('enrollments.partials.form', ['buttonText' => 'Salvar'])
             </form>
         </div>
     </div>
