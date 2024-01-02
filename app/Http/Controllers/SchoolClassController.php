@@ -57,7 +57,7 @@ class SchoolClassController extends Controller
             $turmas = $schoolterm ? SchoolClass::whereHas('instructors', function($query) { 
                 return $query->where('instructors.codpes', Auth::user()->codpes); 
             })->whereBelongsTo($schoolterm)->get() : [];
-        }elseif(Auth::user()->hasRole("Membro Comissão")){
+        }elseif(Auth::user()->hasRole("Membro Comissão") && !Auth::user()->hasRole("Secretaria")){
             $turmas = $schoolterm ? SchoolClass::whereBelongsTo($schoolterm)
                 ->whereBelongsTo(Instructor::where(['codpes'=>Auth::user()->codpes])->first()->department)->get() : [];
         }else{
