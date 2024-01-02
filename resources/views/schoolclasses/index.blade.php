@@ -12,7 +12,7 @@
                 <h4 class='text-center mb-5'>{{ $schoolterm->period . ' de ' . $schoolterm->year }}</h4>
             @endif
 
-            @if(Auth::user()->hasRole('Membro Comissão'))
+            @if(Auth::user()->hasRole('Membro Comissão') && !Auth::user()->hasRole('Secretaria'))
                 <h4 class='text-center mb-5'>Departamento de {{ App\Models\Instructor::where(['codpes'=>Auth::user()->codpes])->first()->department->nomset }}</h4>
             @endif
 
