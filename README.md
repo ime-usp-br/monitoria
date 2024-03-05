@@ -5,7 +5,7 @@
     <img src="storage/app/images/logo_ime_vert.jpg" alt="Logo" width="150" height="150">
   </a>
 
-  <h3 align="center">Sistema da Monitoria</h3>
+  <h3 align="center">Sistema de Monitoria</h3>
 
 </div>
 
