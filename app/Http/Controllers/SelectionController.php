@@ -246,7 +246,7 @@ class SelectionController extends Controller
     public function selectUnenrolled(SelectUnenrolledSelectionRequest $request){
         $validated = $request->validated();
         
-        $estudante = Student::firstOrCreate(Student::getFromReplicadoByCodpes($validated['codpes']));
+        $estudante = Student::updateOrCreate(["codpes"=>$validated["codpes"]],Student::getFromReplicadoByCodpes($validated['codpes']));
         $validated['student_id'] = $estudante->id;
         unset($validated['codpes']);
 
