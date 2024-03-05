@@ -22,7 +22,7 @@
                 @method('patch')
                 @csrf
 
-                @include('schoolclasses.partials.form', ['buttonText' => 'Editar'])
+                @include('schoolclasses.partials.form', ['buttonText' => 'Salvar'])
             </form>
 
             @include('schoolclasses.modals.addClassSchedule')

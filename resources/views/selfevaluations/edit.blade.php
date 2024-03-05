@@ -18,7 +18,7 @@
             >
                 @csrf
                 @method("patch")
-                @include('selfevaluations.partials.form', ['buttonText' => 'Editar'])
+                @include('selfevaluations.partials.form', ['buttonText' => 'Salvar'])
             </form>
         </div>
     </div>

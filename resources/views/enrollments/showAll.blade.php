@@ -47,16 +47,18 @@
                             <td style="white-space: nowrap;">{{ $aluno->nompes }}</td>
                             <td style="white-space: nowrap;">{{ $aluno->codema }}</td>
                             <td style="text-align: center">
-                                <form method="POST" action="{{ route('schoolrecords.download') }}" target="_blank">
-                                    @csrf
-                                    <input type='hidden' name='path' value="{{ $aluno->getSchoolRecordFromOpenSchoolTerm()->file_path }}">
-                                    <button class="btn btn-link"
-                                        data-toggle="tooltip" data-placement="top"
-                                        title="Baixar Histórico Escolar"
-                                    >
-                                        Download
-                                    </button>
-                                </form> 
+                                @if($aluno->schoolrecords()->where('schoolterm_id', $schoolterm->id)->first())
+                                    <form method="POST" action="{{ route('schoolrecords.download') }}" target="_blank">
+                                        @csrf
+                                        <input type='hidden' name='path' value="{{ $aluno->schoolrecords()->where('schoolterm_id', $schoolterm->id)->first()->file_path }}">
+                                        <button class="btn btn-link"
+                                            data-toggle="tooltip" data-placement="top"
+                                            title="Baixar Histórico Escolar"
+                                        >
+                                            Download
+                                        </button>
+                                    </form> 
+                                @endif
                             </td>
                             <td style="white-space: nowrap;text-align: center">
                                 @php

@@ -36,7 +36,7 @@ class RequisitionController extends Controller
         }elseif(!SchoolTerm::isRequisitionPeriod()){
             Session::flash('alert-warning', 'Período de solicitação de monitores encerrado');
             return redirect('/');
-        }elseif(SchoolTerm::getOpenSchoolTerm()->id != SchoolTerm::getSchoolTermInEnrollmentPeriod()->id){
+        }elseif(SchoolTerm::getOpenSchoolTerm()->id != SchoolTerm::getSchoolTermInRequisitionPeriod()->id){
             Session::flash('alert-warning', 'Período letivo aberto é diferente do periodo letivo com solicitação de monitores abertas, favor informar a secretaria de monitoria.');
             return redirect('/');
         } 
