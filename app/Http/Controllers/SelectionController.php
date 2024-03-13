@@ -283,15 +283,15 @@ class SelectionController extends Controller
 
         $validated['requisition_id'] = SchoolClass::where(['id'=>$validated['school_class_id']])->first()->requisition->id;
 
-        if(Auth::user()->hasRole('Membro Comissão')){
+        if(Auth::user()->hasRole(['Secretaria', 'Administrador'])){
+            $selecao = Selection::firstOrCreate($validated);
+        }elseif(Auth::user()->hasRole('Membro Comissão')){
             $docente = Instructor::where(['codpes'=>Auth::user()->codpes])->first();
             if($inscricao->schoolclass->department == $docente->department){
                 $selecao = Selection::firstOrCreate($validated);
             }else{
                 abort(403);
             }
-        }elseif(Auth::user()->hasRole(['Secretaria', 'Administrador'])){
-            $selecao = Selection::firstOrCreate($validated);
         }else{
             abort(403);
         }
