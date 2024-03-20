@@ -86,6 +86,7 @@ Route::get('frequencies/{frequency}', [FrequencyController::class,"update"])->na
 Route::get('frequencies', [FrequencyController::class,"index"])->name('frequencies.index');
 
 Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+Route::get('/reports/external', [ReportController::class, 'external'])->name('reports.external');
 Route::post('/reports/make', [ReportController::class, 'make'])->name('reports.make');
 
 Route::patch('/tutors/turnintovolunteer/{selection}', [TutorController::class, 'turnIntoVolunteer'])->name('tutors.turnintovolunteer'); 
