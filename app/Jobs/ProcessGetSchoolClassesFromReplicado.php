@@ -56,17 +56,20 @@ class ProcessGetSchoolClassesFromReplicado implements ShouldQueue
                 $schoolclass = new SchoolClass;
                 $schoolclass->fill($turma);
                 $schoolclass->save();
-        
-                foreach($turma['instructors'] as $instructor){
-                    $docente = Instructor::getFromReplicadoByCodpes($instructor["codpes"]);
-                    $schoolclass->instructors()->attach(Instructor::updateOrCreate(["nompes"=>$docente["nompes"],"codpes"=>$docente["codpes"]],["codema"=>$docente["codema"],"department_id"=>$docente["department_id"]]));
-                }
-        
-                foreach($turma['class_schedules'] as $classSchedule){
-                    $schoolclass->classschedules()->attach(ClassSchedule::firstOrCreate($classSchedule));
-                }
-                $schoolclass->save();
             }
+
+            $schoolclass->instructors()->detach();
+            foreach($turma['instructors'] as $instructor){
+                $docente = Instructor::getFromReplicadoByCodpes($instructor["codpes"]);
+                $schoolclass->instructors()->attach(Instructor::updateOrCreate(["nompes"=>$docente["nompes"],"codpes"=>$docente["codpes"]],["codema"=>$docente["codema"],"department_id"=>$docente["department_id"]]));
+            }
+    
+            $schoolclass->classschedules()->detach();
+            foreach($turma['class_schedules'] as $classSchedule){
+                $schoolclass->classschedules()->attach(ClassSchedule::firstOrCreate($classSchedule));
+            }
+            $schoolclass->save();
+
             $n += 1;
             $this->queueProgress(20 + floor($n*80/$t));
         }
