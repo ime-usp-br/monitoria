@@ -109,7 +109,7 @@ class RequisitionController extends Controller
 
         foreach($recommendations as $recommendation){
             Recommendation::create([
-                'student_id'=>Student::firstOrCreate(Student::getFromReplicadoByCodpes($recommendation['codpes']))->id,
+                'student_id'=>Student::updateOrCreate(["codpes"=>$recommendation["codpes"]],Student::getFromReplicadoByCodpes($recommendation['codpes']))->id,
                 'requisition_id'=>$requisition->id
             ]);
         }
@@ -190,7 +190,7 @@ class RequisitionController extends Controller
         $requisition->recommendations()->delete();
         foreach($recommendations as $recommendation){
             Recommendation::create([
-                'student_id'=>Student::firstOrCreate(Student::getFromReplicadoByCodpes($recommendation['codpes']))->id,
+                'student_id'=>Student::updateOrCreate(["codpes"=>$recommendation["codpes"]],Student::getFromReplicadoByCodpes($recommendation['codpes']))->id,
                 'requisition_id'=>$requisition->id
             ]);
         }
