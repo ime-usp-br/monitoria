@@ -20,7 +20,7 @@
                 @csrf
                 <div class="text-center" style="height: 50px;">
                 <input  class="custom-form-input" type='file' name='file' >
-                <button class="btn btn-primary" type='submit' name='submit' >
+                <button class="btn btn-outline-primary" type='submit' name='submit' >
                     <i class="fas fa-file-upload"></i>
                     Importar PDF
                 </button>

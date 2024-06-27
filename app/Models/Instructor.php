@@ -90,7 +90,7 @@ class Instructor extends Model
         return $requests;
     }
 
-    public function getPronounTreatment()
+    public function getSexo()
     {
         $query = " SELECT P.sexpes";
         $query .= " FROM PESSOA AS P";
@@ -99,9 +99,14 @@ class Instructor extends Model
             'codpes' => $this->codpes,
         ];
 
-        $res = DB::fetchAll($query, $param)[0];
+        return DB::fetchAll($query, $param)[0]["sexpes"]; 
+    }
 
-        if($res['sexpes'] == 'F'){
+    public function getPronounTreatment()
+    {
+        $sexo = $this->getSexo();
+
+        if($sexo == 'F'){
             return 'Profa. Dra. ';
         }else{
             return 'Prof. Dr. ';
@@ -140,7 +145,7 @@ class Instructor extends Model
         $query .= " AND VP.codpes = :codpes";
         $query .= " AND VP.tipfnc = :tipfnc";
         $query .= " AND EP.codpes = :codpes";
-        $query .= " AND EP.stamtr = :stamtr";
+        $query .= " AND (EP.stamtr = :stamtr)";
         $param = [
             'codpes' => $codpes,
             'tipfnc' => 'Docente',
@@ -149,9 +154,28 @@ class Instructor extends Model
 
         $res = array_unique(DB::fetchAll($query, $param),SORT_REGULAR);
 
-        $res[0]["department_id"] = Department::firstOrCreate(Department::getFromReplicadoByCodset($res[0]["codset"]))->id;
-        unset($res[0]["codset"]);
+        if(!$res){
+            $query = " SELECT P.codpes, P.nompes, VP.codset, EP.codema";
+            $query .= " FROM PESSOA AS P, VINCULOPESSOAUSP AS VP, EMAILPESSOA as EP";
+            $query .= " WHERE P.codpes = :codpes";
+            $query .= " AND VP.codpes = :codpes";
+            $query .= " AND VP.tipfnc = :tipfnc";
+            $query .= " AND EP.codpes = :codpes";
+            $param = [
+                'codpes' => $codpes,
+                'tipfnc' => 'Docente',
+            ];
 
-        return $res[0];
+            $res = array_unique(DB::fetchAll($query, $param),SORT_REGULAR);
+        }
+
+        if($res){
+            $res[0]["department_id"] = Department::firstOrCreate(Department::getFromReplicadoByCodset($res[0]["codset"]))->id;
+            unset($res[0]["codset"]);
+    
+            return $res[0];
+        }else{
+            return [];
+        }
     }
 }

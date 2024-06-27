@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreEnrollmentRequest;
 use App\Http\Requests\UpdateEnrollmentRequest;
 use App\Http\Requests\CreateEnrollmentRequest;
+use App\Http\Requests\ShowAllEnrollmentRequest;
 use App\Models\Enrollment;
 use App\Models\Student;
 use App\Models\SchoolClass;
 use App\Models\SchoolTerm;
+use App\Models\Scholarship;
+use App\Models\Selection;
 use Illuminate\Support\Facades\Gate;
 use Auth;
 use Session;
@@ -30,6 +33,12 @@ class EnrollmentController extends Controller
         }elseif(!SchoolTerm::isEnrollmentPeriod()){
             Session::flash('alert-warning', 'Período de inscrições encerrado');
             return redirect('/');
+        }elseif(!SchoolTerm::getOpenSchoolTerm()){
+            Session::flash('alert-warning', 'Período letivo fechado');
+            return redirect('/');
+        }elseif(SchoolTerm::getOpenSchoolTerm()->id != SchoolTerm::getSchoolTermInEnrollmentPeriod()->id){
+            Session::flash('alert-warning', 'Período letivo aberto é diferente do periodo letivo com inscrições abertas, favor informar a secretaria de monitoria.');
+            return redirect('/');
         }                                 
 
         $estudante = Student::where(['codpes'=>Auth::user()->codpes])->first();
@@ -40,14 +49,10 @@ class EnrollmentController extends Controller
         
         $turmas = SchoolClass::whereInEnrollmentPeriod()->whereHas('enrollments', function($query) use ($estudante){
                     return $query->where(['student_id'=>$estudante->id]);
-                })->union(
-                  SchoolClass::whereInEnrollmentPeriod()->whereDoesntHave('enrollments', function($query) use ($estudante){
+                })->get();
+        $turmas = $turmas->merge(SchoolClass::whereInEnrollmentPeriod()->whereDoesntHave('enrollments', function($query) use ($estudante){
                     return $query->where(['student_id'=>$estudante->id]);
-                })->whereHas('requisition'))
-                ->union(
-                  SchoolClass::whereInEnrollmentPeriod()->whereDoesntHave('enrollments', function($query) use ($estudante){
-                    return $query->where(['student_id'=>$estudante->id]);
-                })->whereDoesntHave('requisition'))->get();
+                })->orderBy("coddis")->get());
 
         return view('enrollments.index', compact(['turmas', 'estudante']));
     }
@@ -70,7 +75,11 @@ class EnrollmentController extends Controller
         
         $estudante = Student::where(['codpes'=>Auth::user()->codpes])->first();
 
-        if(count($estudante->enrollments)>=SchoolTerm::getSchoolTermInEnrollmentPeriod()->max_enrollments){
+        $schoolterm = SchoolTerm::getSchoolTermInEnrollmentPeriod();
+
+        if(SchoolClass::whereBelongsTo($schoolterm)->whereHas("enrollments", 
+                    function($query)use($estudante){$query->whereBelongsTo($estudante);})
+                ->pluck("coddis")->unique()->count()>=$schoolterm->max_enrollments){
             Session::flash('alert-warning', 'Você excedeu o número máximo de inscrições');
             return redirect('/enrollments');
         }
@@ -98,8 +107,22 @@ class EnrollmentController extends Controller
         $validated = $request->validated();
 
         $validated['student_id'] = Student::where(['codpes'=>Auth::user()->codpes])->first()->id;
+
+        $scholarships = array_key_exists('scholarships', $validated) ? $validated['scholarships'] : [];
+        unset($validated['scholarships']);
+
+        $schoolterm = SchoolTerm::getSchoolTermInEnrollmentPeriod();
         
-        $inscricao = Enrollment::create($validated);
+        foreach(SchoolClass::whereBelongsTo($schoolterm)->where("coddis",SchoolClass::find($validated["school_class_id"])->coddis)->get() as $schoolclass){
+            $validated["school_class_id"] = $schoolclass->id;
+
+            $enrollment = Enrollment::create($validated);
+
+            foreach($scholarships as $scholarship_id){
+                $enrollment->others_scholarships()->attach(Scholarship::find($scholarship_id));
+            }
+        }
+
 
         return redirect('/enrollments');
     }
@@ -161,7 +184,27 @@ class EnrollmentController extends Controller
 
         $validated['disponibilidade_noturno'] = isset($validated['disponibilidade_noturno']) ? 1 : 0;
 
-        $enrollment->update($validated);
+        $scholarships = array_key_exists('scholarships', $validated) ? $validated['scholarships'] : [];
+        unset($validated['scholarships']);
+
+        $schoolterm = SchoolTerm::getSchoolTermInEnrollmentPeriod();
+
+        $enrollments = Enrollment::whereHas("schoolclass", function($query)use($enrollment,$schoolterm){
+            $query->whereBelongsTo($schoolterm)->where("coddis",$enrollment->schoolclass->coddis);})
+        ->whereHas("student", function($query)use($enrollment){
+            $query->where("id", $enrollment->student->id);})->get();
+
+        foreach($enrollments as $e){
+            $e->others_scholarships()->detach();
+
+            foreach($scholarships as $scholarship_id){
+                $e->others_scholarships()->attach(Scholarship::find($scholarship_id));
+            }
+
+            $validated["school_class_id"] = $e->schoolclass->id;
+
+            $e->update($validated);
+        }
 
         return redirect('/enrollments');
     }
@@ -180,19 +223,54 @@ class EnrollmentController extends Controller
             Session::flash('alert-warning', 'Período de inscrições encerrado');
             return redirect('/');
         } 
+
+        $enrollments = Enrollment::whereHas("schoolclass", function($query)use($enrollment){
+            $query->whereBelongsTo($enrollment->schoolclass->schoolterm)
+                ->where("coddis",$enrollment->schoolclass->coddis);
+        })->whereHas("student", function($query)use($enrollment){
+            $query->where("id", $enrollment->student->id);})->get();
         
-        $enrollment->delete();
+        $hasSelection = Selection::whereHas("enrollment", function($query)use($enrollments){
+            $query->whereIn("id", $enrollments->pluck("id")->toArray());
+        })->exists();
+
+        if($hasSelection){
+            Session::flash('alert-warning', 'Você foi selecionado como monitor de uma turma dessa disciplina. 
+                Caso queira desistir comunique a comissão de monitoria.');
+            return back();
+        }
+
+        Enrollment::whereHas("schoolclass", function($query)use($enrollment){
+                $query->whereBelongsTo($enrollment->schoolclass->schoolterm)
+                    ->where("coddis",$enrollment->schoolclass->coddis);
+            })->whereHas("student", function($query)use($enrollment){
+                $query->where("id", $enrollment->student->id);})->delete();
 
         return redirect('/enrollments');
     }
 
-    public function showAll()
+    public function showAll(ShowAllEnrollmentRequest $request)
     {
         if(!Gate::allows('visualizar todos inscritos')){
             abort(403);
         }
 
-        $schoolterm = SchoolTerm::getOpenSchoolTerm();
+        $validated = $request->validated();
+
+        if(isset($validated['periodoId'])){
+            $schoolterm = SchoolTerm::find($validated['periodoId']);
+        }else{
+            $schoolterm = SchoolTerm::getOpenSchoolTerm();
+
+            if(!$schoolterm){
+                $schoolterm = SchoolTerm::getLatest();
+            }
+        }
+
+        if(!$schoolterm){
+            Session::flash('alert-warning', 'Não foi encontrado um periodo letivo.');
+            return back();
+        }
 
         $alunos = Student::whereHas("enrollments.schoolclass", function($query)use($schoolterm){
             $query->whereBelongsTo($schoolterm);})->get()->sortBy("nompes");

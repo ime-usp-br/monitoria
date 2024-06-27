@@ -37,6 +37,17 @@ class Enrollment extends Model
         return $this->hasOne(Selection::class);
     }
 
+    public function others_scholarships()
+    {
+        return $this->morphToMany(
+            Scholarship::class,
+            'model',
+            'model_has_scholarships',
+            'model_id',
+            'scholarship_id',
+        );
+    }
+
     public function hasOtherSelectionInOpenSchoolTerm()
     {
         $schoolclass_id = $this->school_class_id;

@@ -51,7 +51,13 @@ class Department extends Model
             'nomabvset' => $nomabvset,
         ];
 
-        return DB::fetchAll($query, $param)[0];
+        $res = DB::fetchAll($query, $param);
+
+        if($res){
+            return $res[0];
+        }else{
+            return [];
+        }
     }
 
     public static function getFromReplicadoByCodset($codset){

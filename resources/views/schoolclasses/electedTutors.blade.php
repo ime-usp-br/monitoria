@@ -1,13 +1,13 @@
 @extends('parent')
 
-@section('title', 'Monitores Eleitos')
+@section('title', 'Monitores')
 
 @section('content')
 @parent
-<div class="container">
-    <div class="row justify-content-center">
+<div id="layout_conteudo">
+    <div class="justify-content-center">
         <div class="col-md-12">
-            <h1 class='text-center mb-5'>Monitores Eleitos</h1>
+            <h1 class='text-center mb-5'>Monitores</h1>
             <h2 class='text-center mb-5'>
                 Departamento de {{ $turma->department->nomset }}<br>
             </h2>
@@ -16,7 +16,7 @@
             </h4>
 
             <p class="text-right">
-                <a class="btn btn-primary"
+                <a class="btn btn-outline-primary"
                     data-toggle="tooltip" data-placement="top"
                     title="Voltar"
                     href="{{ url()->previous() }}"
@@ -52,7 +52,7 @@
                             <td class="text-center">
                                 {{ $eleicao->requisition->isStudentRecommended($eleicao->student) ? 'Sim' : 'Não' }} <br/>
                             </td>
-                            <td class="text-center"><a href="/schoolclasses/{{$turma->id}}/electedTutors/{{$eleicao->student->id}}/frequencies" class="btn btn-outline-dark btn-sm">Registrar frequência</a></td>
+                            <td class="text-center"><a href="{{ route('frequencies.show',['schoolclass'=>$eleicao->schoolclass->id,'tutor'=>$eleicao->student->id]) }}" class="btn btn-outline-dark btn-sm">Registrar frequência</a></td>
                         </tr>
                     @endforeach
                 </table>

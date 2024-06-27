@@ -4,12 +4,12 @@
 
 @section('content')
 @parent
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-12">
-            <h1 class='h5 font-weight-bold my-3'>
-                Editar inscrição
-            </h1>
+        <div class="col-12">
+            <h1 class='text-center'>
+                Editar Inscrição
+            </h3>
 
             <form method="POST"
                 action="{{ route('enrollments.update', $inscricao) }}"
@@ -17,7 +17,7 @@
                 @method('patch')
                 @csrf
 
-                @include('enrollments.partials.form', ['buttonText' => 'Editar'])
+                @include('enrollments.partials.form', ['buttonText' => 'Salvar'])
             </form>
         </div>
     </div>

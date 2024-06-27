@@ -4,8 +4,8 @@
 
 @section('content')
 @parent
-<div class="container">
-    <div class="row justify-content-center">
+<div id="layout_conteudo">
+    <div class="justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Solicitação de Monitores</h1>
             @include('requisitions.modals.addSchoolClass')
@@ -27,7 +27,7 @@
                 @endif
                 @if(App\Models\SchoolTerm::isRequisitionPeriod())
                     <p class="text-right">
-                        <a class="btn btn-primary"
+                        <a class="btn btn-outline-primary"
                             data-toggle="modal"
                             data-target="#addSchoolClassModal"
                             title="Cadastrar" 

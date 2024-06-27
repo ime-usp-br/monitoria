@@ -4,13 +4,13 @@
 
 @section('content')
 @parent
-<div class="container">
-    <div class="row justify-content-center">
+<div id="layout_conteudo">
+    <div class="justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Docentes</h1>
 
             <p class="text-right">
-                <button class="btn btn-primary" id="btn-search" data-toggle="modal" data-target="#instructorsSearchModal">
+                <button class="btn btn-outline-primary" id="btn-search" data-toggle="modal" data-target="#instructorsSearchModal">
                     <i class="fas fa-search"></i>
                     Buscar
                 </button>

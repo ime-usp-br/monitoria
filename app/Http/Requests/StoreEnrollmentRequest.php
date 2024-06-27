@@ -28,8 +28,10 @@ class StoreEnrollmentRequest extends FormRequest
             'disponibilidade_diurno' => 'sometimes|bool',
             'disponibilidade_noturno' => 'sometimes|bool',
             'voluntario' => 'sometimes|bool',
-            'observacoes' => 'nullable|max:255',
+            'observacoes' => 'nullable|max:65500',
             'preferencia_horario' => 'required',
+            'scholarships' => 'sometimes|array',
+            'scholarships.*' => 'required|numeric|exists:App\Models\Scholarship,id',
         ];
 
         return $rules;

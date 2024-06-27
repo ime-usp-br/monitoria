@@ -42,13 +42,22 @@ class SchoolClassController extends Controller
             $schoolterm = SchoolTerm::find($validated['periodoId']);
         }else{
             $schoolterm = SchoolTerm::getOpenSchoolTerm();
+
+            if(!$schoolterm){
+                $schoolterm = SchoolTerm::getLatest();
+            }
+        }
+
+        if(!$schoolterm){
+            Session::flash('alert-warning', 'Não foi encontrado um periodo letivo.');
+            return back();
         }
         
         if(Auth::user()->hasRole('Docente') && !Auth::user()->hasRole("Membro Comissão")){
             $turmas = $schoolterm ? SchoolClass::whereHas('instructors', function($query) { 
                 return $query->where('instructors.codpes', Auth::user()->codpes); 
             })->whereBelongsTo($schoolterm)->get() : [];
-        }elseif(Auth::user()->hasRole("Membro Comissão")){
+        }elseif(Auth::user()->hasRole("Membro Comissão") && !Auth::user()->hasRole("Secretaria")){
             $turmas = $schoolterm ? SchoolClass::whereBelongsTo($schoolterm)
                 ->whereBelongsTo(Instructor::where(['codpes'=>Auth::user()->codpes])->first()->department)->get() : [];
         }else{
@@ -292,25 +301,5 @@ class SchoolClassController extends Controller
             'turma' => $turma,
         ]);
         
-    }
-
-    public function showFrequencies($schoolclass, $tutor, Request $request)
-    {
-        if(Auth::check()){
-            if(!Gate::allows('registrar frequencia')){
-                abort(403);
-            }
-        }elseif(!$request->hasValidSignature()){
-            abort(403);
-        }
-
-        $monitor = Student::find($tutor);
-        $turma = SchoolClass::find($schoolclass);
-
-        return view('schoolclasses.frequencies', [
-            'monitor' => $monitor,
-            'turma' => $turma
-        ]);
-
     }
 }

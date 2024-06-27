@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DispatchEmailsRequest extends FormRequest
+class StoreMailTemplateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,13 @@ class DispatchEmailsRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'school_classes_id' => 'required|array',
-            'school_classes_id.*' => 'required|numeric',
+            'name' => 'required',
+            'description_and_mail_class' => 'required',
+            'subject' => 'required|max:256',
+            'body' => 'required|max:8192',
+            'sending_frequency' => 'required',
+            'sending_date' => 'required_unless:sending_frequency,Manual',
+            'sending_hour' => 'required_unless:sending_frequency,Manual',
         ];
 
         return $rules;

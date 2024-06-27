@@ -4,8 +4,8 @@
 
 @section('content')
 @parent
-<div class="container">
-    <div class="row justify-content-center">
+<div id="layout_conteudo">
+    <div class="justify-content-center">
         <div class="col-md-12">
             <h1 class='text-center mb-5'>Relatório</h1>
 
@@ -15,7 +15,7 @@
             @include('reports.modals.makeReport')
             <p class="text-right">
                 <a  id="btn-addModal"
-                    class="btn btn-primary"
+                    class="btn btn-outline-primary"
                     data-toggle="modal"
                     data-target="#makeReportModal"
                     title="Gerar Relatório" 

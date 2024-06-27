@@ -4,10 +4,10 @@
 
 @section('content')
 @parent
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-12">
-            <h1 class='h5 font-weight-bold my-3'>
+        <div class="col-12">
+            <h1 class='text-center'>
                 Editar turma
             </h1>
 
@@ -22,7 +22,7 @@
                 @method('patch')
                 @csrf
 
-                @include('schoolclasses.partials.form', ['buttonText' => 'Editar'])
+                @include('schoolclasses.partials.form', ['buttonText' => 'Salvar'])
             </form>
 
             @include('schoolclasses.modals.addClassSchedule')
