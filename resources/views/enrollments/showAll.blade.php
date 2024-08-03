@@ -15,6 +15,7 @@
             @include('enrollments.modals.chooseSchoolTerm')
 
             <p class="text-right">
+            <p style="position: absolute;right: 10px;">
                 <a  id="btn-chooseSchoolTermModal"
                     class="btn btn-outline-primary"
                     data-toggle="modal"
@@ -23,103 +24,107 @@
                 >
                     Escolher Semestre
                 </a>
+                </p>
             </p>
 
             @if (count($alunos) > 0)
 
-                <table class="table table-bordered table-striped table-hover" style="font-size:12px;">
-                    <tr>
-                        <th>N USP</th>
-                        <th>Nome</th>
-                        <th>E-mail</th>
-                        <th>Histórico Escolar</th>
-                        <th>Inscrito nas Disciplinas</th>
-                        <th>Disponibilidade de dia</th>
-                        <th>Disponibilidade de noite</th>
-                        <th>Preferência pelo período</th>
-                        <th>Outras<br>Bolsas</th>
-                        <th>Telefone</th>
-                    </tr>
-
-                    @foreach($alunos as $aluno)
-                        <tr style="font-size:12px;">
-                            <td style="text-align: center">{{ $aluno->codpes }}</td>
-                            <td style="white-space: nowrap;">{{ $aluno->nompes }}</td>
-                            <td style="white-space: nowrap;">{{ $aluno->codema }}</td>
-                            <td style="text-align: center">
-                                @if($aluno->schoolrecords()->where('schoolterm_id', $schoolterm->id)->first())
-                                    <form method="POST" action="{{ route('schoolrecords.download') }}" target="_blank">
-                                        @csrf
-                                        <input type='hidden' name='path' value="{{ $aluno->schoolrecords()->where('schoolterm_id', $schoolterm->id)->first()->file_path }}">
-                                        <button class="btn btn-link"
-                                            data-toggle="tooltip" data-placement="top"
-                                            title="Baixar Histórico Escolar"
-                                        >
-                                            Download
-                                        </button>
-                                    </form> 
-                                @endif
-                            </td>
-                            <td style="white-space: nowrap;text-align: center">
-                                @php
-                                    $disciplines = App\Models\SchoolClass::whereBelongsTo($schoolterm)->whereHas("enrollments",function($query)use($aluno){
-                                        $query->whereBelongsTo($aluno);
-                                    })->pluck("coddis")->unique()->toArray();
-                                @endphp
-                                @foreach($disciplines as $coddis)
-                                    {{ $coddis }} <br/>
-                                @endforeach
-                            </td>
-                            @php
-                                $disp_dia_array = $aluno->enrollments()->whereHas("schoolclass", function($query)use($schoolterm){$query->whereBelongsTo($schoolterm);})->get()->pluck("disponibilidade_diurno")->unique()->toarray();
-                            @endphp
-                            <td style="text-align: center">
-                                @if(count($disp_dia_array)>1)
-                                    Depende<br>da Vaga
-                                @else
-                                    {!! $disp_dia_array[0] ? "Sim" : "Não" !!}
-                                @endif
-                            </td>
-                            @php
-                                $disp_noite_array = $aluno->enrollments()->whereHas("schoolclass", function($query)use($schoolterm){$query->whereBelongsTo($schoolterm);})->get()->pluck("disponibilidade_noturno")->unique()->toarray();
-                            @endphp
-                            <td style="text-align: center">
-                                @if(count($disp_noite_array)>1)
-                                    Depende<br>da Vaga
-                                @else
-                                    {!! $disp_noite_array[0] ? "Sim" : "Não" !!}
-                                @endif
-                            </td>
-                            @php
-                                $pref_hor_array = $aluno->enrollments()->whereHas("schoolclass", function($query)use($schoolterm){$query->whereBelongsTo($schoolterm);})->get()->pluck("preferencia_horario")->unique()->toarray();
-                            @endphp
-                            <td style="text-align: center">
-                                @if(count($pref_hor_array)>1)
-                                    Depende<br>da Vaga
-                                @else
-                                    {!! $pref_hor_array[0] !!}
-                                @endif
-                            </td>
-                            <td class="text-left" style="white-space: nowrap;">
-                                @php
-                                $enrollments = $aluno->enrollments()->whereHas("schoolclass", function($query)use($schoolterm){$query->whereBelongsTo($schoolterm);})->get();
-                                $scholarships = [];
-                                foreach($enrollments as $enrollment){
-                                    $scholarships = array_merge($scholarships,$enrollment->others_scholarships->pluck("name")->toArray());
-                                }
-                                $scholarships = array_unique($scholarships);
-                                @endphp
-                                @foreach($scholarships as $scholarship)
-                                    {{ $scholarship }} <br/>
-                                @endforeach
-                            </td>
-                            <td style="white-space: nowrap;">
-                                @foreach($aluno->getTelefonesFromReplicado() as $tel)
-                                    {!! "+".$tel['codddi']." (".$tel['codddd'].") ".$tel['numtel'] !!}<br>
-                                @endforeach
-                            </td>
+                <table id="tabela-inscritos" class="table table-bordered table-striped table-hover" style="font-size:12px;">
+                    <thead>
+                        <tr>
+                            <th>N USP</th>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>Histórico Escolar</th>
+                            <th>Inscrito nas Disciplinas</th>
+                            <th>Disponibilidade de dia</th>
+                            <th>Disponibilidade de noite</th>
+                            <th>Preferência pelo período</th>
+                            <th>Outras<br>Bolsas</th>
+                            <th>Telefone</th>
                         </tr>
-                    @endforeach
+                    </thead>
+                    <tbody>
+                        @foreach($alunos as $aluno)
+                            <tr style="font-size:12px;">
+                                <td style="text-align: center">{{ $aluno->codpes }}</td>
+                                <td style="white-space: nowrap;">{{ $aluno->nompes }}</td>
+                                <td style="white-space: nowrap;">{{ $aluno->codema }}</td>
+                                <td style="text-align: center">
+                                    @if($aluno->schoolrecords()->where('schoolterm_id', $schoolterm->id)->first())
+                                        <form method="POST" action="{{ route('schoolrecords.download') }}" target="_blank">
+                                            @csrf
+                                            <input type='hidden' name='path' value="{{ $aluno->schoolrecords()->where('schoolterm_id', $schoolterm->id)->first()->file_path }}">
+                                            <button class="btn btn-link"
+                                                data-toggle="tooltip" data-placement="top"
+                                                title="Baixar Histórico Escolar"
+                                            >
+                                                Download
+                                            </button>
+                                        </form> 
+                                    @endif
+                                </td>
+                                <td style="white-space: nowrap;text-align: center">
+                                    @php
+                                        $disciplines = App\Models\SchoolClass::whereBelongsTo($schoolterm)->whereHas("enrollments",function($query)use($aluno){
+                                            $query->whereBelongsTo($aluno);
+                                        })->pluck("coddis")->unique()->toArray();
+                                    @endphp
+                                    @foreach($disciplines as $coddis)
+                                        {{ $coddis }} <br/>
+                                    @endforeach
+                                </td>
+                                @php
+                                    $disp_dia_array = $aluno->enrollments()->whereHas("schoolclass", function($query)use($schoolterm){$query->whereBelongsTo($schoolterm);})->get()->pluck("disponibilidade_diurno")->unique()->toarray();
+                                @endphp
+                                <td style="text-align: center">
+                                    @if(count($disp_dia_array)>1)
+                                        Depende<br>da Vaga
+                                    @else
+                                        {!! $disp_dia_array[0] ? "Sim" : "Não" !!}
+                                    @endif
+                                </td>
+                                @php
+                                    $disp_noite_array = $aluno->enrollments()->whereHas("schoolclass", function($query)use($schoolterm){$query->whereBelongsTo($schoolterm);})->get()->pluck("disponibilidade_noturno")->unique()->toarray();
+                                @endphp
+                                <td style="text-align: center">
+                                    @if(count($disp_noite_array)>1)
+                                        Depende<br>da Vaga
+                                    @else
+                                        {!! $disp_noite_array[0] ? "Sim" : "Não" !!}
+                                    @endif
+                                </td>
+                                @php
+                                    $pref_hor_array = $aluno->enrollments()->whereHas("schoolclass", function($query)use($schoolterm){$query->whereBelongsTo($schoolterm);})->get()->pluck("preferencia_horario")->unique()->toarray();
+                                @endphp
+                                <td style="text-align: center">
+                                    @if(count($pref_hor_array)>1)
+                                        Depende<br>da Vaga
+                                    @else
+                                        {!! $pref_hor_array[0] !!}
+                                    @endif
+                                </td>
+                                <td class="text-left" style="white-space: nowrap;">
+                                    @php
+                                    $enrollments = $aluno->enrollments()->whereHas("schoolclass", function($query)use($schoolterm){$query->whereBelongsTo($schoolterm);})->get();
+                                    $scholarships = [];
+                                    foreach($enrollments as $enrollment){
+                                        $scholarships = array_merge($scholarships,$enrollment->others_scholarships->pluck("name")->toArray());
+                                    }
+                                    $scholarships = array_unique($scholarships);
+                                    @endphp
+                                    @foreach($scholarships as $scholarship)
+                                        {{ $scholarship }} <br/>
+                                    @endforeach
+                                </td>
+                                <td style="white-space: nowrap;">
+                                    @foreach($aluno->getTelefonesFromReplicado() as $tel)
+                                        {!! "+".$tel['codddi']." (".$tel['codddd'].") ".$tel['numtel'] !!}<br>
+                                    @endforeach
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
                 </table>
             @else
                 <p class="text-center">Não há alunos inscritos esse semestre</p>
@@ -127,4 +132,41 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('javascripts_bottom')
+  @parent
+  <script>
+    $(document).ready(function() {
+        $('#tabela-inscritos').DataTable({
+            dom: 'B',
+            buttons: {
+                buttons:[{
+                    extend: 'excel',
+                    text:'Exportar para Excel',
+                    className: 'btn-outline-primary',
+                    exportOptions: {
+                        columns: [0,1,2,4,5,6,7,8,9],
+                        format: {
+                            body: function (data, row, column, node) {
+                                let newData = data.replace(/<br\s*\/?>/gi, '; ');
+                                while (newData.indexOf('  ') !== -1) {
+                                    newData = newData.replace(/  /g, ' ');
+                                }
+                                return newData;
+                            }
+                        }
+                    }
+                }],
+                dom:{
+                    button:{
+                        className:'btn'
+                    }
+                }
+            },
+            paging:false,
+            order:[]
+        });
+    });
+  </script>
 @endsection
