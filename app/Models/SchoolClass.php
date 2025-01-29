@@ -306,4 +306,24 @@ class SchoolClass extends Model
         }
         return $schoolclasses;
     }
+
+
+    public function calcEstimadedEnrollment()
+    {
+        $query = " SELECT (T.numins+T.numinscpl+T.numinsopt+T.numinsecr+T.numinsoptlre) AS TOTALINSCRITOS";
+        $query .= " FROM TURMAGR AS T";
+        $query .= " WHERE (T.coddis = :coddis)";
+        $query .= " AND T.codtur LIKE :codtur";
+        $query .= " AND T.verdis = (SELECT MAX(T.verdis) 
+                                    FROM TURMAGR AS T 
+                                    WHERE T.coddis = :coddis)";
+        $param = [
+            'coddis' => $this->coddis,
+            'codtur' => $this->codtur,
+        ];
+
+        $res = DB::fetchAll($query, $param);
+
+        return $res ? $res[0]["TOTALINSCRITOS"] : null;
+    }
 }
