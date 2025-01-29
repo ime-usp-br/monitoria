@@ -25,7 +25,8 @@
                         <th>Horários</th>
                         <th>Professor(a) Solicitante</th>
                         <th>N.° de Monitores Solicitados</th>
-                        <th>N.° de Inscritos</th>
+                        <th>N.° de Inscritos na(s) vaga(s)</th>
+                        <th>N.° de Inscritos na turma</th>
                         <th>Monitores Eleitos</th>
                         <th></th>
                     </tr>
@@ -43,6 +44,7 @@
                             <td class="text-left" style="white-space: nowrap;">{{ $solicitacao->instructor->getPronounTreatment() . $solicitacao->instructor->nompes}}</td>
                             <td>{{$solicitacao->requested_number}}</td>
                             <td>{{count($solicitacao->schoolclass->enrollments)}}</td>
+                            <td>{{$solicitacao->schoolclass->calcEstimadedEnrollment()}}</td>
                             <td class="text-left" style="white-space: nowrap;">
                                 @foreach($solicitacao->schoolclass->selections()->where("sitatl", "!=", "Desligado")->get() as $selecionado)
                                     <b>{{$selecionado->student->nompes}}</b> <br/>
