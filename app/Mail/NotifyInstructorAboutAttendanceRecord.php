@@ -8,8 +8,10 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\MailTemplate;
 use App\Models\Frequency;
+use App\Models\Selection;
 use Illuminate\Support\Facades\Blade;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
+use Illuminate\Support\Facades\Log;
 
 class NotifyInstructorAboutAttendanceRecord extends Mailable
 {
@@ -41,6 +43,15 @@ class NotifyInstructorAboutAttendanceRecord extends Mailable
      */
     public function build()
     {
+        $selection = Selection::where('student_id', $this->student->id)
+                            ->where('school_class_id', $this->schoolclass->id)
+                            ->first();
+    
+        if (!$selection || $selection->sitatl !== 'Ativo') {
+            Log::info("Email de frequência cancelado para monitor desligado: {$this->student->codpes} na turma {$this->schoolclass->codtur}");
+            return null;
+        }
+
         $cssToInlineStyles = new CssToInlineStyles();
 
         $subject = Blade::render(

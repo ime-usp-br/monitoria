@@ -9,6 +9,7 @@ use App\Models\Student;
 use App\Models\SchoolTerm;
 use App\Models\Selection;
 use App\Models\Instructor;
+use App\Models\Frequency;
 use Auth;
 use Session;
 
@@ -76,6 +77,12 @@ class TutorController extends Controller
         }
 
         $validated = $request->validated();
+
+        Frequency::where('student_id', $selection->student_id)
+            ->where('school_class_id', $selection->school_class_id)
+            ->where('registered', false)
+            ->where('month', '>=', date('m'))
+            ->delete();
 
         $selection->sitatl = "Desligado";
         $selection->motdes = $validated["motdes"];
