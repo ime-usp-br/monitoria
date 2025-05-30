@@ -81,7 +81,7 @@ class TutorController extends Controller
         Frequency::where('student_id', $selection->student_id)
             ->where('school_class_id', $selection->school_class_id)
             ->where('registered', false)
-            ->where('month', '>=', date('m'))
+            ->where('month', '>=', (int)date('m'))
             ->delete();
 
         $selection->sitatl = "Desligado";
