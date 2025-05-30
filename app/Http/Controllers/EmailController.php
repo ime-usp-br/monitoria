@@ -55,7 +55,7 @@ class EmailController extends Controller
 
         return view('emails.indexSelections', compact(["turmas", "schoolterm"]));
     }
-
+    
     public function indexAttendanceRecords(IndexAttendanceRecordsRequest $request)
     {
         if(!Gate::allows('Disparar emails')){
@@ -85,21 +85,31 @@ class EmailController extends Controller
                 return back();
             }
         }else{
-            $month = date("d") >= 20 ? date("m") : date("m")-1;
+            $month = date("d") >= 20 ? date("m") : ((int)date("m"))-1; 
             if(!in_array($month, $months)){
-                if(date("Y")."-".$month < $schoolterm->year."-".$months[0]){
+                $month_for_comparison_str = str_pad((int)$month, 2, '0', STR_PAD_LEFT);
+                $current_year_for_comparison = date("Y");
+                if ((int)$month == 0 && (int)date("m") == 1 && (int)date("d") < 20) {
+                    $current_year_for_comparison = (int)date("Y") - 1;
+                    $month_for_comparison_str = "12";
+                }
+
+
+                if($current_year_for_comparison."-".$month_for_comparison_str < $schoolterm->year."-".str_pad($months[0], 2, '0', STR_PAD_LEFT)){
                     $month = $months[0];
-                }elseif(date("Y")."-".$month > $schoolterm->year."-".$months[3]){
+                }elseif($current_year_for_comparison."-".$month_for_comparison_str > $schoolterm->year."-".str_pad($months[3], 2, '0', STR_PAD_LEFT)){
                     $month = $months[3];
                 }
             }
         }
 
+        $month = (int)$month;
+
         $frequencies = Frequency::whereHas("schoolclass", function($query)use($schoolterm){
             $query->whereBelongsTo($schoolterm);
         })->whereHas("schoolclass.selections", function($query){
             $query->where("sitatl","Ativo");
-        })->where("month", $month)->where("registered",false)->get()->sortBy("student.nompes");
+        })->where("month", $month)->where("registered",false)->get()->sortBy("student.nompes"); // $month is now an int for the DB query
 
         return view('emails.indexAttendanceRecords', compact(["schoolterm","frequencies", "month"]));
     }
