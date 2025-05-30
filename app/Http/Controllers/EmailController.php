@@ -105,11 +105,16 @@ class EmailController extends Controller
 
         $month = (int)$month;
 
-        $frequencies = Frequency::whereHas("schoolclass", function($query)use($schoolterm){
-            $query->whereBelongsTo($schoolterm);
-        })->whereHas("schoolclass.selections", function($query){
-            $query->where("sitatl","Ativo");
-        })->where("month", $month)->where("registered",false)->get()->sortBy("student.nompes"); // $month is now an int for the DB query
+        $frequencies = Frequency::where('month', $month)
+        ->where('registered', false)
+        ->whereHas('schoolclass.schoolterm', function ($query) use ($schoolterm) {
+            $query->where('id', $schoolterm->id);
+        })
+        ->whereHas('student.selections', function ($query) {
+            $query->where('sitatl', 'Ativo')
+                  ->whereColumn('selections.school_class_id', 'frequencies.school_class_id');
+        })
+        ->get()->sortBy('student.nompes');
 
         return view('emails.indexAttendanceRecords', compact(["schoolterm","frequencies", "month"]));
     }
