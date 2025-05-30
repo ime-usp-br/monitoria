@@ -89,7 +89,8 @@ class Kernel extends ConsoleKernel
             $frequencies = Frequency::whereHas("schoolclass.schoolterm", function($query){
                 $query->where("year",date("Y"));
             })->whereHas("schoolclass.selections", function($query){
-                $query->where("sitatl","Ativo");
+                $query->where("sitatl","Ativo")
+                ->whereColumn('selections.school_class_id', 'frequencies.school_class_id');
             })->where("month", date("m"))->where("registered",false)->get();
 
             foreach($frequencies as $frequency){
