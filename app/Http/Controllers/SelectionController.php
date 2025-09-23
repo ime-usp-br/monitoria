@@ -296,6 +296,8 @@ class SelectionController extends Controller
             abort(403);
         }
 
+        Frequency::createFromSelection($selecao);
+        
         return back();
     }
 }
