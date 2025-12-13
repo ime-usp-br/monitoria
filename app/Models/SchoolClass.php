@@ -209,7 +209,11 @@ class SchoolClass extends Model
             if(in_array($instructor_codpes, array_column($instructors ,"codpes"))){
                 $turma['instructors'] = $instructors;
                 $turma['class_schedules'] = ClassSchedule::getFromReplicadoBySchoolClass($turma);
-                $turma['department_id'] = Department::firstOrCreate(Department::getFromReplicadoByNomabvset($turma['pfxdisval']))->id;
+                $departmentData = Department::getFromReplicadoByNomabvset($turma['pfxdisval']);
+                $turma['department_id'] = Department::updateOrCreate(
+                    ['codset' => $departmentData['codset']],
+                    $departmentData
+                )->id;
                 $turma['school_term_id'] = $st->id;
                 $turma['dtainitur'] = Carbon::createFromFormat("Y-m-d H:i:s", $turma["dtainitur"])->format("d/m/Y");
                 $turma['dtafimtur'] = Carbon::createFromFormat("Y-m-d H:i:s", $turma["dtafimtur"])->format("d/m/Y");
@@ -222,7 +226,11 @@ class SchoolClass extends Model
             $turmas[0]['codtur'] = $st->year . ($st->period == "1° Semestre" ? "1" : "2") . (max(69, substr(SchoolClass::where("coddis",$coddis)->whereBelongsTo($st)->get()->max("codtur"), -2) ?? 0) + 1);
             $turmas[0]['instructors'] = [Instructor::getFromReplicadoByCodpes($instructor_codpes)];
             $turmas[0]['class_schedules'] = [["diasmnocp" => "sab","horent" => "00:00","horsai" => "00:01"]];
-            $turmas[0]['department_id'] = Department::firstOrCreate(Department::getFromReplicadoByNomabvset($turmas[0]['pfxdisval']))->id;
+            $departmentData = Department::getFromReplicadoByNomabvset($turmas[0]['pfxdisval']);
+            $turmas[0]['department_id'] = Department::updateOrCreate(
+                ['codset' => $departmentData['codset']],
+                $departmentData
+            )->id;
             $turmas[0]['school_term_id'] = $st->id;
             $turmas[0]['dtainitur'] = Carbon::createFromFormat("Y-m-d H:i:s", $turma["dtainitur"])->format("d/m/Y");
             $turmas[0]['dtafimtur'] = Carbon::createFromFormat("Y-m-d H:i:s", $turma["dtafimtur"])->format("d/m/Y");
@@ -248,7 +256,11 @@ class SchoolClass extends Model
                 $turmas[0]['codtur'] = $st->year . ($st->period == "1° Semestre" ? "1" : "2") . (max(69, substr(SchoolClass::where("coddis",$coddis)->whereBelongsTo($st)->get()->max("codtur"), -2) ?? 0) + 1);
                 $turmas[0]['instructors'] = [Instructor::getFromReplicadoByCodpes($instructor_codpes)];
                 $turmas[0]['class_schedules'] = [["diasmnocp" => "sab","horent" => "00:00","horsai" => "00:01"]];
-                $turmas[0]['department_id'] = Department::firstOrCreate(Department::getFromReplicadoByNomabvset($turmas[0]['pfxdisval']))->id;
+                $departmentData = Department::getFromReplicadoByNomabvset($turmas[0]['pfxdisval']);
+                $turmas[0]['department_id'] = Department::updateOrCreate(
+                    ['codset' => $departmentData['codset']],
+                    $departmentData
+                )->id;
                 $turmas[0]['school_term_id'] = $st->id;
                 $turmas[0]['dtainitur'] = "01/".($st == "1° Semestre" ? "03/" : "08/").$st->year;
                 $turmas[0]['dtafimtur'] = "15/".($st == "1° Semestre" ? "07/" : "12/").$st->year;
@@ -295,7 +307,11 @@ class SchoolClass extends Model
             foreach($turmas as $key => $turma){
                 $turmas[$key]['class_schedules'] = ClassSchedule::getFromReplicadoBySchoolClass($turma);
                 $turmas[$key]['instructors'] = Instructor::getFromReplicadoBySchoolClass($turma);
-                $turmas[$key]['department_id'] = Department::firstOrCreate(Department::getFromReplicadoByNomabvset($turma['pfxdisval']))->id;
+                $departmentData = Department::getFromReplicadoByNomabvset($turma['pfxdisval']);
+                $turmas[$key]['department_id'] = Department::updateOrCreate(
+                    ['codset' => $departmentData['codset']],
+                    $departmentData
+                )->id;
                 $turmas[$key]['school_term_id'] = $schoolTerm->id;
                 $turmas[$key]['dtainitur'] = Carbon::createFromFormat("Y-m-d H:i:s", $turma["dtainitur"])->format("d/m/Y");
                 $turmas[$key]['dtafimtur'] = Carbon::createFromFormat("Y-m-d H:i:s", $turma["dtafimtur"])->format("d/m/Y");

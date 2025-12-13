@@ -170,7 +170,11 @@ class Instructor extends Model
         }
 
         if($res){
-            $res[0]["department_id"] = Department::firstOrCreate(Department::getFromReplicadoByCodset($res[0]["codset"]))->id;
+            $departmentData = Department::getFromReplicadoByCodset($res[0]["codset"]);
+            $res[0]["department_id"] = Department::updateOrCreate(
+                ['codset' => $departmentData['codset']],
+                $departmentData
+            )->id;
             unset($res[0]["codset"]);
     
             return $res[0];

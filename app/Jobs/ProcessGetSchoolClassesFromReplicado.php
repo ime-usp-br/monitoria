@@ -29,6 +29,8 @@ class ProcessGetSchoolClassesFromReplicado implements ShouldQueue
         $this->schoolterm = $schoolterm;
     }
 
+    public $timeout = 3600;
+
     public function progressCooldown(): int
     {
         return 1; 
@@ -60,8 +62,7 @@ class ProcessGetSchoolClassesFromReplicado implements ShouldQueue
 
             $schoolclass->instructors()->detach();
             foreach($turma['instructors'] as $instructor){
-                $docente = Instructor::getFromReplicadoByCodpes($instructor["codpes"]);
-                $schoolclass->instructors()->attach(Instructor::updateOrCreate(["nompes"=>$docente["nompes"],"codpes"=>$docente["codpes"]],["codema"=>$docente["codema"],"department_id"=>$docente["department_id"]]));
+                $schoolclass->instructors()->attach(Instructor::updateOrCreate(["nompes"=>$instructor["nompes"],"codpes"=>$instructor["codpes"]],["codema"=>$instructor["codema"],"department_id"=>$instructor["department_id"]]));
             }
     
             $schoolclass->classschedules()->detach();
