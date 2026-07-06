@@ -46,22 +46,45 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected static $syncingVinculo = false;
+
     public static function booted(){
 
-        static::created(function ($user){
-            $codpes = $user->codpes;
-            if (str_contains(env('LOG_AS_ADMINISTRATOR'), $codpes)){
-                $user->assignRole("Administrador");
+        static::saved(function ($user){
+            if (static::$syncingVinculo) {
+                return;
             }
-            foreach($user->getVinculosFromReplicadoByCodpes($codpes) as $vinculo){
-                if ($vinculo == 'Docente'){
-                    $user->assignRole("Docente");
+            static::$syncingVinculo = true;
+            try {
+                $codpes = (string) $user->codpes;
+                if (str_contains((string) env('LOG_AS_ADMINISTRATOR'), $codpes) && !$user->hasRole('Administrador')) {
+                    $user->assignRole('Administrador');
                 }
-                if ($vinculo == 'Aluno'){
-                    $user->assignRole("Aluno");
-                }
+                $user->syncVinculoRoles();
+            } finally {
+                static::$syncingVinculo = false;
             }
         });
+    }
+
+    public function syncVinculoRoles(): void
+    {
+        if (!$this->codpes) {
+            return;
+        }
+
+        $target = $this->getVinculosFromReplicadoByCodpes($this->codpes);
+
+        foreach (['Aluno', 'Docente'] as $role) {
+            $shouldHave = in_array($role, $target, true);
+            $hasRole = $this->hasRole($role);
+
+            if ($shouldHave && !$hasRole) {
+                $this->assignRole($role);
+            } elseif (!$shouldHave && $hasRole) {
+                $this->removeRole($role);
+            }
+        }
     }
 
     public static function getVinculosFromReplicadoByCodpes($codpes)
