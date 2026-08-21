@@ -25,6 +25,7 @@ class SearchSchoolClassRequest extends FormRequest
     {
         $rules = [
             'coddis' => 'sometimes',
+            'periodoId' => 'sometimes|numeric',
         ];
 
         return $rules;
