@@ -99,7 +99,9 @@ class Instructor extends Model
             'codpes' => $this->codpes,
         ];
 
-        return DB::fetchAll($query, $param)[0]["sexpes"]; 
+        $res = DB::fetchAll($query, $param);
+
+        return !empty($res) ? $res[0]['sexpes'] : null;
     }
 
     public function getPronounTreatment()

@@ -4,6 +4,8 @@ namespace Tests\Feature\Scenario;
 
 use App\Models\Selection;
 use App\Models\Student;
+use App\Mail\NotifyCertificateRequest;
+use Illuminate\Support\Facades\Mail;
 use Mockery;
 
 class CertificateScenarioTest extends ScenarioTestCase
@@ -107,6 +109,38 @@ class CertificateScenarioTest extends ScenarioTestCase
 
         $resp = $this->actingAs($fixture['env']['secretaria'])->get('/certificates/make/'.$active->id);
         $resp->assertOk();
+    }
+
+    public function test_cen_certificate_008_make_aluno_nao_baixa_atestado_e_notifica_secretaria()
+    {
+        $fixture = $this->envWithSelections();
+        $concluded = $fixture['concludedSelection'];
+
+        config(['certificate.secretaria_email' => 'secretaria@ime.usp.br']);
+        Mail::fake();
+
+        $resp = $this->from('/certificates')->actingAs($fixture['env']['aluno'])->get('/certificates/make/'.$concluded->id);
+
+        // o aluno não baixa mais o certificado com assinatura em foto
+        $resp->assertRedirect('/certificates');
+        $this->assertEquals('Sua solicitação de Certificado de Monitoria foi registrada. A Secretaria de Monitoria será notificada e o certificado, após validação no USP ASSINA, será enviado a você por e-mail.', $this->app['session']->get('alert-info'));
+
+        // a Secretaria é notificada da solicitação
+        Mail::assertQueued(NotifyCertificateRequest::class, 1);
+    }
+
+    public function test_cen_certificate_009_make_aluno_sem_email_de_secretaria_configurado_nao_envia()
+    {
+        $fixture = $this->envWithSelections();
+        $concluded = $fixture['concludedSelection'];
+
+        config(['certificate.secretaria_email' => '']);
+        Mail::fake();
+
+        $resp = $this->from('/certificates')->actingAs($fixture['env']['aluno'])->get('/certificates/make/'.$concluded->id);
+
+        $resp->assertRedirect('/certificates');
+        Mail::assertNothingQueued();
     }
 
     protected function mockLaraTeX(): void

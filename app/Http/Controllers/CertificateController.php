@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Selection;
 use App\Models\Student;
 use App\Models\SchoolTerm;
+use App\Mail\NotifyCertificateRequest;
+use Illuminate\Support\Facades\Mail;
 use Ismaelw\LaraTeX\LaraTeX;
 use Auth;
 use Session;
@@ -63,24 +65,40 @@ class CertificateController extends Controller
 
     public function make(Selection $selection)
     {
+        $isSecretariaAdmin = false;
+
         if(Auth::check()){
             if(!Auth::user()->hasRole(["Secretaria", "Administrador"])){
                 if($selection->student_id != (Student::where("codpes", Auth::user()->codpes)->first()->id ?? "")){
                     abort(403);
                 }
+            }else{
+                $isSecretariaAdmin = true;
             }
         }else{
             return redirect("login");
         }
 
-        if($selection->sitatl == "Concluido"){
-            return (new LaraTeX('certificates.completed'))->with([
-                'selection' => $selection,
-            ])->download('atestado.pdf');
-        }elseif($selection->sitatl == "Ativo"){
-            return (new LaraTeX('certificates.ongoing'))->with([
-                'selection' => $selection,
-            ])->download('atestado.pdf');
+        if($selection->sitatl == "Concluido" || $selection->sitatl == "Ativo"){
+            // Para a Secretaria/Administrador, que encaminha ao USP ASSINA,
+            // o certificado é gerado normalmente (sem assinatura em foto).
+            if($isSecretariaAdmin){
+                $template = $selection->sitatl == "Concluido" ? "certificates.completed" : "certificates.ongoing";
+                return (new LaraTeX($template))->with([
+                    'selection' => $selection,
+                ])->download('atestado_' . $selection->student->codpes . '.pdf');
+            }
+
+            // Para o aluno, o certificado não vai mais direto ao aluno com a
+            // assinatura em foto: o sistema avisa a Secretaria da solicitação,
+            // que encaminha ao USP ASSINA para validação e posterior envio.
+            $secretariaEmail = config('certificate.secretaria_email');
+            if($secretariaEmail){
+                Mail::to($secretariaEmail)->send(new NotifyCertificateRequest($selection));
+            }
+
+            Session::flash('alert-info', 'Sua solicitação de Certificado de Monitoria foi registrada. A Secretaria de Monitoria será notificada e o certificado, após validação no USP ASSINA, será enviado a você por e-mail.');
+            return back();
         }
     }
 }

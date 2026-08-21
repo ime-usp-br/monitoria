@@ -195,9 +195,9 @@ class Student extends Model
             'codpes' => $this->codpes,
         ];
 
-        $res = DB::fetchAll($query, $param)[0];
+        $res = DB::fetchAll($query, $param);
 
-        return $res['sexpes'];
+        return !empty($res) ? $res[0]['sexpes'] : null;
     }
 
     // Função usada para pegar o vinculo em determinado periodo, util para dados importados do sistema antigo 
