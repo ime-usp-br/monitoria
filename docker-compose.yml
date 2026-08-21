@@ -1,3 +1,12 @@
+# ---------------------------------------------------------------------------
+# Monitoria — docker-compose único (Laravel / PHP 7.4)
+#
+# Os serviços se comunicam na rede bridge default do projeto. O serviço `nginx`
+# também ingressa numa rede externa (`web`, reverse proxy) para exposição via
+# domínio/TLS — por isso não publica porta de host. A rede externa deve existir:
+#   docker network create web
+# ---------------------------------------------------------------------------
+
 services:
   app:
     build:
@@ -13,8 +22,6 @@ services:
       - .:/var/www
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     entrypoint: ["sh", "./docker/entrypoint.sh"]
-    networks:
-      - monitoria
     depends_on:
       - mysql
       - redis
@@ -23,13 +30,12 @@ services:
     image: nginx:alpine
     container_name: monitoria-nginx
     restart: unless-stopped
-    ports:
-      - "${DOCKER_APP_PORT:-8000}:80"
     volumes:
       - .:/var/www
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     networks:
-      - monitoria
+      - default
+      - web
     depends_on:
       - app
 
@@ -37,8 +43,6 @@ services:
     image: mysql:5.7
     container_name: monitoria-mysql
     restart: unless-stopped
-    ports:
-      - "${DOCKER_DB_PORT:-3307}:3306"
     environment:
       MYSQL_DATABASE: ${DB_DATABASE:-laravel}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
@@ -48,17 +52,16 @@ services:
       SERVICE_NAME: mysql
     volumes:
       - mysql-data:/var/lib/mysql
-    networks:
-      - monitoria
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   redis:
     image: redis:alpine
     container_name: monitoria-redis
     restart: unless-stopped
-    ports:
-      - "6381:6379"
-    networks:
-      - monitoria
 
   # Queue worker — runs as www-data to avoid permission conflicts with Laravel storage/cache
   worker:
@@ -75,15 +78,13 @@ services:
       - .:/var/www
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     entrypoint: ["sh", "./docker/worker-entrypoint.sh"]
-    networks:
-      - monitoria
     depends_on:
       - mysql
       - redis
 
 networks:
-  monitoria:
-    driver: bridge
+  web:
+    external: true
 
 volumes:
   mysql-data:
