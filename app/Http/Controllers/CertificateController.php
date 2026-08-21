@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Selection;
 use App\Models\Student;
 use App\Models\SchoolTerm;
+use App\Models\MailTemplate;
 use App\Mail\NotifyCertificateRequest;
 use Illuminate\Support\Facades\Mail;
 use Ismaelw\LaraTeX\LaraTeX;
@@ -92,9 +93,17 @@ class CertificateController extends Controller
             // Para o aluno, o certificado não vai mais direto ao aluno com a
             // assinatura em foto: o sistema avisa a Secretaria da solicitação,
             // que encaminha ao USP ASSINA para validação e posterior envio.
+
+            $mailtemplate = MailTemplate::where("mail_class", "NotifyCertificateRequest")->where("active", true)->where("sending_frequency", "Manual")->first();
+
+            if(!$mailtemplate){
+                Session::flash('alert-warning', 'Não foi encontrado nenhum modelo de e-mail ativo com frequência manual para notificar a Secretaria sobre a solicitação de certificado.');
+                return back();
+            }
+
             $secretariaEmail = config('certificate.secretaria_email');
             if($secretariaEmail){
-                Mail::to($secretariaEmail)->send(new NotifyCertificateRequest($selection));
+                Mail::to($secretariaEmail)->send(new NotifyCertificateRequest($selection, $mailtemplate));
             }
 
             Session::flash('alert-info', 'Sua solicitação de Certificado de Monitoria foi registrada. A Secretaria de Monitoria será notificada e o certificado, após validação no USP ASSINA, será enviado a você por e-mail.');

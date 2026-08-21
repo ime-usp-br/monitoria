@@ -12,6 +12,7 @@ use App\Models\Student;
 use App\Models\Enrollment;
 use App\Models\Selection;
 use App\Models\ClassSchedule;
+use App\Models\MailTemplate;
 
 class FictitiousMonitorSeeder extends Seeder
 {
@@ -33,6 +34,30 @@ class FictitiousMonitorSeeder extends Seeder
      */
     public function run()
     {
+        MailTemplate::firstOrCreate(['mail_class' => 'NotifyCertificateRequest'], [
+            'name' => 'Notificação de solicitação de certificado de monitoria',
+            'description' => 'E-mail enviado à Secretaria sobre solicitação de certificado de monitoria',
+            'mail_class' => 'NotifyCertificateRequest',
+            'sending_frequency' => 'Manual',
+            'sending_date' => null,
+            'sending_hour' => null,
+            'active' => true,
+            'subject' => '[Sistema de Monitoria] Solicitação de Certificado de Monitoria - {{ $student->nompes }}',
+            'body' => '<div>Olá,</div>
+<div>&nbsp;</div>
+<div>
+<div>O aluno-monitor <strong>{{ $student->nompes }}</strong> (Nº USP {{ $student->codpes }}) solicitou o Certificado de Monitoria da disciplina <strong>{{ $schoolclass->coddis }} - {{ $schoolclass->nomdis }}</strong>, referente ao <strong>{{ $schoolterm->period }}</strong> de <strong>{{ $schoolterm->year }}</strong>.</div>
+</div>
+<div>&nbsp;</div>
+<div>
+<div>Segue em anexo o certificado gerado pelo Sistema de Monitoria. Encaminhe-o ao USP ASSINA para validação e posterior envio ao aluno.</div>
+</div>
+<div>&nbsp;</div>
+<div>
+<div>Essa mensagem foi gerada automaticamente pelo <a href="../" target="_blank" rel="noopener">Sistema de Monitoria</a></div>
+</div>',
+        ]);
+
         $department = Department::firstOrCreate(
             ['codset' => 5000],
             [

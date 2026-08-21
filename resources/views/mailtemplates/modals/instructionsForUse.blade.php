@@ -82,6 +82,19 @@
                     <b>$instructor->department->nomset</b> - Nome do departamento do docente que solicitou a vaga<br>
                     <b>$instructor->department->nomabvset</b> - Nome abreviado do departamento do docente que solicitou a vaga<br>
                 </div><br>
+
+                <label class="font-weight-bold">Variáveis disponíveis no e-mail enviado à Secretaria sobre a solicitação de Certificado de Monitoria:</label>
+                <div class="col-12">
+                    <b>$student->nompes</b> - Nome do monitor<br>
+                    <b>$student->codema</b> - E-mail do monitor<br>
+                    <b>$student->codpes</b> - Número USP do monitor<br>
+                    <b>$student->getSexo()</b> - Sexo do monitor<br>
+                    <b>$schoolclass->coddis</b> - Código da disciplina<br>
+                    <b>$schoolclass->nomdis</b> - Nome da disciplina<br>
+                    <b>$schoolclass->codtur</b> - Código da turma<br>
+                    <b>$schoolterm->period</b> - Período da monitoria Ex. 1° Semestre<br>
+                    <b>$schoolterm->year</b> - Ano da monitoria<br>
+                </div><br>
                 
             </div>
             <div class="modal-footer">

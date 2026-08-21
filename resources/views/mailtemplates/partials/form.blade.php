@@ -25,6 +25,7 @@
                         "E-mail enviado aos professores sobre o registro de frequência dos monitores"=>"NotifyInstructorAboutAttendanceRecord",
                         "E-mail enviado aos monitores sobre a auto avaliação"=>"NotifyStudentAboutSelfEvaluation",
                         "E-mail enviado aos professores sobre a avaliação dos monitores"=>"NotifyInstructorAboutEvaluation",
+                        "E-mail enviado à Secretaria sobre a solicitação de Certificado de Monitoria"=>"NotifyCertificateRequest",
                      ] as $key=>$value)
                 <option value='{"description":"{{$key}}","mail_class":"{{$value}}"}' {{ ( $mailtemplate->mail_class === $value) ? 'selected' : ''}}>{{ $key }}</option>
             @endforeach

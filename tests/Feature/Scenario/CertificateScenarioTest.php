@@ -4,6 +4,7 @@ namespace Tests\Feature\Scenario;
 
 use App\Models\Selection;
 use App\Models\Student;
+use App\Models\MailTemplate;
 use App\Mail\NotifyCertificateRequest;
 use Illuminate\Support\Facades\Mail;
 use Mockery;
@@ -116,6 +117,8 @@ class CertificateScenarioTest extends ScenarioTestCase
         $fixture = $this->envWithSelections();
         $concluded = $fixture['concludedSelection'];
 
+        $this->makeCertificateTemplate();
+
         config(['certificate.secretaria_email' => 'secretaria@ime.usp.br']);
         Mail::fake();
 
@@ -134,6 +137,8 @@ class CertificateScenarioTest extends ScenarioTestCase
         $fixture = $this->envWithSelections();
         $concluded = $fixture['concludedSelection'];
 
+        $this->makeCertificateTemplate();
+
         config(['certificate.secretaria_email' => '']);
         Mail::fake();
 
@@ -141,6 +146,35 @@ class CertificateScenarioTest extends ScenarioTestCase
 
         $resp->assertRedirect('/certificates');
         Mail::assertNothingQueued();
+    }
+
+    public function test_cen_certificate_010_make_aluno_sem_template_ativo_nao_envia_e_avisa()
+    {
+        $fixture = $this->envWithSelections();
+        $concluded = $fixture['concludedSelection'];
+
+        config(['certificate.secretaria_email' => 'secretaria@ime.usp.br']);
+        Mail::fake();
+
+        $this->from('/certificates')->actingAs($fixture['env']['aluno'])->get('/certificates/make/'.$concluded->id)
+            ->assertRedirect('/certificates');
+        $this->assertSessionHasWarningContaining('modelo de e-mail ativo');
+        Mail::assertNothingQueued();
+    }
+
+    protected function makeCertificateTemplate(): MailTemplate
+    {
+        return MailTemplate::create([
+            'name' => 'Template NotifyCertificateRequest',
+            'description' => 'desc',
+            'mail_class' => 'NotifyCertificateRequest',
+            'sending_frequency' => 'Manual',
+            'sending_date' => null,
+            'sending_hour' => null,
+            'active' => true,
+            'subject' => 'Solicitação de Certificado - {{ student.nompes }}',
+            'body' => '<p>Corpo do certificado</p>',
+        ]);
     }
 
     protected function mockLaraTeX(): void
