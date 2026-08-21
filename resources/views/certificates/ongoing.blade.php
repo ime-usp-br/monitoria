@@ -39,7 +39,7 @@
    \end{center}
    \hspace{2cm} Atestamos para os devidos fins que \textbf{{!! $selection->student->nompes !!}}
    é {!! $selection->student->getSexo() == "F" ? "aluna-monitora" : "aluno-monitor" !!}
-  do Instituto de Matemática e Estatística da Universidade de São Paulo, sem vínculo
+  do Instituto de Matemática, Estatística e Ciência da Computação da Universidade de São Paulo, sem vínculo
   empregatício, até o final do {!! $selection->schoolclass->schoolterm->period !!} de {!! $selection->schoolclass->schoolterm->year !!}, 
   junto à disciplina “\textbf{{!! $selection->schoolclass->coddis !!} - {!! $selection->schoolclass->nomdis !!}}”, sob a responsabilidade 
   {!! $selection->requisition->instructor->getPronounTreatment() == "Prof. Dr. " ? "do" : "da" !!}
