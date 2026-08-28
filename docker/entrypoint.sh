@@ -27,6 +27,12 @@ mkdir -p bootstrap/cache
 chown -R "${LARAVEL_USER}:${LARAVEL_GROUP}" storage bootstrap/cache
 chmod -R u+rwx storage bootstrap/cache
 
+# Log do uspdev/replicado: garante que o arquivo exista e pertença ao usuário
+# da aplicação (evita "Permission denied" quando web/worker rodam como www-data).
+touch storage/logs/replicado.log
+chown "${LARAVEL_USER}:${LARAVEL_GROUP}" storage/logs/replicado.log 2>/dev/null || true
+chmod u+rw,go+r storage/logs/replicado.log 2>/dev/null || true
+
 # If cache driver is file, ensure existing cache files are not owned by root.
 if [ -d "storage/framework/cache/data" ]; then
     find storage/framework/cache/data -user root -exec chown "${LARAVEL_USER}:${LARAVEL_GROUP}" {} + 2>/dev/null || true

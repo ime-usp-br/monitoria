@@ -1,10 +1,25 @@
+# -----------------------------------------------------------------------------
+# Exemplo de configuração do supervisor para produção SEM Docker.
+#
+# O worker roda como daemon (queue:work) e mantém a conexão com o replicado
+# aberta por muito tempo. Quando essa conexão morre (erro 20047 "DBPROCESS is
+# dead"), todos os jobs seguintes falham até o processo reiniciar. Por isso:
+#   - --max-time=3600  reinicia o worker a cada 1h, renovando a conexão;
+#   - --sleep=5        evita sobrecarga de polling na fila `database`.
+#
+# 8 workers (valor antigo) disputando a fila `database` do MySQL gerava
+# deadlocks (código 1213) no SELECT ... FOR UPDATE / DELETE de `jobs`.
+# Reduza para o mínimo necessário para o volume de e-mails/imports.
+# -----------------------------------------------------------------------------
 [program:laravel-worker]
 process_name=%(program_name)s_%(process_num)02d
-command=php {aqui vai o caminho para o diretorio do projeto}/artisan queue:work --tries=3
+command=php {aqui vai o caminho para o diretorio do projeto}/artisan queue:work --tries=3 --sleep=5 --max-time=3600 --timeout=1900
 autostart=true
 autorestart=true
-user=root
+# Use o usuário que possui os arquivos do projeto e tem escrita em storage/logs
+# (ex.: www-data se rodando sob nginx/php-fpm). NÃO use root.
+user=www-data
 startsecs=0
-numprocs=8
+numprocs=1
 redirect_stderr=true
 stdout_logfile=/var/log/supervisor/laravel-queue.log

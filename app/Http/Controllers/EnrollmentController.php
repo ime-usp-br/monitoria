@@ -64,7 +64,10 @@ class EnrollmentController extends Controller
      */
     public function create(CreateEnrollmentRequest $request)
     {
-        if(!Auth::user()->hasRole('Aluno')){
+        if(!Auth::user()){
+            Session::flash('alert-warning', 'Antes de se inscrever você precisa fazer login');
+            return redirect('/');
+        }elseif(!Auth::user()->hasRole('Aluno')){
             abort(403);
         }elseif(!SchoolTerm::isEnrollmentPeriod()){
             Session::flash('alert-warning', 'Período de inscrições encerrado');
@@ -97,7 +100,10 @@ class EnrollmentController extends Controller
      */
     public function store(StoreEnrollmentRequest $request)
     {
-        if(!Auth::user()->hasRole('Aluno')){
+        if(!Auth::user()){
+            Session::flash('alert-warning', 'Antes de se inscrever você precisa fazer login');
+            return redirect('/');
+        }elseif(!Auth::user()->hasRole('Aluno')){
             abort(403);
         }elseif(!SchoolTerm::isEnrollmentPeriod()){
             Session::flash('alert-warning', 'Período de inscrições encerrado');
@@ -146,7 +152,10 @@ class EnrollmentController extends Controller
      */
     public function edit(Enrollment $enrollment)
     {
-        if(!Auth::user()->hasRole('Aluno')){
+        if(!Auth::user()){
+            Session::flash('alert-warning', 'Antes de se inscrever você precisa fazer login');
+            return redirect('/');
+        }elseif(!Auth::user()->hasRole('Aluno')){
             abort(403);
         }elseif(!SchoolTerm::isEnrollmentPeriod()){
             Session::flash('alert-warning', 'Período de inscrições encerrado');
@@ -169,7 +178,10 @@ class EnrollmentController extends Controller
      */
     public function update(UpdateEnrollmentRequest $request, Enrollment $enrollment)
     {
-        if(!Auth::user()->hasRole('Aluno')){
+        if(!Auth::user()){
+            Session::flash('alert-warning', 'Antes de se inscrever você precisa fazer login');
+            return redirect('/');
+        }elseif(!Auth::user()->hasRole('Aluno')){
             abort(403);
         }elseif(!SchoolTerm::isEnrollmentPeriod()){
             Session::flash('alert-warning', 'Período de inscrições encerrado');
@@ -217,7 +229,10 @@ class EnrollmentController extends Controller
      */
     public function destroy(Enrollment $enrollment)
     {
-        if(!Auth::user()->hasRole('Aluno')){
+        if(!Auth::user()){
+            Session::flash('alert-warning', 'Antes de se inscrever você precisa fazer login');
+            return redirect('/');
+        }elseif(!Auth::user()->hasRole('Aluno')){
             abort(403);
         }elseif(!SchoolTerm::isEnrollmentPeriod()){
             Session::flash('alert-warning', 'Período de inscrições encerrado');

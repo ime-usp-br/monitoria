@@ -17,6 +17,12 @@ until [ -f "vendor/autoload.php" ]; do
 done
 echo "[worker] vendor encontrado."
 
+# Log do uspdev/replicado: garante o arquivo com ownership correto antes do worker
+# escrever nele (evita "Permission denied" no /tmp/replicado.log).
+touch storage/logs/replicado.log 2>/dev/null || true
+chown "${LARAVEL_USER}:${LARAVEL_GROUP}" storage/logs/replicado.log 2>/dev/null || true
+chmod u+rw,go+r storage/logs/replicado.log 2>/dev/null || true
+
 # Aguarda MySQL estar acessivel antes de iniciar o worker.
 echo "[worker] Aguardando MySQL..."
 until php -r "new PDO('mysql:host=${DB_HOST:-mysql};port=${DB_PORT:-3306}', '${DB_USERNAME:-laravel}', '${DB_PASSWORD:-root}');" 2>/dev/null; do

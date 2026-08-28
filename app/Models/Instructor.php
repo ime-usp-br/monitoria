@@ -92,14 +92,19 @@ class Instructor extends Model
 
     public function getSexo()
     {
-        $query = " SELECT P.sexpes";
-        $query .= " FROM PESSOA AS P";
-        $query .= " WHERE P.codpes = :codpes";
-        $param = [
-            'codpes' => $this->codpes,
-        ];
+        try {
+            $query = " SELECT P.sexpes";
+            $query .= " FROM PESSOA AS P";
+            $query .= " WHERE P.codpes = :codpes";
+            $param = [
+                'codpes' => $this->codpes,
+            ];
 
-        $res = DB::fetchAll($query, $param);
+            $res = DB::fetchAll($query, $param);
+        } catch (\Throwable $e) {
+            report($e);
+            return null;
+        }
 
         return !empty($res) ? $res[0]['sexpes'] : null;
     }

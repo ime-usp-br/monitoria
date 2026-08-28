@@ -69,6 +69,13 @@ Configure as variaveis do <a href="https://github.com/uspdev/replicado">replicad
     REPLICADO_PASSWORD=
     REPLICADO_SYBASE=
     
+    # Caminho do log do replicado. Use um diretório gravável pelo usuário do
+    # web e do worker (ex.: storage/logs). O padrão /tmp/replicado.log costuma
+    # gerar "Permission denied" em produção sem Docker, onde web e worker rodam
+    # com usuários diferentes (www-data x root). Se não for informada, a
+    # aplicação usa automaticamente storage/logs/replicado.log.
+    REPLICADO_PATHLOG=storage/logs/replicado.log
+    
 Gere uma nova chave
 
     php artisan key:generate
