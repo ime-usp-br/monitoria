@@ -54,7 +54,7 @@
 
 \vspace{3cm}
 \begin{flushright}
-  {\normalsize Profa. Dra. Elizabeti Kira}\\
+  {\normalsize Profa. Dra. Elisabeti Kira}\\
   {\small Presidente da Comissão de Monitoria}
 \end{flushright}
 \vspace{1.5cm}
