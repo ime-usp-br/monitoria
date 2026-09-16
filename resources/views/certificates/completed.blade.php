@@ -19,6 +19,12 @@
 \renewcommand{\headrulewidth}{0pt}
 \doublespacing
 
+\rightskip=0pt
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\tolerance=3000
+\emergencystretch=2em
+
 \begin{document}
 
 \begin{center}
