@@ -46,11 +46,12 @@ Além das dependências, foram encontrados dois problemas críticos que **não s
 - **Fase 1a concluída:** hotfix de dependências dentro do Laravel 8/PHP 7.4. O `composer audit` caiu de **49 avisos em 13 pacotes** para **7 avisos em 2 pacotes** (`laravel/framework` e `league/flysystem` 1.x, ambos sem correção na série atual).
 - **Fase 1b (histórico):** Sentry atualizado para 4.31.0; `uspdev/senhaunica-socialite` e `uspdev/replicado` ficaram pinados em 4.3.2/1.13.2 no PHP 7.4 porque o Replicado 1.28.9 usa sintaxe PHP 8 e a Senhaunica 4.5 depende dele.
 - **Fase 2 concluída:** Laravel **9.52.23**, PHP **8.2.36**, Symfony **6.4**, Flysystem **3.36.0**, Symfony Mailer, CORS nativo, Sanctum **3.3.3**, Spatie **5.11.1**, Replicado **1.28.9**, Senhaunica **4.5.12**, QueueMonitor **5.3.7**, Staudenmeir **2.12.1/1.17.3**. Dockerfile de produção e E2E migrados para PHP 8.2; Node 22 no build.
-- **Auditoria atual:** **7 avisos em 1 pacote** (`laravel/framework` 9.52.23), incluindo a critical `CVE-2026-114509` sem correção na série 9. Flysystem 3.36 e `firebase/php-jwt` 7.2 eliminaram os avisos anteriores.
+- **Fase 3 concluída:** Laravel **10.50.4**, Monolog **3.13.0**, PHPUnit **10.5.67**, Spatie **6.25.0**, QueueMonitor **5.4.5**, Staudenmeir **2.15.1/1.19.5**, Collision **7.12.0** e Ignition **2.9.1**. A `phpunit.xml` foi migrada para o schema do PHPUnit 10 (`<source>`). A critical `CVE-2026-114509` foi corrigida nesta versão.
+- **Auditoria atual:** **5 avisos em 1 pacote** (`laravel/framework` 10.50.4): 2 de CRLF/XSS de baixo impacto, 1 de path confusion em URL assinada e 1 de task output injection. Não há mais avisos em dependências transitivas.
 - **Correções de código aplicadas:** SEC-02 (escalada de privilégio), SEC-03 (PII não autenticada), SEC-04 (XSS armazenado), SEC-05 (download arbitrário), SEC-06 (bug de variável e determinismo), SEC-07 (substring de admin) e SEC-14 (IDOR em autoavaliação).
 - **SEC-01 mitigado, não eliminado:** a permissão `Editar E-mails` foi removida da Secretaria e templates com `@php`/`<?` passam a ser rejeitados. A renderização de conteúdo do banco via `Blade::render` ainda permite expressões PHP para Administrador; a troca por um motor sandboxed/placeholders continua na fase 8.
-- **Testes após a Fase 2:** **264 testes PHPUnit, 0 falhas, 0 skipped** e **31 testes E2E aprovados** no PHP 8.2.
-- **Pendências:** Fase 3 (Laravel 10.50.4), frontend/build (axios/laravel-mix/package-lock), infraestrutura (MySQL 8.4, imagens pinadas).
+- **Testes após a Fase 3:** **264 testes PHPUnit 10, 0 falhas, 0 skipped** e **31 testes E2E aprovados** no PHP 8.2.
+- **Pendências:** Fase 4 (Laravel 11 + PHP 8.3, incluindo a nova estrutura `bootstrap/app.php`), frontend/build (axios/laravel-mix/package-lock), infraestrutura (MySQL 8.4, imagens pinadas).
 - **Observação:** o Composer 2.10 bloqueia a instalação de qualquer versão do Laravel 8 por advisory de segurança. O hotfix usou `--no-blocking` de forma consciente e documentada; a dívida residual está listada na seção 5.
 
 ## 2. Metodologia
@@ -693,6 +694,8 @@ Mudanças:
 - Revisar `$dates` (não encontrado no código), casts e `Model::load`.
 
 Esta é uma fase relativamente curta; o objetivo é chegar ao Laravel 10.50.4, que corrige a critical `CVE-2026-114509` e as falhas com patch disponível para a série 10, mas **não** corrige os quatro avisos mais recentes (`CVE-2026-48019`, `CVE-2026-128083`, `CVE-2026-102279` e `GHSA-crmm-hgp2-wgrp`), cujas correções começam na série 12. A primeira versão com todas as CVEs conhecidas corrigidas é **12.71.0+** (usar 12.73.0). **Não parar no L10**, pois ele está EOL.
+
+**Resultado da execução (2026-11-23):** etapa concluída. Laravel 10.50.4, Monolog 3.13.0, PHPUnit 10.5.67, Spatie 6.25.0, QueueMonitor 5.4.5, Staudenmeir 2.15.1/1.19.5, Collision 7.12.0 e Ignition 2.9.1. `phpunit.xml` migrada para o schema do PHPUnit 10. **264 testes PHPUnit 10 + 31 E2E verdes**. Auditoria: 5 avisos em 1 pacote (Laravel 10).
 
 ### 9.8 Fase 4 — Laravel 10 → 11
 
