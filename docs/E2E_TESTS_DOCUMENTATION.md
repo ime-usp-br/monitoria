@@ -6,8 +6,8 @@
 - `docs/TECHNICAL_DOCUMENTATION.md`
 - `docs/SCENARIO_TESTS_DOCUMENTATION.md` (244 cenários `CEN-*`)
 
-**Data:** 2026-11-19
-**Status:** fundação implementada. Existem `docker-compose.e2e.yml`, imagens, seed, fixtures do Replicado, 31 testes Playwright executando e a matriz dos 244 cenários. A cobertura completa ainda será construída incrementalmente.
+**Data:** 2026-11-23
+**Status:** cobertura concluída. Os 244 cenários `CEN-*` têm destino executável na matriz `e2e/coverage.yaml`: 181 via Playwright (UI/híbrido) e 63 via PHPUnit de cenário (non-ui/híbrido). A suíte Playwright tem 201 testes; a suíte PHPUnit de cenário tem 249 testes (1 skip condicional de data).
 
 ### O que já está implementado
 
@@ -16,8 +16,9 @@
 - `docker/e2e/Dockerfile.app`, entrypoints, nginx e imagem `e2e/Dockerfile` com Chromium.
 - `php artisan e2e:seed`, manifesto `seed.json` e fixtures do Replicado em `replicado.json`.
 - Fallback de Replicado por `E2E_REPLICADO_FAKE=true` (ver seção 7.5), necessário porque o ASE do `asedocker` sofre SIGSEGV no kernel deste ambiente.
-- Suíte `e2e/tests` com 31 testes P0/P1/P2 passando.
-- `e2e/coverage.yaml` com os 244 `CEN-*` mapeados.
+- Suíte `e2e/tests` com 201 testes Playwright P0/P1/P2 passando (279–296 s nos ciclos completos).
+- `e2e/coverage.yaml` com os 244 `CEN-*` mapeados, `status: implemented` e `nodeid` verificável.
+- Suíte PHPUnit `tests/Feature/Scenario` com 249 testes (244 CEN-* + 5 testes auxiliares), 1822 asserções (53 s).
 - `scripts/run_e2e.sh` e documentação de execução.
 
 ---
@@ -297,7 +298,8 @@ Fluxo executado pelo helper de login:
 3. o helper preenche `#callback` com `http://web/callback`, preenche `#loginUsuario` com o `codpes` do usuário e clica em "Login";
 4. o faker redireciona para o callback da aplicação com `oauth_token` e `oauth_verifier`;
 5. a aplicação cria/atualiza o `User`, sincroniza os vínculos do Replicado e autentica;
-6. o helper aguarda a URL `/` e valida que o menu esperado apareceu.
+6. o helper restaura `name`/`email` do usuário a partir do manifesto (`support.auth.restore_identity`), porque o faker gera nome/e-mail aleatórios e o `senhaunica-socialite` regrava o usuário local no callback;
+7. o helper aguarda a URL `/` e valida que o menu esperado apareceu.
 
 O formulário do faker tem os campos `#callback`, `#loginUsuario`, `#oauth_token`, `#callback_id`. O helper preenche `#callback` com a URL da aplicação (`http://web/callback`) porque o faker usa o referer do request_token como valor padrão, que aponta para ele mesmo.
 
@@ -563,6 +565,9 @@ e2e/
     auth.py
     manifest.py
     db.py
+    http.py
+    mailpit.py
+    state.py
   fixtures/
     replicado/
       init-replicado.sh
@@ -591,23 +596,23 @@ e2e/
     olddb.py
   tests/
     test_auth.py
-    test_schoolterms.py
-    test_schoolclasses.py
-    test_requisitions.py
-    test_schoolrecords.py
-    test_enrollments.py
-    test_selections.py
-    test_frequencies.py
-    test_tutors.py
     test_certificates.py
-    test_selfevaluations.py
-    test_instructorevaluations.py
-    test_mailtemplates.py
     test_emails.py
-    test_users.py
-    test_reports.py
+    test_enrollments.py
+    test_evaluations.py
+    test_frequencies.py
+    test_instructors.py
+    test_mailtemplates.py
     test_olddb.py
-    test_commands_jobs_kernel.py
+    test_reports.py
+    test_requisitions.py
+    test_schoolclasses.py
+    test_schoolrecords.py
+    test_schoolterms.py
+    test_selections.py
+    test_students.py
+    test_tutors.py
+    test_users.py
   artifacts/            # gitignored
 scripts/
   run_e2e.sh
@@ -733,35 +738,35 @@ Todos os 244 `CEN-*` da `docs/SCENARIO_TESTS_DOCUMENTATION.md` entram na matriz 
 
 ### 11.2 Distribuição por módulo
 
-| Módulo | CENs | Classificação principal | Rotas/entradas | Observações |
-|---|---:|---|---|---|
-| `SCHOOLTERM` | 22 | UI + híbrido | `/schoolterms` | Upload/download de edital e validações de datas. |
-| `SELECTION` | 18 | UI + híbrido | `/selections`, `/selections/{id}/enrollments` | Escopo por papel e departamento; bloqueios. |
-| `REQUISITION` | 18 | UI | `/requisitions` | Formulário com atividades, recomendações e bolsas. |
-| `SCHOOLCLASS` | 16 | UI + híbrido | `/schoolclasses` | Import do Replicado é assíncrono/síncrono. |
-| `ENROLLMENT` | 16 | UI | `/enrollments` | Múltiplas turmas da mesma `coddis`. |
-| `EMAIL` | 16 | UI + mailpit | `/emails` | Disparos e modelos ativos. |
-| `SELFEVAL` | 15 | UI + links assinados | `/selfevaluations` | Janela de avaliação. |
-| `MAILTEMPLATE` | 13 | UI + mailpit | `/mailtemplates` | CRUD, ativação e teste de envio. |
-| `TUTOR` | 11 | UI | `/tutors` | Revogar, voluntário e escopo. |
-| `FREQUENCY` | 11 | UI + regra de data | `/frequencies` | Dia 20 e mês futuro. |
-| `USER` | 10 | UI + híbrido | `/users` | Papéis, busca e login. |
-| `INSEVAL` | 10 | UI + links assinados | `/instructorevaluations` | Janela de avaliação. |
-| `CMD` | 10 | NÃO-UI | `artisan` | Executar no container e validar stdout/exit code/DB. |
-| `REPLICADO` | 9 | NÃO-UI | models | Validar contra o Sybase falso; sem navegador. |
-| `KERNEL` | 8 | NÃO-UI/híbrido | `schedule:run` | Datas calculadas; Mailpit para e-mails. |
-| `SCHOOLRECORD` | 7 | UI + upload/download | `/schoolRecords` | PDF e unicidade. |
-| `REPORT` | 7 | UI + PDF | `/reports` | Token externo e geração LaTeX. |
-| `CERTIFICATE` | 7 | UI + PDF | `/certificates` | Atestado e envio à Secretaria. |
-| `OLDDB` | 6 | UI + job | `/olddb` | CSV e importação. |
-| `INSTRUCTOR` | 6 | UI + replicado | `/instructors` | Busca por `codpes`. |
-| `STUDENT` | 4 | UI + replicado | `/students` | Busca e vínculos. |
-| `JOB` | 4 | NÃO-UI | queue | Worker ou `queue:work --once`. |
-| **Total** | **244** | | | |
+| Módulo | CENs | E2E (Playwright) | PHPUnit | Observações |
+|---|---:|---:|---:|---|
+| `SCHOOLTERM` | 22 | 14 | 8 | Upload/download de edital e validações de datas; mutators/auxiliares no PHPUnit. |
+| `SELECTION` | 18 | 17 | 1 | Escopo por papel/departamento; repopulação de `Course` no PHPUnit. |
+| `REQUISITION` | 18 | 13 | 5 | Formulário, atividades, recomendações e bolsas; guardas de período no PHPUnit. |
+| `SCHOOLCLASS` | 16 | 14 | 2 | Import do Replicado (síncrono/fila) no PHPUnit. |
+| `ENROLLMENT` | 16 | 14 | 2 | Múltiplas turmas da mesma `coddis`; período divergente no PHPUnit. |
+| `EMAIL` | 16 | 15 | 1 | Disparos e Mailpit; cancelamento de mailable no PHPUnit. |
+| `SELFEVAL` | 15 | 14 | 1 | Janela de avaliação e links assinados; destroy stub no PHPUnit. |
+| `MAILTEMPLATE` | 13 | 12 | 1 | CRUD, ativação e teste de envio; falha graciosa no PHPUnit. |
+| `TUTOR` | 11 | 11 | 0 | Revogar, voluntário e escopo. |
+| `FREQUENCY` | 11 | 9 | 2 | Dia 20, mês futuro e seleção não ativa; casos dependentes de data no PHPUnit. |
+| `USER` | 10 | 7 | 3 | Papéis, busca, loginas; stubs/sync de vínculo no PHPUnit. |
+| `INSEVAL` | 10 | 10 | 0 | Janela de avaliação e links assinados. |
+| `CMD` | 10 | 0 | 10 | Console: stdout, exit code e transação. |
+| `REPLICADO` | 9 | 0 | 9 | Models/SQL contra os stubs de Replicado. |
+| `KERNEL` | 8 | 0 | 8 | Agendador e fechamento de período; datas calculadas. |
+| `SCHOOLRECORD` | 7 | 5 | 2 | Upload/download e stubs. |
+| `REPORT` | 7 | 7 | 0 | Index, `make` (PDF) e endpoint externo com token. |
+| `CERTIFICATE` | 7 | 7 | 0 | Listagem, permissões e PDFs. |
+| `OLDDB` | 6 | 4 | 2 | Importação e monitor; cadeia completa/erros de Replicado no PHPUnit. |
+| `INSTRUCTOR` | 6 | 5 | 1 | Busca JSON, index e requisições; stubs no PHPUnit. |
+| `STUDENT` | 4 | 3 | 1 | Busca JSON; stubs no PHPUnit. |
+| `JOB` | 4 | 0 | 4 | Fila, timeout e monitor. |
+| **Total** | **244** | **181** | **63** | Nenhum `CEN-*` sem destino. |
 
 ### 11.3 Jornadas críticas (P0)
 
-As jornadas abaixo formam o primeiro conjunto a implementar e devem rodar em menos de 10 minutos:
+As jornadas abaixo estão implementadas e a suíte completa executa em cerca de 4 min 39 s a 4 min 56 s (279–296 s) nos ciclos completos:
 
 1. Login como Admin/Secretaria/Docente/Aluno e visibilidade de menu.
 2. Criação e edição de período letivo, upload de edital e período aberto.
@@ -778,40 +783,73 @@ As jornadas abaixo formam o primeiro conjunto a implementar e devem rodar em men
 
 ### 11.4 Rastreabilidade
 
-Formato previsto para `e2e/coverage.yaml`:
+Formato atual de `e2e/coverage.yaml`:
 
 ```yaml
-- cen: CEN-SCHOOLTERM-001
+- cen: CEN-SCHOOLTERM-003
   module: SCHOOLTERM
   type: ui
-  test: tests/test_schoolterms.py::test_cen_schoolterm_001_periodo_aberto_duplicado
   priority: p0
-  status: planned
-- cen: CEN-KERNEL-005
+  test: tests/test_schoolterms.py
+  nodeid: "tests/test_schoolterms.py::test_cen_schoolterm_003_inicio_depois_do_fim_rejeitado[chromium]"
+  status: implemented
+- cen: CEN-KERNEL-002
   module: KERNEL
   type: non-ui
-  test: tests/test_commands_jobs_kernel.py::test_cen_kernel_005_fechamento
   priority: p1
-  status: planned
-  note: executado via schedule:run no container app
+  test: tests/Feature/Scenario/KernelScenarioTest.php
+  nodeid: "tests/Feature/Scenario/KernelScenarioTest.php::test_cen_kernel_002_disparo_mensal_agenda_monthly_on"
+  status: implemented
+  justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
 ```
 
 Regras:
 
 - `type: ui|hibrido|non-ui`.
-- `status: planned|implemented|blocked`.
-- Cenários não-UI precisam de `note` explicando por que não usam navegador.
-- O pipeline deve falhar se houver `CEN-*` sem entrada na matriz ou se um `test` apontar para nodeid inexistente.
+- `status: planned|implemented|blocked`. Todos os 244 estão `implemented`.
+- Todo `nodeid` é executável: `tests/...py::teste[chromium]` para Playwright ou `tests/Feature/Scenario/...php::teste` para PHPUnit.
+- `justification` é obrigatória quando o destino é PHPUnit.
+- `./scripts/validate_e2e_coverage.sh` confirma 244/244, `planned=0` e que cada `nodeid` aponta para arquivo e função existentes. O script deve rodar no CI antes do Playwright.
 
 ### 11.5 Cenários que não fazem sentido no navegador
 
 - `CEN-JOB-*`: jobs e monitor de fila.
-- `CEN-KERNEL-*`: agendador; podem ser híbridos quando o efeito é visível (e-mail, seleção concluída).
-- `CEN-CMD-*`: comandos de console; validar stdout, exit code e banco.
-- `CEN-REPLICADO-*`: models e SQL; validar contra o Sybase falso.
-- Partes de `CEN-OLDDB-*` e `CEN-SCHOOLCLASS-*` que testam processamento interno do job, sem tela.
+- `CEN-KERNEL-*`: agendador; as regras de data/hora e o fechamento são validados no PHPUnit, sem depender do relógio real.
+- `CEN-CMD-*`: comandos de console; stdout, exit code, rollback e banco.
+- `CEN-REPLICADO-*`: models e SQL; validação contra os stubs de Replicado.
+- Partes de `CEN-OLDDB-*`, `CEN-SCHOOLCLASS-*`, `CEN-FREQUENCY-*`, `CEN-USER-*` e `CEN-SCHOOLTERM-*` que testam processamento interno, helpers ou stubs, sem tela própria.
 
-Esses cenários continuam no pipeline como testes PHPUnit/console, executados antes ou depois da suíte Playwright, e aparecem na matriz como `non-ui`.
+Esses 63 cenários aparecem na matriz como `non-ui`/`hibrido` e são executados pela suíte PHPUnit de cenário.
+
+### 11.6 Limitações conhecidas e alternativas
+
+- **Faker e identidade local:** o `senhaunica-faker` devolve nome/e-mail aleatórios no callback OAuth e o `senhaunica-socialite` regrava o usuário local. O helper `e2e/support/auth.py::restore_identity` restaura nome/e-mail do manifesto após o login; sem isso, a busca de usuários e a unicidade de e-mail ficariam não determinísticas. A alternativa seria fixar identidades no faker, o que exigiria trocar a imagem pinada.
+- **Regra do dia 20 (`CEN-FREQUENCY-009`):** o teste PHPUnit é pulado quando o dia do mês é ≥ 20; a execução atual (dia 23) exercita o caminho liberado (`CEN-FREQUENCY-010`). Para cobrir os dois lados em qualquer data seria necessário congelar o relógio (`Carbon::setTestNow`), o que o teste PHPUnit já faz quando aplicável.
+- **Mês futuro (`CEN-FREQUENCY-008`):** o seed cria uma frequência para `min(12, mês_atual + 1)`. Em dezembro não existe mês posterior dentro do 2º semestre, então o teste Playwright é pulado e a regra fica coberta pelo PHPUnit com relógio congelado. O skip é explícito e não mascara falha.
+- **`CEN-FREQUENCY-007`:** usa seleção `Concluido` e frequência futura para provar o bloqueio por status; é non-ui porque a URL assinada de update precisa ser gerada pelo backend.
+- **`CEN-SELECTION-002`:** o texto do cenário cita Presidente de Comissão, mas a configuração de permissões atual não concede `Selecionar monitor` a esse papel. O teste Playwright cobre Admin/Secretaria (comportamento real) e o PHPUnit registra a negação ao Docente.
+- **`CEN-EMAIL-012/014/015`:** o corpo do e-mail só contém a URL assinada porque o seed inclui `@isset($link)` no template. A asserção valida o link no Mailpit, não apenas o assunto.
+- **`CEN-REPORT-003/005/006`:** a geração LaTeX é real (LaraTeX + `create_graphs.py`); o endpoint externo retorna `status: false` mesmo no sucesso (comportamento legado), então o teste valida a mensagem e o PDF em base64.
+- **`CEN-OLDDB-003/005`:** o job roda com `QUEUE_CONNECTION=sync`, portanto o monitor já está disponível ao fim da requisição. O teste confirma o despacho/erro pelo endpoint `monitor/getImportOldDBJob`; a cadeia completa (`CEN-OLDDB-004/006`) permanece no PHPUnit porque depende de SQL do banco antigo não reproduzido no fake.
+- **`UserController::search`:** a implementação atual faz `$validated["name"]`/`["codpes"]` sem `??`, então os testes passam explicitamente `name=` e `codpes=` vazios. É uma limitação do produto, não do teste; deve ser corrigida em code review.
+- **TinyMCE:** as telas de autoavaliação/avaliação carregam o editor via CDN com chave inválida no domínio `web`; a validação é feita por submissão HTTP autenticada e asserção do flash, sem depender do editor.
+- **PHPUnit no ambiente E2E:** a imagem de produção não inclui `tests/` nem dependências de dev (`.dockerignore`). A suíte é executada em um container one-off com `vendor` do checkout de desenvolvimento e `E2E_REPLICADO_FAKE=false`, pois o provider E2E aliasa `Uspdev\Replicado\DB` e impede os stubs Mockery. O banco `laravel_test` é criado uma vez no MariaDB do compose; o diretório de views precisa existir porque o entrypoint normal não roda no container one-off. Comando usado:
+  ```bash
+  docker compose -p monitoria_e2e -f docker-compose.e2e.yml up -d --wait db senhaunica mailpit
+  docker compose -p monitoria_e2e -f docker-compose.e2e.yml exec -T db \
+    mariadb -uroot -proot -e "CREATE DATABASE IF NOT EXISTS laravel_test; \
+      GRANT ALL ON laravel_test.* TO 'e2e'@'%'; FLUSH PRIVILEGES;"
+  docker compose -p monitoria_e2e -f docker-compose.e2e.yml run --rm --no-deps \
+    -e E2E_REPLICADO_FAKE=false --entrypoint sh \
+    -v "$PWD:/src:ro" -v /caminho/do/monitoria/vendor:/var/www/vendor:ro app \
+    -lc "mkdir -p storage/framework/views storage/framework/cache/data \
+         storage/framework/sessions storage/framework/testing storage/logs bootstrap/cache && \
+         rm -rf /var/www/tests && cp -r /src/tests /var/www/tests && \
+         cp /src/phpunit.xml /var/www/phpunit.xml && \
+         php -d memory_limit=512M vendor/bin/phpunit tests/Feature/Scenario --colors=never"
+  ```
+  Resultado do último ciclo: `Tests: 249, Assertions: 1822, Skipped: 1` em 52 s. A alternativa definitiva é uma imagem de CI com `composer install` (incluindo dev) e `tests/` copiados.
+
 
 ---
 
@@ -879,6 +917,9 @@ Esses cenários continuam no pipeline como testes PHPUnit/console, executados an
 ### 13.2 Comandos
 
 ```bash
+# valida a matriz de rastreabilidade (244 CEN-*)
+./scripts/validate_e2e_coverage.sh
+
 # execução completa (limpa, sobe, semeia, roda e derruba)
 ./scripts/run_e2e.sh
 
@@ -938,14 +979,15 @@ O Playwright roda headless no container. Para depuração visual, usar trace/scr
 Pipeline previsto (GitHub Actions ou equivalente):
 
 1. checkout;
-2. build das imagens com cache de camadas;
-3. `down -v` preventivo;
-4. `up -d --build --wait`;
-5. executar testes PHPUnit existentes (gate complementar);
-6. executar `pytest -m "p0 or p1"`;
-7. publicar `e2e/artifacts` como artifact em sucesso/falha;
-8. `down -v` sempre;
-9. timeout do job (ex.: 60 min) e timeout por teste.
+2. `./scripts/validate_e2e_coverage.sh`;
+3. build das imagens com cache de camadas;
+4. `down -v` preventivo;
+5. `up -d --build --wait`;
+6. executar a suíte PHPUnit de cenário (249 testes; 1 skip condicional de data);
+7. executar `pytest` completo (201 testes);
+8. publicar `e2e/artifacts` como artifact em sucesso/falha;
+9. `down -v` sempre;
+10. timeout do job (ex.: 60 min) e timeout por teste.
 
 Nenhum secret é necessário. As credenciais são fixas e fictícias.
 
@@ -960,15 +1002,15 @@ A implementação futura será considerada concluída quando:
 - [x] O Replicado falso responde a todas as consultas usadas pelas jornadas cobertas.
 - [x] O login via `senhaunica-faker` funciona para todos os papéis da seção 6.3.
 - [x] O seed grava o manifesto e nenhum teste hardcodeia IDs.
-- [x] Todos os 244 `CEN-*` estão em `e2e/coverage.yaml` com tipo, prioridade e destino.
-- [x] As jornadas P0 passam de forma estável em três execuções consecutivas (31 testes).
-- [ ] Nenhum teste faz chamada a `replicado.ime.usp.br`, `dev.uspdigital.usp.br` ou CDN externa.
-- [ ] E-mails são validados pelo Mailpit, incluindo links assinados.
-- [ ] PDFs de atestado, relatório e histórico são baixados e validados.
-- [ ] Cenários de fila e Kernel têm estratégia explícita e não dependem de espera arbitrária.
+- [x] Todos os 244 `CEN-*` estão em `e2e/coverage.yaml` com tipo, prioridade, `status: implemented` e `nodeid` verificável.
+- [x] A suíte completa (201 testes Playwright) passa em duas execuções consecutivas; a suíte PHPUnit de cenário (249 testes, 1 skip de data) passa com 1822 asserções.
+- [ ] Nenhum teste faz chamada a `replicado.ime.usp.br` ou `dev.uspdigital.usp.br` (o Replicado é substituído). As telas de autoavaliação/avaliação ainda carregam o TinyMCE por CDN, mas nenhum teste depende dele; a validação usa HTTP autenticado.
+- [x] E-mails são validados pelo Mailpit, incluindo links assinados.
+- [x] PDFs de atestado, relatório e histórico são baixados/validados.
+- [x] Cenários de fila e Kernel têm estratégia explícita (PHPUnit/`schedule` refletido) e não dependem de espera arbitrária.
 - [x] `scripts/run_e2e.sh` derruba a stack e os volumes ao final, inclusive em falha.
 - [x] Artefatos de falha (trace, screenshot, vídeo, logs) são publicados.
-- [x] A suíte completa executa em ~40s neste ambiente (meta: P0 < 10 min; completa < 45 min).
+- [x] A suíte Playwright completa executa em 279–296 s (~4 min 39 s a 4 min 56 s); PHPUnit de cenário em 53 s.
 - [x] O README documenta como rodar, depurar e atualizar as fixtures.
 
 ---

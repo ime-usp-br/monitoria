@@ -92,6 +92,59 @@ class KernelScenarioTest extends ScenarioTestCase
         $this->assertTrue(true);
     }
 
+
+    public function test_cen_kernel_002_disparo_mensal_agenda_monthly_on()
+    {
+        $this->createOpenTerm();
+        MailTemplate::create(['name' => 'Mensal', 'description' => 'Mensal E2E', 'mail_class' => 'NotifySelectStudent', 'sending_frequency' => 'Mensal', 'sending_date' => '15', 'sending_hour' => '08:00', 'active' => true, 'subject' => 's', 'body' => 'b']);
+
+        $schedule = new \Illuminate\Console\Scheduling\Schedule($this->app);
+        $kernel = app(Kernel::class);
+        $method = new \ReflectionMethod($kernel, 'schedule');
+        $method->setAccessible(true);
+        $method->invoke($kernel, $schedule);
+
+        $event = collect($schedule->events())->first(fn ($event) => str_contains((string) $event->description, 'Mensal E2E'));
+        $this->assertNotNull($event);
+        $this->assertSame('0 8 15 * *', $event->expression);
+    }
+
+    public function test_cen_kernel_003_disparo_inicio_do_periodo_de_avaliacao()
+    {
+        $start = now()->addDays(5);
+        $term = $this->createOpenTerm(['start_date_evaluations' => $start->format('d/m/Y')]);
+        MailTemplate::create(['name' => 'Inicio', 'description' => 'Inicio E2E', 'mail_class' => 'NotifySelectStudent', 'sending_frequency' => 'Inicio do período de avaliação', 'sending_date' => '5', 'sending_hour' => '08:00', 'active' => true, 'subject' => 's', 'body' => 'b']);
+
+        $schedule = new \Illuminate\Console\Scheduling\Schedule($this->app);
+        $kernel = app(Kernel::class);
+        $method = new \ReflectionMethod($kernel, 'schedule');
+        $method->setAccessible(true);
+        $method->invoke($kernel, $schedule);
+
+        $expected = $start->copy()->addDays(5)->format('d/m/Y');
+        $event = collect($schedule->events())->first(fn ($event) => str_contains((string) $event->description, $expected));
+        $this->assertNotNull($event);
+        $this->assertStringContainsString($term->period, $event->description);
+    }
+
+    public function test_cen_kernel_004_disparo_final_do_periodo_de_avaliacao()
+    {
+        $end = now()->addDays(20);
+        $term = $this->createOpenTerm(['end_date_evaluations' => $end->format('d/m/Y')]);
+        MailTemplate::create(['name' => 'Final', 'description' => 'Final E2E', 'mail_class' => 'NotifySelectStudent', 'sending_frequency' => 'Final do período de avaliação', 'sending_date' => '5', 'sending_hour' => '08:00', 'active' => true, 'subject' => 's', 'body' => 'b']);
+
+        $schedule = new \Illuminate\Console\Scheduling\Schedule($this->app);
+        $kernel = app(Kernel::class);
+        $method = new \ReflectionMethod($kernel, 'schedule');
+        $method->setAccessible(true);
+        $method->invoke($kernel, $schedule);
+
+        $expected = $end->copy()->subDays(5)->format('d/m/Y');
+        $event = collect($schedule->events())->first(fn ($event) => str_contains((string) $event->description, $expected));
+        $this->assertNotNull($event);
+        $this->assertStringContainsString($term->period, $event->description);
+    }
+
     private function runCloseTermCallback(SchoolTerm $term): void
     {
         $selection = Selection::find($term->id) ?? null;

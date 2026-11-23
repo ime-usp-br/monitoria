@@ -1,5 +1,6 @@
 import pytest
 
+from support import db
 from support.auth import login_as
 from support.manifest import load_manifest
 
@@ -38,3 +39,15 @@ def anonymous_page(browser):
     page = context.new_page()
     yield page
     context.close()
+
+
+@pytest.fixture
+def temp():
+    """Coleta instruções de limpeza para dados criados por um teste."""
+    cleanups: list[tuple[str, tuple]] = []
+    yield cleanups
+    for sql, params in reversed(cleanups):
+        try:
+            db.execute(sql, params)
+        except Exception:
+            pass
