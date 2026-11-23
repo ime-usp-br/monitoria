@@ -1,20 +1,12 @@
 # Imagem da aplicação usada SOMENTE no stack E2E.
 # Deriva da mesma base do Dockerfile de produção, mas copia o código e as
 # dependências para dentro da imagem (sem bind mount do repositório).
-FROM php:7.4-fpm-bullseye@sha256:3ac7c8c74b2b047c7cb273469d74fc0d59b857aa44043e6ea6a0084372811d5b
+FROM php:8.2-fpm-bookworm@sha256:afd39a6125fcb59cbe9ff0e2183bbad56aecc59858f9262c73cf6f13ddb9a9e0
 
-# Debian 11 (bullseye) está no archive; os espelhos regulares removem os
-# pacotes de segurança antigos e o apt passa a retornar 404.
-RUN rm -f /etc/apt/sources.list \
-    && printf '%s\n' \
-        'deb http://archive.debian.org/debian bullseye main' \
-        'deb http://archive.debian.org/debian-security bullseye-security main' \
-        > /etc/apt/sources.list \
-    && apt-get -o Acquire::Check-Valid-Until=false update
-
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
     git \
     curl \
+    ca-certificates \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
@@ -32,9 +24,8 @@ RUN apt-get install -y \
     texlive-fonts-recommended \
     texlive-lang-portuguese \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath zip \
-    && ln -s /usr/lib/x86_64-linux-gnu/libsybdb.so /usr/lib/libsybdb.so \
+    && docker-php-ext-install -j$(nproc) gd pdo_mysql mbstring exif pcntl bcmath zip \
+    && ln -sf /usr/lib/x86_64-linux-gnu/libsybdb.so /usr/lib/libsybdb.so \
     && SYBASE=/usr docker-php-ext-install pdo_dblib \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 

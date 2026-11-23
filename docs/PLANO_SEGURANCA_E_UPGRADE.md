@@ -44,12 +44,13 @@ Além das dependências, foram encontrados dois problemas críticos que **não s
 
 - **Fase 0 concluída:** testes determinísticos (sem skips por data), suíte de regressão de segurança e correções dos achados críticos/altos que não dependiam do upgrade.
 - **Fase 1a concluída:** hotfix de dependências dentro do Laravel 8/PHP 7.4. O `composer audit` caiu de **49 avisos em 13 pacotes** para **7 avisos em 2 pacotes** (`laravel/framework` e `league/flysystem` 1.x, ambos sem correção na série atual).
-- **Fase 1b concluída parcialmente:** Sentry atualizado para 4.31.0; `uspdev/senhaunica-socialite` e `uspdev/replicado` foram **pinados em 4.3.2 e 1.13.2**. A tentativa de atualizar para 4.5.12/1.28.9 quebrou o login no E2E porque o `uspdev/replicado 1.28.9` usa sintaxe PHP 8 (`string|null` em `Pessoa.php:153`) apesar de declarar suporte a PHP 7.4, e a Senhaunica 4.5 chama `Graduacao::obterCursoAtivo()`, inexistente no Replicado 1.13.2. A atualização desses dois pacotes fica para a fase 2, com PHP 8.2.
-- **Auditoria atual:** 8 avisos em 3 pacotes — `laravel/framework` (6, incluindo a critical sem correção na série 8), `league/flysystem 1.x` (1, low) e `firebase/php-jwt 6.x` (1, low; 7.x exige PHP 8).
+- **Fase 1b (histórico):** Sentry atualizado para 4.31.0; `uspdev/senhaunica-socialite` e `uspdev/replicado` ficaram pinados em 4.3.2/1.13.2 no PHP 7.4 porque o Replicado 1.28.9 usa sintaxe PHP 8 e a Senhaunica 4.5 depende dele.
+- **Fase 2 concluída:** Laravel **9.52.23**, PHP **8.2.36**, Symfony **6.4**, Flysystem **3.36.0**, Symfony Mailer, CORS nativo, Sanctum **3.3.3**, Spatie **5.11.1**, Replicado **1.28.9**, Senhaunica **4.5.12**, QueueMonitor **5.3.7**, Staudenmeir **2.12.1/1.17.3**. Dockerfile de produção e E2E migrados para PHP 8.2; Node 22 no build.
+- **Auditoria atual:** **7 avisos em 1 pacote** (`laravel/framework` 9.52.23), incluindo a critical `CVE-2026-114509` sem correção na série 9. Flysystem 3.36 e `firebase/php-jwt` 7.2 eliminaram os avisos anteriores.
 - **Correções de código aplicadas:** SEC-02 (escalada de privilégio), SEC-03 (PII não autenticada), SEC-04 (XSS armazenado), SEC-05 (download arbitrário), SEC-06 (bug de variável e determinismo), SEC-07 (substring de admin) e SEC-14 (IDOR em autoavaliação).
 - **SEC-01 mitigado, não eliminado:** a permissão `Editar E-mails` foi removida da Secretaria e templates com `@php`/`<?` passam a ser rejeitados. A renderização de conteúdo do banco via `Blade::render` ainda permite expressões PHP para Administrador; a troca por um motor sandboxed/placeholders continua na fase 8.
-- **Testes após as mudanças:** **264 testes PHPUnit, 0 falhas, 0 skipped** e **31 testes E2E aprovados**.
-- **Pendências:** Fase 2 (Laravel 9 + PHP 8.2 + Replicado 1.28.9 + Senhaunica 4.5 + Spatie 5), frontend/build (axios/Node), infraestrutura (MySQL 8.4, imagens pinadas).
+- **Testes após a Fase 2:** **264 testes PHPUnit, 0 falhas, 0 skipped** e **31 testes E2E aprovados** no PHP 8.2.
+- **Pendências:** Fase 3 (Laravel 10.50.4), frontend/build (axios/laravel-mix/package-lock), infraestrutura (MySQL 8.4, imagens pinadas).
 - **Observação:** o Composer 2.10 bloqueia a instalação de qualquer versão do Laravel 8 por advisory de segurança. O hotfix usou `--no-blocking` de forma consciente e documentada; a dívida residual está listada na seção 5.
 
 ## 2. Metodologia
@@ -673,6 +674,8 @@ Mudanças estruturais:
 - Revisar `config/mail.php` para o formato do Symfony Mailer (`MAIL_SCHEME`, `MAIL_ENCRYPTION`).
 
 Testes obrigatórios: e-mail real via Mailpit, PDF real, uploads/downloads, fila/worker, Replicado staging, MySQL 8.4.
+
+**Resultado da execução (2026-11-23):** etapa concluída. Laravel 9.52.23, PHP 8.2.36, Symfony 6.4.50, Flysystem 3.36.0, Symfony Mailer, Sanctum 3.3.3, Spatie 5.11.1, Replicado 1.28.9, Senhaunica 4.5.12, QueueMonitor 5.3.7, Staudenmeir 2.12.1/1.17.3 e LaraTeX 1.3.0-p1. **264 testes PHPUnit + 31 E2E verdes**. Ajustes adicionais: migrations e config do QueueMonitor 5.x, remoção de `NO_AUTO_CREATE_USER` do `config/database.php`, CORS nativo (`Illuminate\Http\Middleware\HandleCors`) e `FakeReplicadoDb` com `getQuery()`/`obterCursoAtivo()`. O `uspdev/laravel-usp-theme` continua no fork pinado porque a versão oficial exige `cadastros-auxiliares-client`/Laravel 11+.
 
 ### 9.7 Fase 3 — Laravel 9 → 10
 

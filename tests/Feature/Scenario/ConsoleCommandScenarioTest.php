@@ -52,9 +52,10 @@ class ConsoleCommandScenarioTest extends ScenarioTestCase
         $this->artisan('report:compare-classes', ['--schoolterm' => $term->id, '--format' => 'json'])->assertExitCode(0);
 
         // CSV em arquivo
-        $path = '/tmp/kilo/relatorio.csv';
+        $path = sys_get_temp_dir() . '/relatorio_monitoria_' . uniqid() . '.csv';
         $this->artisan('report:compare-classes', ['--schoolterm' => $term->id, '--format' => 'csv', '--output' => $path])->assertExitCode(0);
         $this->assertFileExists($path);
+        @unlink($path);
     }
 
     public function test_cen_cmd_005_compare_classes_retorna_codigo_de_saida()

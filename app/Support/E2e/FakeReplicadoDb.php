@@ -31,6 +31,22 @@ class FakeReplicadoDb
         return null;
     }
 
+    public static function getQuery($filename, array $replaces = [])
+    {
+        $path = base_path('vendor/uspdev/replicado/resources/queries/'.$filename);
+        $query = is_file($path) ? (string) file_get_contents($path) : (string) $filename;
+
+        foreach ($replaces as $key => $val) {
+            if (str_starts_with($key, '--') || str_starts_with($key, '__')) {
+                $query = str_replace($key, $val, $query);
+            } else {
+                $query = str_replace(["__{$key}__", "--{$key}--"], $val, $query);
+            }
+        }
+
+        return $query;
+    }
+
     public static function sybase()
     {
         return false;
@@ -46,6 +62,31 @@ class FakeReplicadoDb
         $data = self::data();
         $q = preg_replace('/\s+/', ' ', strtoupper($query));
         $p = array_change_key_case($param, CASE_LOWER);
+
+        // Graduacao::obterCursoAtivo (Replicado >= 1.28)
+        if (strpos($q, 'CURSOGR') !== false && strpos($q, 'HABILITACAOGR') !== false) {
+            $codpes = self::codpes($p);
+            $person = self::find($data['PESSOA'], fn ($x) => (int) $x['codpes'] === $codpes);
+            $vinculo = self::find($data['VINCULOPESSOAUSP'], fn ($v) => (int) $v['codpes'] === $codpes && $v['tipvin'] === 'ALUNOGR');
+
+            if (! $person || ! $vinculo) {
+                return [];
+            }
+
+            $programa = self::find($data['HABILPROGGR'], fn ($h) => (int) $h['codpes'] === $codpes);
+            $codcur = (int) ($programa['codcur'] ?? $data['CURSOGR'][0]['codcur'] ?? 1);
+
+            return [[
+                'codpes' => $codpes,
+                'nompes' => $person['nompes'],
+                'codcur' => $codcur,
+                'nomcur' => 'Ciencia da Computacao',
+                'codhab' => 0,
+                'nomhab' => 'Bacharelado',
+                'dtainivin' => $vinculo['dtainivin'],
+                'codcurgrd' => $codcur,
+            ]];
+        }
 
         if (strpos($q, 'LOCALIZAPESSOA') !== false) {
             $codpes = self::codpes($p);

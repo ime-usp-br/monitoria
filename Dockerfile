@@ -1,4 +1,4 @@
-FROM php:7.4-fpm
+FROM php:8.2-fpm-bookworm
 
 # Arguments defined in docker-compose.yml
 ARG user=monitoria
@@ -8,6 +8,7 @@ ARG uid=1000
 RUN apt-get update && apt-get install -y \
     git \
     curl \
+    ca-certificates \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
@@ -26,9 +27,8 @@ RUN apt-get update && apt-get install -y \
     texlive-fonts-recommended \
     texlive-lang-portuguese \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath zip \
-    && ln -s /usr/lib/x86_64-linux-gnu/libsybdb.so /usr/lib/libsybdb.so \
+    && docker-php-ext-install -j$(nproc) gd pdo_mysql mbstring exif pcntl bcmath zip \
+    && ln -sf /usr/lib/x86_64-linux-gnu/libsybdb.so /usr/lib/libsybdb.so \
     && SYBASE=/usr docker-php-ext-install pdo_dblib \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -36,11 +36,11 @@ RUN apt-get update && apt-get install -y \
 RUN curl -o /usr/local/bin/gosu -sSL "https://github.com/tianon/gosu/releases/download/1.17/gosu-$(dpkg --print-architecture)" \
     && chmod +x /usr/local/bin/gosu
 
-# Get Composer 2 (latest compatible with PHP 7.4)
+# Get Composer 2
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Install Node.js 16 (required for Laravel Mix / webpack)
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+# Install Node.js 22 LTS (required for Laravel Mix / webpack)
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y nodejs \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
