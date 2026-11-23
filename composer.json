@@ -7,28 +7,28 @@
     "require": {
         "php": "^7.3|^8.0",
         "fruitcake/laravel-cors": "^2.0",
-        "guzzlehttp/guzzle": "^7.0.1",
-        "ismaelw/laratex": "dev-main",
-        "laravel/framework": "^8.75",
+        "guzzlehttp/guzzle": "^7.15.2",
+        "ismaelw/laratex": "^1.3.0-p1",
+        "laravel/framework": "^8.83.28",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "romanzipp/laravel-queue-monitor": "^2.3",
+        "romanzipp/laravel-queue-monitor": "^2.3.4",
         "sentry/sentry-laravel": "^3.8",
         "staudenmeir/belongs-to-through": "^2.5",
         "staudenmeir/eloquent-has-many-deep": "^1.7",
-        "symfony/process": "^5.4",
-        "tijsverkoyen/css-to-inline-styles": "^2.2",
-        "uspdev/laravel-usp-theme": "dev-master",
-        "uspdev/replicado": "^1.10",
+        "symfony/process": "^5.4.51",
+        "tijsverkoyen/css-to-inline-styles": "^2.4.0",
+        "uspdev/laravel-usp-theme": "dev-master#bbbd4cb74eab3a2b1fa57cbc8da8fb683f132d7b",
+        "uspdev/replicado": "^1.28.9",
         "uspdev/senhaunica-socialite": "^4.3"
     },
     "require-dev": {
-        "facade/ignition": "^2.5",
-        "fakerphp/faker": "^1.9.1",
+        "facade/ignition": "^2.17.7",
+        "fakerphp/faker": "^1.24.1",
         "laravel/sail": "^1.0.1",
-        "mockery/mockery": "^1.4.4",
+        "mockery/mockery": "^1.6.15",
         "nunomaduro/collision": "^5.10",
-        "phpunit/phpunit": "^9.5.10"
+        "phpunit/phpunit": "^9.6.33"
     },
     "autoload": {
         "psr-4": {
@@ -67,6 +67,7 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
+        "github-protocols": ["https"],
         "allow-plugins": {
             "php-http/discovery": true
         }
@@ -76,7 +77,8 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/ayrtonnotrya/laravel-usp-theme.git"
+            "url": "https://github.com/ayrtonnotrya/laravel-usp-theme.git",
+            "no-api": true
         }
     ]
 }

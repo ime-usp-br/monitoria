@@ -40,7 +40,14 @@ Mensagem principal: **não existe uma versão segura de Laravel 8**. O patch par
 
 Além das dependências, foram encontrados dois problemas críticos que **não serão corrigidos pelo upgrade** e exigem correção de código: execução remota de código (RCE) por meio de templates de e-mail renderizados com `Blade::render` e escalada de privilégio de Secretaria para Administrador no `UserController@update`.
 
----
+### 1.1 Status de execução (2026-11-23)
+
+- **Fase 0 concluída:** testes determinísticos (sem skips por data), suíte de regressão de segurança e correções dos achados críticos/altos que não dependiam do upgrade.
+- **Fase 1a concluída:** hotfix de dependências dentro do Laravel 8/PHP 7.4. O `composer audit` caiu de **49 avisos em 13 pacotes** para **7 avisos em 2 pacotes** (`laravel/framework` e `league/flysystem` 1.x, ambos sem correção na série atual).
+- **Correções de código aplicadas:** SEC-02 (escalada de privilégio), SEC-03 (PII não autenticada), SEC-04 (XSS armazenado), SEC-05 (download arbitrário), SEC-06 (bug de variável e determinismo), SEC-07 (substring de admin) e SEC-14 (IDOR em autoavaliação).
+- **Testes após as mudanças:** **264 testes PHPUnit, 0 falhas, 0 skipped** e **31 testes E2E aprovados**.
+- **Pendências:** Fase 1b (Sentry 4.x, Senhaunica 4.5/Spatie 5), Fase 2 (Laravel 9), frontend/build (axios/Node), infraestrutura (MySQL 8.4, imagens pinadas).
+- **Observação:** o Composer 2.10 bloqueia a instalação de qualquer versão do Laravel 8 por advisory de segurança. O hotfix usou `--no-blocking` de forma consciente e documentada; a dívida residual está listada na seção 5.
 
 ## 2. Metodologia
 
@@ -94,7 +101,7 @@ Limitações:
 | `laravel/tinker` | v2.7.2 | — |
 | `guzzlehttp/guzzle` | 7.5.0 | 9 avisos (1 high, 8 medium) |
 | `league/commonmark` | 2.3.5 | 15 avisos (9 high, 6 medium) |
-| `league/flysystem` | 1.1.9 | 1 aviso low; **sem correção na série 1.x** |
+| `league/flysystem` | 1.1.10 | 1 aviso low; **sem correção na série 1.x** |
 | `nesbot/carbon` | 2.62.1 | 1 aviso medium |
 | `monolog/monolog` | 2.8.0 | Sem aviso; sobe para 3.x no Laravel 10+ |
 | `psy/psysh` | v0.11.8 | 1 aviso medium |
@@ -207,7 +214,7 @@ Foram encontrados **49 avisos de segurança em 13 pacotes**:
 | `symfony/routing` | 5.4.11 | 3 | 2 medium, 1 sem severidade normalizada | 5.4.56 | 7.4 LTS / 8.0 |
 | `symfony/mime` | 5.4.52 | 1 | medium | 5.4.55 | 7.4 LTS / 8.0 |
 | `symfony/process` | 5.4.11 | 2 | 1 high, 1 medium | 5.4.54 | 7.4.5+ / 8.0.5+ |
-| `league/flysystem` | 1.1.9 | 1 | low | **sem correção na série 1.x**; corrigido em 3.35.3+ | 3.36.0 |
+| `league/flysystem` | 1.1.10 | 1 | low | **sem correção na série 1.x**; corrigido em 3.35.3+ | 3.36.0 |
 | `nesbot/carbon` | 2.62.1 | 1 | medium | 2.72.6 (usar 2.73.0) | 3.15.1 |
 | `psy/psysh` | 0.11.8 | 1 | medium | 0.11.23 | 0.12.24 |
 | `phpunit/phpunit` | 9.5.24 | 1 | high | 9.6.33 (usar 9.6.39) | 12.5.45 |
@@ -271,7 +278,7 @@ Componentes com patches antigos:
 
 **Ação imediata:** subir todos os componentes Symfony 5.4 para os últimos patches da série (5.4.55/5.4.56). **Ação estrutural:** migrar para Symfony 6.4 LTS (Laravel 9/10) e depois 7.4 LTS/8.0 (Laravel 12/13).
 
-#### Flysystem 1.1.9
+#### Flysystem 1.1.10
 
 `CVE-2026-102601` (low): bypass do `WhitespacePathNormalizer` com UTF-8 malformado. **Não há correção na série 1.x.** O Laravel 9 já usa Flysystem 3.8+, então o upgrade de framework resolve. Como a aplicação usa `Storage` para uploads e downloads, o upgrade deve ser acompanhado de testes de path traversal e nomes de arquivo malformados.
 
@@ -388,6 +395,7 @@ Estes problemas não são corrigidos por `composer update` e exigem mudanças de
 | SEC-11 | Medium | Autorização dispersa e ausência de `auth` global | `routes/web.php` (rotas sem grupo `auth`); `app/Http/Kernel.php` | Novas rotas podem nascer públicas por omissão; difícil garantir cobertura de autorização | Agrupar rotas autenticadas em middleware `auth`; usar Policies; teste de matriz de acesso |
 | SEC-12 | Medium | Supply chain / reprodutibilidade | `.gitignore:2` ignora `package-lock.json`; `composer.json:11` (`laratex: dev-main`), `:21` (`usp-theme: dev-master` de fork pessoal), `minimum-stability: dev` | Builds não reprodutíveis; código de branch/fork pessoal pode ser alterado sem revisão e executado pela aplicação | Versionar `package-lock.json`; usar tags estáveis; mover o fork para a organização oficial ou revisar/assinar; remover `minimum-stability: dev` |
 | SEC-13 | Low | Configuração de debug e endpoints de teste | `.env.example:4` (`APP_DEBUG=true`); `routes/web.php:59` (`/students/test` sem método); `E2E_MODE` | Debug em produção expõe stack traces; endpoint quebrado gera ruído; modo E2E pode mascarar Replicado se ativado por engano | Garantir `APP_DEBUG=false` em produção; remover rota quebrada; falhar o boot se `E2E_MODE=true` fora de testing |
+| SEC-14 | **High** | IDOR em autoavaliação por atribuição acidental (`=!` em vez de `!=`) | `app/Http/Controllers/SelfEvaluationController.php:165` | Aluno conseguia visualizar a autoavaliação de outro aluno | Corrigido para comparação estrita de `codpes`, com teste de regressão `test_cen_selfeval_013b` |
 
 ### 7.1 Detalhamento dos achados críticos
 
