@@ -48,11 +48,14 @@ Além das dependências, foram encontrados dois problemas críticos que **não s
 - **Fase 2 concluída:** Laravel **9.52.23**, PHP **8.2.36**, Symfony **6.4**, Flysystem **3.36.0**, Symfony Mailer, CORS nativo, Sanctum **3.3.3**, Spatie **5.11.1**, Replicado **1.28.9**, Senhaunica **4.5.12**, QueueMonitor **5.3.7**, Staudenmeir **2.12.1/1.17.3**. Dockerfile de produção e E2E migrados para PHP 8.2; Node 22 no build.
 - **Fase 3 concluída:** Laravel **10.50.4**, Monolog **3.13.0**, PHPUnit **10.5.67**, Spatie **6.25.0**, QueueMonitor **5.4.5**, Staudenmeir **2.15.1/1.19.5**, Collision **7.12.0** e Ignition **2.9.1**. A `phpunit.xml` foi migrada para o schema do PHPUnit 10 (`<source>`). A critical `CVE-2026-114509` foi corrigida nesta versão.
 - **Fase 4 concluída:** Laravel **11.57.1**, PHP **8.3.37**, Symfony **7.4.23**, Carbon **3.15.1**, Sanctum **4.4.0**, Tinker **3.1.0**, PHPUnit **11.5.58**, Collision **8.9.6**, Ignition **2.12.1**, LaraTeX **1.3.2**, Staudenmeir **2.16.4/1.20.7**, Spatie **6.25.0** e QueueMonitor **5.4.5**. Migração estrutural para `bootstrap/app.php`/`bootstrap/providers.php`; `Http\Kernel`, `Console\Kernel`, `Exceptions\Handler` e `RouteServiceProvider` foram removidos; o schedule foi para `app/Console/ScheduledTasks` + `routes/console.php`. Docker migrado para PHP 8.3.
-- **Auditoria atual:** **5 avisos em 1 pacote** (`laravel/framework` 11.57.1), todos sem correção nas séries 9–11: 2 de baixo impacto (task output/XSS de debug), 1 de path confusion em URL assinada, 1 de CRLF em regra de e-mail e 1 advisory sem severidade normalizada. Não há avisos em dependências transitivas.
+- **Fase 5 concluída:** Laravel **12.73.0**, PHP **8.3.37**, Symfony **7.4.23**, PHPUnit **12.5.45**, Spatie **8.5.0**, Sanctum **4.5.0**, Tinker **3.2.0**, QueueMonitor **5.5.0**, Staudenmeir **2.17/1.21.3** e Socialite **5.33.0**. **Composer audit: 0 avisos de segurança.**
+- **Fase 6 concluída:** Laravel **13.43.0**, PHP **8.5.13**, Symfony **8.1.11**, Staudenmeir **2.18/1.22.1**, Ignition **2.13.0**, Sanctum **4.5.0**, Spatie **8.5.0**, QueueMonitor **5.5.0** e PHPUnit **12.5.45**. Docker migrado para PHP 8.5; corrigida a depreciação `PDO::MYSQL_ATTR_SSL_CA` para `Pdo\Mysql::ATTR_SSL_CA`. **Composer audit: 0 avisos.**
+- **Auditoria atual:** **0 avisos de segurança** no `composer audit` (Laravel 13.43.0 e dependências).
 - **Correções de código aplicadas:** SEC-02 (escalada de privilégio), SEC-03 (PII não autenticada), SEC-04 (XSS armazenado), SEC-05 (download arbitrário), SEC-06 (bug de variável e determinismo), SEC-07 (substring de admin) e SEC-14 (IDOR em autoavaliação).
 - **SEC-01 mitigado, não eliminado:** a permissão `Editar E-mails` foi removida da Secretaria e templates com `@php`/`<?` passam a ser rejeitados. A renderização de conteúdo do banco via `Blade::render` ainda permite expressões PHP para Administrador; a troca por um motor sandboxed/placeholders continua na fase 8.
-- **Testes após a Fase 4:** **264 testes PHPUnit 11, 0 falhas, 0 skipped** e **31 testes E2E aprovados** no PHP 8.3.
-- **Pendências:** Fase 5 (Laravel 12.73.0 + PHP 8.4), frontend/build (axios/laravel-mix/package-lock), infraestrutura (MySQL 8.4, imagens pinadas) e avaliação da substituição do fork do `laravel-usp-theme` pela versão oficial.
+- **Testes após a Fase 6:** **264 testes PHPUnit 12, 0 falhas, 0 skipped** e **31 testes E2E aprovados** no PHP 8.5.
+- **Pendências:** Fase 7 (MySQL 8.4 LTS, versionar `package-lock.json`, axios/postcss/follow-redirects, pinagem de nginx/redis, pytest 9) e Fase 8 (hardening SEC-01/08/09/10/11/13, `TrustHosts`, cookies, CORS, CI e auditoria final).
+- **Observação:** o Composer 2.10 bloqueia a instalação de qualquer versão do Laravel 8 por advisory de segurança. O hotfix usou `--no-blocking` de forma consciente e documentada; a dívida residual está listada na seção 5.
 - **Observação:** o Composer 2.10 bloqueia a instalação de qualquer versão do Laravel 8 por advisory de segurança. O hotfix usou `--no-blocking` de forma consciente e documentada; a dívida residual está listada na seção 5.
 
 ## 2. Metodologia
@@ -732,6 +735,8 @@ Testes obrigatórios: schedule, commands, middleware, autenticação, e2e p0 com
 
 Laravel 12 é o mínimo suportado hoje (EOL 2027-02-24). Se o tempo apertar, este é o ponto de parada aceitável, mas o recomendado é seguir para 13.
 
+**Resultado da execução (2026-11-23):** etapa concluída. Laravel 12.73.0, PHP 8.3.37, Symfony 7.4.23, PHPUnit 12.5.45, Spatie 8.5.0, Sanctum 4.5.0, Tinker 3.2.0, QueueMonitor 5.5.0, Staudenmeir 2.17/1.21.3 e Socialite 5.33.0. **Composer audit: 0 avisos. 264 PHPUnit 12 + 31 E2E verdes.**
+
 ### 9.10 Fase 6 — Laravel 12 → 13
 
 - `laravel/framework` **13.43.0**; PHP **8.5** (fallback 8.4).
@@ -743,6 +748,8 @@ Laravel 12 é o mínimo suportado hoje (EOL 2027-02-24). Se o tempo apertar, est
 - Guzzle **7.15.2** (ou 8.0.1, se todos os pacotes suportarem).
 - `ismaelw/laratex` **1.3.2**.
 - Remover definitivamente `swiftmailer/swiftmailer`, `php-http/message-factory` e qualquer resquício de `fruitcake/laravel-cors`.
+
+**Resultado da execução (2026-11-23):** etapa concluída. Laravel 13.43.0, PHP 8.5.13, Symfony 8.1.11, Staudenmeir 2.18/1.22.1, Ignition 2.13.0, Sanctum 4.5.0, Spatie 8.5.0, QueueMonitor 5.5.0 e PHPUnit 12.5.45. Corrigida a depreciação `PDO::MYSQL_ATTR_SSL_CA` (`Pdo\Mysql::ATTR_SSL_CA`). **Composer audit: 0 avisos. 264 PHPUnit 12 + 31 E2E verdes.**
 
 ### 9.11 Fase 7 — Infraestrutura final
 
