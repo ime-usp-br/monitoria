@@ -531,7 +531,7 @@ Sincronização aditiva de professores do Replicado nas turmas locais.
 ## 11. Sistema de E-mails (Modelos e Disparos)
 
 ### 11.1 Classes de e-mail (objetos Mailable)
-Todas montam corpo/assunto renderizando o **template Blade armazenado na linha do banco** (`mailtemplate->subject`/`body`) com um array de contexto, estilizando com CSS inline de `public/css/mail.css` (`CssToInlineStyles`).
+Todas montam corpo/assunto renderizando o **template armazenado na linha do banco** (`mailtemplate->subject`/`body`) com um array de contexto sanitizado, usando **Twig 3 com sandbox** (`MailTemplateRenderer`/`MailTemplateSecurityPolicy`) e estilizando com CSS inline de `public/css/mail.css` (`CssToInlineStyles`). A sintaxe Blade-like documentada (`{{ $var->prop }}`, `@foreach`, `@if`, `count()`, `getSexo()`) é convertida para Twig de forma segura; `@php`, `@include` e funções/métodos não permitidos são rejeitados.
 
 | Mailable | Destinatário | Variáveis de contexto |
 |----------|--------------|-----------------------|

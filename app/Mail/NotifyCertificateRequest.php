@@ -8,7 +8,6 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Selection;
 use App\Models\MailTemplate;
-use Illuminate\Support\Facades\Blade;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 use Ismaelw\LaraTeX\LaraTeX;
 
@@ -42,7 +41,7 @@ class NotifyCertificateRequest extends Mailable implements ShouldQueue
     {
         $cssToInlineStyles = new CssToInlineStyles();
 
-        $subject = Blade::render(
+        $subject = app(\App\Services\MailTemplateRenderer::class)->render(
             html_entity_decode($this->mailtemplate->subject),
             [
                 "student" => $this->student,
@@ -52,7 +51,7 @@ class NotifyCertificateRequest extends Mailable implements ShouldQueue
             ]
         );
 
-        $body = Blade::render(
+        $body = app(\App\Services\MailTemplateRenderer::class)->render(
             html_entity_decode($this->mailtemplate->body),
             [
                 "student" => $this->student,

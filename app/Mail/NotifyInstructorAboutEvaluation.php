@@ -11,7 +11,6 @@ use App\Models\SchoolClass;
 use App\Models\Selection;
 use App\Models\MailTemplate;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
-use Illuminate\Support\Facades\Blade;
 
 class NotifyInstructorAboutEvaluation extends Mailable
 {
@@ -44,7 +43,7 @@ class NotifyInstructorAboutEvaluation extends Mailable
     {
         $cssToInlineStyles = new CssToInlineStyles();
         
-        $subject = Blade::render(
+        $subject = app(\App\Services\MailTemplateRenderer::class)->render(
             html_entity_decode($this->mailtemplate->subject),
             [
                 "schoolclass"=>$this->schoolclass,
@@ -55,7 +54,7 @@ class NotifyInstructorAboutEvaluation extends Mailable
             ]
         );
         
-        $body = Blade::render(
+        $body = app(\App\Services\MailTemplateRenderer::class)->render(
             html_entity_decode($this->mailtemplate->body),
             [
                 "schoolclass"=>$this->schoolclass,

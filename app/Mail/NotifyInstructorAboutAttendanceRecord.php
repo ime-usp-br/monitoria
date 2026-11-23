@@ -9,7 +9,6 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\MailTemplate;
 use App\Models\Frequency;
 use App\Models\Selection;
-use Illuminate\Support\Facades\Blade;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 use Illuminate\Support\Facades\Log;
 
@@ -54,7 +53,7 @@ class NotifyInstructorAboutAttendanceRecord extends Mailable
 
         $cssToInlineStyles = new CssToInlineStyles();
 
-        $subject = Blade::render(
+        $subject = app(\App\Services\MailTemplateRenderer::class)->render(
             html_entity_decode($this->mailtemplate->subject),
             [
                 "schoolclass"=>$this->schoolclass,
@@ -67,7 +66,7 @@ class NotifyInstructorAboutAttendanceRecord extends Mailable
             ]
         );
         
-        $body = Blade::render(
+        $body = app(\App\Services\MailTemplateRenderer::class)->render(
             html_entity_decode($this->mailtemplate->body),
             [
                 "schoolclass"=>$this->schoolclass,
