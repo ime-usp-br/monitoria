@@ -13,7 +13,6 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     unzip \
-    supervisor \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     freetds-dev \
