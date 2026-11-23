@@ -47,11 +47,12 @@ Além das dependências, foram encontrados dois problemas críticos que **não s
 - **Fase 1b (histórico):** Sentry atualizado para 4.31.0; `uspdev/senhaunica-socialite` e `uspdev/replicado` ficaram pinados em 4.3.2/1.13.2 no PHP 7.4 porque o Replicado 1.28.9 usa sintaxe PHP 8 e a Senhaunica 4.5 depende dele.
 - **Fase 2 concluída:** Laravel **9.52.23**, PHP **8.2.36**, Symfony **6.4**, Flysystem **3.36.0**, Symfony Mailer, CORS nativo, Sanctum **3.3.3**, Spatie **5.11.1**, Replicado **1.28.9**, Senhaunica **4.5.12**, QueueMonitor **5.3.7**, Staudenmeir **2.12.1/1.17.3**. Dockerfile de produção e E2E migrados para PHP 8.2; Node 22 no build.
 - **Fase 3 concluída:** Laravel **10.50.4**, Monolog **3.13.0**, PHPUnit **10.5.67**, Spatie **6.25.0**, QueueMonitor **5.4.5**, Staudenmeir **2.15.1/1.19.5**, Collision **7.12.0** e Ignition **2.9.1**. A `phpunit.xml` foi migrada para o schema do PHPUnit 10 (`<source>`). A critical `CVE-2026-114509` foi corrigida nesta versão.
-- **Auditoria atual:** **5 avisos em 1 pacote** (`laravel/framework` 10.50.4): 2 de CRLF/XSS de baixo impacto, 1 de path confusion em URL assinada e 1 de task output injection. Não há mais avisos em dependências transitivas.
+- **Fase 4 concluída:** Laravel **11.57.1**, PHP **8.3.37**, Symfony **7.4.23**, Carbon **3.15.1**, Sanctum **4.4.0**, Tinker **3.1.0**, PHPUnit **11.5.58**, Collision **8.9.6**, Ignition **2.12.1**, LaraTeX **1.3.2**, Staudenmeir **2.16.4/1.20.7**, Spatie **6.25.0** e QueueMonitor **5.4.5**. Migração estrutural para `bootstrap/app.php`/`bootstrap/providers.php`; `Http\Kernel`, `Console\Kernel`, `Exceptions\Handler` e `RouteServiceProvider` foram removidos; o schedule foi para `app/Console/ScheduledTasks` + `routes/console.php`. Docker migrado para PHP 8.3.
+- **Auditoria atual:** **5 avisos em 1 pacote** (`laravel/framework` 11.57.1), todos sem correção nas séries 9–11: 2 de baixo impacto (task output/XSS de debug), 1 de path confusion em URL assinada, 1 de CRLF em regra de e-mail e 1 advisory sem severidade normalizada. Não há avisos em dependências transitivas.
 - **Correções de código aplicadas:** SEC-02 (escalada de privilégio), SEC-03 (PII não autenticada), SEC-04 (XSS armazenado), SEC-05 (download arbitrário), SEC-06 (bug de variável e determinismo), SEC-07 (substring de admin) e SEC-14 (IDOR em autoavaliação).
 - **SEC-01 mitigado, não eliminado:** a permissão `Editar E-mails` foi removida da Secretaria e templates com `@php`/`<?` passam a ser rejeitados. A renderização de conteúdo do banco via `Blade::render` ainda permite expressões PHP para Administrador; a troca por um motor sandboxed/placeholders continua na fase 8.
-- **Testes após a Fase 3:** **264 testes PHPUnit 10, 0 falhas, 0 skipped** e **31 testes E2E aprovados** no PHP 8.2.
-- **Pendências:** Fase 4 (Laravel 11 + PHP 8.3, incluindo a nova estrutura `bootstrap/app.php`), frontend/build (axios/laravel-mix/package-lock), infraestrutura (MySQL 8.4, imagens pinadas).
+- **Testes após a Fase 4:** **264 testes PHPUnit 11, 0 falhas, 0 skipped** e **31 testes E2E aprovados** no PHP 8.3.
+- **Pendências:** Fase 5 (Laravel 12.73.0 + PHP 8.4), frontend/build (axios/laravel-mix/package-lock), infraestrutura (MySQL 8.4, imagens pinadas) e avaliação da substituição do fork do `laravel-usp-theme` pela versão oficial.
 - **Observação:** o Composer 2.10 bloqueia a instalação de qualquer versão do Laravel 8 por advisory de segurança. O hotfix usou `--no-blocking` de forma consciente e documentada; a dívida residual está listada na seção 5.
 
 ## 2. Metodologia
@@ -709,12 +710,14 @@ Esta é a fase de maior esforço estrutural:
 - `staudenmeir/*` **v2.16.4 / v1.20.7**.
 - `romanzipp/laravel-queue-monitor` **5.4.5**.
 - `ismaelw/laratex` **1.3.2** (exige Symfony Process 7.4/8.0; ajustar `symfony/process`).
-- `laravel/tinker` **3.2.0**.
+- `laravel/tinker` **3.1.0** (a 3.2 exige L12+).
 - `phpunit/phpunit` **11.5.58**.
-- `uspdev/laravel-usp-theme` **2.8.44** + `uspdev/cadastros-auxiliares-client ^1`.
+- `uspdev/laravel-usp-theme` **2.8.44** + `uspdev/cadastros-auxiliares-client ^1` (avaliado e adiado: o fork pinado foi mantido nesta fase para evitar nova dependência externa).
 - Revisar `config/*` que deixaram de existir ou mudaram de formato.
 
 Testes obrigatórios: schedule, commands, middleware, autenticação, e2e p0 completo.
+
+**Resultado da execução (2026-11-23):** etapa concluída. Laravel 11.57.1, PHP 8.3.37, Symfony 7.4.23, Carbon 3.15.1, Sanctum 4.4.0, Tinker 3.1.0, PHPUnit 11.5.58, Collision 8.9.6, Ignition 2.12.1, LaraTeX 1.3.2, Staudenmeir 2.16.4/1.20.7. Estrutura migrada para `bootstrap/app.php`/`bootstrap/providers.php`; kernels/handler/RouteServiceProvider removidos; schedule consolidado em `ScheduledTasks` com execução a cada minuto e consultas em runtime (evita acesso ao banco no boot). **264 testes PHPUnit 11 + 31 E2E verdes**. Auditoria: 5 avisos em 1 pacote (Laravel 11).
 
 ### 9.9 Fase 5 — Laravel 11 → 12
 

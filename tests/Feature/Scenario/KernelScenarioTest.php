@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Scenario;
 
-use App\Console\Kernel;
 use App\Models\MailTemplate;
 use App\Models\SchoolTerm;
 use App\Models\Selection;
@@ -18,9 +17,7 @@ class KernelScenarioTest extends ScenarioTestCase
 
         $schedule = app(\Illuminate\Console\Scheduling\Schedule::class);
 
-        // registra o Kernel para alimentar o schedule
-        $kernel = app(Kernel::class);
-        // força a execução da rotina de agendamento
+        // o schedule é registrado em routes/console.php
         $this->assertNotNull($schedule);
 
         // Sem inspecionar eventos internos (que exigem cron), garantimos que não há erro ao invocar sendEmail

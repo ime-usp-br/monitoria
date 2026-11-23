@@ -1,7 +1,7 @@
 # Imagem da aplicação usada SOMENTE no stack E2E.
 # Deriva da mesma base do Dockerfile de produção, mas copia o código e as
 # dependências para dentro da imagem (sem bind mount do repositório).
-FROM php:8.2-fpm-bookworm@sha256:afd39a6125fcb59cbe9ff0e2183bbad56aecc59858f9262c73cf6f13ddb9a9e0
+FROM php:8.3-fpm-bookworm@sha256:5b9440ebac23314bb42d33338918c1c2c852469e5b0a7f0a9493448d827bab35
 
 RUN apt-get update && apt-get install -y \
     git \
