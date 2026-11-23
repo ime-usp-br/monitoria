@@ -13,14 +13,14 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "romanzipp/laravel-queue-monitor": "^2.3.4",
-        "sentry/sentry-laravel": "^3.8",
+        "sentry/sentry-laravel": "^4.31",
         "staudenmeir/belongs-to-through": "^2.5",
         "staudenmeir/eloquent-has-many-deep": "^1.7",
         "symfony/process": "^5.4.51",
         "tijsverkoyen/css-to-inline-styles": "^2.4.0",
         "uspdev/laravel-usp-theme": "dev-master#bbbd4cb74eab3a2b1fa57cbc8da8fb683f132d7b",
-        "uspdev/replicado": "^1.28.9",
-        "uspdev/senhaunica-socialite": "^4.3"
+        "uspdev/replicado": "1.13.2",
+        "uspdev/senhaunica-socialite": "4.3.2"
     },
     "require-dev": {
         "facade/ignition": "^2.17.7",

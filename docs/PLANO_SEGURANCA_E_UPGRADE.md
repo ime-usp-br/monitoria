@@ -44,9 +44,11 @@ Além das dependências, foram encontrados dois problemas críticos que **não s
 
 - **Fase 0 concluída:** testes determinísticos (sem skips por data), suíte de regressão de segurança e correções dos achados críticos/altos que não dependiam do upgrade.
 - **Fase 1a concluída:** hotfix de dependências dentro do Laravel 8/PHP 7.4. O `composer audit` caiu de **49 avisos em 13 pacotes** para **7 avisos em 2 pacotes** (`laravel/framework` e `league/flysystem` 1.x, ambos sem correção na série atual).
+- **Fase 1b concluída parcialmente:** Sentry atualizado para 4.31.0; `uspdev/senhaunica-socialite` e `uspdev/replicado` foram **pinados em 4.3.2 e 1.13.2**. A tentativa de atualizar para 4.5.12/1.28.9 quebrou o login no E2E porque o `uspdev/replicado 1.28.9` usa sintaxe PHP 8 (`string|null` em `Pessoa.php:153`) apesar de declarar suporte a PHP 7.4, e a Senhaunica 4.5 chama `Graduacao::obterCursoAtivo()`, inexistente no Replicado 1.13.2. A atualização desses dois pacotes fica para a fase 2, com PHP 8.2.
+- **Auditoria atual:** 8 avisos em 3 pacotes — `laravel/framework` (6, incluindo a critical sem correção na série 8), `league/flysystem 1.x` (1, low) e `firebase/php-jwt 6.x` (1, low; 7.x exige PHP 8).
 - **Correções de código aplicadas:** SEC-02 (escalada de privilégio), SEC-03 (PII não autenticada), SEC-04 (XSS armazenado), SEC-05 (download arbitrário), SEC-06 (bug de variável e determinismo), SEC-07 (substring de admin) e SEC-14 (IDOR em autoavaliação).
 - **Testes após as mudanças:** **264 testes PHPUnit, 0 falhas, 0 skipped** e **31 testes E2E aprovados**.
-- **Pendências:** Fase 1b (Sentry 4.x, Senhaunica 4.5/Spatie 5), Fase 2 (Laravel 9), frontend/build (axios/Node), infraestrutura (MySQL 8.4, imagens pinadas).
+- **Pendências:** Fase 2 (Laravel 9 + PHP 8.2 + Replicado 1.28.9 + Senhaunica 4.5 + Spatie 5), frontend/build (axios/Node), infraestrutura (MySQL 8.4, imagens pinadas).
 - **Observação:** o Composer 2.10 bloqueia a instalação de qualquer versão do Laravel 8 por advisory de segurança. O hotfix usou `--no-blocking` de forma consciente e documentada; a dívida residual está listada na seção 5.
 
 ## 2. Metodologia
@@ -112,8 +114,8 @@ Limitações:
 | `staudenmeir/eloquent-has-many-deep` | v1.14.4 | Última compatível com Laravel 8 |
 | `romanzipp/laravel-queue-monitor` | 2.3.0 | Atualizar para 2.3.4 no PHP 7.4 |
 | `ismaelw/laratex` | `dev-main` | Dependência de branch, não reprodutível |
-| `uspdev/replicado` | 1.13.2 | Atualizar para 1.28.9 (suporta Laravel 8–13) |
-| `uspdev/senhaunica-socialite` | 4.3.2 | Atualizar para 4.5.12 (suporta Spatie 4–8) |
+| `uspdev/replicado` | 1.13.2 | Manter 1.13.2 no PHP 7.4; **1.28.9 usa sintaxe PHP 8** (`string|null` em `Pessoa.php:153`) e quebra em 7.4. Atualizar na fase 2 (PHP 8.2) |
+| `uspdev/senhaunica-socialite` | 4.3.2 | Manter 4.3.2 no PHP 7.4; 4.5.12 exige `Graduacao::obterCursoAtivo()` do Replicado novo e não funciona com 1.13.2. Atualizar junto com Replicado 1.28.9 na fase 2 |
 | `uspdev/laravel-usp-theme` | `dev-master` de fork pessoal | **Risco de supply chain**; substituir por versão oficial/tag |
 | `fruitcake/laravel-cors` | 2.2.0 | **Abandonado**; remover no Laravel 9+ (CORS nativo) |
 | `swiftmailer/swiftmailer` | v6.3.0 | **Abandonado**; Laravel 9+ usa Symfony Mailer |
@@ -550,7 +552,7 @@ Estas atualizações reduzem a superfície imediata sem exigir upgrade de framew
 | `psy/psysh` | 0.11.8 | **0.11.23** |
 | `phpunit/phpunit` | 9.5.24 | **9.6.39** |
 | `sentry/sentry-laravel` | 3.8.2 | **4.31.0** |
-| `uspdev/replicado` | 1.13.2 | **1.28.9** |
+| `uspdev/replicado` | 1.13.2 | **1.13.2** (pin; 1.28.9 exige PHP 8) |
 | `romanzipp/laravel-queue-monitor` | 2.3.0 | **2.3.4** |
 | `mockery/mockery` | 1.5.0 | **1.6.15** |
 | `fakerphp/faker` | 1.20.0 | **1.24.1** |
@@ -562,7 +564,7 @@ Estas atualizações reduzem a superfície imediata sem exigir upgrade de framew
 | `json5` (npm) | 1.0.2 | **2.2.3** |
 | Node.js | 16 | **24 LTS** |
 
-`uspdev/senhaunica-socialite` 4.3.2 → 4.5.12 pode entrar na fase 1 ou 2. Ela suporta Spatie 4–8, mas adiciona `kyslik/column-sortable` e `doctrine/dbal`; validar em PHP 7.4/Laravel 8 antes de promover.
+`uspdev/senhaunica-socialite` 4.3.2 → 4.5.12 foi tentada e **revertida**: a 4.5.12 chama `Graduacao::obterCursoAtivo()`, que não existe no Replicado 1.13.2, e o Replicado 1.28.9 usa sintaxe PHP 8 incompatível com PHP 7.4. As duas ficam pinadas em 4.3.2/1.13.2 até a fase 2, quando o runtime será PHP 8.2. O Sentry 4.31.0 foi aplicado com sucesso no PHP 7.4.
 
 O que **não** dá para corrigir na fase 1:
 
@@ -593,6 +595,8 @@ O que **não** dá para corrigir na fase 1:
 | `uspdev/laravel-usp-theme` | 2.8.37 (oficial) | 2.8.37 (oficial) | 2.8.44 | 2.8.44 | 2.8.44 |
 | `laravel/socialite` | 5.31.0 | 5.31.0 | 5.31.0 | 5.33.0 | 5.33.0 |
 | `guzzlehttp/guzzle` | 7.15.2 | 7.15.2 | 7.15.2 | 7.15.2 | 7.15.2/8.0.1 |
+
+Nota: `uspdev/replicado` 1.28.9 e `uspdev/senhaunica-socialite` 4.5.12 só funcionam na prática com PHP 8.2+; por isso a fase 2 (Laravel 9) já sobe o runtime para PHP 8.2. No PHP 7.4, manter 1.13.2/4.3.2.
 
 #### P2 — Fase 7 e 8
 
@@ -641,9 +645,9 @@ Atenção:
 - `guzzle 7.15.2` exige `guzzlehttp/promises ^2.5.1` e `psr7 ^2.13`; revisar compatibilidade com Socialite/Senhaunica.
 - `commonmark 2.10.7` suporta PHP 7.4.
 - `symfony 5.4.56` suporta PHP 7.4.
-- `sentry-laravel 4.31.0` suporta Laravel 8–13 e PHP 7.2+.
-- `replicado 1.28.9` traz `uspdev/cache ^1`; validar o log e a integração Replicado.
-- Se `senhaunica 4.5.12` não estabilizar em PHP 7.4, adiar para a fase 2.
+- `sentry-laravel 4.31.0` suporta Laravel 8–13 e PHP 7.2+; aplicado com sucesso.
+- `replicado 1.28.9` **não funciona em PHP 7.4**: usa `string|null` em `Pessoa.php:153`, apesar de declarar `php ^7 || ^8`. Manter 1.13.2 até a fase 2 (PHP 8.2). A 1.28.9 também traz `uspdev/cache ^1`.
+- `senhaunica 4.5.12` chama `Graduacao::obterCursoAtivo()` (inexistente no Replicado 1.13.2) e depende do Replicado novo. Manter 4.3.2 até a fase 2.
 
 ### 9.6 Fase 2 — Laravel 8 → 9
 
@@ -656,6 +660,9 @@ Mudanças estruturais:
 - `fruitcake/laravel-cors` → CORS nativo do Laravel 9 (remover pacote; manter `config/cors.php`).
 - `laravel/sanctum` → **3.3.3**.
 - `spatie/laravel-permission` → **5.11.1**.
+- `uspdev/replicado` → **1.28.9** (agora com PHP 8.2).
+- `uspdev/senhaunica-socialite` → **4.5.12**.
+- `laravel/socialite` → **5.31.0** e `firebase/php-jwt` → **7.x** (elimina o advisory low restante).
 - `romanzipp/laravel-queue-monitor` → **5.3.7**.
 - `staudenmeir/*` → **v2.12.1 / v1.17.3**.
 - `laratex` → **1.3.0-p1**.
