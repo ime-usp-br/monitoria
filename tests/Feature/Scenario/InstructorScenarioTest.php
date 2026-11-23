@@ -10,16 +10,21 @@ class InstructorScenarioTest extends ScenarioTestCase
 {
     public function test_cen_instructor_001_busca_json_por_codpes_retorna_nome_do_docente()
     {
-        $resp = $this->getJson('/instructors?codpes=2000');
+        $resp = $this->actingAs($this->secretaria())->getJson('/instructors?codpes=2000');
 
         $resp->assertOk()->assertExactJson(['Professor Do Ime']);
+    }
+
+    public function test_cen_instructor_001b_busca_json_exige_autenticacao()
+    {
+        $this->getJson('/instructors?codpes=2000')->assertStatus(401);
     }
 
     public function test_cen_instructor_002_busca_json_por_codpes_sem_vinculo_docente_retorna_vazio()
     {
         ReplicadoStubs::registerPessoa('vinculos', ['Aluno']);
 
-        $resp = $this->getJson('/instructors?codpes=2000');
+        $resp = $this->actingAs($this->secretaria())->getJson('/instructors?codpes=2000');
 
         $resp->assertOk()->assertExactJson(['']);
     }

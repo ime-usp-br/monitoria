@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: PHPUnit, auditorias e E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Preparar .env de CI
+        run: |
+          cp .env.example .env
+          sed -i 's/^DB_HOST=.*/DB_HOST=mysql/' .env
+          sed -i 's/^DB_DATABASE=.*/DB_DATABASE=laravel_test/' .env
+          sed -i 's/^DB_USERNAME=.*/DB_USERNAME=laravel/' .env
+          sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD=root/' .env
+          sed -i 's/^REDIS_HOST=.*/REDIS_HOST=redis/' .env
+
+      - name: Criar rede externa do compose
+        run: docker network create web 2>/dev/null || true
+
+      - name: Subir MySQL e Redis
+        run: |
+          docker compose up -d mysql redis
+          for i in $(seq 1 60); do
+            if docker compose exec -T mysql mysqladmin ping -h localhost -uroot -proot --silent >/dev/null 2>&1; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "MySQL não ficou pronto" >&2
+          docker compose logs mysql
+          exit 1
+
+      - name: Build da imagem da aplicação
+        run: docker compose build app
+
+      - name: Instalar dependências, gerar chave e rodar PHPUnit
+        run: |
+          docker compose run --rm --no-deps --entrypoint sh app -lc '
+            composer install --no-interaction --prefer-dist --no-progress &&
+            php artisan key:generate --force &&
+            php vendor/bin/phpunit --colors=never
+          '
+
+      - name: Composer audit
+        run: |
+          docker compose run --rm --no-deps --entrypoint sh app -lc 'composer audit --locked'
+
+      - name: npm ci + npm audit
+        run: |
+          docker run --rm -v "$PWD":/app -w /app node:22-alpine sh -c '
+            npm ci --no-audit --no-fund &&
+            npm audit
+          '
+
+      - name: E2E Playwright
+        run: ./scripts/run_e2e.sh
+
+      - name: Guardar artefatos do E2E
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-artifacts
+          path: |
+            e2e/artifacts
+          if-no-files-found: ignore

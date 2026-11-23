@@ -53,12 +53,12 @@ Além das dependências, foram encontrados dois problemas críticos que **não s
 - **Fase 5 concluída:** Laravel **12.73.0**, PHP **8.3.37**, Symfony **7.4.23**, PHPUnit **12.5.45**, Spatie **8.5.0**, Sanctum **4.5.0**, Tinker **3.2.0**, QueueMonitor **5.5.0**, Staudenmeir **2.17/1.21.3** e Socialite **5.33.0**. **Composer audit: 0 avisos de segurança.**
 - **Fase 6 concluída:** Laravel **13.43.0**, PHP **8.5.13**, Symfony **8.1.11**, Staudenmeir **2.18/1.22.1**, Ignition **2.13.0**, Sanctum **4.5.0**, Spatie **8.5.0**, QueueMonitor **5.5.0** e PHPUnit **12.5.45**. Docker migrado para PHP 8.5; corrigida a depreciação `PDO::MYSQL_ATTR_SSL_CA` para `Pdo\Mysql::ATTR_SSL_CA`. **Composer audit: 0 avisos.**
 - **Fase 7 concluída (MySQL fora de escopo):** nginx atualizado de **1.29.8** (vulnerável a `CVE-2026-123007` major, `CVE-2026-118899` major e `CVE-2026-113425` major) para **1.30.7-alpine** pinado por digest; Redis **8.2-alpine** pinado; `nginx` e `supervisor` removidos da imagem da aplicação. Frontend migrado de Laravel Mix para **Vite 8.3.8 + laravel-vite-plugin 3.2.1**; `axios`, `lodash`, `laravel-mix` e `webpack` removidos; o código de UI que existia apenas no bundle antigo foi recuperado para `resources/js/app-legacy.js`; `parent.blade.php` usa `@vite`; `package-lock.json` versionado e assets em `public/build`. E2E atualizado para pytest **9.2.0** e Playwright **1.65.2** pinado. **MySQL 5.7 mantido por decisão de negócio** (risco aceito e mitigações na seção 10).
-- **Fase 8 (parcial):** SEC-01 corrigido com **Twig 3.31 sandbox** e contexto sanitizado (apenas campos whitelisted; loops/condicionais/métodos documentados suportados via conversão Blade-like). SEC-10 aplicado: `SESSION_ENCRYPT=true`, cookie `Secure` automático em produção e HSTS em produção/HTTPS. `TrustHosts` habilitado com o host de `APP_URL` (localhost/127.0.0.1 apenas fora de produção). SEC-08 fica aguardando confirmação do consumidor; CORS mantém wildcard por decisão.
+- **Fase 8 (parcial):** SEC-01 corrigido com **Twig 3.31 sandbox** e contexto sanitizado (apenas campos whitelisted; loops/condicionais/métodos documentados suportados via conversão Blade-like). SEC-10 aplicado: `SESSION_ENCRYPT=true`, cookie `Secure` automático em produção e HSTS em produção/HTTPS. `TrustHosts` habilitado com o host de `APP_URL` (localhost/127.0.0.1 apenas fora de produção). SEC-11 aplicado: rotas protegidas agrupadas em `auth`, com whitelist explícita de rotas públicas (home, edital, relatório por token e links assinados) e testes de baseline. CI criado em `.github/workflows/ci.yml` (PHPUnit, auditorias e E2E via Docker). SEC-08 fica aguardando confirmação do consumidor; CORS mantém wildcard por decisão.
 - **Auditoria atual:** **0 avisos** no `composer audit` e **0 avisos** no `npm audit` completo (não apenas no `--omit=dev`). A árvore vulnerável do Laravel Mix/webpack-dev-server foi eliminada com a migração para Vite.
-- **Correções de código aplicadas:** SEC-01 (RCE de template eliminado), SEC-02 (escalada de privilégio), SEC-03 (PII não autenticada), SEC-04 (XSS armazenado), SEC-05 (download arbitrário), SEC-06 (bug de variável e determinismo), SEC-07 (substring de admin), SEC-10 (cookies/HSTS), SEC-14 (IDOR em autoavaliação) e TrustHosts.
-- **Testes após as Fases 6/7/8:** **277 testes PHPUnit 12, 0 falhas, 0 skipped** e **41 testes E2E aprovados** no PHP 8.5 com nginx 1.30.7, build Vite e Twig sandbox.
+- **Correções de código aplicadas:** SEC-01 (RCE de template eliminado), SEC-02 (escalada de privilégio), SEC-03 (PII não autenticada), SEC-04 (XSS armazenado), SEC-05 (download arbitrário), SEC-06 (bug de variável e determinismo), SEC-07 (substring de admin), SEC-10 (cookies/HSTS), SEC-11 (baseline de autenticação), SEC-14 (IDOR em autoavaliação), TrustHosts e CI.
+- **Testes após as Fases 6/7/8:** **281 testes PHPUnit 12, 0 falhas, 0 skipped** e **41 testes E2E aprovados** no PHP 8.5 com nginx 1.30.7, build Vite e Twig sandbox.
 - **Regressão da UI legada:** 10 testes E2E novos em `e2e/tests/test_ui_legacy.py` cobrem datepicker, modal de horário (válido/inválido), busca e inclusão de docente, busca de aluno por codpes/nome/não encontrado, modal de indicação, DataTable com botões de exportação e modais de remoção/revogação.
-- **Pendências:** SEC-08 (token do relatório externo; aguardando consumidor), SEC-11 (baseline de autenticação por grupo de rotas), SEC-13 (revisão de `APP_DEBUG`/`E2E_MODE`), CI (GitHub Actions com Docker + E2E). CORS wildcard foi mantido por decisão.
+- **Pendências:** SEC-08 (token do relatório externo; aguardando consumidor), SEC-13 (revisão de `APP_DEBUG`/`E2E_MODE`), pinagem opcional do digest da imagem Node e execução/ajuste do workflow de CI no GitHub. CORS wildcard foi mantido por decisão.
 - **Decisão de negócio:** o MySQL 5.7 **não será atualizado** (banco legado). A decisão, os riscos aceitos e as mitigações estão registrados na seção 10; o `config/database.php` já foi preparado para não impedir uma futura migração.
 - **Observação:** o Composer 2.10 bloqueia a instalação de qualquer versão do Laravel 8 por advisory de segurança. O hotfix usou `--no-blocking` de forma consciente e documentada; a dívida residual está listada na seção 5.
 
@@ -413,7 +413,7 @@ Estes problemas não são corrigidos por `composer update` e exigem mudanças de
 | SEC-08 | Medium | Token de relatório externo em query string e comparação não constante | `app/Http/Controllers/ReportController.php:42` | Token vaza em logs, histórico, Referer; comparação `!=` não é timing-safe | Receber token em header `Authorization`, usar `hash_equals`, rate limit, rotação e auditoria |
 | SEC-09 | Low/Medium | CORS com `allowed_origins: ['*']` | `config/cors.php:22` | Qualquer origem pode chamar `api/*`; CORS não protege bearer tokens, mas amplia a superfície | Allowlist explícita de domínios; revisar `supports_credentials` |
 | SEC-10 | Low/Medium | Cookies de sessão sem `secure` obrigatório e sem criptografia | `config/session.php` | Em produção, cookie podia trafegar sem HTTPS ou ser lido/alterado se houver XSS | **Corrigido:** `SESSION_ENCRYPT=true`, `Secure` automático em produção, HSTS em produção/HTTPS, `SameSite=Lax` |
-| SEC-11 | Medium | Autorização dispersa e ausência de `auth` global | `routes/web.php` (rotas sem grupo `auth`); `app/Http/Kernel.php` | Novas rotas podem nascer públicas por omissão; difícil garantir cobertura de autorização | Agrupar rotas autenticadas em middleware `auth`; usar Policies; teste de matriz de acesso |
+| SEC-11 | Medium | Autorização dispersa e ausência de `auth` global | `routes/web.php` | Novas rotas podiam nascer públicas por omissão; difícil garantir cobertura de autorização | **Corrigido:** rotas protegidas agrupadas em `auth`, whitelist explícita de rotas públicas e testes `AuthRoutesTest` |
 | SEC-12 | Medium | Supply chain / reprodutibilidade | `.gitignore:2` ignora `package-lock.json`; `composer.json:11` (`laratex: dev-main`), `:21` (`usp-theme: dev-master` de fork pessoal), `minimum-stability: dev` | Builds não reprodutíveis; código de branch/fork pessoal pode ser alterado sem revisão e executado pela aplicação | Versionar `package-lock.json`; usar tags estáveis; mover o fork para a organização oficial ou revisar/assinar; remover `minimum-stability: dev` |
 | SEC-13 | Low | Configuração de debug e endpoints de teste | `.env.example:4` (`APP_DEBUG=true`); `routes/web.php:59` (`/students/test` sem método); `E2E_MODE` | Debug em produção expõe stack traces; endpoint quebrado gera ruído; modo E2E pode mascarar Replicado se ativado por engano | Garantir `APP_DEBUG=false` em produção; remover rota quebrada; falhar o boot se `E2E_MODE=true` fora de testing |
 | SEC-14 | **High** | IDOR em autoavaliação por atribuição acidental (`=!` em vez de `!=`) | `app/Http/Controllers/SelfEvaluationController.php:165` | Aluno conseguia visualizar a autoavaliação de outro aluno | Corrigido para comparação estrita de `codpes`, com teste de regressão `test_cen_selfeval_013b` |
@@ -805,6 +805,8 @@ Laravel 12 é o mínimo suportado hoje (EOL 2027-02-24). Se o tempo apertar, est
 9. Remover rotas/métodos de debug (`/students/test`, endpoints de monitor sem auth).
 10. Rodar auditoria final (`composer audit`, `npm audit`, Trivy, gitleaks) e anexar o resultado ao release.
 
+**Resultado (2026-11-23):** SEC-01 (Twig sandbox), SEC-02, SEC-03, SEC-04, SEC-05, SEC-06, SEC-07, SEC-10 (cookies/HSTS), SEC-11 (auth baseline), SEC-14, `TrustHosts` e CI concluídos. Pendentes: SEC-08 (aguardando consumidor), SEC-09/CORS wildcard (decisão), SEC-13, CSP, rate limit, rotação de segredos, Trivy/gitleaks e teste de rollback.
+
 ---
 
 ## 10. Banco de dados: decisão de manter o MySQL 5.7 (legado)
@@ -861,14 +863,17 @@ Antes de considerar o upgrade concluído:
 - [x] `composer.lock` e `package-lock.json` versionados; builds com `npm ci`.
 - [ ] Dependências de branch/fork substituídas por tags oficiais.
 - [x] PHPUnit completo verde e determinístico (sem skips por data).
-- [ ] E2E completo verde, incluindo p0; matriz `coverage.yaml` atualizada (31 verdes, matriz pendente).
+- [x] E2E completo verde (41 verdes); matriz `coverage.yaml` atualizada com os 10 cenários de UI legada.
 - [ ] Cobertura PHP medida e acima da meta.
 - [ ] Teste com Replicado real em staging.
 - [ ] Geração real de PDF e envio real de e-mail validados.
 - [x] SEC-01 e SEC-02 corrigidos e com testes de regressão.
-- [ ] SEC-03 a SEC-13 corrigidos ou aceitos formalmente com prazo.
-- [ ] Cookies `Secure`/`HttpOnly`/`SameSite`, HSTS e CSP configurados.
-- [ ] CORS restrito e `TrustHosts` habilitado.
+- [ ] SEC-03 a SEC-13 corrigidos ou aceitos formalmente com prazo (SEC-03/04/05/06/07/10/11/14 e TrustHosts concluídos).
+- [x] Cookies `Secure`/`HttpOnly`/`SameSite` e HSTS configurados; CSP permanece pendente.
+- [ ] CORS restrito (mantido wildcard por decisão).
+- [x] `TrustHosts` habilitado com o host de `APP_URL`.
+- [x] Baseline de autenticação por grupo de rotas e testes de acesso.
+- [x] Workflow de CI (GitHub Actions com Docker, PHPUnit, auditorias e E2E) criado.
 - [ ] Segredos rotacionados e fora do repositório/artefatos.
 - [ ] Imagens Docker pinadas por digest e sem critical/high no Trivy.
 - [ ] Plano de rollback documentado e testado.

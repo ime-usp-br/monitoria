@@ -27,85 +27,92 @@ use App\Http\Controllers\OldDBController;
 | Web Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
+| Rotas públicas: home, edital, relatório externo por token e links
+| assinados de frequência/autoavaliação/avaliação. Todas as demais rotas
+| exigem autenticação; as permissões de papel continuam nos controllers.
 |
 */
 
-Route::get('/', [MainController::class, 'index'])->name("home");
-
-Route::get('/users/loginas', [UserController::class, 'loginas'])->name("users.loginas");
-Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
-Route::resource('users', UserController::class);
-
-Route::resource('schoolterms', SchoolTermController::class);
+// Público
+Route::get('/', [MainController::class, 'index'])->name('home');
 Route::post('/schoolterms/download', [SchoolTermController::class, 'download'])->name('schoolterms.download');
-
-Route::get('/schoolclasses/{schoolclass}/enrollments', [SchoolClassController::class, 'enrollments'])->name('schoolclasses.enrollments');
-Route::get('/schoolclasses/search', [SchoolClassController::class, 'search'])->name('schoolclasses.search');
-Route::patch('/schoolclasses/import', [SchoolClassController::class, 'import'])->name('schoolclasses.import');
-Route::get('/schoolclasses/{schoolclass}/electedTutors', [SchoolClassController::class, 'electedTutors'])->name('schoolclasses.electedTutors');
-Route::resource('schoolclasses', SchoolClassController::class);
-
-Route::get("/instructors/evaluations", [InstructorEvaluationController::class, "instructorIndex"])->name("instructorevaluations.instructorIndex");
-Route::get('/instructors/{instructor}/requisitions', [InstructorController::class, 'requisitions'])->name('instructors.requisitions');
-Route::get('/instructors/search', [InstructorController::class, 'search'])->name('instructors.search');
-Route::resource('instructors', InstructorController::class);
-
-Route::resource('requisitions', RequisitionController::class);
-
-Route::get("/students/selfevaluations", [SelfEvaluationController::class, "studentIndex"])->name("selfevaluations.studentIndex");
-Route::resource('students', StudentController::class)->middleware(['auth', 'throttle:30,1']);
-
-Route::get('/enrollments/showAll', [EnrollmentController::class, 'showAll'])->name('enrollments.showAll');
-Route::resource('enrollments', EnrollmentController::class);
-
-Route::post('/schoolrecords/download', [SchoolRecordController::class, 'download'])->name('schoolrecords.download');
-Route::resource('schoolRecords', SchoolRecordController::class);
-
-Route::post('/selections/selectunenrolled', [SelectionController::class, 'selectUnenrolled'])->name('selections.selectunenrolled');
-Route::get('/selections/{schoolclass}/enrollments', [SelectionController::class, 'enrollments'])->name('selections.enrollments');
-Route::resource('selections', SelectionController::class);
-
-Route::get('/monitor/getimportschoolclassesjob', [MonitorController::class, 'getImportSchoolClassesJob']);
-
-Route::get('/emails', [EmailController::class, 'index'])->name('emails.index');
-Route::get('/emails/selections', [EmailController::class, 'indexSelections'])->name('emails.indexSelections');
-Route::get('/emails/attendanceRecords', [EmailController::class, 'indexAttendanceRecords'])->name('emails.indexAttendanceRecords');
-Route::get('/emails/selfEvaluations', [EmailController::class, 'indexSelfEvaluations'])->name('emails.indexSelfEvaluations');
-Route::get('/emails/instructorEvaluations', [EmailController::class, 'indexInstructorEvaluations'])->name('emails.indexInstructorEvaluations');
-Route::post('/emails/triggerSelections', [EmailController::class, 'triggerSelections'])->name('emails.triggerSelections');
-Route::post('/emails/triggerAttendanceRecords', [EmailController::class, 'triggerAttendanceRecords'])->name('emails.triggerAttendanceRecords');
-Route::post('/emails/triggerSelfEvaluations', [EmailController::class, 'triggerSelfEvaluations'])->name('emails.triggerSelfEvaluations');
-Route::post('/emails/triggerInstructorEvaluations', [EmailController::class, 'triggerInstructorEvaluations'])->name('emails.triggerInstructorEvaluations');
-
-Route::get('/frequencies/{schoolclass}/{tutor}', [FrequencyController::class, 'show'])->name('frequencies.show');
-Route::get('frequencies/{frequency}', [FrequencyController::class,"update"])->name('frequencies.update');
-Route::get('frequencies', [FrequencyController::class,"index"])->name('frequencies.index');
-
-Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 Route::get('/reports/external', [ReportController::class, 'external'])->name('reports.external');
-Route::post('/reports/make', [ReportController::class, 'make'])->name('reports.make');
+Route::get('/frequencies/{schoolclass}/{tutor}', [FrequencyController::class, 'show'])->name('frequencies.show');
+Route::get('frequencies/{frequency}', [FrequencyController::class, 'update'])->name('frequencies.update');
 
-Route::patch('/tutors/turnintovolunteer/{selection}', [TutorController::class, 'turnIntoVolunteer'])->name('tutors.turnintovolunteer'); 
-Route::patch('/tutors/turnintononvolunteer/{selection}', [TutorController::class, 'turnIntoNonVolunteer'])->name('tutors.turnintononvolunteer'); 
-Route::patch('/tutors/revoke/{selection}', [TutorController::class, 'revoke'])->name('tutors.revoke'); 
-Route::get('/tutors', [TutorController::class, 'index'])->name('tutors.index'); 
+Route::get('/selfevaluations/create', [SelfEvaluationController::class, 'create'])->name('selfevaluations.create');
+Route::post('/selfevaluations', [SelfEvaluationController::class, 'store'])->name('selfevaluations.store');
+Route::get('/instructorevaluations/create', [InstructorEvaluationController::class, 'create'])->name('instructorevaluations.create');
+Route::post('/instructorevaluations', [InstructorEvaluationController::class, 'store'])->name('instructorevaluations.store');
 
-Route::get('/certificates', [CertificateController::class, 'index'])->name('certificates.index');
-Route::get('/certificates/make/{selection}', [CertificateController::class, 'make'])->name('certificates.make');
+// Autenticado
+Route::middleware('auth')->group(function () {
+    Route::get('/users/loginas', [UserController::class, 'loginas'])->name('users.loginas');
+    Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
+    Route::resource('users', UserController::class);
 
-Route::post('/mailtemplates/test', [MailTemplateController::class, 'test'])->name('mailtemplates.test');
-Route::get('/mailtemplates/activate/{mailtemplate}', [MailTemplateController::class, 'activate'])->name('mailtemplates.activate');
-Route::get('/mailtemplates/deactivate/{mailtemplate}', [MailTemplateController::class, 'deactivate'])->name('mailtemplates.deactivate');
-Route::resource('mailtemplates', MailTemplateController::class);
+    Route::resource('schoolterms', SchoolTermController::class);
 
-Route::get('/olddb', [OldDBController::class, "index"])->name('olddb.index');
-Route::post('/olddb/import', [OldDBController::class, "import"])->name('olddb.import');
+    Route::get('/schoolclasses/{schoolclass}/enrollments', [SchoolClassController::class, 'enrollments'])->name('schoolclasses.enrollments');
+    Route::get('/schoolclasses/search', [SchoolClassController::class, 'search'])->name('schoolclasses.search');
+    Route::patch('/schoolclasses/import', [SchoolClassController::class, 'import'])->name('schoolclasses.import');
+    Route::get('/schoolclasses/{schoolclass}/electedTutors', [SchoolClassController::class, 'electedTutors'])->name('schoolclasses.electedTutors');
+    Route::resource('schoolclasses', SchoolClassController::class);
 
-Route::resource('selfevaluations', SelfEvaluationController::class);
+    Route::get('/instructors/evaluations', [InstructorEvaluationController::class, 'instructorIndex'])->name('instructorevaluations.instructorIndex');
+    Route::get('/instructors/{instructor}/requisitions', [InstructorController::class, 'requisitions'])->name('instructors.requisitions');
+    Route::get('/instructors/search', [InstructorController::class, 'search'])->name('instructors.search');
+    Route::resource('instructors', InstructorController::class);
 
-Route::resource('instructorevaluations', InstructorEvaluationController::class);
+    Route::resource('requisitions', RequisitionController::class);
 
-Route::get('/monitor/getImportOldDBJob', [MonitorController::class, 'getImportOldDBJob']);
+    Route::get('/students/selfevaluations', [SelfEvaluationController::class, 'studentIndex'])->name('selfevaluations.studentIndex');
+    Route::resource('students', StudentController::class)->middleware('throttle:30,1');
+
+    Route::get('/enrollments/showAll', [EnrollmentController::class, 'showAll'])->name('enrollments.showAll');
+    Route::resource('enrollments', EnrollmentController::class);
+
+    Route::post('/schoolrecords/download', [SchoolRecordController::class, 'download'])->name('schoolrecords.download');
+    Route::resource('schoolRecords', SchoolRecordController::class);
+
+    Route::post('/selections/selectunenrolled', [SelectionController::class, 'selectUnenrolled'])->name('selections.selectunenrolled');
+    Route::get('/selections/{schoolclass}/enrollments', [SelectionController::class, 'enrollments'])->name('selections.enrollments');
+    Route::resource('selections', SelectionController::class);
+
+    Route::get('/monitor/getimportschoolclassesjob', [MonitorController::class, 'getImportSchoolClassesJob']);
+    Route::get('/monitor/getImportOldDBJob', [MonitorController::class, 'getImportOldDBJob']);
+
+    Route::get('/emails', [EmailController::class, 'index'])->name('emails.index');
+    Route::get('/emails/selections', [EmailController::class, 'indexSelections'])->name('emails.indexSelections');
+    Route::get('/emails/attendanceRecords', [EmailController::class, 'indexAttendanceRecords'])->name('emails.indexAttendanceRecords');
+    Route::get('/emails/selfEvaluations', [EmailController::class, 'indexSelfEvaluations'])->name('emails.indexSelfEvaluations');
+    Route::get('/emails/instructorEvaluations', [EmailController::class, 'indexInstructorEvaluations'])->name('emails.indexInstructorEvaluations');
+    Route::post('/emails/triggerSelections', [EmailController::class, 'triggerSelections'])->name('emails.triggerSelections');
+    Route::post('/emails/triggerAttendanceRecords', [EmailController::class, 'triggerAttendanceRecords'])->name('emails.triggerAttendanceRecords');
+    Route::post('/emails/triggerSelfEvaluations', [EmailController::class, 'triggerSelfEvaluations'])->name('emails.triggerSelfEvaluations');
+    Route::post('/emails/triggerInstructorEvaluations', [EmailController::class, 'triggerInstructorEvaluations'])->name('emails.triggerInstructorEvaluations');
+
+    Route::get('frequencies', [FrequencyController::class, 'index'])->name('frequencies.index');
+
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::post('/reports/make', [ReportController::class, 'make'])->name('reports.make');
+
+    Route::patch('/tutors/turnintovolunteer/{selection}', [TutorController::class, 'turnIntoVolunteer'])->name('tutors.turnintovolunteer');
+    Route::patch('/tutors/turnintononvolunteer/{selection}', [TutorController::class, 'turnIntoNonVolunteer'])->name('tutors.turnintononvolunteer');
+    Route::patch('/tutors/revoke/{selection}', [TutorController::class, 'revoke'])->name('tutors.revoke');
+    Route::get('/tutors', [TutorController::class, 'index'])->name('tutors.index');
+
+    Route::get('/certificates', [CertificateController::class, 'index'])->name('certificates.index');
+    Route::get('/certificates/make/{selection}', [CertificateController::class, 'make'])->name('certificates.make');
+
+    Route::post('/mailtemplates/test', [MailTemplateController::class, 'test'])->name('mailtemplates.test');
+    Route::get('/mailtemplates/activate/{mailtemplate}', [MailTemplateController::class, 'activate'])->name('mailtemplates.activate');
+    Route::get('/mailtemplates/deactivate/{mailtemplate}', [MailTemplateController::class, 'deactivate'])->name('mailtemplates.deactivate');
+    Route::resource('mailtemplates', MailTemplateController::class);
+
+    Route::get('/olddb', [OldDBController::class, 'index'])->name('olddb.index');
+    Route::post('/olddb/import', [OldDBController::class, 'import'])->name('olddb.import');
+
+    Route::resource('selfevaluations', SelfEvaluationController::class)->except(['create', 'store']);
+    Route::resource('instructorevaluations', InstructorEvaluationController::class)->except(['create', 'store']);
+});
