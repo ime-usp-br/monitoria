@@ -56,7 +56,8 @@ Além das dependências, foram encontrados dois problemas críticos que **não s
 - **Auditoria atual:** **0 avisos** no `composer audit` e **0 avisos** no `npm audit` completo (não apenas no `--omit=dev`). A árvore vulnerável do Laravel Mix/webpack-dev-server foi eliminada com a migração para Vite.
 - **Correções de código aplicadas:** SEC-02 (escalada de privilégio), SEC-03 (PII não autenticada), SEC-04 (XSS armazenado), SEC-05 (download arbitrário), SEC-06 (bug de variável e determinismo), SEC-07 (substring de admin) e SEC-14 (IDOR em autoavaliação).
 - **SEC-01 mitigado, não eliminado:** a permissão `Editar E-mails` foi removida da Secretaria e templates com `@php`/`<?` passam a ser rejeitados. A renderização de conteúdo do banco via `Blade::render` ainda permite expressões PHP para Administrador; a troca por um motor sandboxed/placeholders continua na fase 8.
-- **Testes após as Fases 6/7:** **264 testes PHPUnit 12, 0 falhas, 0 skipped** e **31 testes E2E aprovados** no PHP 8.5 com nginx 1.30.7 e build Vite.
+- **Testes após as Fases 6/7:** **264 testes PHPUnit 12, 0 falhas, 0 skipped** e **41 testes E2E aprovados** no PHP 8.5 com nginx 1.30.7 e build Vite.
+- **Regressão da UI legada:** 10 testes E2E novos em `e2e/tests/test_ui_legacy.py` cobrem datepicker, modal de horário (válido/inválido), busca e inclusão de docente, busca de aluno por codpes/nome/não encontrado, modal de indicação, DataTable com botões de exportação e modais de remoção/revogação.
 - **Pendências:** concluir a Fase 8 (hardening SEC-01/08/09/10/11/13, `TrustHosts`, cookies, CORS, CI e auditoria final); opcionalmente pinar o digest da imagem Node.
 - **Decisão de negócio:** o MySQL 5.7 **não será atualizado** (banco legado). A decisão, os riscos aceitos e as mitigações estão registrados na seção 10; o `config/database.php` já foi preparado para não impedir uma futura migração.
 - **Observação:** o Composer 2.10 bloqueia a instalação de qualquer versão do Laravel 8 por advisory de segurança. O hotfix usou `--no-blocking` de forma consciente e documentada; a dívida residual está listada na seção 5.
@@ -495,7 +496,7 @@ Pontos fortes:
 | Lacuna | Impacto no upgrade |
 |---|---|
 | **Sem métrica de cobertura** (não há Xdebug/PCOV) | Não é possível afirmar qual percentual de `app/` está coberto; adicionar driver e gate de cobertura |
-| **E2E com 31 testes para 244 cenários planejados** | `e2e/coverage.yaml` tem 244 cenários, todos marcados como `planned`; a matriz está desatualizada e a cobertura real é ~12,7% |
+| **E2E com 41 testes para 244 cenários planejados (+10 de UI legada)** | `e2e/coverage.yaml` tem 244 cenários planejados; os 10 cenários `CEN-UI-LEGACY-*` estão `implemented`; a cobertura real ainda é ~16% |
 | **Testes dependentes de data** | `FrequencyScenarioTest` pula testes conforme o dia do mês; a suíte não roda 100% em qualquer data |
 | **Sem testes de frontend/JS** | O upgrade de axios/postcss/webpack pode quebrar interações e não será detectado |
 | **Sem teste com Replicado real** | Os testes usam `ReplicadoStubs`/fixtures; o upgrade de `uspdev/replicado`, PHP 8 e `pdo_dblib` pode quebrar SQL/Sybase sem ser detectado |

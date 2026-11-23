@@ -1467,7 +1467,69 @@ scenarios:
     test: tests/test_commands_jobs_kernel.py
     status: planned
 
-# Testes implementados nesta primeira entrega (31).
+  # Regressão da UI legada recuperada do bundle antigo (app-legacy.js).
+  - cen: CEN-UI-LEGACY-001
+    module: UI_LEGACY
+    type: ui
+    priority: p0
+    test: tests/test_ui_legacy.py
+    status: implemented
+  - cen: CEN-UI-LEGACY-002
+    module: UI_LEGACY
+    type: ui
+    priority: p0
+    test: tests/test_ui_legacy.py
+    status: implemented
+  - cen: CEN-UI-LEGACY-003
+    module: UI_LEGACY
+    type: ui
+    priority: p1
+    test: tests/test_ui_legacy.py
+    status: implemented
+  - cen: CEN-UI-LEGACY-004
+    module: UI_LEGACY
+    type: ui
+    priority: p0
+    test: tests/test_ui_legacy.py
+    status: implemented
+  - cen: CEN-UI-LEGACY-005
+    module: UI_LEGACY
+    type: ui
+    priority: p1
+    test: tests/test_ui_legacy.py
+    status: implemented
+  - cen: CEN-UI-LEGACY-006
+    module: UI_LEGACY
+    type: ui
+    priority: p0
+    test: tests/test_ui_legacy.py
+    status: implemented
+  - cen: CEN-UI-LEGACY-007
+    module: UI_LEGACY
+    type: ui
+    priority: p0
+    test: tests/test_ui_legacy.py
+    status: implemented
+  - cen: CEN-UI-LEGACY-008
+    module: UI_LEGACY
+    type: ui
+    priority: p1
+    test: tests/test_ui_legacy.py
+    status: implemented
+  - cen: CEN-UI-LEGACY-009
+    module: UI_LEGACY
+    type: ui
+    priority: p1
+    test: tests/test_ui_legacy.py
+    status: implemented
+  - cen: CEN-UI-LEGACY-010
+    module: UI_LEGACY
+    type: ui
+    priority: p0
+    test: tests/test_ui_legacy.py
+    status: implemented
+
+# Testes implementados nesta primeira entrega (41).
 # A matriz acima continua com status planned para a cobertura completa dos CEN-*.
 implemented_tests:
   - tests/test_auth.py::test_admin_login_exibe_menu_administrativo[chromium]
@@ -1501,3 +1563,13 @@ implemented_tests:
   - tests/test_tutors.py::test_membro_mae_nao_ve_monitor_do_mac[chromium]
   - tests/test_users.py::test_admin_lista_usuarios[chromium]
   - tests/test_users.py::test_secretaria_acessa_usuarios[chromium]
+  - tests/test_ui_legacy.py::test_ui_legacy_datepicker_inicializa_e_abre_calendario[chromium]
+  - tests/test_ui_legacy.py::test_ui_legacy_modal_horario_adiciona_horario_valido[chromium]
+  - tests/test_ui_legacy.py::test_ui_legacy_modal_horario_valida_campos_obrigatorios[chromium]
+  - tests/test_ui_legacy.py::test_ui_legacy_modal_instrutor_busca_e_adiciona_docente[chromium]
+  - tests/test_ui_legacy.py::test_ui_legacy_modal_instrutor_rejeita_codpes_inexistente[chromium]
+  - tests/test_ui_legacy.py::test_ui_legacy_busca_aluno_no_modal_de_selecao[chromium]
+  - tests/test_ui_legacy.py::test_ui_legacy_datatable_inicializa_com_botoes_de_exportacao[chromium]
+  - tests/test_ui_legacy.py::test_ui_legacy_modal_remocao_define_action_do_form[chromium]
+  - tests/test_ui_legacy.py::test_ui_legacy_modal_revogacao_define_action_do_form[chromium]
+  - tests/test_ui_legacy.py::test_ui_legacy_modal_indicacao_busca_e_adiciona_aluno[chromium]

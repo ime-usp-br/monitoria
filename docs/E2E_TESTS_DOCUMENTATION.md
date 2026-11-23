@@ -7,7 +7,7 @@
 - `docs/SCENARIO_TESTS_DOCUMENTATION.md` (244 cenários `CEN-*`)
 
 **Data:** 2026-11-19
-**Status:** fundação implementada. Existem `docker-compose.e2e.yml`, imagens, seed, fixtures do Replicado, 31 testes Playwright executando e a matriz dos 244 cenários. A cobertura completa ainda será construída incrementalmente.
+**Status:** fundação implementada. Existem `docker-compose.e2e.yml`, imagens, seed, fixtures do Replicado, **41 testes Playwright** executando e a matriz dos 244 cenários (+ 10 cenários de regressão da UI legada). A cobertura completa ainda será construída incrementalmente.
 
 ### O que já está implementado
 
@@ -16,7 +16,7 @@
 - `docker/e2e/Dockerfile.app`, entrypoints, nginx e imagem `e2e/Dockerfile` com Chromium.
 - `php artisan e2e:seed`, manifesto `seed.json` e fixtures do Replicado em `replicado.json`.
 - Fallback de Replicado por `E2E_REPLICADO_FAKE=true` (ver seção 7.5), necessário porque o ASE do `asedocker` sofre SIGSEGV no kernel deste ambiente.
-- Suíte `e2e/tests` com 31 testes P0/P1/P2 passando.
+- Suíte `e2e/tests` com **41 testes** P0/P1/P2 passando.
 - `e2e/coverage.yaml` com os 244 `CEN-*` mapeados.
 - `scripts/run_e2e.sh` e documentação de execução.
 
@@ -608,6 +608,7 @@ e2e/
     test_reports.py
     test_olddb.py
     test_commands_jobs_kernel.py
+    test_ui_legacy.py
   artifacts/            # gitignored
 scripts/
   run_e2e.sh
@@ -616,10 +617,11 @@ scripts/
 ### 9.1 Dependências Python
 
 ```text
-pytest==8.4.2
+pytest==9.2.0
 pytest-playwright==0.10.0
 pytest-timeout==2.4.0
 PyMySQL==1.2.4
+playwright==1.65.2
 ```
 
 - `pymysql` serve para leitura/asserts e preparação controlada de estados que não têm UI.
@@ -961,7 +963,7 @@ A implementação futura será considerada concluída quando:
 - [x] O login via `senhaunica-faker` funciona para todos os papéis da seção 6.3.
 - [x] O seed grava o manifesto e nenhum teste hardcodeia IDs.
 - [x] Todos os 244 `CEN-*` estão em `e2e/coverage.yaml` com tipo, prioridade e destino.
-- [x] As jornadas P0 passam de forma estável em três execuções consecutivas (31 testes).
+- [x] As jornadas P0 passam de forma estável em três execuções consecutivas (41 testes, incluindo a UI legada).
 - [ ] Nenhum teste faz chamada a `replicado.ime.usp.br`, `dev.uspdigital.usp.br` ou CDN externa.
 - [ ] E-mails são validados pelo Mailpit, incluindo links assinados.
 - [ ] PDFs de atestado, relatório e histórico são baixados e validados.
