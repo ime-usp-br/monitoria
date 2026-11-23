@@ -54,6 +54,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+	if ($this->app->isProduction() && config('app.debug')) {
+            throw new \RuntimeException('APP_DEBUG deve ser false em produção.');
+        }
+
 	Schema::defaultStringLength(191);
 	
 	if ($this->app->environment('local') || $this->app->environment('development')) {

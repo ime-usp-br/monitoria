@@ -58,7 +58,7 @@ Além das dependências, foram encontrados dois problemas críticos que **não s
 - **Correções de código aplicadas:** SEC-01 (RCE de template eliminado), SEC-02 (escalada de privilégio), SEC-03 (PII não autenticada), SEC-04 (XSS armazenado), SEC-05 (download arbitrário), SEC-06 (bug de variável e determinismo), SEC-07 (substring de admin), SEC-10 (cookies/HSTS), SEC-11 (baseline de autenticação), SEC-14 (IDOR em autoavaliação), TrustHosts e CI.
 - **Testes após as Fases 6/7/8:** **281 testes PHPUnit 12, 0 falhas, 0 skipped** e **41 testes E2E aprovados** no PHP 8.5 com nginx 1.30.7, build Vite e Twig sandbox.
 - **Regressão da UI legada:** 10 testes E2E novos em `e2e/tests/test_ui_legacy.py` cobrem datepicker, modal de horário (válido/inválido), busca e inclusão de docente, busca de aluno por codpes/nome/não encontrado, modal de indicação, DataTable com botões de exportação e modais de remoção/revogação.
-- **Pendências:** SEC-08 (token do relatório externo; aguardando consumidor), SEC-13 (revisão de `APP_DEBUG`/`E2E_MODE`), pinagem opcional do digest da imagem Node e execução/ajuste do workflow de CI no GitHub. CORS wildcard foi mantido por decisão.
+- **Pendências:** SEC-08 (token do relatório externo; aguardando consumidor), pinagem opcional do digest da imagem Node, execução/ajuste do workflow de CI no GitHub, CSP/rate limit/rotação de segredos/Trivy/gitleaks e teste de rollback. CORS wildcard foi mantido por decisão. SEC-13 coberto por guarda de `APP_DEBUG` em produção e `E2E_MODE` já restrito a testing.
 - **Decisão de negócio:** o MySQL 5.7 **não será atualizado** (banco legado). A decisão, os riscos aceitos e as mitigações estão registrados na seção 10; o `config/database.php` já foi preparado para não impedir uma futura migração.
 - **Observação:** o Composer 2.10 bloqueia a instalação de qualquer versão do Laravel 8 por advisory de segurança. O hotfix usou `--no-blocking` de forma consciente e documentada; a dívida residual está listada na seção 5.
 
@@ -805,7 +805,7 @@ Laravel 12 é o mínimo suportado hoje (EOL 2027-02-24). Se o tempo apertar, est
 9. Remover rotas/métodos de debug (`/students/test`, endpoints de monitor sem auth).
 10. Rodar auditoria final (`composer audit`, `npm audit`, Trivy, gitleaks) e anexar o resultado ao release.
 
-**Resultado (2026-11-23):** SEC-01 (Twig sandbox), SEC-02, SEC-03, SEC-04, SEC-05, SEC-06, SEC-07, SEC-10 (cookies/HSTS), SEC-11 (auth baseline), SEC-14, `TrustHosts` e CI concluídos. Pendentes: SEC-08 (aguardando consumidor), SEC-09/CORS wildcard (decisão), SEC-13, CSP, rate limit, rotação de segredos, Trivy/gitleaks e teste de rollback.
+**Resultado (2026-11-23):** SEC-01 (Twig sandbox), SEC-02, SEC-03, SEC-04, SEC-05, SEC-06, SEC-07, SEC-10 (cookies/HSTS), SEC-11 (auth baseline), SEC-13, SEC-14, `TrustHosts` e CI concluídos. Pendentes: SEC-08 (aguardando consumidor), SEC-09/CORS wildcard (decisão), CSP, rate limit, rotação de segredos, Trivy/gitleaks e teste de rollback.
 
 ---
 
@@ -873,6 +873,7 @@ Antes de considerar o upgrade concluído:
 - [ ] CORS restrito (mantido wildcard por decisão).
 - [x] `TrustHosts` habilitado com o host de `APP_URL`.
 - [x] Baseline de autenticação por grupo de rotas e testes de acesso.
+- [x] Guarda de `APP_DEBUG=false` em produção e `E2E_MODE` restrito a testing.
 - [x] Workflow de CI (GitHub Actions com Docker, PHPUnit, auditorias e E2E) criado.
 - [ ] Segredos rotacionados e fora do repositório/artefatos.
 - [ ] Imagens Docker pinadas por digest e sem critical/high no Trivy.
