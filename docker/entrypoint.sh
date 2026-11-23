@@ -47,13 +47,17 @@ fi
 # Install node_modules if missing
 if [ ! -d "node_modules" ]; then
     echo "Installing Node dependencies..."
-    npm install
+    if [ -f "package-lock.json" ]; then
+        npm ci
+    else
+        npm install
+    fi
 fi
 
-# Build assets only if they are missing (avoid overwriting pre-compiled files)
-if [ ! -f "public/js/app.js" ] || [ ! -f "public/css/app.css" ]; then
+# Build assets only if the Vite manifest is missing
+if [ ! -f "public/build/manifest.json" ]; then
     echo "Building assets..."
-    npm run dev 2>/dev/null || PATH="$PATH:/var/www/node_modules/.bin" npx mix || true
+    npm run build
 fi
 
 # Copy .env if it does not exist, ajustando valores para o ambiente Docker

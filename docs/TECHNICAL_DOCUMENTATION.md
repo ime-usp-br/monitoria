@@ -2,7 +2,7 @@
 
 **Projeto:** Sistema de Monitoria do IME (Instituto de Matemática e Estatística, USP)
 **URL:** https://monitoria.ime.usp.br
-**Stack:** Laravel 8 (PHP ^7.3|^8.0), MySQL, Laravel Sanctum, Spatie Permission, `uspdev/senhaunica-socialite`, `uspdev/replicado`, `ismaielw/laratex`, `romanzipp/laravel-queue-monitor`, npm/webpack.mix.
+**Stack:** Laravel 13 (PHP ^8.3), MySQL 5.7 (legado, mantido por decisão), Laravel Sanctum, Spatie Permission, `uspdev/senhaunica-socialite`, `uspdev/replicado`, `ismaielw/laratex`, `romanzipp/laravel-queue-monitor`, Vite.
 
 Este documento é uma referência técnica exaustiva, derivada diretamente da análise do código-fonte. Ele detalha todas as funcionalidades e mapeia todos os fluxos de trabalho, servindo como base primária para a geração de testes baseados em cenários.
 
@@ -480,13 +480,13 @@ Se a inscrição do aluno está associada a uma `Selection` (ou seja, foi seleci
 
 ---
 
-## 8. Tarefas Automatizadas / Agendadas (Kernel)
+## 8. Tarefas Automatizadas / Agendadas (ScheduledTasks)
 
-`app/Console/Kernel.php::schedule()` define:
+`app/Console/ScheduledTasks.php::register()` (chamado em `routes/console.php`) registra dois jobs que rodam **a cada minuto** e consultam o banco em runtime:
 
 1. **Disparo agendado de e-mails** para cada `MailTemplate` com `active=true` e `sending_frequency != "Manual"`, por tipo de frequência:
    - `Única`: quando `now == sending_date` e `now == sending_hour`.
-   - `Mensal`: `monthlyOn(sending_date, sending_hour)` (interpretado do modelo).
+   - `Mensal`: quando `now.day == sending_date` e `now == sending_hour`.
    - `Inicio do período de avaliação`: para cada período com `start_date_evaluations >= now - sending_date`, envia em `start_date_evaluations + sending_date` dias.
    - `Final do período de avaliação`: para cada período com `end_date_evaluations >= now + sending_date`, envia em `end_date_evaluations - sending_date` dias.
 2. **Fechamento automático do período**: para cada período com `finished_at >= now`, em `finished_at` às 23:59, transforma todas as seleções `Ativo` do período em `Concluido`.

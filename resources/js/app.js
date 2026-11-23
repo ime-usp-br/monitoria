@@ -1,1 +1,1 @@
-require('./bootstrap');
+import './app-legacy';

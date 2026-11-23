@@ -1,3 +1,13 @@
+# Etapa de build dos assets (Vite).
+FROM node:22-alpine@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a AS assets
+
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY vite.config.js ./
+COPY resources ./resources
+RUN npm run build
+
 # Imagem da aplicação usada SOMENTE no stack E2E.
 # Deriva da mesma base do Dockerfile de produção, mas copia o código e as
 # dependências para dentro da imagem (sem bind mount do repositório).
@@ -36,6 +46,8 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-interaction --prefer-dist --no-scripts --no-autoloader
 
 COPY . /var/www
+
+COPY --from=assets /app/public/build /var/www/public/build
 
 RUN mkdir -p /opt/e2e-storage \
     && cp -a storage/app/images /opt/e2e-storage/images

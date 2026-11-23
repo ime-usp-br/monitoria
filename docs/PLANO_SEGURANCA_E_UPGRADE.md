@@ -52,12 +52,12 @@ Além das dependências, foram encontrados dois problemas críticos que **não s
 - **Fase 4 concluída:** Laravel **11.57.1**, PHP **8.3.37**, Symfony **7.4.23**, Carbon **3.15.1**, Sanctum **4.4.0**, Tinker **3.1.0**, PHPUnit **11.5.58**, Collision **8.9.6**, Ignition **2.12.1**, LaraTeX **1.3.2**, Staudenmeir **2.16.4/1.20.7**, Spatie **6.25.0** e QueueMonitor **5.4.5**. Migração estrutural para `bootstrap/app.php`/`bootstrap/providers.php`; `Http\Kernel`, `Console\Kernel`, `Exceptions\Handler` e `RouteServiceProvider` foram removidos; o schedule foi para `app/Console/ScheduledTasks` + `routes/console.php`. Docker migrado para PHP 8.3.
 - **Fase 5 concluída:** Laravel **12.73.0**, PHP **8.3.37**, Symfony **7.4.23**, PHPUnit **12.5.45**, Spatie **8.5.0**, Sanctum **4.5.0**, Tinker **3.2.0**, QueueMonitor **5.5.0**, Staudenmeir **2.17/1.21.3** e Socialite **5.33.0**. **Composer audit: 0 avisos de segurança.**
 - **Fase 6 concluída:** Laravel **13.43.0**, PHP **8.5.13**, Symfony **8.1.11**, Staudenmeir **2.18/1.22.1**, Ignition **2.13.0**, Sanctum **4.5.0**, Spatie **8.5.0**, QueueMonitor **5.5.0** e PHPUnit **12.5.45**. Docker migrado para PHP 8.5; corrigida a depreciação `PDO::MYSQL_ATTR_SSL_CA` para `Pdo\Mysql::ATTR_SSL_CA`. **Composer audit: 0 avisos.**
-- **Fase 7 concluída (MySQL fora de escopo):** nginx atualizado de **1.29.8** (vulnerável a `CVE-2026-123007` major, `CVE-2026-118899` major e `CVE-2026-113425` major) para **1.30.7-alpine** pinado por digest; Redis **8.2-alpine** pinado; `nginx` e `supervisor` removidos da imagem da aplicação. Frontend atualizado: axios **1.18**, postcss **8.5.23**, overrides para follow-redirects/json5/proxy-addr/shell-quote, webpack **5.99.9** (compatibilidade com Laravel Mix 6), `package-lock.json` versionado e assets reconstruídos. E2E atualizado para pytest **9.2.0** e Playwright **1.65.2** pinado. **MySQL 5.7 mantido por decisão de negócio** (risco aceito e mitigações na seção 10).
-- **Auditoria atual:** **0 avisos** no `composer audit`; **0 avisos de runtime** no `npm audit --omit=dev`. O `npm audit` completo ainda aponta 25 avisos **apenas de toolchain de build/dev** (0 critical, 10 high), majoritariamente na árvore do Laravel Mix/webpack-dev-server; a migração para Vite é a solução definitiva.
+- **Fase 7 concluída (MySQL fora de escopo):** nginx atualizado de **1.29.8** (vulnerável a `CVE-2026-123007` major, `CVE-2026-118899` major e `CVE-2026-113425` major) para **1.30.7-alpine** pinado por digest; Redis **8.2-alpine** pinado; `nginx` e `supervisor` removidos da imagem da aplicação. Frontend migrado de Laravel Mix para **Vite 8.3.8 + laravel-vite-plugin 3.2.1**; `axios`, `lodash`, `laravel-mix` e `webpack` removidos; o código de UI que existia apenas no bundle antigo foi recuperado para `resources/js/app-legacy.js`; `parent.blade.php` usa `@vite`; `package-lock.json` versionado e assets em `public/build`. E2E atualizado para pytest **9.2.0** e Playwright **1.65.2** pinado. **MySQL 5.7 mantido por decisão de negócio** (risco aceito e mitigações na seção 10).
+- **Auditoria atual:** **0 avisos** no `composer audit` e **0 avisos** no `npm audit` completo (não apenas no `--omit=dev`). A árvore vulnerável do Laravel Mix/webpack-dev-server foi eliminada com a migração para Vite.
 - **Correções de código aplicadas:** SEC-02 (escalada de privilégio), SEC-03 (PII não autenticada), SEC-04 (XSS armazenado), SEC-05 (download arbitrário), SEC-06 (bug de variável e determinismo), SEC-07 (substring de admin) e SEC-14 (IDOR em autoavaliação).
 - **SEC-01 mitigado, não eliminado:** a permissão `Editar E-mails` foi removida da Secretaria e templates com `@php`/`<?` passam a ser rejeitados. A renderização de conteúdo do banco via `Blade::render` ainda permite expressões PHP para Administrador; a troca por um motor sandboxed/placeholders continua na fase 8.
-- **Testes após as Fases 6/7:** **264 testes PHPUnit 12, 0 falhas, 0 skipped** e **31 testes E2E aprovados** no PHP 8.5 com nginx 1.30.7 e assets reconstruídos.
-- **Pendências:** concluir a Fase 8 (hardening SEC-01/08/09/10/11/13, `TrustHosts`, cookies, CORS, CI e auditoria final); opcionalmente pinar o digest da imagem Node e avaliar a migração para Vite.
+- **Testes após as Fases 6/7:** **264 testes PHPUnit 12, 0 falhas, 0 skipped** e **31 testes E2E aprovados** no PHP 8.5 com nginx 1.30.7 e build Vite.
+- **Pendências:** concluir a Fase 8 (hardening SEC-01/08/09/10/11/13, `TrustHosts`, cookies, CORS, CI e auditoria final); opcionalmente pinar o digest da imagem Node.
 - **Decisão de negócio:** o MySQL 5.7 **não será atualizado** (banco legado). A decisão, os riscos aceitos e as mitigações estão registrados na seção 10; o `config/database.php` já foi preparado para não impedir uma futura migração.
 - **Observação:** o Composer 2.10 bloqueia a instalação de qualquer versão do Laravel 8 por advisory de segurança. O hotfix usou `--no-blocking` de forma consciente e documentada; a dívida residual está listada na seção 5.
 
@@ -135,16 +135,14 @@ Limitações:
 
 | Pacote | Versão instalada | Observação |
 |---|---|---|
-| `axios` | 0.21.4 | 23 avisos no OSV; build/dev |
-| `laravel-mix` | 6.0.49 | Última 6.x; árvore transitiva com avisos |
-| `lodash` | 4.18.1 | Sem aviso no OSV na versão instalada |
-| `postcss` | 8.5.16 | 2 avisos high; corrigido em 8.5.23 |
-| `follow-redirects` | 1.16.0 | 3 avisos high; corrigido em 1.16.2 |
-| `json5` | 1.0.2 | 3 avisos; corrigido em 2.2.3 |
-| `webpack` | 5.108.4 | Sem aviso direto |
-| `webpack-dev-server` / `webpack-dev-middleware` | transitivos | Avisos high; afetam apenas dev server |
+| `vite` | 8.3.8 | Build atual; substitui Laravel Mix/webpack |
+| `laravel-vite-plugin` | 3.2.1 | Integração com Laravel; `@vite` no Blade |
+| `axios` | removido | Não era usado pelo código de UI; removido na migração |
+| `lodash` | removido | Não era usado pelo código de UI; removido na migração |
+| `laravel-mix` / `webpack` | removidos | Árvore antiga com avisos de dev server eliminada |
+| `postcss` | via Vite | Vite 8 inclui o pipeline de PostCSS |
 
-Observação importante: `package-lock.json` está no `.gitignore` (`.gitignore:2`). Isso torna o build não reprodutível e impede `npm ci`. O arquivo existe localmente, mas não é versionado. Recomenda-se versioná-lo e usar `npm ci`.
+Observação: `package-lock.json` foi versionado e o build usa `npm ci`. O `npm audit` completo está em **0 avisos**.
 
 ### 3.4 Tamanho do código
 
@@ -337,7 +335,7 @@ Destaques:
 
 **Importante:** `npm audit --omit=dev` retorna **0 vulnerabilidades**. Não há JavaScript de runtime servido ao navegador; os achados são de toolchain de build/dev. Ainda assim, o build roda em CI e na máquina de desenvolvedores, então há risco de supply chain e de execução de código no build.
 
-**Status após a Fase 7:** `axios` **1.18**, `postcss` **8.5.23**, `webpack` **5.99.9** (pinado por compatibilidade com Laravel Mix 6), overrides para `follow-redirects`, `json5`, `proxy-addr` e `shell-quote`; `package-lock.json` versionado e assets reconstruídos. O `npm audit` completo caiu para **25 avisos, 0 critical, 10 high**, todos em toolchain de build/dev (`webpack-dev-server`, `webpack-dev-middleware`, `svgo`, `node-forge`, `body-parser`, `compression` etc.); `npm audit --omit=dev` continua **0**. A migração para Vite elimina a maior parte dessa dívida.
+**Status após a Fase 7:** o build foi migrado de Laravel Mix/webpack para **Vite 8.3.8 + laravel-vite-plugin 3.2.1**. `axios`, `lodash`, `laravel-mix` e `webpack` foram removidos; o código de UI que existia apenas no bundle antigo foi recuperado para `resources/js/app-legacy.js`. `package-lock.json` versionado e assets em `public/build`. **`npm audit` completo: 0 avisos** (e `npm audit --omit=dev`: 0). A árvore vulnerável de `webpack-dev-server`/`webpack-dev-middleware`/`svgo` foi eliminada.
 
 ### 5.5 Python / E2E
 
@@ -777,10 +775,10 @@ Laravel 12 é o mínimo suportado hoje (EOL 2027-02-24). Se o tempo apertar, est
 #### Frontend/build
 
 1. Node 22 LTS no Dockerfile (já aplicado); pinar o digest da imagem.
-2. Versionar `package-lock.json` e usar `npm ci`.
-3. Atualizar axios/postcss/follow-redirects/json5.
-4. Rebuild e testar `public/js/app.js` e `public/css/app.css`.
-5. Opcional recomendado: migrar de Laravel Mix para Vite, eliminando a árvore de dependências antiga do Mix/Webpack.
+2. Vite **8.3.8** + `laravel-vite-plugin` **3.2.1** (aplicado); `package-lock.json` versionado e `npm ci` no build.
+3. `@vite` no `parent.blade.php`; assets em `public/build`; Laravel Mix, webpack, axios e lodash removidos.
+4. O Dockerfile de E2E builda os assets em um estágio Node antes de copiar `public/build`.
+5. pytest **9.2.0** e Playwright **1.65.2** pinados no E2E.
 
 #### Containers
 
@@ -791,7 +789,7 @@ Laravel 12 é o mínimo suportado hoje (EOL 2027-02-24). Se o tempo apertar, est
 5. `python:3.12-slim` no E2E (ou 3.14) com digest; fixar transitivas.
 6. Trivy/Grype sem vulnerabilidades critical/high não mitigadas.
 
-**Resultado da execução (2026-11-23):** nginx 1.30.7-alpine pinado; Redis 8.2-alpine pinado; frontend com axios 1.18, postcss 8.5.23, webpack 5.99.9, overrides de transitivas, `package-lock.json` versionado e assets reconstruídos; pytest 9.2.0 e Playwright 1.65.2; `npm audit --omit=dev` = 0. **31 E2E verdes** com os novos assets e nginx. MySQL 5.7 mantido por decisão de negócio (seção 10). A imagem Node ainda usa a tag 22.x do NodeSource (pinar digest é opcional).
+**Resultado da execução (2026-11-23):** nginx 1.30.7-alpine pinado; Redis 8.2-alpine pinado; frontend migrado para Vite 8.3.8, `package-lock.json` versionado, `public/build` gerado e código legado recuperado; pytest 9.2.0 e Playwright 1.65.2; **`npm audit` completo = 0**; **31 E2E verdes** com Vite e nginx 1.30.7. MySQL 5.7 mantido por decisão de negócio (seção 10). A imagem Node ainda usa a tag 22.x do NodeSource (pinar digest é opcional).
 
 ### 9.12 Fase 8 — Hardening e encerramento
 
@@ -858,7 +856,7 @@ Antes de considerar o upgrade concluído:
 - [x] MySQL 5.7 mantido com as mitigações da seção 10 e exceção registrada.
 - [x] nginx em 1.30.7+ pinado por digest.
 - [x] `composer audit` sem critical/high não mitigados (0 avisos).
-- [ ] `npm audit --omit=dev` = 0 (ok) e `npm audit` sem critical/high no build (restam 10 high dev-only).
+- [x] `npm audit --omit=dev` = 0 e `npm audit` = 0 (Vite; sem árvore de build vulnerável).
 - [x] `composer.lock` e `package-lock.json` versionados; builds com `npm ci`.
 - [ ] Dependências de branch/fork substituídas por tags oficiais.
 - [x] PHPUnit completo verde e determinístico (sem skips por data).

@@ -198,12 +198,12 @@ WORKDIR /var/www
 COPY . /var/www
 RUN composer install --no-interaction --no-dev --optimize-autoloader \
     && npm ci \
-    && npm run prod
+    && npm run build
 ```
 
 Se preferir uma única imagem, o `Dockerfile` da raiz pode ser parametrizado para copiar o código apenas em builds E2E; a exigência é que a imagem final contenha `vendor/`, `node_modules/`/`public/` e o código do commit testado, sem depender de bind mount.
 
-O Dockerfile de produção já instala PHP 7.4, `pdo_dblib`, TeX Live e Python 3, necessários para Replicado, atestados e relatórios. O entrypoint de E2E deve ser mínimo:
+O Dockerfile de produção já instala PHP 8.5, `pdo_dblib`, TeX Live e Python 3, necessários para Replicado, atestados e relatórios. O entrypoint de E2E deve ser mínimo:
 
 1. aguardar `db`;
 2. aguardar `vendor/autoload.php`;
@@ -211,7 +211,7 @@ O Dockerfile de produção já instala PHP 7.4, `pdo_dblib`, TeX Live e Python 3
 4. `php artisan storage:link`;
 5. iniciar `php-fpm`.
 
-Nada de `composer install`, `npm install`, geração de `.env` ou ajustes de UID em tempo de execução. Build de assets (`npm ci && npm run prod`) acontece na construção da imagem.
+Nada de `composer install`, `npm install`, geração de `.env` ou ajustes de UID em tempo de execução. Build de assets (`npm ci && npm run build`) acontece na construção da imagem.
 
 O serviço `seed` é o único responsável pelo schema: ele valida `APP_ENV=testing`, `E2E_MODE=true` e `DB_DATABASE=monitoria_e2e`, aguarda `db`, executa `php artisan migrate:fresh --force` e depois `php artisan e2e:seed`. O `app` não roda migration, evitando corrida entre os dois.
 

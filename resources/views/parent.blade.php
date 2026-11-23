@@ -2,7 +2,7 @@
 
 @section('styles')
   @parent
-  <link rel="stylesheet" href="{{ asset('css/app.css').'?version=3' }}" />
+  @vite('resources/css/app.css')
   <link rel="stylesheet" href="{{ asset('css/listmenu_v.css').'?version=2' }}" />
   <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/datatables.min.css"/>
@@ -13,7 +13,7 @@
   <script type="text/javascript">
     let baseURL = "{{ env('APP_URL') }}";
   </script>
-  <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
+  @vite('resources/js/app.js')
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="{{ asset('js/datepicker-pt-BR.js') }}"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/datatables.min.js"></script>
