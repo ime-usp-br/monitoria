@@ -176,6 +176,76 @@ class UserScenarioTest extends ScenarioTestCase
         $this->assertTrue($user->fresh()->hasRole('Administrador'));
     }
 
+    public function test_cen_user_009b_log_as_administrator_nao_aceita_substring_de_codpes()
+    {
+        $this->setEnv('LOG_AS_ADMINISTRATOR', '1234567,7654321');
+
+        $user = User::factory()->create([
+            'name' => 'Substring Indevida',
+            'email' => 'substring@ime.usp.br',
+            'codpes' => '2345',
+        ]);
+
+        $this->assertFalse($user->fresh()->hasRole('Administrador'));
+    }
+
+    public function test_cen_user_011_secretaria_nao_pode_atribuir_administrador()
+    {
+        $secretaria = $this->secretaria();
+        $target = $this->createUser('Docente');
+
+        $this->actingAs($secretaria)->put('/users/'.$target->id, [
+            'name' => $target->name,
+            'email' => $target->email,
+            'roles' => ['Administrador'],
+        ])->assertForbidden();
+
+        $target->refresh();
+        $this->assertFalse($target->hasRole('Administrador'));
+        $this->assertTrue($target->hasRole('Docente'));
+    }
+
+    public function test_cen_user_012_secretaria_nao_pode_alterar_administrador_existente()
+    {
+        $secretaria = $this->secretaria();
+        $admin = $this->admin();
+
+        $this->actingAs($secretaria)->put('/users/'.$admin->id, [
+            'name' => $admin->name,
+            'email' => $admin->email,
+            'roles' => ['Docente'],
+        ])->assertForbidden();
+
+        $this->assertTrue($admin->fresh()->hasRole('Administrador'));
+        $this->assertFalse($admin->fresh()->hasRole('Docente'));
+    }
+
+    public function test_cen_user_013_administrador_pode_atribuir_administrador()
+    {
+        $admin = $this->admin();
+        $target = $this->createUser('Docente');
+
+        $this->actingAs($admin)->put('/users/'.$target->id, [
+            'name' => $target->name,
+            'email' => $target->email,
+            'roles' => ['Administrador'],
+        ])->assertRedirect('/users');
+
+        $this->assertTrue($target->fresh()->hasRole('Administrador'));
+    }
+
+    public function test_cen_user_014_user_request_rejeita_papel_inexistente()
+    {
+        $admin = $this->admin();
+        $target = $this->createUser('Docente');
+
+        $this->actingAs($admin)->put('/users/'.$target->id, [
+            'name' => $target->name,
+            'email' => $target->email,
+            'roles' => ['PapelInexistente'],
+        ])->assertSessionHasErrors('roles.0');
+    }
+
     public function test_cen_user_010_login_cria_student_e_instructor_correspondente()
     {
         // Aluno sem registro Student

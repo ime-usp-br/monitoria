@@ -123,7 +123,7 @@
                             </div>
                             @if($se->comments)
                                 <div class="col-lg-auto">
-                                    {!! $se->comments !!}
+                                    {!! nl2br(e($se->comments)) !!}
                                 </div>
                             @endif
                         </div>

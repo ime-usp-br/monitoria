@@ -57,7 +57,8 @@ class User extends Authenticatable
             static::$syncingVinculo = true;
             try {
                 $codpes = (string) $user->codpes;
-                if (str_contains((string) env('LOG_AS_ADMINISTRATOR'), $codpes) && !$user->hasRole('Administrador')) {
+                $administrators = array_filter(array_map('trim', explode(',', (string) env('LOG_AS_ADMINISTRATOR'))));
+                if (in_array($codpes, $administrators, true) && !$user->hasRole('Administrador')) {
                     $user->assignRole('Administrador');
                 }
                 $user->syncVinculoRoles();

@@ -310,6 +310,18 @@ class SelectionScenarioTest extends ScenarioTestCase
         $this->assertTrue($posRecommended < $posPlain, 'Recomendados devem aparecer antes');
     }
 
+    public function test_cen_selection_014b_enrollments_escapa_comentarios()
+    {
+        $env = $this->seedEnvironment();
+        $env['requisition']->update(['comments' => '<script>alert(1)</script>']);
+
+        $this->actingAs($env['secretaria'])
+            ->get('/selections/'.$env['class']->id.'/enrollments')
+            ->assertOk()
+            ->assertDontSee('<script>alert(1)</script>', false)
+            ->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;', false);
+    }
+
     public function test_cen_selection_015_select_unenrolled_cria_selecao_sem_inscricao_previa()
     {
         $env = $this->seedEnvironment();

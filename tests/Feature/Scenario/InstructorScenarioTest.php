@@ -61,6 +61,19 @@ class InstructorScenarioTest extends ScenarioTestCase
         $this->assertSame($instructor->id, $resp->viewData('docente')->id);
     }
 
+    public function test_cen_instructor_004b_view_de_solicitacoes_escapa_comentarios()
+    {
+        $secretaria = $this->secretaria();
+        $env = $this->seedEnvironment();
+        $env['requisition']->update(['comments' => '<script>alert(1)</script>']);
+
+        $this->actingAs($secretaria)
+            ->get('/instructors/'.$env['instructor']->id.'/requisitions')
+            ->assertOk()
+            ->assertDontSee('<script>alert(1)</script>', false)
+            ->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;', false);
+    }
+
     public function test_cen_instructor_005_busca_por_codpes()
     {
         $secretaria = $this->secretaria();

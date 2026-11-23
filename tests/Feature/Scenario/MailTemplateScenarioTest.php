@@ -53,21 +53,67 @@ class MailTemplateScenarioTest extends ScenarioTestCase
         $this->actingAs($semPermissao)->delete('/mailtemplates/'.$template->id)->assertForbidden();
     }
 
-    public function test_cen_mailtemplate_002_store_decodifica_campo_combinado()
+    public function test_cen_mailtemplate_001b_secretaria_nao_pode_editar_templates()
     {
         $secretaria = $this->secretaria();
+        $template = $this->createMailTemplate();
 
-        $this->actingAs($secretaria)->post('/mailtemplates', $this->payload());
+        $this->actingAs($secretaria)->get('/mailtemplates')->assertForbidden();
+        $this->actingAs($secretaria)->post('/mailtemplates', $this->payload())->assertForbidden();
+        $this->actingAs($secretaria)->put('/mailtemplates/'.$template->id, $this->payload())->assertForbidden();
+        $this->actingAs($secretaria)->delete('/mailtemplates/'.$template->id)->assertForbidden();
+    }
+
+    public function test_cen_mailtemplate_001c_template_rejeita_diretivas_php()
+    {
+        $admin = $this->admin();
+
+        $this->actingAs($admin)->post('/mailtemplates', $this->payload([
+            'body' => '@php system("id"); @endphp',
+        ]))->assertSessionHasErrors('body');
+
+        $this->actingAs($admin)->post('/mailtemplates', $this->payload([
+            'subject' => '<?php echo "x"; ?>',
+        ]))->assertSessionHasErrors('subject');
+
+        $this->actingAs($admin)->post('/mailtemplates', $this->payload([
+            'body' => '<p>Olá {{ $student->nompes }}</p>',
+        ]))->assertSessionHasNoErrors();
+    }
+
+    public function test_cen_mailtemplate_001d_renderiza_subject_e_body_reais()
+    {
+        $env = $this->seedEnvironment();
+        $selection = $this->createSelection(['enrollment_id' => $env['enrollment']->id]);
+
+        $template = $this->createMailTemplate([
+            'subject' => 'Turma {{ $schoolclass->coddis }}',
+            'body' => '<p>Olá {{ $student->nompes }}</p>',
+        ]);
+
+        $mailable = new \App\Mail\NotifySelectStudent($selection->student, $selection->schoolclass, $template);
+        $html = $mailable->render();
+
+        $this->assertSame('Turma '.$env['class']->coddis, $mailable->subject);
+        $this->assertStringContainsString($selection->student->nompes, $html);
+        $this->assertStringContainsString('Olá', $html);
+    }
+
+    public function test_cen_mailtemplate_002_store_decodifica_campo_combinado()
+    {
+        $admin = $this->admin();
+
+        $this->actingAs($admin)->post('/mailtemplates', $this->payload());
 
         $this->assertDatabaseHas('mail_templates', ['name' => 'Template Payload', 'description' => 'Descricao de teste', 'mail_class' => 'NotifySelectStudent']);
     }
 
     public function test_cen_mailtemplate_003_store_rejeita_nome_duplicado()
     {
-        $secretaria = $this->secretaria();
+        $admin = $this->admin();
         $this->createMailTemplate(['name' => 'Template A']);
 
-        $this->from('/mailtemplates')->actingAs($secretaria)
+        $this->from('/mailtemplates')->actingAs($admin)
             ->post('/mailtemplates', array_merge($this->payload(), ['name' => 'Template A']))
             ->assertRedirect('/mailtemplates');
 
@@ -77,7 +123,7 @@ class MailTemplateScenarioTest extends ScenarioTestCase
 
     public function test_cen_mailtemplate_004_validacao_de_campos_do_template()
     {
-        $secretaria = $this->secretaria();
+        $admin = $this->admin();
 
         $cases = [
             'name_ausente' => ['name' => null],
@@ -88,24 +134,24 @@ class MailTemplateScenarioTest extends ScenarioTestCase
         ];
 
         foreach ($cases as $key => $overrides) {
-            $this->actingAs($secretaria)->post('/mailtemplates', array_merge($this->payload(), $overrides))->assertSessionHasErrors();
+            $this->actingAs($admin)->post('/mailtemplates', array_merge($this->payload(), $overrides))->assertSessionHasErrors();
         }
     }
 
     public function test_cen_mailtemplate_005_update_rejeita_nome_duplicado_excluindo_a_si_mesmo()
     {
-        $secretaria = $this->secretaria();
+        $admin = $this->admin();
         $a = $this->createMailTemplate(['name' => 'Template A']);
         $this->createMailTemplate(['name' => 'Template B']);
 
         // atualizar A para B deve falhar
-        $this->from('/mailtemplates')->actingAs($secretaria)
+        $this->from('/mailtemplates')->actingAs($admin)
             ->put('/mailtemplates/'.$a->id, array_merge($this->payload(), ['name' => 'Template B']))
             ->assertRedirect('/mailtemplates');
         $this->assertSessionHasWarningContaining('modelo com esse nome');
 
         // manter o próprio nome passa
-        $this->from('/mailtemplates')->actingAs($secretaria)
+        $this->from('/mailtemplates')->actingAs($admin)
             ->put('/mailtemplates/'.$a->id, array_merge($this->payload(), ['name' => 'Template A']))
             ->assertRedirect('/mailtemplates');
         $this->assertDatabaseHas('mail_templates', ['id' => $a->id, 'name' => 'Template A']);
@@ -113,11 +159,11 @@ class MailTemplateScenarioTest extends ScenarioTestCase
 
     public function test_cen_mailtemplate_006_update_rejeita_ativar_outro_manual_ativo_da_mesma_classe()
     {
-        $secretaria = $this->secretaria();
+        $admin = $this->admin();
         $t1 = $this->createMailTemplate(['name' => 'T1', 'mail_class' => 'NotifySelectStudent', 'active' => true, 'sending_frequency' => 'Manual']);
         $t2 = $this->createMailTemplate(['name' => 'T2', 'mail_class' => 'NotifySelectStudent', 'active' => false, 'sending_frequency' => 'Manual']);
 
-        $this->from('/mailtemplates')->actingAs($secretaria)
+        $this->from('/mailtemplates')->actingAs($admin)
             ->put('/mailtemplates/'.$t2->id, array_merge($this->payload(), ['name' => 'T2', 'mail_class' => 'NotifySelectStudent', 'active' => true, 'sending_frequency' => 'Manual']))
             ->assertRedirect('/mailtemplates');
         $this->assertSessionHasWarningContaining('disparo manual');
@@ -126,10 +172,10 @@ class MailTemplateScenarioTest extends ScenarioTestCase
 
     public function test_cen_mailtemplate_007_frequencia_manual_limpa_data_e_hora()
     {
-        $secretaria = $this->secretaria();
+        $admin = $this->admin();
         $t = $this->createMailTemplate(['sending_frequency' => 'Mensal', 'sending_date' => '15', 'sending_hour' => '08:00']);
 
-        $this->from('/mailtemplates')->actingAs($secretaria)
+        $this->from('/mailtemplates')->actingAs($admin)
             ->put('/mailtemplates/'.$t->id, array_merge($this->payload(), ['name' => $t->name, 'sending_frequency' => 'Manual']))
             ->assertRedirect('/mailtemplates');
 
@@ -140,38 +186,38 @@ class MailTemplateScenarioTest extends ScenarioTestCase
 
     public function test_cen_mailtemplate_008_activate_bloqueia_dois_manuais_ativos_da_mesma_classe()
     {
-        $secretaria = $this->secretaria();
+        $admin = $this->admin();
         $t1 = $this->createMailTemplate(['name' => 'T1', 'mail_class' => 'NotifySelectStudent', 'active' => true, 'sending_frequency' => 'Manual']);
         $t2 = $this->createMailTemplate(['name' => 'T2', 'mail_class' => 'NotifySelectStudent', 'active' => false, 'sending_frequency' => 'Manual']);
 
-        $this->from('/mailtemplates')->actingAs($secretaria)->get('/mailtemplates/activate/'.$t2->id);
+        $this->from('/mailtemplates')->actingAs($admin)->get('/mailtemplates/activate/'.$t2->id);
         $this->assertSessionHasWarningContaining('disparo manual');
         $this->assertSame(0, (int) $t2->fresh()->active);
     }
 
     public function test_cen_mailtemplate_009_activate_define_active_true_em_condicoes_validas()
     {
-        $secretaria = $this->secretaria();
+        $admin = $this->admin();
         $t2 = $this->createMailTemplate(['name' => 'T2', 'mail_class' => 'NotifyInstructorAboutEvaluation', 'active' => false, 'sending_frequency' => 'Manual']);
 
-        $this->from('/mailtemplates')->actingAs($secretaria)->get('/mailtemplates/activate/'.$t2->id);
+        $this->from('/mailtemplates')->actingAs($admin)->get('/mailtemplates/activate/'.$t2->id);
 
         $this->assertSame(1, (int) $t2->fresh()->active);
     }
 
     public function test_cen_mailtemplate_010_deactivate_define_active_false()
     {
-        $secretaria = $this->secretaria();
+        $admin = $this->admin();
         $t = $this->createMailTemplate(['active' => true]);
 
-        $this->from('/mailtemplates')->actingAs($secretaria)->get('/mailtemplates/deactivate/'.$t->id);
+        $this->from('/mailtemplates')->actingAs($admin)->get('/mailtemplates/deactivate/'.$t->id);
 
         $this->assertSame(0, (int) $t->fresh()->active);
     }
 
     public function test_cen_mailtemplate_011_test_envia_email_de_exemplo_com_registro_real()
     {
-        $secretaria = $this->secretaria();
+        $admin = $this->admin();
         $template = $this->createMailTemplate(['mail_class' => 'NotifySelectStudent', 'active' => true]);
 
         // cria seleção real para ser usada de exemplo
@@ -180,7 +226,7 @@ class MailTemplateScenarioTest extends ScenarioTestCase
 
         Mail::fake();
 
-        $this->actingAs($secretaria)->from('/mailtemplates')
+        $this->actingAs($admin)->from('/mailtemplates')
             ->post('/mailtemplates/test', ['mailtemplate_id' => $template->id, 'email' => 'destino@example.com']);
 
         Mail::assertQueued(\App\Mail\NotifySelectStudent::class);
@@ -189,11 +235,11 @@ class MailTemplateScenarioTest extends ScenarioTestCase
 
     public function test_cen_mailtemplate_012_test_sem_registros_reais_falha_graciosamente()
     {
-        $secretaria = $this->secretaria();
+        $admin = $this->admin();
         $template = $this->createMailTemplate(['mail_class' => 'NotifySelectStudent']);
 
         // sem nenhuma seleção
-        $this->from('/mailtemplates')->actingAs($secretaria)
+        $this->from('/mailtemplates')->actingAs($admin)
             ->post('/mailtemplates/test', ['mailtemplate_id' => $template->id, 'email' => 'destino@example.com']);
 
         $this->assertSessionHasWarningContaining('nenhum monitor');
@@ -201,10 +247,10 @@ class MailTemplateScenarioTest extends ScenarioTestCase
 
     public function test_cen_mailtemplate_013_destroy_exclui_o_modelo()
     {
-        $secretaria = $this->secretaria();
+        $admin = $this->admin();
         $t = $this->createMailTemplate();
 
-        $this->from('/mailtemplates')->actingAs($secretaria)->delete('/mailtemplates/'.$t->id);
+        $this->from('/mailtemplates')->actingAs($admin)->delete('/mailtemplates/'.$t->id);
 
         $this->assertDatabaseMissing('mail_templates', ['id' => $t->id]);
     }

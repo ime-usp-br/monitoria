@@ -7,10 +7,25 @@ use App\Models\Requisition;
 use App\Models\SchoolClass;
 use App\Models\Selection;
 use App\Models\Student;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\URL;
 
 class FrequencyScenarioTest extends ScenarioTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Carbon::setTestNow(Carbon::create(2026, 11, 23, 12, 0, 0, config('app.timezone')));
+    }
+
+    protected function tearDown(): void
+    {
+        Carbon::setTestNow();
+
+        parent::tearDown();
+    }
+
     public function test_cen_frequency_001_index_lista_selecoes_ativo_do_docente_autenticado()
     {
         $env = $this->seedEnvironment();
@@ -90,15 +105,11 @@ class FrequencyScenarioTest extends ScenarioTestCase
 
     public function test_cen_frequency_006_update_alterna_registered_via_url_assinada()
     {
-        if ((int) date('d') < 20) {
-            $this->markTestSkipped('Requer estar no dia 20 ou depois.');
-        }
-
         $env = $this->seedEnvironment();
         $selection = $this->createSelection(['enrollment_id' => $env['enrollment']->id]);
         $frequency = $this->createFrequency([
             'selection_id' => $selection->id,
-            'month' => (int) date('m'),
+            'month' => now()->month,
             'registered' => false,
         ]);
 
@@ -118,7 +129,7 @@ class FrequencyScenarioTest extends ScenarioTestCase
         $selection = $this->createSelection(['enrollment_id' => $env['enrollment']->id, 'sitatl' => 'Concluido']);
         $frequency = $this->createFrequency([
             'selection_id' => $selection->id,
-            'month' => min(12, (int) date('m') + 1),
+            'month' => min(12, now()->month + 1),
         ]);
 
         $url = URL::signedRoute('frequencies.update', ['frequency' => $frequency->id]);
@@ -134,7 +145,7 @@ class FrequencyScenarioTest extends ScenarioTestCase
         $selection = $this->createSelection(['enrollment_id' => $env['enrollment']->id]);
         $frequency = $this->createFrequency([
             'selection_id' => $selection->id,
-            'month' => min(12, (int) date('m') + 1),
+            'month' => min(12, now()->month + 1),
         ]);
 
         $url = URL::signedRoute('frequencies.update', ['frequency' => $frequency->id]);
@@ -146,15 +157,13 @@ class FrequencyScenarioTest extends ScenarioTestCase
 
     public function test_cen_frequency_009_update_bloqueado_antes_do_dia_20_do_mes()
     {
-        if ((int) date('d') >= 20) {
-            $this->markTestSkipped('Requer dia do mês < 20.');
-        }
+        Carbon::setTestNow(Carbon::create(2026, 11, 10, 12, 0, 0, config('app.timezone')));
 
         $env = $this->seedEnvironment();
         $selection = $this->createSelection(['enrollment_id' => $env['enrollment']->id]);
         $frequency = $this->createFrequency([
             'selection_id' => $selection->id,
-            'month' => (int) date('m'),
+            'month' => now()->month,
         ]);
 
         $url = URL::signedRoute('frequencies.update', ['frequency' => $frequency->id]);
@@ -165,15 +174,11 @@ class FrequencyScenarioTest extends ScenarioTestCase
 
     public function test_cen_frequency_010_update_liberado_a_partir_do_dia_20()
     {
-        if ((int) date('d') < 20) {
-            $this->markTestSkipped('Requer dia do mês >= 20.');
-        }
-
         $env = $this->seedEnvironment();
         $selection = $this->createSelection(['enrollment_id' => $env['enrollment']->id]);
         $frequency = $this->createFrequency([
             'selection_id' => $selection->id,
-            'month' => (int) date('m'),
+            'month' => now()->month,
         ]);
 
         $url = URL::signedRoute('frequencies.update', ['frequency' => $frequency->id]);
@@ -190,5 +195,39 @@ class FrequencyScenarioTest extends ScenarioTestCase
 
         // sem URL assinada e sem usuário => 403
         $this->get('/frequencies/'.$frequency->id)->assertForbidden();
+    }
+
+    public function test_cen_frequency_012_update_autenticado_como_instrutor_alterna_registered()
+    {
+        $env = $this->seedEnvironment();
+        $selection = $this->createSelection(['enrollment_id' => $env['enrollment']->id]);
+        $frequency = $this->createFrequency([
+            'selection_id' => $selection->id,
+            'month' => now()->month,
+            'registered' => false,
+        ]);
+
+        $this->actingAs($env['docente'])
+            ->from('/frequencies')
+            ->get(route('frequencies.update', ['frequency' => $frequency->id]))
+            ->assertRedirect('/frequencies');
+
+        $this->assertSame(1, (int) $frequency->fresh()->registered);
+    }
+
+    public function test_cen_frequency_013_update_autenticado_sem_ser_instrutor_recebe_403()
+    {
+        $env = $this->seedEnvironment();
+        $selection = $this->createSelection(['enrollment_id' => $env['enrollment']->id]);
+        $frequency = $this->createFrequency([
+            'selection_id' => $selection->id,
+            'month' => now()->month,
+        ]);
+
+        $this->actingAs($this->docente())
+            ->get(route('frequencies.update', ['frequency' => $frequency->id]))
+            ->assertForbidden();
+
+        $this->assertSame(0, (int) $frequency->fresh()->registered);
     }
 }

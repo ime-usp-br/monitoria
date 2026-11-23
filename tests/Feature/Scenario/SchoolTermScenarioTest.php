@@ -216,6 +216,7 @@ class SchoolTermScenarioTest extends ScenarioTestCase
 
     public function test_cen_schoolterm_014_baixar_edital_com_caminho_valido()
     {
+        $this->createOpenTerm(['public_notice_file_path' => '20261/edital.pdf']);
         Storage::put('20261/edital.pdf', 'conteudo do edital');
 
         $this->post('/schoolterms/download', ['path' => '20261/edital.pdf'])
@@ -227,6 +228,15 @@ class SchoolTermScenarioTest extends ScenarioTestCase
         $this->from('/schoolterms')
             ->post('/schoolterms/download', ['path' => '20261/nao-existe.pdf'])
             ->assertSessionHasErrors('path');
+    }
+
+    public function test_cen_schoolterm_017_download_rejeita_arquivo_que_nao_e_edital_publico()
+    {
+        $this->createOpenTerm(['public_notice_file_path' => '20261/edital.pdf']);
+        Storage::put('20261/segredo.pdf', 'conteudo privado');
+
+        $this->post('/schoolterms/download', ['path' => '20261/segredo.pdf'])
+            ->assertNotFound();
     }
 
     public function test_cen_schoolterm_016_deletar_periodo_eh_stub_vazio()

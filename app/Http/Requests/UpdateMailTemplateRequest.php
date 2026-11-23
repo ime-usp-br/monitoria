@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\SafeMailTemplate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateMailTemplateRequest extends FormRequest
@@ -26,8 +27,8 @@ class UpdateMailTemplateRequest extends FormRequest
         $rules = [
             'name' => 'required',
             'description_and_mail_class' => 'required',
-            'subject' => 'required|max:256',
-            'body' => 'required|max:8192',
+            'subject' => ['required', 'max:256', new SafeMailTemplate()],
+            'body' => ['required', 'max:8192', new SafeMailTemplate()],
             'sending_frequency' => 'required',
             'sending_date' => 'required_unless:sending_frequency,Manual',
             'sending_hour' => 'required_unless:sending_frequency,Manual',

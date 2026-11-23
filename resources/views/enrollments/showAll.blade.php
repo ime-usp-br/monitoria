@@ -101,7 +101,7 @@
                                     @if(count($pref_hor_array)>1)
                                         Depende<br>da Vaga
                                     @else
-                                        {!! $pref_hor_array[0] !!}
+                                        {{ $pref_hor_array[0] }}
                                     @endif
                                 </td>
                                 <td class="text-left" style="white-space: nowrap;">
@@ -119,7 +119,7 @@
                                 </td>
                                 <td style="white-space: nowrap;">
                                     @foreach($aluno->getTelefonesFromReplicado() as $tel)
-                                        {!! "+".$tel['codddi']." (".$tel['codddd'].") ".$tel['numtel'] !!}<br>
+                                        {{ "+".$tel['codddi']." (".$tel['codddd'].") ".$tel['numtel'] }}<br>
                                     @endforeach
                                 </td>
                             </tr>

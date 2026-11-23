@@ -162,7 +162,7 @@ class SelfEvaluationController extends Controller
     {
         if(Auth::check()){
             if(Auth::user()->hasRole("Aluno")){
-                if($selfevaluation->student->codpes =! Auth::user()->codpes){
+                if((string) $selfevaluation->student->codpes !== (string) Auth::user()->codpes){
                     abort(403);
                 }
             }elseif(!Gate::allows('Visualizar auto avaliações')){

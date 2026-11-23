@@ -156,6 +156,9 @@ class SchoolTermController extends Controller
     {
         $validated = $request->validated();
 
+        $isPublicNotice = SchoolTerm::where('public_notice_file_path', $validated['path'])->exists();
+        abort_unless($isPublicNotice, 404);
+
         return Storage::download($validated['path'], 'edital_monitoria.pdf');
     }
 }

@@ -56,8 +56,7 @@ Route::resource('instructors', InstructorController::class);
 Route::resource('requisitions', RequisitionController::class);
 
 Route::get("/students/selfevaluations", [SelfEvaluationController::class, "studentIndex"])->name("selfevaluations.studentIndex");
-Route::get('/students/test', [StudentController::class, 'test'])->name("students.test");
-Route::resource('students', StudentController::class);
+Route::resource('students', StudentController::class)->middleware(['auth', 'throttle:30,1']);
 
 Route::get('/enrollments/showAll', [EnrollmentController::class, 'showAll'])->name('enrollments.showAll');
 Route::resource('enrollments', EnrollmentController::class);

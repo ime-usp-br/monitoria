@@ -93,7 +93,6 @@ class RolesAndPermissionsSeeder extends Seeder
             ->givePermissionTo('registrar frequencia')
             ->givePermissionTo('gerar relatorio')
             ->givePermissionTo('visualizar monitores')
-            ->givePermissionTo('Editar E-mails')
             ->givePermissionTo('Visualizar auto avaliações')
             ->givePermissionTo('Visualizar avaliações dos docentes')
             ->givePermissionTo('Emitir Atestado')

@@ -101,7 +101,17 @@ class UserController extends Controller
         }
 
         $validated = $request->validated();
-        $usuario = User::find($id);
+        $usuario = User::findOrFail($id);
+
+        $requester = $request->user();
+        $managesAdministrators = $requester && $requester->hasRole('Administrador');
+        $changesAdministrator = in_array('Administrador', $validated['roles'], true)
+            || $usuario->hasRole('Administrador');
+
+        if (!$managesAdministrators && $changesAdministrator) {
+            abort(403, 'Apenas administradores podem gerenciar o papel de Administrador.');
+        }
+
         $usuario->roles()->detach();
         $usuario->assignRole($validated['roles']);
         $usuario->update($validated);

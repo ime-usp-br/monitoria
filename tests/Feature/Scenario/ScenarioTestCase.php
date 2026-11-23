@@ -329,7 +329,7 @@ abstract class ScenarioTestCase extends TestCase
         return Frequency::create(array_merge([
             'student_id' => $selection->student_id,
             'school_class_id' => $selection->school_class_id,
-            'month' => (int) date('m'),
+            'month' => (int) now()->month,
             'registered' => false,
         ], $attributes));
     }

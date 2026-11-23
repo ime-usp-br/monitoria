@@ -130,7 +130,7 @@ class FrequencyController extends Controller
                 abort(403);
             }
         }elseif(Auth::check()){
-            if(!$schoolclass->isInstructor(Auth::user()->codpes)){
+            if(!$frequency->schoolclass->isInstructor(Auth::user()->codpes)){
                 abort(403);
             }
         }else{
@@ -146,7 +146,7 @@ class FrequencyController extends Controller
         
         $meses = [1=>"janeiro", 2=>"fevereiro", 3=>"março", 4=>"abril", 5=>"maio", 6=>"junho", 7=>"julho", 8=>"agosto", 9=>"setembro", 10=>"outubro", 11=>"novembro", 12=>"dezembro"];
 
-        if($frequency->month>date("m") or ($frequency->month==date("m") and date("d")<20)){
+        if($frequency->month > now()->month or ($frequency->month == now()->month and now()->day < 20)){
             Session::flash('alert-warning', 'A frequência de '.$meses[$frequency->month].' só será liberada a partir do dia 20/'.$frequency->month.'.');
             return back();
         }

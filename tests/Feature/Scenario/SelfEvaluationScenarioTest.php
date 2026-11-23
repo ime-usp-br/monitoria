@@ -225,6 +225,34 @@ class SelfEvaluationScenarioTest extends ScenarioTestCase
         $this->actingAs($semPermissao)->get('/selfevaluations/'.$se->id)->assertForbidden();
     }
 
+    public function test_cen_selfeval_013b_show_bloqueia_aluno_que_nao_e_dono()
+    {
+        $fixture = $this->envWithSelection();
+        $se = SelfEvaluation::create(['selection_id' => $fixture['selection']->id, 'student_amount' => 1, 'homework_amount' => 1, 'workload' => 1]);
+
+        $outroAluno = $this->aluno();
+
+        $this->actingAs($outroAluno)->get('/selfevaluations/'.$se->id)->assertForbidden();
+    }
+
+    public function test_cen_selfeval_016_show_escapa_comentarios()
+    {
+        $fixture = $this->envWithSelection();
+        $se = SelfEvaluation::create([
+            'selection_id' => $fixture['selection']->id,
+            'student_amount' => 1,
+            'homework_amount' => 1,
+            'workload' => 1,
+            'comments' => '<script>alert(1)</script>',
+        ]);
+
+        $this->actingAs($fixture['env']['aluno'])
+            ->get('/selfevaluations/'.$se->id)
+            ->assertOk()
+            ->assertDontSee('<script>alert(1)</script>', false)
+            ->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;', false);
+    }
+
     public function test_cen_selfeval_014_edit_update_restrito_ao_aluno_dono()
     {
         $fixture = $this->envWithSelection();

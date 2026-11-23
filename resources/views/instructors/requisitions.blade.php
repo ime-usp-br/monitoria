@@ -55,7 +55,7 @@
                                     @endforeach
                                 @endif
                             </td>
-                            <td class="text-left">{!! $solicitacao->comments !!}</td>
+                            <td class="text-left">{!! nl2br(e($solicitacao->comments)) !!}</td>
                             <td class="text-center">
                                 @if($solicitacao->schoolclass->enrollments()->exists())
                                     <a href="{{ route('schoolclasses.enrollments', $solicitacao->schoolclass) }}" class="btn btn-outline-dark btn-sm">Inscritos</a>

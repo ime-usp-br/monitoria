@@ -30,6 +30,7 @@ class UserRequest extends FormRequest
             'name' => 'required',
             'email' => ['required', 'unique:App\Models\User,email,' . $id],
             'roles' => 'required|array|min:1',
+            'roles.*' => 'exists:roles,name',
         ];
 
         return $rules;

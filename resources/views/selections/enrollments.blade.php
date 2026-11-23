@@ -47,7 +47,7 @@
                                 {{ $scholarship->name }} <br/>
                             @endforeach
                         </td>
-                        <td class="text-left">{!! $turma->requisition->comments !!}</td>
+                        <td class="text-left">{!! nl2br(e($turma->requisition->comments)) !!}</td>
                     </tr>
                 </table> <br/>
 

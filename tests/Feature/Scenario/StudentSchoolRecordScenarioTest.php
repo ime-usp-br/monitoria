@@ -15,9 +15,14 @@ class StudentSchoolRecordScenarioTest extends ScenarioTestCase
     // Student
     // ------------------------------------------------------------------
 
+    public function test_cen_student_000_busca_json_exige_autenticacao()
+    {
+        $this->getJson('/students?codpes=1234567')->assertStatus(401);
+    }
+
     public function test_cen_student_001_busca_json_por_codpes_retorna_dados_do_aluno()
     {
-        $response = $this->getJson('/students?codpes=1234567');
+        $response = $this->actingAs($this->docente())->getJson('/students?codpes=1234567');
 
         $response->assertOk()->assertJson([
             'codpes' => '1234567',
@@ -30,7 +35,7 @@ class StudentSchoolRecordScenarioTest extends ScenarioTestCase
     {
         ReplicadoStubs::rule('FROM PESSOA AS P, EMAILPESSOA', []);
 
-        $response = $this->getJson('/students?codpes=999999');
+        $response = $this->actingAs($this->docente())->getJson('/students?codpes=999999');
 
         $response->assertOk()->assertExactJson(['']);
     }
@@ -39,7 +44,7 @@ class StudentSchoolRecordScenarioTest extends ScenarioTestCase
     {
         ReplicadoStubs::rule('VP.TIPVIN', [['tipvin' => 'ALUNOGR', 'dtafimvin' => null, 'tipfnc' => null]]);
 
-        $response = $this->getJson('/students?nompes=Aluno');
+        $response = $this->actingAs($this->docente())->getJson('/students?nompes=Aluno');
 
         $response->assertOk();
         $json = $response->json();
@@ -56,7 +61,7 @@ class StudentSchoolRecordScenarioTest extends ScenarioTestCase
     {
         ReplicadoStubs::rule('FROM PESSOA AS P, EMAILPESSOA', []);
 
-        $response = $this->getJson('/students?nompes=Ninguem');
+        $response = $this->actingAs($this->docente())->getJson('/students?nompes=Ninguem');
 
         $response->assertOk()->assertExactJson(['']);
     }
