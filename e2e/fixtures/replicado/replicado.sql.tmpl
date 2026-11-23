@@ -1,0 +1,416 @@
+CREATE DATABASE replicado
+go
+
+use replicado
+go
+
+create table PESSOA (
+    codpes int not null,
+    nompes varchar(120) not null,
+    nompesttd varchar(120) null,
+    sexpes char(1) null,
+    dtanas datetime null
+)
+go
+
+create table EMAILPESSOA (
+    codpes int not null,
+    codema varchar(120) not null,
+    stamtr char(1) null
+)
+go
+
+create table VINCULOPESSOAUSP (
+    codpes int not null,
+    tipvin varchar(30) not null,
+    tipfnc varchar(30) null,
+    codset int null,
+    dtainivin datetime null,
+    dtafimvin datetime null
+)
+go
+
+create table TELEFPESSOA (
+    codpes int not null,
+    codddi varchar(5) null,
+    codddd varchar(5) null,
+    numtel varchar(20) null,
+    tiptelpes varchar(20) null
+)
+go
+
+create table SETOR (
+    codset int not null,
+    nomabvset varchar(30) not null,
+    nomset varchar(120) not null,
+    codund int not null,
+    tipset varchar(60) null
+)
+go
+
+create table UNIDADE (
+    codund int not null,
+    sglund varchar(20) not null,
+    nomund varchar(120) not null
+)
+go
+
+create table TURMAGR (
+    coddis varchar(20) not null,
+    codtur varchar(20) not null,
+    verdis int not null,
+    dtainitur datetime null,
+    dtafimtur datetime null,
+    tiptur varchar(30) null,
+    numins int null,
+    numinscpl int null,
+    numinsopt int null,
+    numinsecr int null,
+    numinsoptlre int null
+)
+go
+
+create table DISCIPLINAGR (
+    coddis varchar(20) not null,
+    verdis int not null,
+    nomdis varchar(120) not null
+)
+go
+
+create table DISCIPGRCODIGO (
+    coddis varchar(20) not null,
+    codclg int not null,
+    pfxdisval varchar(30) null
+)
+go
+
+create table PREFIXODISCIP (
+    codset int not null,
+    codclg int not null
+)
+go
+
+create table MINISTRANTE (
+    coddis varchar(20) not null,
+    codtur varchar(20) not null,
+    codperhor int not null,
+    codpes int not null
+)
+go
+
+create table OCUPTURMA (
+    coddis varchar(20) not null,
+    codtur varchar(20) not null,
+    codperhor int not null,
+    diasmnocp varchar(20) null
+)
+go
+
+create table PERIODOHORARIO (
+    codperhor int not null,
+    horent varchar(10) null,
+    horsai varchar(10) null
+)
+go
+
+create table PROGRAMAGR (
+    codpes int not null,
+    codpgm int not null,
+    dtaing datetime null,
+    stapgm char(1) null
+)
+go
+
+create table HABILPROGGR (
+    codpes int not null,
+    codpgm int not null,
+    codcur int not null
+)
+go
+
+create table CURSOGR (
+    codcur int not null,
+    codclg int not null
+)
+go
+
+create table COLEGIADO (
+    codclg int not null,
+    sglclg varchar(20) null,
+    codundrsp int null
+)
+go
+
+create table AGPROGRAMA (
+    codpes int not null,
+    codare int not null,
+    dtaselpgm datetime null,
+    nivpgm varchar(5) null
+)
+go
+
+create table AREA (
+    codare int not null,
+    codcur int not null
+)
+go
+
+create table NOMECURSO (
+    codcur int not null,
+    nomcur varchar(120) not null
+)
+go
+
+create table CURSO (
+    codcur int not null,
+    codclg int not null
+)
+go
+
+insert into UNIDADE (codund, sglund, nomund) values (45, 'IME', 'Instituto de Matematica e Estatistica')
+go
+
+insert into SETOR (codset, nomabvset, nomset, codund, tipset) values
+(5000, 'MAC', 'Departamento de Ciencia da Computacao', 45, 'Departamento de Ensino')
+go
+insert into SETOR (codset, nomabvset, nomset, codund, tipset) values
+(5001, 'MAE', 'Departamento de Economia', 45, 'Departamento de Ensino')
+go
+insert into SETOR (codset, nomabvset, nomset, codund, tipset) values
+(5002, 'MAP', 'Departamento de Matematica Aplicada', 45, 'Departamento de Ensino')
+go
+insert into SETOR (codset, nomabvset, nomset, codund, tipset) values
+(5003, 'MAT', 'Departamento de Matematica', 45, 'Departamento de Ensino')
+go
+
+insert into PESSOA (codpes, nompes, nompesttd, sexpes, dtanas) values
+(10001, 'Admin E2E', 'Admin E2E', 'M', convert(datetime, '01/01/1980', 103))
+go
+insert into PESSOA (codpes, nompes, nompesttd, sexpes, dtanas) values
+(10002, 'Secretaria E2E', 'Secretaria E2E', 'F', convert(datetime, '01/01/1980', 103))
+go
+insert into PESSOA (codpes, nompes, nompesttd, sexpes, dtanas) values
+(10003, 'Servidor Sem Papel', 'Servidor Sem Papel', 'M', convert(datetime, '01/01/1980', 103))
+go
+insert into PESSOA (codpes, nompes, nompesttd, sexpes, dtanas) values
+(20001, 'Docente MAC E2E', 'Docente MAC E2E', 'M', convert(datetime, '01/01/1970', 103))
+go
+insert into PESSOA (codpes, nompes, nompesttd, sexpes, dtanas) values
+(20002, 'Membro Comissao MAC E2E', 'Membro Comissao MAC E2E', 'F', convert(datetime, '01/01/1970', 103))
+go
+insert into PESSOA (codpes, nompes, nompesttd, sexpes, dtanas) values
+(20003, 'Presidente Comissao E2E', 'Presidente Comissao E2E', 'M', convert(datetime, '01/01/1970', 103))
+go
+insert into PESSOA (codpes, nompes, nompesttd, sexpes, dtanas) values
+(20004, 'Vice Presidente Comissao E2E', 'Vice Presidente Comissao E2E', 'F', convert(datetime, '01/01/1970', 103))
+go
+insert into PESSOA (codpes, nompes, nompesttd, sexpes, dtanas) values
+(20005, 'Membro Comissao MAE E2E', 'Membro Comissao MAE E2E', 'M', convert(datetime, '01/01/1970', 103))
+go
+insert into PESSOA (codpes, nompes, nompesttd, sexpes, dtanas) values
+(20006, 'Docente Sem Turma E2E', 'Docente Sem Turma E2E', 'F', convert(datetime, '01/01/1970', 103))
+go
+insert into PESSOA (codpes, nompes, nompesttd, sexpes, dtanas) values
+(160001, 'Aluno Com Historico E2E', 'Aluno Com Historico E2E', 'M', convert(datetime, '01/01/2002', 103))
+go
+insert into PESSOA (codpes, nompes, nompesttd, sexpes, dtanas) values
+(160002, 'Aluno Monitor Ativo E2E', 'Aluno Monitor Ativo E2E', 'F', convert(datetime, '01/01/2002', 103))
+go
+insert into PESSOA (codpes, nompes, nompesttd, sexpes, dtanas) values
+(160003, 'Aluno Sem Historico E2E', 'Aluno Sem Historico E2E', 'M', convert(datetime, '01/01/2002', 103))
+go
+insert into PESSOA (codpes, nompes, nompesttd, sexpes, dtanas) values
+(160004, 'Aluno Monitor Concluido E2E', 'Aluno Monitor Concluido E2E', 'F', convert(datetime, '01/01/2002', 103))
+go
+insert into PESSOA (codpes, nompes, nompesttd, sexpes, dtanas) values
+(800001, 'Aluno Pos E2E', 'Aluno Pos E2E', 'M', convert(datetime, '01/01/1998', 103))
+go
+
+insert into EMAILPESSOA (codpes, codema, stamtr) values (10001, 'admin@monitoria.e2e', 'S')
+go
+insert into EMAILPESSOA (codpes, codema, stamtr) values (10002, 'secretaria@monitoria.e2e', 'S')
+go
+insert into EMAILPESSOA (codpes, codema, stamtr) values (10003, 'servidor@monitoria.e2e', 'S')
+go
+insert into EMAILPESSOA (codpes, codema, stamtr) values (20001, 'docente.mac@monitoria.e2e', 'S')
+go
+insert into EMAILPESSOA (codpes, codema, stamtr) values (20002, 'membro.mac@monitoria.e2e', 'S')
+go
+insert into EMAILPESSOA (codpes, codema, stamtr) values (20003, 'presidente@monitoria.e2e', 'S')
+go
+insert into EMAILPESSOA (codpes, codema, stamtr) values (20004, 'vice@monitoria.e2e', 'S')
+go
+insert into EMAILPESSOA (codpes, codema, stamtr) values (20005, 'membro.mae@monitoria.e2e', 'S')
+go
+insert into EMAILPESSOA (codpes, codema, stamtr) values (20006, 'docente.sem.turma@monitoria.e2e', 'S')
+go
+insert into EMAILPESSOA (codpes, codema, stamtr) values (160001, 'aluno.historico@monitoria.e2e', 'S')
+go
+insert into EMAILPESSOA (codpes, codema, stamtr) values (160002, 'aluno.monitor@monitoria.e2e', 'S')
+go
+insert into EMAILPESSOA (codpes, codema, stamtr) values (160003, 'aluno.sem.historico@monitoria.e2e', 'S')
+go
+insert into EMAILPESSOA (codpes, codema, stamtr) values (160004, 'aluno.concluido@monitoria.e2e', 'S')
+go
+insert into EMAILPESSOA (codpes, codema, stamtr) values (800001, 'aluno.pos@monitoria.e2e', 'S')
+go
+
+insert into VINCULOPESSOAUSP (codpes, tipvin, tipfnc, codset, dtainivin, dtafimvin) values
+(10001, 'SERVIDOR', 'Administrativo', 5000, convert(datetime, '01/01/2010', 103), null)
+go
+insert into VINCULOPESSOAUSP (codpes, tipvin, tipfnc, codset, dtainivin, dtafimvin) values
+(10002, 'SERVIDOR', 'Administrativo', 5000, convert(datetime, '01/01/2010', 103), null)
+go
+insert into VINCULOPESSOAUSP (codpes, tipvin, tipfnc, codset, dtainivin, dtafimvin) values
+(10003, 'SERVIDOR', 'Administrativo', 5000, convert(datetime, '01/01/2010', 103), null)
+go
+insert into VINCULOPESSOAUSP (codpes, tipvin, tipfnc, codset, dtainivin, dtafimvin) values
+(20001, 'SERVIDOR', 'Docente', 5000, convert(datetime, '01/01/2010', 103), null)
+go
+insert into VINCULOPESSOAUSP (codpes, tipvin, tipfnc, codset, dtainivin, dtafimvin) values
+(20002, 'SERVIDOR', 'Docente', 5000, convert(datetime, '01/01/2010', 103), null)
+go
+insert into VINCULOPESSOAUSP (codpes, tipvin, tipfnc, codset, dtainivin, dtafimvin) values
+(20003, 'SERVIDOR', 'Docente', 5000, convert(datetime, '01/01/2010', 103), null)
+go
+insert into VINCULOPESSOAUSP (codpes, tipvin, tipfnc, codset, dtainivin, dtafimvin) values
+(20004, 'SERVIDOR', 'Docente', 5000, convert(datetime, '01/01/2010', 103), null)
+go
+insert into VINCULOPESSOAUSP (codpes, tipvin, tipfnc, codset, dtainivin, dtafimvin) values
+(20005, 'SERVIDOR', 'Docente', 5001, convert(datetime, '01/01/2010', 103), null)
+go
+insert into VINCULOPESSOAUSP (codpes, tipvin, tipfnc, codset, dtainivin, dtafimvin) values
+(20006, 'SERVIDOR', 'Docente', 5000, convert(datetime, '01/01/2010', 103), null)
+go
+insert into VINCULOPESSOAUSP (codpes, tipvin, tipfnc, codset, dtainivin, dtafimvin) values
+(160001, 'ALUNOGR', null, 0, convert(datetime, '01/01/2020', 103), null)
+go
+insert into VINCULOPESSOAUSP (codpes, tipvin, tipfnc, codset, dtainivin, dtafimvin) values
+(160002, 'ALUNOGR', null, 0, convert(datetime, '01/01/2020', 103), null)
+go
+insert into VINCULOPESSOAUSP (codpes, tipvin, tipfnc, codset, dtainivin, dtafimvin) values
+(160003, 'ALUNOGR', null, 0, convert(datetime, '01/01/2020', 103), null)
+go
+insert into VINCULOPESSOAUSP (codpes, tipvin, tipfnc, codset, dtainivin, dtafimvin) values
+(160004, 'ALUNOGR', null, 0, convert(datetime, '01/01/2019', 103), null)
+go
+insert into VINCULOPESSOAUSP (codpes, tipvin, tipfnc, codset, dtainivin, dtafimvin) values
+(800001, 'ALUNOPOS', null, 0, convert(datetime, '01/01/2021', 103), null)
+go
+
+insert into TELEFPESSOA (codpes, codddi, codddd, numtel, tiptelpes) values
+(160001, '55', '11', '999999999', 'celular')
+go
+
+insert into PERIODOHORARIO (codperhor, horent, horsai) values (1, '08:00', '10:00')
+go
+
+insert into DISCIPLINAGR (coddis, verdis, nomdis) values ('MAC0101', 1, 'Introducao a Computacao')
+go
+insert into DISCIPLINAGR (coddis, verdis, nomdis) values ('MAC0202', 1, 'Estruturas de Dados')
+go
+insert into DISCIPLINAGR (coddis, verdis, nomdis) values ('MAE0101', 1, 'Introducao a Economia')
+go
+insert into DISCIPLINAGR (coddis, verdis, nomdis) values ('MAT0101', 1, 'Calculo I')
+go
+insert into DISCIPLINAGR (coddis, verdis, nomdis) values ('MAC0303', 1, 'Banco de Dados')
+go
+
+insert into DISCIPGRCODIGO (coddis, codclg, pfxdisval) values ('MAC0101', 1, 'MAC')
+go
+insert into DISCIPGRCODIGO (coddis, codclg, pfxdisval) values ('MAC0202', 1, 'MAC')
+go
+insert into DISCIPGRCODIGO (coddis, codclg, pfxdisval) values ('MAE0101', 2, 'MAE')
+go
+insert into DISCIPGRCODIGO (coddis, codclg, pfxdisval) values ('MAT0101', 3, 'MAT')
+go
+insert into DISCIPGRCODIGO (coddis, codclg, pfxdisval) values ('MAC0303', 1, 'MAC')
+go
+
+insert into PREFIXODISCIP (codset, codclg) values (5000, 1)
+go
+insert into PREFIXODISCIP (codset, codclg) values (5001, 2)
+go
+insert into PREFIXODISCIP (codset, codclg) values (5002, 2)
+go
+insert into PREFIXODISCIP (codset, codclg) values (5003, 3)
+go
+
+insert into TURMAGR (coddis, codtur, verdis, dtainitur, dtafimtur, tiptur, numins, numinscpl, numinsopt, numinsecr, numinsoptlre) values
+('MAC0101', '__YEAR____PERIOD__101', 1, convert(datetime, '01/03/__YEAR__', 103), convert(datetime, '30/06/__YEAR__', 103), 'Teoria', 10, 1, 0, 0, 0)
+go
+insert into TURMAGR (coddis, codtur, verdis, dtainitur, dtafimtur, tiptur, numins, numinscpl, numinsopt, numinsecr, numinsoptlre) values
+('MAC0101', '__YEAR____PERIOD__102', 1, convert(datetime, '01/03/__YEAR__', 103), convert(datetime, '30/06/__YEAR__', 103), 'Teoria', 10, 1, 0, 0, 0)
+go
+insert into TURMAGR (coddis, codtur, verdis, dtainitur, dtafimtur, tiptur, numins, numinscpl, numinsopt, numinsecr, numinsoptlre) values
+('MAC0202', '__YEAR____PERIOD__201', 1, convert(datetime, '01/03/__YEAR__', 103), convert(datetime, '30/06/__YEAR__', 103), 'Teoria', 10, 1, 0, 0, 0)
+go
+insert into TURMAGR (coddis, codtur, verdis, dtainitur, dtafimtur, tiptur, numins, numinscpl, numinsopt, numinsecr, numinsoptlre) values
+('MAE0101', '__YEAR____PERIOD__103', 1, convert(datetime, '01/03/__YEAR__', 103), convert(datetime, '30/06/__YEAR__', 103), 'Teoria', 10, 1, 0, 0, 0)
+go
+insert into TURMAGR (coddis, codtur, verdis, dtainitur, dtafimtur, tiptur, numins, numinscpl, numinsopt, numinsecr, numinsoptlre) values
+('MAT0101', '__YEAR____PERIOD__104', 1, convert(datetime, '01/03/__YEAR__', 103), convert(datetime, '30/06/__YEAR__', 103), 'Teoria', 10, 1, 0, 0, 0)
+go
+insert into TURMAGR (coddis, codtur, verdis, dtainitur, dtafimtur, tiptur, numins, numinscpl, numinsopt, numinsecr, numinsoptlre) values
+('MAC0303', '__CLOSED_YEAR____CLOSED_PERIOD__101', 1, convert(datetime, '01/03/__CLOSED_YEAR__', 103), convert(datetime, '30/06/__CLOSED_YEAR__', 103), 'Teoria', 10, 1, 0, 0, 0)
+go
+
+insert into MINISTRANTE (coddis, codtur, codperhor, codpes) values ('MAC0101', '__YEAR____PERIOD__101', 1, 20001)
+go
+insert into MINISTRANTE (coddis, codtur, codperhor, codpes) values ('MAC0101', '__YEAR____PERIOD__102', 1, 20001)
+go
+insert into MINISTRANTE (coddis, codtur, codperhor, codpes) values ('MAC0202', '__YEAR____PERIOD__201', 1, 20001)
+go
+insert into MINISTRANTE (coddis, codtur, codperhor, codpes) values ('MAE0101', '__YEAR____PERIOD__103', 1, 20005)
+go
+insert into MINISTRANTE (coddis, codtur, codperhor, codpes) values ('MAT0101', '__YEAR____PERIOD__104', 1, 20003)
+go
+insert into MINISTRANTE (coddis, codtur, codperhor, codpes) values ('MAC0303', '__CLOSED_YEAR____CLOSED_PERIOD__101', 1, 20001)
+go
+
+insert into OCUPTURMA (coddis, codtur, codperhor, diasmnocp) values ('MAC0101', '__YEAR____PERIOD__101', 1, 'seg')
+go
+insert into OCUPTURMA (coddis, codtur, codperhor, diasmnocp) values ('MAC0101', '__YEAR____PERIOD__102', 1, 'seg')
+go
+insert into OCUPTURMA (coddis, codtur, codperhor, diasmnocp) values ('MAC0202', '__YEAR____PERIOD__201', 1, 'seg')
+go
+insert into OCUPTURMA (coddis, codtur, codperhor, diasmnocp) values ('MAE0101', '__YEAR____PERIOD__103', 1, 'ter')
+go
+insert into OCUPTURMA (coddis, codtur, codperhor, diasmnocp) values ('MAT0101', '__YEAR____PERIOD__104', 1, 'seg')
+go
+insert into OCUPTURMA (coddis, codtur, codperhor, diasmnocp) values ('MAC0303', '__CLOSED_YEAR____CLOSED_PERIOD__101', 1, 'seg')
+go
+
+insert into PROGRAMAGR (codpes, codpgm, dtaing, stapgm) values (160001, 1, convert(datetime, '01/01/2020', 103), 'A')
+go
+insert into PROGRAMAGR (codpes, codpgm, dtaing, stapgm) values (160002, 1, convert(datetime, '01/01/2020', 103), 'A')
+go
+insert into PROGRAMAGR (codpes, codpgm, dtaing, stapgm) values (160003, 1, convert(datetime, '01/01/2020', 103), 'A')
+go
+insert into PROGRAMAGR (codpes, codpgm, dtaing, stapgm) values (160004, 1, convert(datetime, '01/01/2019', 103), 'A')
+go
+
+insert into HABILPROGGR (codpes, codpgm, codcur) values (160001, 1, 1)
+go
+insert into HABILPROGGR (codpes, codpgm, codcur) values (160002, 1, 1)
+go
+insert into HABILPROGGR (codpes, codpgm, codcur) values (160003, 1, 1)
+go
+insert into HABILPROGGR (codpes, codpgm, codcur) values (160004, 1, 1)
+go
+
+insert into CURSOGR (codcur, codclg) values (1, 1)
+go
+insert into COLEGIADO (codclg, sglclg, codundrsp) values (1, 'CG', 45)
+go
+
+insert into AGPROGRAMA (codpes, codare, dtaselpgm, nivpgm) values (800001, 1, convert(datetime, '01/01/2021', 103), 'ME')
+go
+insert into AREA (codare, codcur) values (1, 2)
+go
+insert into NOMECURSO (codcur, nomcur) values (2, 'Matematica')
+go
+insert into CURSO (codcur, codclg) values (2, 2)
+go
+insert into COLEGIADO (codclg, sglclg, codundrsp) values (2, 'CPG', 45)
+go

@@ -16,3 +16,9 @@ yarn-error.log
 /.vscode
 public/vendor
 tmp/
+# E2E artifacts
+/e2e/artifacts/*
+/e2e/.auth
+!/e2e/artifacts/.gitkeep
+.pytest_cache
+__pycache__

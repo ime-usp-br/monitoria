@@ -1,0 +1,201 @@
+# Stack descartável dos testes E2E de navegador (Playwright).
+#
+# Compatível com o dump de produção monitoria_20262108_1400.sql:
+#   - MariaDB 10.5
+#   - utf8mb4 / utf8mb4_unicode_ci nas tabelas
+#   - mesmo schema gerado pelas migrations atuais
+#
+# Uso: ./scripts/run_e2e.sh
+name: monitoria-e2e
+
+x-app-env: &app-env
+  APP_NAME: "Sistema de Monitoria E2E"
+  APP_ENV: testing
+  APP_DEBUG: "true"
+  APP_URL: http://web
+  APP_KEY: base64:ZTJlLXRlc3Qta2V5LW1vbml0b3JpYS0wMDAwMDAwMDA=
+  DB_CONNECTION: mysql
+  DB_HOST: db
+  DB_PORT: "3306"
+  DB_DATABASE: monitoria_e2e
+  DB_USERNAME: e2e
+  DB_PASSWORD: e2e
+  CACHE_DRIVER: file
+  SESSION_DRIVER: file
+  QUEUE_CONNECTION: sync
+  FILESYSTEM_DRIVER: local
+  MAIL_MAILER: smtp
+  MAIL_HOST: mailpit
+  MAIL_PORT: "1025"
+  MAIL_FROM_ADDRESS: no-reply@monitoria.e2e
+  CERTIFICATE_SECRETARIA_EMAIL: secretaria@monitoria.e2e
+  BASE_PATH: /var/www
+  PYTHON_CMD: /usr/bin/python3
+  SENHAUNICA_DEV: http://senhaunica:3141/wsusuario/oauth
+  SENHAUNICA_KEY: e2e-key
+  SENHAUNICA_SECRET: e2e-secret
+  SENHAUNICA_CALLBACK_ID: "77"
+  SENHAUNICA_ADMINS: ""
+  SENHAUNICA_GERENTES: ""
+  SENHAUNICA_USERS: ""
+  REPLICADO_HOST: replicado
+  REPLICADO_PORT: "5000"
+  REPLICADO_DATABASE: replicado
+  REPLICADO_USERNAME: sa
+  REPLICADO_PASSWORD: Sybase123456789
+  REPLICADO_SYBASE: "1"
+  REPLICADO_CODUNDCLG: "45"
+  REPLICADO_PATHLOG: storage/logs/replicado.log
+  UNIDADE: IME
+  IS_SUPERVISOR_CONFIG: "false"
+  LOG_AS_ADMINISTRATOR: ""
+  E2E_MODE: "true"
+  # O asedocker (ASE 16) não roda em kernels 7.x (SIGSEGV no boot).
+  # Padrão: Replicado falso em JSON gerado pelo e2e:seed.
+  # Para usar o ASE, suba o profile `asedocker` e mude para "false".
+  E2E_REPLICADO_FAKE: "true"
+  E2E_REPLICADO_FIXTURE: /e2e-artifacts/replicado.json
+  TZ: America/Sao_Paulo
+
+services:
+  db:
+    image: mariadb:10.5@sha256:a530aeeefd82f4fa5150f391b6c75462140904780338766f6b03acecb1cca3ce
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    environment:
+      MARIADB_DATABASE: monitoria_e2e
+      MARIADB_USER: e2e
+      MARIADB_PASSWORD: e2e
+      MARIADB_ROOT_PASSWORD: root
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -uroot -proot --silent"]
+      interval: 3s
+      timeout: 5s
+      retries: 60
+    volumes:
+      - e2e_db_data:/var/lib/mysql
+
+  replicado:
+    image: uspdev/asedocker@sha256:c1b5d6ffc0e065e7aa0cbc3c257e71416db20ad3d2c62d06fed6de2a7c18f598
+    profiles: ["asedocker"]
+    hostname: sybase
+    networks:
+      default:
+        aliases:
+          - sybase
+    expose:
+      - "5000"
+
+  replicado-init:
+    image: uspdev/asedocker@sha256:c1b5d6ffc0e065e7aa0cbc3c257e71416db20ad3d2c62d06fed6de2a7c18f598
+    profiles: ["asedocker"]
+    depends_on:
+      replicado:
+        condition: service_started
+    volumes:
+      - ./e2e/fixtures/replicado:/fixtures:ro
+    entrypoint: ["/bin/bash", "/fixtures/init-replicado.sh"]
+
+  senhaunica:
+    image: uspdev/senhaunica-faker@sha256:9736cf1fc77a84d1f46a7114ae68342eb983ec7e61860ba54af669cf49a86c88
+    environment:
+      APP_URL: http://senhaunica:3141
+      FAKER_CODIGO_UNIDADE: "45"
+      FAKER_SIGLA_UNIDADE: IME
+      FAKER_NOME_UNIDADE: Instituto de Matematica e Estatistica
+      FAKER_CODIGOS_SETOR: 5000,5001,5002,5003
+      FAKER_SERVIDOR: 10001,10002,10003
+      FAKER_DOCENTE: 20001,20002,20003,20004,20005,20006
+      FAKER_ALUNOGR: 160001,160002,160003,160004
+      FAKER_ALUNOPOS: 800001
+    expose:
+      - "3141"
+
+  mailpit:
+    image: axllent/mailpit@sha256:23a2ef85bc50853ab3093645d1d64679afd8887e89da5e48a88940c172591a4e
+    expose:
+      - "1025"
+      - "8025"
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/e2e/Dockerfile.app
+    environment: *app-env
+    entrypoint: ["sh", "/var/www/docker/e2e/app-entrypoint.sh"]
+    volumes:
+      - type: volume
+        source: e2e_storage
+        target: /var/www/storage
+        volume:
+          nocopy: true
+      - e2e_public:/var/www/public
+      - ./e2e/artifacts:/e2e-artifacts
+    depends_on:
+      db:
+        condition: service_healthy
+      senhaunica:
+        condition: service_started
+      mailpit:
+        condition: service_started
+
+  web:
+    image: nginx@sha256:5616878291a2eed594aee8db4dade5878cf7edcb475e59193904b198d9b830de
+    volumes:
+      - e2e_public:/var/www/public:ro
+      - ./docker/e2e/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    expose:
+      - "80"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost/ >/dev/null || exit 1"]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+    depends_on:
+      app:
+        condition: service_started
+
+  seed:
+    build:
+      context: .
+      dockerfile: docker/e2e/Dockerfile.app
+    environment: *app-env
+    entrypoint: ["sh", "/var/www/docker/e2e/seed-entrypoint.sh"]
+    volumes:
+      - type: volume
+        source: e2e_storage
+        target: /var/www/storage
+        volume:
+          nocopy: true
+      - ./e2e/artifacts:/e2e-artifacts
+    depends_on:
+      db:
+        condition: service_healthy
+
+  e2e:
+    build:
+      context: ./e2e
+    environment:
+      TZ: America/Sao_Paulo
+      E2E_BASE_URL: http://web
+      E2E_MANIFEST: /e2e-artifacts/seed.json
+      E2E_DB_HOST: db
+      E2E_DB_PORT: "3306"
+      E2E_DB_NAME: monitoria_e2e
+      E2E_DB_USER: e2e
+      E2E_DB_PASSWORD: e2e
+    volumes:
+      - ./e2e:/e2e
+      - ./e2e/artifacts:/e2e-artifacts
+    depends_on:
+      web:
+        condition: service_healthy
+      seed:
+        condition: service_completed_successfully
+      mailpit:
+        condition: service_started
+    command: ["pytest", "-q", "tests", "-c", "pytest.ini"]
+
+volumes:
+  e2e_db_data:
+  e2e_storage:
+  e2e_public:

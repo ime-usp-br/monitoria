@@ -20,6 +20,9 @@ storage/framework/sessions/*
 storage/framework/views/*
 storage/logs/*
 storage/debugbar
+storage/app/*
+!storage/app/images
+!storage/app/images/**
 
 # Ignorar arquivos Docker
 docker-compose*.yml
@@ -46,3 +49,8 @@ scripts
 phpunit.xml
 .styleci.yml
 .editorconfig
+tmp
+.kilo
+e2e/**
+docs/**
+tests/**

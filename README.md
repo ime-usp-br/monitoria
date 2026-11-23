@@ -213,3 +213,19 @@ php artisan sync:class-instructors --class=123
 ```
 
 **⚠️ Importante:** O comando de sincronização é **aditivo apenas** - ele adiciona novos professores encontrados no Replicado, mas nunca remove professores existentes no banco local, mesmo que não estejam mais listados no Replicado.
+
+## Testes E2E (Playwright)
+
+A suíte E2E usa Playwright + pytest em um stack Docker descartável, com banco MariaDB 10.5 dedicado (compatível com o dump de produção), `senhaunica-faker` e Mailpit.
+
+```bash
+./scripts/run_e2e.sh          # suíte completa
+./scripts/run_e2e.sh -m p0    # somente jornadas críticas
+E2E_KEEP_STACK=1 ./scripts/run_e2e.sh -k schoolterms
+```
+
+- Documentação: `docs/E2E_TESTS_DOCUMENTATION.md`.
+- Matriz dos 244 cenários: `e2e/coverage.yaml`.
+- Fixtures do Replicado: `e2e/fixtures/replicado/`.
+- Em kernels 7.x o ASE do `asedocker` sofre SIGSEGV; por isso o padrão é `E2E_REPLICADO_FAKE=true` (fixtures JSON geradas pelo `e2e:seed`).
+- Artefatos de falha ficam em `e2e/artifacts/`.

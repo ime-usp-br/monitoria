@@ -1,0 +1,1503 @@
+# Matriz de rastreabilidade dos cenários da docs/SCENARIO_TESTS_DOCUMENTATION.md
+# type: ui | hibrido | non-ui
+# status: planned | implemented | blocked
+scenarios:
+  - cen: CEN-SCHOOLTERM-001
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-002
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-003
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-004
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-005
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-006
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-007
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-008
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-009
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-010
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-011
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-012
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-013
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-014
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-015
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-016
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-017
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-018
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-019
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-020
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-021
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLTERM-022
+    module: SCHOOLTERM
+    type: ui
+    priority: p0
+    test: tests/test_schoolterms.py
+    status: planned
+  - cen: CEN-SCHOOLCLASS-001
+    module: SCHOOLCLASS
+    type: hibrido
+    priority: p1
+    test: tests/test_schoolclasses.py
+    status: planned
+  - cen: CEN-SCHOOLCLASS-002
+    module: SCHOOLCLASS
+    type: hibrido
+    priority: p1
+    test: tests/test_schoolclasses.py
+    status: planned
+  - cen: CEN-SCHOOLCLASS-003
+    module: SCHOOLCLASS
+    type: hibrido
+    priority: p1
+    test: tests/test_schoolclasses.py
+    status: planned
+  - cen: CEN-SCHOOLCLASS-004
+    module: SCHOOLCLASS
+    type: hibrido
+    priority: p1
+    test: tests/test_schoolclasses.py
+    status: planned
+  - cen: CEN-SCHOOLCLASS-005
+    module: SCHOOLCLASS
+    type: hibrido
+    priority: p1
+    test: tests/test_schoolclasses.py
+    status: planned
+  - cen: CEN-SCHOOLCLASS-006
+    module: SCHOOLCLASS
+    type: hibrido
+    priority: p1
+    test: tests/test_schoolclasses.py
+    status: planned
+  - cen: CEN-SCHOOLCLASS-007
+    module: SCHOOLCLASS
+    type: hibrido
+    priority: p1
+    test: tests/test_schoolclasses.py
+    status: planned
+  - cen: CEN-SCHOOLCLASS-008
+    module: SCHOOLCLASS
+    type: hibrido
+    priority: p1
+    test: tests/test_schoolclasses.py
+    status: planned
+  - cen: CEN-SCHOOLCLASS-009
+    module: SCHOOLCLASS
+    type: hibrido
+    priority: p1
+    test: tests/test_schoolclasses.py
+    status: planned
+  - cen: CEN-SCHOOLCLASS-010
+    module: SCHOOLCLASS
+    type: hibrido
+    priority: p1
+    test: tests/test_schoolclasses.py
+    status: planned
+  - cen: CEN-SCHOOLCLASS-011
+    module: SCHOOLCLASS
+    type: hibrido
+    priority: p1
+    test: tests/test_schoolclasses.py
+    status: planned
+  - cen: CEN-SCHOOLCLASS-012
+    module: SCHOOLCLASS
+    type: hibrido
+    priority: p1
+    test: tests/test_schoolclasses.py
+    status: planned
+  - cen: CEN-SCHOOLCLASS-013
+    module: SCHOOLCLASS
+    type: hibrido
+    priority: p1
+    test: tests/test_schoolclasses.py
+    status: planned
+  - cen: CEN-SCHOOLCLASS-014
+    module: SCHOOLCLASS
+    type: hibrido
+    priority: p1
+    test: tests/test_schoolclasses.py
+    status: planned
+  - cen: CEN-SCHOOLCLASS-015
+    module: SCHOOLCLASS
+    type: hibrido
+    priority: p1
+    test: tests/test_schoolclasses.py
+    status: planned
+  - cen: CEN-SCHOOLCLASS-016
+    module: SCHOOLCLASS
+    type: hibrido
+    priority: p1
+    test: tests/test_schoolclasses.py
+    status: planned
+  - cen: CEN-INSTRUCTOR-001
+    module: INSTRUCTOR
+    type: ui
+    priority: p2
+    test: tests/test_instructors.py
+    status: planned
+  - cen: CEN-INSTRUCTOR-002
+    module: INSTRUCTOR
+    type: ui
+    priority: p2
+    test: tests/test_instructors.py
+    status: planned
+  - cen: CEN-INSTRUCTOR-003
+    module: INSTRUCTOR
+    type: ui
+    priority: p2
+    test: tests/test_instructors.py
+    status: planned
+  - cen: CEN-INSTRUCTOR-004
+    module: INSTRUCTOR
+    type: ui
+    priority: p2
+    test: tests/test_instructors.py
+    status: planned
+  - cen: CEN-INSTRUCTOR-005
+    module: INSTRUCTOR
+    type: ui
+    priority: p2
+    test: tests/test_instructors.py
+    status: planned
+  - cen: CEN-INSTRUCTOR-006
+    module: INSTRUCTOR
+    type: ui
+    priority: p2
+    test: tests/test_instructors.py
+    status: planned
+  - cen: CEN-REQUISITION-001
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-REQUISITION-002
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-REQUISITION-003
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-REQUISITION-004
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-REQUISITION-005
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-REQUISITION-006
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-REQUISITION-007
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-REQUISITION-008
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-REQUISITION-009
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-REQUISITION-010
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-REQUISITION-011
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-REQUISITION-012
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-REQUISITION-013
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-REQUISITION-014
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-REQUISITION-015
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-REQUISITION-016
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-REQUISITION-017
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-REQUISITION-018
+    module: REQUISITION
+    type: ui
+    priority: p0
+    test: tests/test_requisitions.py
+    status: planned
+  - cen: CEN-STUDENT-001
+    module: STUDENT
+    type: ui
+    priority: p2
+    test: tests/test_students.py
+    status: planned
+  - cen: CEN-STUDENT-002
+    module: STUDENT
+    type: ui
+    priority: p2
+    test: tests/test_students.py
+    status: planned
+  - cen: CEN-STUDENT-003
+    module: STUDENT
+    type: ui
+    priority: p2
+    test: tests/test_students.py
+    status: planned
+  - cen: CEN-STUDENT-004
+    module: STUDENT
+    type: ui
+    priority: p2
+    test: tests/test_students.py
+    status: planned
+  - cen: CEN-SCHOOLRECORD-001
+    module: SCHOOLRECORD
+    type: ui
+    priority: p2
+    test: tests/test_schoolrecords.py
+    status: planned
+  - cen: CEN-SCHOOLRECORD-002
+    module: SCHOOLRECORD
+    type: ui
+    priority: p2
+    test: tests/test_schoolrecords.py
+    status: planned
+  - cen: CEN-SCHOOLRECORD-003
+    module: SCHOOLRECORD
+    type: ui
+    priority: p2
+    test: tests/test_schoolrecords.py
+    status: planned
+  - cen: CEN-SCHOOLRECORD-004
+    module: SCHOOLRECORD
+    type: ui
+    priority: p2
+    test: tests/test_schoolrecords.py
+    status: planned
+  - cen: CEN-SCHOOLRECORD-005
+    module: SCHOOLRECORD
+    type: ui
+    priority: p2
+    test: tests/test_schoolrecords.py
+    status: planned
+  - cen: CEN-SCHOOLRECORD-006
+    module: SCHOOLRECORD
+    type: ui
+    priority: p2
+    test: tests/test_schoolrecords.py
+    status: planned
+  - cen: CEN-SCHOOLRECORD-007
+    module: SCHOOLRECORD
+    type: ui
+    priority: p2
+    test: tests/test_schoolrecords.py
+    status: planned
+  - cen: CEN-ENROLLMENT-001
+    module: ENROLLMENT
+    type: ui
+    priority: p0
+    test: tests/test_enrollments.py
+    status: planned
+  - cen: CEN-ENROLLMENT-002
+    module: ENROLLMENT
+    type: ui
+    priority: p0
+    test: tests/test_enrollments.py
+    status: planned
+  - cen: CEN-ENROLLMENT-003
+    module: ENROLLMENT
+    type: ui
+    priority: p0
+    test: tests/test_enrollments.py
+    status: planned
+  - cen: CEN-ENROLLMENT-004
+    module: ENROLLMENT
+    type: ui
+    priority: p0
+    test: tests/test_enrollments.py
+    status: planned
+  - cen: CEN-ENROLLMENT-005
+    module: ENROLLMENT
+    type: ui
+    priority: p0
+    test: tests/test_enrollments.py
+    status: planned
+  - cen: CEN-ENROLLMENT-006
+    module: ENROLLMENT
+    type: ui
+    priority: p0
+    test: tests/test_enrollments.py
+    status: planned
+  - cen: CEN-ENROLLMENT-007
+    module: ENROLLMENT
+    type: ui
+    priority: p0
+    test: tests/test_enrollments.py
+    status: planned
+  - cen: CEN-ENROLLMENT-008
+    module: ENROLLMENT
+    type: ui
+    priority: p0
+    test: tests/test_enrollments.py
+    status: planned
+  - cen: CEN-ENROLLMENT-009
+    module: ENROLLMENT
+    type: ui
+    priority: p0
+    test: tests/test_enrollments.py
+    status: planned
+  - cen: CEN-ENROLLMENT-010
+    module: ENROLLMENT
+    type: ui
+    priority: p0
+    test: tests/test_enrollments.py
+    status: planned
+  - cen: CEN-ENROLLMENT-011
+    module: ENROLLMENT
+    type: ui
+    priority: p0
+    test: tests/test_enrollments.py
+    status: planned
+  - cen: CEN-ENROLLMENT-012
+    module: ENROLLMENT
+    type: ui
+    priority: p0
+    test: tests/test_enrollments.py
+    status: planned
+  - cen: CEN-ENROLLMENT-013
+    module: ENROLLMENT
+    type: ui
+    priority: p0
+    test: tests/test_enrollments.py
+    status: planned
+  - cen: CEN-ENROLLMENT-014
+    module: ENROLLMENT
+    type: ui
+    priority: p0
+    test: tests/test_enrollments.py
+    status: planned
+  - cen: CEN-ENROLLMENT-015
+    module: ENROLLMENT
+    type: ui
+    priority: p0
+    test: tests/test_enrollments.py
+    status: planned
+  - cen: CEN-ENROLLMENT-016
+    module: ENROLLMENT
+    type: ui
+    priority: p0
+    test: tests/test_enrollments.py
+    status: planned
+  - cen: CEN-SELECTION-001
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-SELECTION-002
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-SELECTION-003
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-SELECTION-004
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-SELECTION-005
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-SELECTION-006
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-SELECTION-007
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-SELECTION-008
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-SELECTION-009
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-SELECTION-010
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-SELECTION-011
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-SELECTION-012
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-SELECTION-013
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-SELECTION-014
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-SELECTION-015
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-SELECTION-016
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-SELECTION-017
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-SELECTION-018
+    module: SELECTION
+    type: ui
+    priority: p0
+    test: tests/test_selections.py
+    status: planned
+  - cen: CEN-FREQUENCY-001
+    module: FREQUENCY
+    type: hibrido
+    priority: p0
+    test: tests/test_frequencies.py
+    status: planned
+  - cen: CEN-FREQUENCY-002
+    module: FREQUENCY
+    type: hibrido
+    priority: p0
+    test: tests/test_frequencies.py
+    status: planned
+  - cen: CEN-FREQUENCY-003
+    module: FREQUENCY
+    type: hibrido
+    priority: p0
+    test: tests/test_frequencies.py
+    status: planned
+  - cen: CEN-FREQUENCY-004
+    module: FREQUENCY
+    type: hibrido
+    priority: p0
+    test: tests/test_frequencies.py
+    status: planned
+  - cen: CEN-FREQUENCY-005
+    module: FREQUENCY
+    type: hibrido
+    priority: p0
+    test: tests/test_frequencies.py
+    status: planned
+  - cen: CEN-FREQUENCY-006
+    module: FREQUENCY
+    type: hibrido
+    priority: p0
+    test: tests/test_frequencies.py
+    status: planned
+  - cen: CEN-FREQUENCY-007
+    module: FREQUENCY
+    type: hibrido
+    priority: p0
+    test: tests/test_frequencies.py
+    status: planned
+  - cen: CEN-FREQUENCY-008
+    module: FREQUENCY
+    type: hibrido
+    priority: p0
+    test: tests/test_frequencies.py
+    status: planned
+  - cen: CEN-FREQUENCY-009
+    module: FREQUENCY
+    type: hibrido
+    priority: p0
+    test: tests/test_frequencies.py
+    status: planned
+  - cen: CEN-FREQUENCY-010
+    module: FREQUENCY
+    type: hibrido
+    priority: p0
+    test: tests/test_frequencies.py
+    status: planned
+  - cen: CEN-FREQUENCY-011
+    module: FREQUENCY
+    type: hibrido
+    priority: p0
+    test: tests/test_frequencies.py
+    status: planned
+  - cen: CEN-TUTOR-001
+    module: TUTOR
+    type: ui
+    priority: p0
+    test: tests/test_tutors.py
+    status: planned
+  - cen: CEN-TUTOR-002
+    module: TUTOR
+    type: ui
+    priority: p0
+    test: tests/test_tutors.py
+    status: planned
+  - cen: CEN-TUTOR-003
+    module: TUTOR
+    type: ui
+    priority: p0
+    test: tests/test_tutors.py
+    status: planned
+  - cen: CEN-TUTOR-004
+    module: TUTOR
+    type: ui
+    priority: p0
+    test: tests/test_tutors.py
+    status: planned
+  - cen: CEN-TUTOR-005
+    module: TUTOR
+    type: ui
+    priority: p0
+    test: tests/test_tutors.py
+    status: planned
+  - cen: CEN-TUTOR-006
+    module: TUTOR
+    type: ui
+    priority: p0
+    test: tests/test_tutors.py
+    status: planned
+  - cen: CEN-TUTOR-007
+    module: TUTOR
+    type: ui
+    priority: p0
+    test: tests/test_tutors.py
+    status: planned
+  - cen: CEN-TUTOR-008
+    module: TUTOR
+    type: ui
+    priority: p0
+    test: tests/test_tutors.py
+    status: planned
+  - cen: CEN-TUTOR-009
+    module: TUTOR
+    type: ui
+    priority: p0
+    test: tests/test_tutors.py
+    status: planned
+  - cen: CEN-TUTOR-010
+    module: TUTOR
+    type: ui
+    priority: p0
+    test: tests/test_tutors.py
+    status: planned
+  - cen: CEN-TUTOR-011
+    module: TUTOR
+    type: ui
+    priority: p0
+    test: tests/test_tutors.py
+    status: planned
+  - cen: CEN-CERTIFICATE-001
+    module: CERTIFICATE
+    type: ui
+    priority: p0
+    test: tests/test_certificates.py
+    status: planned
+  - cen: CEN-CERTIFICATE-002
+    module: CERTIFICATE
+    type: ui
+    priority: p0
+    test: tests/test_certificates.py
+    status: planned
+  - cen: CEN-CERTIFICATE-003
+    module: CERTIFICATE
+    type: ui
+    priority: p0
+    test: tests/test_certificates.py
+    status: planned
+  - cen: CEN-CERTIFICATE-004
+    module: CERTIFICATE
+    type: ui
+    priority: p0
+    test: tests/test_certificates.py
+    status: planned
+  - cen: CEN-CERTIFICATE-005
+    module: CERTIFICATE
+    type: ui
+    priority: p0
+    test: tests/test_certificates.py
+    status: planned
+  - cen: CEN-CERTIFICATE-006
+    module: CERTIFICATE
+    type: ui
+    priority: p0
+    test: tests/test_certificates.py
+    status: planned
+  - cen: CEN-CERTIFICATE-007
+    module: CERTIFICATE
+    type: ui
+    priority: p0
+    test: tests/test_certificates.py
+    status: planned
+  - cen: CEN-SELFEVAL-001
+    module: SELFEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-SELFEVAL-002
+    module: SELFEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-SELFEVAL-003
+    module: SELFEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-SELFEVAL-004
+    module: SELFEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-SELFEVAL-005
+    module: SELFEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-SELFEVAL-006
+    module: SELFEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-SELFEVAL-007
+    module: SELFEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-SELFEVAL-008
+    module: SELFEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-SELFEVAL-009
+    module: SELFEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-SELFEVAL-010
+    module: SELFEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-SELFEVAL-011
+    module: SELFEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-SELFEVAL-012
+    module: SELFEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-SELFEVAL-013
+    module: SELFEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-SELFEVAL-014
+    module: SELFEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-SELFEVAL-015
+    module: SELFEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-INSEVAL-001
+    module: INSEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-INSEVAL-002
+    module: INSEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-INSEVAL-003
+    module: INSEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-INSEVAL-004
+    module: INSEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-INSEVAL-005
+    module: INSEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-INSEVAL-006
+    module: INSEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-INSEVAL-007
+    module: INSEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-INSEVAL-008
+    module: INSEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-INSEVAL-009
+    module: INSEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-INSEVAL-010
+    module: INSEVAL
+    type: ui
+    priority: p0
+    test: tests/test_evaluations.py
+    status: planned
+  - cen: CEN-MAILTEMPLATE-001
+    module: MAILTEMPLATE
+    type: ui
+    priority: p0
+    test: tests/test_mailtemplates.py
+    status: planned
+  - cen: CEN-MAILTEMPLATE-002
+    module: MAILTEMPLATE
+    type: ui
+    priority: p0
+    test: tests/test_mailtemplates.py
+    status: planned
+  - cen: CEN-MAILTEMPLATE-003
+    module: MAILTEMPLATE
+    type: ui
+    priority: p0
+    test: tests/test_mailtemplates.py
+    status: planned
+  - cen: CEN-MAILTEMPLATE-004
+    module: MAILTEMPLATE
+    type: ui
+    priority: p0
+    test: tests/test_mailtemplates.py
+    status: planned
+  - cen: CEN-MAILTEMPLATE-005
+    module: MAILTEMPLATE
+    type: ui
+    priority: p0
+    test: tests/test_mailtemplates.py
+    status: planned
+  - cen: CEN-MAILTEMPLATE-006
+    module: MAILTEMPLATE
+    type: ui
+    priority: p0
+    test: tests/test_mailtemplates.py
+    status: planned
+  - cen: CEN-MAILTEMPLATE-007
+    module: MAILTEMPLATE
+    type: ui
+    priority: p0
+    test: tests/test_mailtemplates.py
+    status: planned
+  - cen: CEN-MAILTEMPLATE-008
+    module: MAILTEMPLATE
+    type: ui
+    priority: p0
+    test: tests/test_mailtemplates.py
+    status: planned
+  - cen: CEN-MAILTEMPLATE-009
+    module: MAILTEMPLATE
+    type: ui
+    priority: p0
+    test: tests/test_mailtemplates.py
+    status: planned
+  - cen: CEN-MAILTEMPLATE-010
+    module: MAILTEMPLATE
+    type: ui
+    priority: p0
+    test: tests/test_mailtemplates.py
+    status: planned
+  - cen: CEN-MAILTEMPLATE-011
+    module: MAILTEMPLATE
+    type: ui
+    priority: p0
+    test: tests/test_mailtemplates.py
+    status: planned
+  - cen: CEN-MAILTEMPLATE-012
+    module: MAILTEMPLATE
+    type: ui
+    priority: p0
+    test: tests/test_mailtemplates.py
+    status: planned
+  - cen: CEN-MAILTEMPLATE-013
+    module: MAILTEMPLATE
+    type: ui
+    priority: p0
+    test: tests/test_mailtemplates.py
+    status: planned
+  - cen: CEN-EMAIL-001
+    module: EMAIL
+    type: hibrido
+    priority: p1
+    test: tests/test_emails.py
+    status: planned
+  - cen: CEN-EMAIL-002
+    module: EMAIL
+    type: hibrido
+    priority: p1
+    test: tests/test_emails.py
+    status: planned
+  - cen: CEN-EMAIL-003
+    module: EMAIL
+    type: hibrido
+    priority: p1
+    test: tests/test_emails.py
+    status: planned
+  - cen: CEN-EMAIL-004
+    module: EMAIL
+    type: hibrido
+    priority: p1
+    test: tests/test_emails.py
+    status: planned
+  - cen: CEN-EMAIL-005
+    module: EMAIL
+    type: hibrido
+    priority: p1
+    test: tests/test_emails.py
+    status: planned
+  - cen: CEN-EMAIL-006
+    module: EMAIL
+    type: hibrido
+    priority: p1
+    test: tests/test_emails.py
+    status: planned
+  - cen: CEN-EMAIL-007
+    module: EMAIL
+    type: hibrido
+    priority: p1
+    test: tests/test_emails.py
+    status: planned
+  - cen: CEN-EMAIL-008
+    module: EMAIL
+    type: hibrido
+    priority: p1
+    test: tests/test_emails.py
+    status: planned
+  - cen: CEN-EMAIL-009
+    module: EMAIL
+    type: hibrido
+    priority: p1
+    test: tests/test_emails.py
+    status: planned
+  - cen: CEN-EMAIL-010
+    module: EMAIL
+    type: hibrido
+    priority: p1
+    test: tests/test_emails.py
+    status: planned
+  - cen: CEN-EMAIL-011
+    module: EMAIL
+    type: hibrido
+    priority: p1
+    test: tests/test_emails.py
+    status: planned
+  - cen: CEN-EMAIL-012
+    module: EMAIL
+    type: hibrido
+    priority: p1
+    test: tests/test_emails.py
+    status: planned
+  - cen: CEN-EMAIL-013
+    module: EMAIL
+    type: hibrido
+    priority: p1
+    test: tests/test_emails.py
+    status: planned
+  - cen: CEN-EMAIL-014
+    module: EMAIL
+    type: hibrido
+    priority: p1
+    test: tests/test_emails.py
+    status: planned
+  - cen: CEN-EMAIL-015
+    module: EMAIL
+    type: hibrido
+    priority: p1
+    test: tests/test_emails.py
+    status: planned
+  - cen: CEN-EMAIL-016
+    module: EMAIL
+    type: hibrido
+    priority: p1
+    test: tests/test_emails.py
+    status: planned
+  - cen: CEN-USER-001
+    module: USER
+    type: ui
+    priority: p2
+    test: tests/test_users.py
+    status: planned
+  - cen: CEN-USER-002
+    module: USER
+    type: ui
+    priority: p2
+    test: tests/test_users.py
+    status: planned
+  - cen: CEN-USER-003
+    module: USER
+    type: ui
+    priority: p2
+    test: tests/test_users.py
+    status: planned
+  - cen: CEN-USER-004
+    module: USER
+    type: ui
+    priority: p2
+    test: tests/test_users.py
+    status: planned
+  - cen: CEN-USER-005
+    module: USER
+    type: ui
+    priority: p2
+    test: tests/test_users.py
+    status: planned
+  - cen: CEN-USER-006
+    module: USER
+    type: ui
+    priority: p2
+    test: tests/test_users.py
+    status: planned
+  - cen: CEN-USER-007
+    module: USER
+    type: ui
+    priority: p2
+    test: tests/test_users.py
+    status: planned
+  - cen: CEN-USER-008
+    module: USER
+    type: ui
+    priority: p2
+    test: tests/test_users.py
+    status: planned
+  - cen: CEN-USER-009
+    module: USER
+    type: ui
+    priority: p2
+    test: tests/test_users.py
+    status: planned
+  - cen: CEN-USER-010
+    module: USER
+    type: ui
+    priority: p2
+    test: tests/test_users.py
+    status: planned
+  - cen: CEN-REPORT-001
+    module: REPORT
+    type: ui
+    priority: p2
+    test: tests/test_reports.py
+    status: planned
+  - cen: CEN-REPORT-002
+    module: REPORT
+    type: ui
+    priority: p2
+    test: tests/test_reports.py
+    status: planned
+  - cen: CEN-REPORT-003
+    module: REPORT
+    type: ui
+    priority: p2
+    test: tests/test_reports.py
+    status: planned
+  - cen: CEN-REPORT-004
+    module: REPORT
+    type: ui
+    priority: p2
+    test: tests/test_reports.py
+    status: planned
+  - cen: CEN-REPORT-005
+    module: REPORT
+    type: ui
+    priority: p2
+    test: tests/test_reports.py
+    status: planned
+  - cen: CEN-REPORT-006
+    module: REPORT
+    type: ui
+    priority: p2
+    test: tests/test_reports.py
+    status: planned
+  - cen: CEN-REPORT-007
+    module: REPORT
+    type: ui
+    priority: p2
+    test: tests/test_reports.py
+    status: planned
+  - cen: CEN-OLDDB-001
+    module: OLDDB
+    type: hibrido
+    priority: p1
+    test: tests/test_olddb.py
+    status: planned
+  - cen: CEN-OLDDB-002
+    module: OLDDB
+    type: hibrido
+    priority: p1
+    test: tests/test_olddb.py
+    status: planned
+  - cen: CEN-OLDDB-003
+    module: OLDDB
+    type: hibrido
+    priority: p1
+    test: tests/test_olddb.py
+    status: planned
+  - cen: CEN-OLDDB-004
+    module: OLDDB
+    type: hibrido
+    priority: p1
+    test: tests/test_olddb.py
+    status: planned
+  - cen: CEN-OLDDB-005
+    module: OLDDB
+    type: hibrido
+    priority: p1
+    test: tests/test_olddb.py
+    status: planned
+  - cen: CEN-OLDDB-006
+    module: OLDDB
+    type: hibrido
+    priority: p1
+    test: tests/test_olddb.py
+    status: planned
+  - cen: CEN-JOB-001
+    module: JOB
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-JOB-002
+    module: JOB
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-JOB-003
+    module: JOB
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-JOB-004
+    module: JOB
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-KERNEL-001
+    module: KERNEL
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-KERNEL-002
+    module: KERNEL
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-KERNEL-003
+    module: KERNEL
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-KERNEL-004
+    module: KERNEL
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-KERNEL-005
+    module: KERNEL
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-KERNEL-006
+    module: KERNEL
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-KERNEL-007
+    module: KERNEL
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-KERNEL-008
+    module: KERNEL
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-CMD-001
+    module: CMD
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-CMD-002
+    module: CMD
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-CMD-003
+    module: CMD
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-CMD-004
+    module: CMD
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-CMD-005
+    module: CMD
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-CMD-006
+    module: CMD
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-CMD-007
+    module: CMD
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-CMD-008
+    module: CMD
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-CMD-009
+    module: CMD
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-CMD-010
+    module: CMD
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-REPLICADO-001
+    module: REPLICADO
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-REPLICADO-002
+    module: REPLICADO
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-REPLICADO-003
+    module: REPLICADO
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-REPLICADO-004
+    module: REPLICADO
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-REPLICADO-005
+    module: REPLICADO
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-REPLICADO-006
+    module: REPLICADO
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-REPLICADO-007
+    module: REPLICADO
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-REPLICADO-008
+    module: REPLICADO
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+  - cen: CEN-REPLICADO-009
+    module: REPLICADO
+    type: non-ui
+    priority: p1
+    test: tests/test_commands_jobs_kernel.py
+    status: planned
+
+# Testes implementados nesta primeira entrega (31).
+# A matriz acima continua com status planned para a cobertura completa dos CEN-*.
+implemented_tests:
+  - tests/test_auth.py::test_admin_login_exibe_menu_administrativo[chromium]
+  - tests/test_auth.py::test_aluno_login_exibe_menu_de_inscricao[chromium]
+  - tests/test_auth.py::test_servidor_sem_papel_recebe_403[chromium]
+  - tests/test_certificates.py::test_admin_lista_atestados_do_periodo_aberto[chromium]
+  - tests/test_certificates.py::test_aluno_sem_monitoria_recebe_aviso[chromium]
+  - tests/test_enrollments.py::test_aluno_ve_turmas_do_periodo_de_inscricao[chromium]
+  - tests/test_enrollments.py::test_aluno_edita_inscricao_e_propaga_preferencia[chromium]
+  - tests/test_enrollments.py::test_docente_nao_acessa_inscricao_de_aluno[chromium]
+  - tests/test_evaluations.py::test_link_assinado_abre_autoavaliacao[chromium]
+  - tests/test_evaluations.py::test_link_assinado_abre_avaliacao_do_docente[chromium]
+  - tests/test_evaluations.py::test_link_adulterado_e_rejeitado[chromium]
+  - tests/test_frequencies.py::test_docente_ve_monitor_ativo_na_frequencia[chromium]
+  - tests/test_frequencies.py::test_link_assinado_registra_frequencia[chromium]
+  - tests/test_frequencies.py::test_aluno_nao_acessa_frequencia[chromium]
+  - tests/test_mailtemplates.py::test_admin_lista_modelos_de_email[chromium]
+  - tests/test_mailtemplates.py::test_admin_acessa_area_de_disparos[chromium]
+  - tests/test_mailtemplates.py::test_docente_nao_edita_modelos[chromium]
+  - tests/test_reports.py::test_admin_acessa_tela_de_relatorios[chromium]
+  - tests/test_reports.py::test_aluno_nao_gera_relatorio[chromium]
+  - tests/test_requisitions.py::test_docente_ve_suas_turmas_no_periodo_de_solicitacao[chromium]
+  - tests/test_requisitions.py::test_aluno_nao_acessa_solicitacoes[chromium]
+  - tests/test_schoolterms.py::test_index_lista_periodo_aberto[chromium]
+  - tests/test_schoolterms.py::test_cria_periodo_fechado_com_edital[chromium]
+  - tests/test_schoolterms.py::test_bloqueia_segundo_periodo_aberto[chromium]
+  - tests/test_selections.py::test_membro_comissao_ve_apenas_solicitacoes_do_departamento[chromium]
+  - tests/test_selections.py::test_membro_comissao_elege_monitor[chromium]
+  - tests/test_selections.py::test_membro_de_outro_departamento_nao_elege[chromium]
+  - tests/test_tutors.py::test_admin_ve_monitor_ativo[chromium]
+  - tests/test_tutors.py::test_membro_mae_nao_ve_monitor_do_mac[chromium]
+  - tests/test_users.py::test_admin_lista_usuarios[chromium]
+  - tests/test_users.py::test_secretaria_acessa_usuarios[chromium]
