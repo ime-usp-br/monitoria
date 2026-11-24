@@ -44,19 +44,21 @@ class ScheduledTasks
                     $this->sendEmail($email);
                 }
             } elseif ($email->sending_frequency == 'Inicio do período de avaliação') {
-                $schoolterms = SchoolTerm::where('start_date_evaluations', '>=', now()->subDays($email->sending_date))->get();
+                $days = (int) $email->sending_date;
+                $schoolterms = SchoolTerm::whereDate('start_date_evaluations', '>=', now()->subDays($days)->toDateString())->get();
 
                 foreach ($schoolterms as $st) {
-                    $day = Carbon::createFromFormat('d/m/Y', $st->start_date_evaluations)->addDays($email->sending_date)->format('d/m/Y');
+                    $day = Carbon::createFromFormat('d/m/Y', $st->start_date_evaluations)->addDays($days)->format('d/m/Y');
                     if ($this->isDueOnDate($day, $email->sending_hour)) {
                         $this->sendEmail($email);
                     }
                 }
             } elseif ($email->sending_frequency == 'Final do período de avaliação') {
-                $schoolterms = SchoolTerm::where('end_date_evaluations', '>=', now()->addDays($email->sending_date))->get();
+                $days = (int) $email->sending_date;
+                $schoolterms = SchoolTerm::whereDate('end_date_evaluations', '>=', now()->addDays($days)->toDateString())->get();
 
                 foreach ($schoolterms as $st) {
-                    $day = Carbon::createFromFormat('d/m/Y', $st->end_date_evaluations)->subDays($email->sending_date)->format('d/m/Y');
+                    $day = Carbon::createFromFormat('d/m/Y', $st->end_date_evaluations)->subDays($days)->format('d/m/Y');
                     if ($this->isDueOnDate($day, $email->sending_hour)) {
                         $this->sendEmail($email);
                     }

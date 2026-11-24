@@ -2,7 +2,21 @@ import re
 
 from playwright.sync_api import Page
 
-from support.manifest import BASE_URL
+from support import db
+from support.manifest import BASE_URL, load_manifest
+
+_MANIFEST = load_manifest()
+
+
+def restore_identity(codpes: str) -> None:
+    """Restaura nome/e-mail do seed após o faker reescrever o usuário no OAuth."""
+    codpes = str(codpes)
+    user = next((item for item in _MANIFEST["users"].values() if str(item["codpes"]) == codpes), None)
+    if user and user.get("email"):
+        db.execute(
+            "update users set name=%s, email=%s where codpes=%s",
+            (user["name"], user["email"], codpes),
+        )
 
 
 def login_as(page: Page, codpes: str) -> None:
@@ -19,4 +33,5 @@ def login_as(page: Page, codpes: str) -> None:
         lambda url: url.startswith(BASE_URL) and "/wsusuario/" not in url,
         timeout=30000,
     )
+    restore_identity(codpes)
     page.wait_for_load_state("domcontentloaded")

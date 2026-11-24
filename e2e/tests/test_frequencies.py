@@ -73,3 +73,66 @@ def test_aluno_nao_acessa_frequencia(page_as):
     response = page.goto(f"{BASE_URL}/frequencies")
     assert response is not None
     assert response.status == 403
+
+
+@pytest.mark.p0
+def test_cen_frequency_003_show_via_url_assinada(anonymous_page, manifest):
+    anonymous_page.goto(manifest["urls"]["frequency_signed"])
+    expect(anonymous_page.get_by_role("heading", name="Registro de Frequência")).to_be_visible()
+    expect(anonymous_page.locator("body")).to_contain_text("Aluno Monitor Ativo E2E")
+
+
+@pytest.mark.p0
+def test_cen_frequency_004_show_por_instrutor_e_negado_para_outro(page_as, manifest):
+    docente = page_as("docente")
+    response = docente.goto(
+        f"{BASE_URL}/frequencies/{manifest['classes']['mac_monitor']['id']}/{manifest['selections']['ativo']['student_id']}"
+    )
+    assert response.status == 200
+
+    outro = page_as("docente_sem_turma")
+    outro.goto(f"{BASE_URL}/frequencies")
+    outro.goto(
+        f"{BASE_URL}/frequencies/{manifest['classes']['mac_monitor']['id']}/{manifest['selections']['ativo']['student_id']}"
+    )
+    expect(outro.locator("body")).to_contain_text("Você não ministra esta disciplina")
+
+
+@pytest.mark.p1
+def test_cen_frequency_005_show_negado_para_tutor_de_outra_turma(page_as, manifest):
+    page = page_as("docente")
+    page.goto(f"{BASE_URL}/frequencies")
+    page.goto(
+        f"{BASE_URL}/frequencies/{manifest['classes']['mac_monitor']['id']}/{manifest['students']['160001']}"
+    )
+    expect(page.locator("body")).to_contain_text("não pertence a disciplina")
+
+
+@pytest.mark.p0
+def test_cen_frequency_008_update_bloqueado_para_mes_futuro(anonymous_page, manifest):
+    future = {
+        int(key.rsplit("_", 1)[1]): value
+        for key, value in manifest["frequencies"].items()
+        if key.startswith("futura_")
+    }
+    assert future, "Fixture de frequência futura ausente"
+    month, _ = next(iter(future.items()))
+    if month <= datetime.now().month:
+        pytest.skip("Mês futuro não disponível no calendário atual")
+
+    anonymous_page.goto(manifest["urls"]["frequency_signed"])
+    row = anonymous_page.locator("tr", has=anonymous_page.get_by_role("cell", name=str(month), exact=True))
+    row.get_by_role("link", name="Registrar", exact=True).click()
+    anonymous_page.wait_for_load_state("domcontentloaded")
+    expect(anonymous_page.locator("body")).to_contain_text("só será liberada")
+
+
+@pytest.mark.p2
+def test_cen_frequency_011_update_requer_autorizacao(anonymous_page, manifest):
+    frequency_id = next(
+        value
+        for key, value in manifest["frequencies"].items()
+        if key.startswith("nao_registrada_")
+    )
+    response = anonymous_page.goto(f"{BASE_URL}/frequencies/{frequency_id}")
+    assert response.status == 403

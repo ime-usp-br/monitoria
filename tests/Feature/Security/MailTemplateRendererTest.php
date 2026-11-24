@@ -69,6 +69,24 @@ class MailTemplateRendererTest extends TestCase
         $this->assertSame('<ul><li>Ana</li><li>Ana</li></ul>', $html);
     }
 
+    public function test_renderiza_isset(): void
+    {
+        $template = '@isset($link)<a href="{{ $link }}">Acessar</a>@endisset';
+
+        $this->assertSame(
+            '<a href="http://example.test">Acessar</a>',
+            $this->renderer()->render($template, ['link' => 'http://example.test'])
+        );
+        $this->assertSame('', $this->renderer()->render($template, []));
+    }
+
+    public function test_rejeita_isset_com_expressao_composta(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->renderer()->render('@isset($a ?? $b)x@endisset', []);
+    }
+
     public function test_rejeita_funcao_php_no_template(): void
     {
         $this->expectException(SyntaxError::class);

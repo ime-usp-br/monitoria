@@ -27,6 +27,14 @@ class MailTemplateSyntax
     {
         $source = $this->assertNoPhp($source);
 
+        $source = $this->replaceDirective($source, 'isset', function (string $expression) {
+            if (! preg_match('/^[A-Za-z_][A-Za-z0-9_.]*$/', $expression)) {
+                throw new InvalidArgumentException('Diretiva @isset aceita apenas uma variável simples.');
+            }
+
+            return '{% if '.$expression.' is defined and '.$expression.' is not null %}';
+        });
+
         $source = $this->replaceDirective($source, 'foreach', function (string $expression) {
             $parts = preg_split('/\s+as\s+/', $expression, 2);
 
@@ -45,6 +53,7 @@ class MailTemplateSyntax
         $source = str_replace('@endforeach', '{% endfor %}', $source);
         $source = str_replace('@endif', '{% endif %}', $source);
         $source = str_replace('@else', '{% else %}', $source);
+        $source = str_replace('@endisset', '{% endif %}', $source);
 
         $source = preg_replace_callback('/\{\{\s*(.*?)\s*\}\}/s', function (array $matches) {
             return '{{ '.$this->expression($matches[1]).' }}';
@@ -65,6 +74,7 @@ class MailTemplateSyntax
 
         return array_values(array_unique(array_diff($matches[1], [
             'foreach', 'endforeach', 'if', 'elseif', 'else', 'endif',
+            'isset', 'endisset',
         ])));
     }
 

@@ -2,13 +2,22 @@
 
 namespace Tests\Feature\Scenario;
 
+use App\Console\ScheduledTasks;
 use App\Models\MailTemplate;
 use App\Models\SchoolTerm;
 use App\Models\Selection;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 
 class KernelScenarioTest extends ScenarioTestCase
 {
+    protected function tearDown(): void
+    {
+        Carbon::setTestNow();
+
+        parent::tearDown();
+    }
+
     public function test_cen_kernel_008_modelos_ativos_nao_manual_programados_mas_manual_nao()
     {
         $this->createOpenTerm();
@@ -87,6 +96,56 @@ class KernelScenarioTest extends ScenarioTestCase
         $this->artisan('schedule:run');
 
         $this->assertTrue(true);
+    }
+
+    public function test_cen_kernel_002_disparo_mensal_agenda_monthly_on()
+    {
+        Carbon::setTestNow(Carbon::create(2026, 11, 15, 8, 0));
+
+        MailTemplate::create(['name' => 'Mensal', 'description' => 'Mensal E2E', 'mail_class' => 'NotifySelectStudent', 'sending_frequency' => 'Mensal', 'sending_date' => '15', 'sending_hour' => '08:00', 'active' => true, 'subject' => 's', 'body' => 'b']);
+
+        $tasks = \Mockery::mock(ScheduledTasks::class)->makePartial();
+        $tasks->shouldReceive('sendEmail')->once()
+            ->with(\Mockery::on(fn ($template) => $template->name === 'Mensal'));
+
+        $tasks->runScheduledEmails();
+
+        Carbon::setTestNow(Carbon::create(2026, 11, 16, 8, 0));
+        $tasks->runScheduledEmails();
+    }
+
+    public function test_cen_kernel_003_disparo_inicio_do_periodo_de_avaliacao()
+    {
+        Carbon::setTestNow(Carbon::create(2026, 11, 24, 8, 0));
+
+        $this->createOpenTerm(['start_date_evaluations' => now()->subDays(5)->format('d/m/Y')]);
+        MailTemplate::create(['name' => 'Inicio', 'description' => 'Inicio E2E', 'mail_class' => 'NotifySelectStudent', 'sending_frequency' => 'Inicio do período de avaliação', 'sending_date' => '5', 'sending_hour' => '08:00', 'active' => true, 'subject' => 's', 'body' => 'b']);
+
+        $tasks = \Mockery::mock(ScheduledTasks::class)->makePartial();
+        $tasks->shouldReceive('sendEmail')->once()
+            ->with(\Mockery::on(fn ($template) => $template->name === 'Inicio'));
+
+        $tasks->runScheduledEmails();
+
+        Carbon::setTestNow(Carbon::create(2026, 11, 25, 8, 0));
+        $tasks->runScheduledEmails();
+    }
+
+    public function test_cen_kernel_004_disparo_final_do_periodo_de_avaliacao()
+    {
+        Carbon::setTestNow(Carbon::create(2026, 11, 24, 8, 0));
+
+        $this->createOpenTerm(['end_date_evaluations' => now()->addDays(5)->format('d/m/Y')]);
+        MailTemplate::create(['name' => 'Final', 'description' => 'Final E2E', 'mail_class' => 'NotifySelectStudent', 'sending_frequency' => 'Final do período de avaliação', 'sending_date' => '5', 'sending_hour' => '08:00', 'active' => true, 'subject' => 's', 'body' => 'b']);
+
+        $tasks = \Mockery::mock(ScheduledTasks::class)->makePartial();
+        $tasks->shouldReceive('sendEmail')->once()
+            ->with(\Mockery::on(fn ($template) => $template->name === 'Final'));
+
+        $tasks->runScheduledEmails();
+
+        Carbon::setTestNow(Carbon::create(2026, 11, 25, 8, 0));
+        $tasks->runScheduledEmails();
     }
 
     private function runCloseTermCallback(SchoolTerm $term): void

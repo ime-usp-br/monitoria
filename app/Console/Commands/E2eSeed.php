@@ -8,6 +8,7 @@ use App\Models\Department;
 use App\Models\Enrollment;
 use App\Models\Frequency;
 use App\Models\Instructor;
+use App\Models\InstructorEvaluation;
 use App\Models\MailTemplate;
 use App\Models\Recommendation;
 use App\Models\Requisition;
@@ -16,6 +17,7 @@ use App\Models\SchoolClass;
 use App\Models\SchoolRecord;
 use App\Models\SchoolTerm;
 use App\Models\Selection;
+use App\Models\SelfEvaluation;
 use App\Models\Student;
 use App\Models\User;
 use Carbon\Carbon;
@@ -193,10 +195,16 @@ class E2eSeed extends Command
                 }
             }
 
+            if ($definition['codpes'] === 10001) {
+                // Permissão "admin" usada pelo senhaunica-socialite (loginAs).
+                $user->givePermissionTo('admin');
+            }
+
             $this->manifest['users'][$this->userKey($definition['codpes'])] = [
                 'id' => $user->id,
                 'codpes' => (string) $user->codpes,
                 'name' => $user->name,
+                'email' => $user->email,
                 'roles' => $user->getRoleNames()->values()->all(),
             ];
         }
@@ -253,6 +261,7 @@ class E2eSeed extends Command
         $classes = [
             'mac_a' => [$open, $mac, 'MAC0101', $year.$periodCode.'101', 'Introdução à Computação', 'Teoria', [20001]],
             'mac_b' => [$open, $mac, 'MAC0101', $year.$periodCode.'102', 'Introdução à Computação', 'Teoria', [20001]],
+            'mac_c' => [$open, $mac, 'MAC0101', $year.$periodCode.'103', 'Introdução à Computação', 'Teoria', [20001]],
             'mac_monitor' => [$open, $mac, 'MAC0202', $year.$periodCode.'201', 'Estruturas de Dados', 'Teoria', [20001]],
             'mae_a' => [$open, $mae, 'MAE0101', $year.$periodCode.'103', 'Introdução à Economia', 'Teoria', [20005]],
             'mat_a' => [$open, $mat, 'MAT0101', $year.$periodCode.'104', 'Cálculo I', 'Teoria', [20003]],
@@ -378,6 +387,7 @@ class E2eSeed extends Command
         $definitions = [
             'ativo' => ['student' => '160002', 'class' => 'mac_monitor', 'status' => 'Ativo'],
             'concluido' => ['student' => '160004', 'class' => 'closed_a', 'status' => 'Concluido'],
+            'desligado' => ['student' => '160003', 'class' => 'mac_a', 'status' => 'Desligado'],
         ];
 
         $this->manifest['selections'] = [];
@@ -423,6 +433,15 @@ class E2eSeed extends Command
             $this->manifest['frequencies'][$key.$month] = $frequency->id;
         }
 
+        // Frequência futura em relação ao mês corrente, usada para validar o
+        // bloqueio de edição sem depender de congelamento do relógio.
+        $futureMonth = min(12, (int) now()->format("n") + 1);
+        $future = Frequency::updateOrCreate(
+            ['student_id' => $active['student_id'], 'school_class_id' => $active['school_class_id'], 'month' => $futureMonth],
+            ['registered' => false]
+        );
+        $this->manifest['frequencies']['futura_'.$futureMonth] = $future->id;
+
         $this->manifest['urls'] = [
             'frequency_signed' => URL::signedRoute('frequencies.show', [
                 'schoolclass' => $active['school_class_id'],
@@ -435,6 +454,34 @@ class E2eSeed extends Command
                 'selectionID' => $active['id'],
             ]),
         ];
+
+        $concluded = $this->manifest['selections']['concluido'];
+
+        $selfEvaluation = SelfEvaluation::updateOrCreate(
+            ['selection_id' => $concluded['id']],
+            [
+                'student_amount' => 2,
+                'homework_amount' => 1,
+                'secondary_activity' => 'Monitoria E2E',
+                'workload' => 2,
+                'workload_reason' => null,
+                'comments' => 'Autoavaliação E2E',
+            ]
+        );
+
+        $instructorEvaluation = InstructorEvaluation::updateOrCreate(
+            ['selection_id' => $concluded['id']],
+            [
+                'ease_of_contact' => 2,
+                'efficiency' => 2,
+                'reliability' => 2,
+                'overall' => 2,
+                'comments' => 'Avaliação E2E',
+            ]
+        );
+
+        $this->manifest['self_evaluations'] = ['concluido' => $selfEvaluation->id];
+        $this->manifest['instructor_evaluations'] = ['concluido' => $instructorEvaluation->id];
     }
 
     private function seedMailTemplates(): void
@@ -459,7 +506,7 @@ class E2eSeed extends Command
                     'sending_hour' => null,
                     'active' => true,
                     'subject' => '[E2E] '.$name,
-                    'body' => '<p>Mensagem E2E para {{ $student->nompes ?? "aluno" }}.</p>',
+                    'body' => '<p>Mensagem E2E para {{ $student->nompes ?? "aluno" }}.</p>@isset($link)<p><a href="{{ $link }}">Acessar</a></p>@endisset',
                 ]
             );
             $this->manifest['mail_templates'][$mailClass] = $template->id;
@@ -492,10 +539,10 @@ class E2eSeed extends Command
         ];
 
         $departments = [
-            ['codset' => 5000, 'nomabvset' => 'MAC', 'nomset' => 'Departamento de Ciencia da Computacao'],
-            ['codset' => 5001, 'nomabvset' => 'MAE', 'nomset' => 'Departamento de Economia'],
-            ['codset' => 5002, 'nomabvset' => 'MAP', 'nomset' => 'Departamento de Matematica Aplicada'],
-            ['codset' => 5003, 'nomabvset' => 'MAT', 'nomset' => 'Departamento de Matematica'],
+            ['codset' => 5000, 'nomabvset' => 'MAC', 'nomset' => 'Ciência da Computação'],
+            ['codset' => 5001, 'nomabvset' => 'MAE', 'nomset' => 'Economia'],
+            ['codset' => 5002, 'nomabvset' => 'MAP', 'nomset' => 'Matemática Aplicada'],
+            ['codset' => 5003, 'nomabvset' => 'MAT', 'nomset' => 'Matemática'],
         ];
 
         $classes = [
@@ -546,7 +593,7 @@ class E2eSeed extends Command
             ], $people),
             'TELEFPESSOA' => [['codpes' => 160001, 'codddi' => '55', 'codddd' => '11', 'numtel' => '999999999', 'tiptelpes' => 'celular']],
             'SETOR' => array_map(fn ($d) => $d + ['codund' => 45, 'tipset' => 'Departamento de Ensino'], $departments),
-            'UNIDADE' => [['codund' => 45, 'sglund' => 'IME', 'nomund' => 'Instituto de Matematica e Estatistica']],
+            'UNIDADE' => [['codund' => 45, 'sglund' => 'IME', 'nomund' => 'Instituto de Matemática e Estatística']],
             'TURMAGR' => $turmas,
             'DISCIPLINAGR' => array_map(fn ($t) => ['coddis' => $t['coddis'], 'verdis' => 1, 'nomdis' => $t['nomdis']], $turmas),
             'DISCIPGRCODIGO' => array_map(fn ($t) => ['coddis' => $t['coddis'], 'codclg' => $t['pfxdisval'] === 'MAC' ? 1 : ($t['pfxdisval'] === 'MAE' ? 2 : 3), 'pfxdisval' => $t['pfxdisval']], $turmas),

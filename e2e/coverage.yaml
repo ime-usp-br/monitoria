@@ -1,1471 +1,1780 @@
 # Matriz de rastreabilidade dos cenários da docs/SCENARIO_TESTS_DOCUMENTATION.md
 # type: ui | hibrido | non-ui
 # status: planned | implemented | blocked
+# nodeid: identificador executável (pytest com [chromium] ou PHPUnit).
+# justification: obrigatória quando o destino é um teste PHPUnit (non-ui/hibrido).
 scenarios:
   - cen: CEN-SCHOOLTERM-001
     module: SCHOOLTERM
     type: ui
     priority: p0
     test: tests/test_schoolterms.py
-    status: planned
+    nodeid: "tests/test_schoolterms.py::test_bloqueia_segundo_periodo_aberto[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLTERM-002
     module: SCHOOLTERM
     type: ui
     priority: p0
     test: tests/test_schoolterms.py
-    status: planned
+    nodeid: "tests/test_schoolterms.py::test_cria_periodo_fechado_com_edital[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLTERM-003
     module: SCHOOLTERM
     type: ui
     priority: p0
     test: tests/test_schoolterms.py
-    status: planned
+    nodeid: "tests/test_schoolterms.py::test_cen_schoolterm_003_inicio_depois_do_fim_rejeitado[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLTERM-004
     module: SCHOOLTERM
-    type: ui
+    type: hibrido
     priority: p0
-    test: tests/test_schoolterms.py
-    status: planned
+    test: tests/Feature/Scenario/SchoolTermScenarioTest.php
+    nodeid: "tests/Feature/Scenario/SchoolTermScenarioTest.php::test_cen_schoolterm_004_ano_periodo_duplicado_atualiza_em_vez_de_duplicar"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-SCHOOLTERM-005
     module: SCHOOLTERM
     type: ui
     priority: p0
     test: tests/test_schoolterms.py
-    status: planned
+    nodeid: "tests/test_schoolterms.py::test_cen_schoolterm_005_validacoes_do_formulario[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLTERM-006
     module: SCHOOLTERM
     type: ui
     priority: p0
     test: tests/test_schoolterms.py
-    status: planned
+    nodeid: "tests/test_schoolterms.py::test_cen_schoolterm_006_edital_armazenado_sob_pasta_do_periodo[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLTERM-007
     module: SCHOOLTERM
     type: ui
     priority: p0
     test: tests/test_schoolterms.py
-    status: planned
+    nodeid: "tests/test_schoolterms.py::test_cen_schoolterm_007_edital_nao_pdf_rejeitado[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLTERM-008
     module: SCHOOLTERM
     type: ui
     priority: p0
     test: tests/test_schoolterms.py
-    status: planned
+    nodeid: "tests/test_schoolterms.py::test_cen_schoolterm_008_edital_acima_de_1000kb_rejeitado[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLTERM-009
     module: SCHOOLTERM
     type: ui
     priority: p0
     test: tests/test_schoolterms.py
-    status: planned
+    nodeid: "tests/test_schoolterms.py::test_cen_schoolterm_009_atualizar_para_aberto_com_outro_aberto_bloqueado[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLTERM-010
     module: SCHOOLTERM
     type: ui
     priority: p0
     test: tests/test_schoolterms.py
-    status: planned
+    nodeid: "tests/test_schoolterms.py::test_cen_schoolterm_010_atualizar_proprio_periodo_aberto_permitido[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLTERM-011
     module: SCHOOLTERM
-    type: ui
+    type: hibrido
     priority: p0
-    test: tests/test_schoolterms.py
-    status: planned
+    test: tests/Feature/Scenario/SchoolTermScenarioTest.php
+    nodeid: "tests/Feature/Scenario/SchoolTermScenarioTest.php::test_cen_schoolterm_011_atualizar_de_fechado_para_aberto_sem_outro_aberto_permitido"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-SCHOOLTERM-012
     module: SCHOOLTERM
     type: ui
     priority: p0
     test: tests/test_schoolterms.py
-    status: planned
+    nodeid: "tests/test_schoolterms.py::test_cen_schoolterm_012_substituir_edital_na_atualizacao[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLTERM-013
     module: SCHOOLTERM
-    type: ui
+    type: hibrido
     priority: p0
-    test: tests/test_schoolterms.py
-    status: planned
+    test: tests/Feature/Scenario/SchoolTermScenarioTest.php
+    nodeid: "tests/Feature/Scenario/SchoolTermScenarioTest.php::test_cen_schoolterm_013_atualizacao_sem_edital_mantem_caminho"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-SCHOOLTERM-014
     module: SCHOOLTERM
     type: ui
     priority: p0
     test: tests/test_schoolterms.py
-    status: planned
+    nodeid: "tests/test_schoolterms.py::test_cen_schoolterm_014_baixar_edital_com_caminho_valido[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLTERM-015
     module: SCHOOLTERM
     type: ui
     priority: p0
     test: tests/test_schoolterms.py
-    status: planned
+    nodeid: "tests/test_schoolterms.py::test_cen_schoolterm_015_baixar_edital_com_caminho_inexistente_falha[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLTERM-016
     module: SCHOOLTERM
-    type: ui
+    type: non-ui
     priority: p0
-    test: tests/test_schoolterms.py
-    status: planned
+    test: tests/Feature/Scenario/SchoolTermScenarioTest.php
+    nodeid: "tests/Feature/Scenario/SchoolTermScenarioTest.php::test_cen_schoolterm_016_deletar_periodo_eh_stub_vazio"
+    status: implemented
+    justification: "Regra de modelo/helper sem interação de navegador distinta; verificado por teste de cenário PHPUnit no nível de modelo."
   - cen: CEN-SCHOOLTERM-017
     module: SCHOOLTERM
     type: ui
     priority: p0
     test: tests/test_schoolterms.py
-    status: planned
+    nodeid: "tests/test_schoolterms.py::test_cen_schoolterm_017_index_ordena_periodos_decrescente[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLTERM-018
     module: SCHOOLTERM
     type: ui
     priority: p0
     test: tests/test_schoolterms.py
-    status: planned
+    nodeid: "tests/test_schoolterms.py::test_cen_schoolterm_018_sem_permissao_negado[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLTERM-019
     module: SCHOOLTERM
-    type: ui
+    type: non-ui
     priority: p0
-    test: tests/test_schoolterms.py
-    status: planned
+    test: tests/Feature/Scenario/SchoolTermScenarioTest.php
+    nodeid: "tests/Feature/Scenario/SchoolTermScenarioTest.php::test_cen_schoolterm_019_persistencia_de_datas_normalizada_mutators"
+    status: implemented
+    justification: "Regra de modelo/helper sem interação de navegador distinta; verificado por teste de cenário PHPUnit no nível de modelo."
   - cen: CEN-SCHOOLTERM-020
     module: SCHOOLTERM
-    type: ui
+    type: non-ui
     priority: p0
-    test: tests/test_schoolterms.py
-    status: planned
+    test: tests/Feature/Scenario/SchoolTermScenarioTest.php
+    nodeid: "tests/Feature/Scenario/SchoolTermScenarioTest.php::test_cen_schoolterm_020_auxiliar_de_periodo_de_solicitacao"
+    status: implemented
+    justification: "Regra de modelo/helper sem interação de navegador distinta; verificado por teste de cenário PHPUnit no nível de modelo."
   - cen: CEN-SCHOOLTERM-021
     module: SCHOOLTERM
-    type: ui
+    type: non-ui
     priority: p0
-    test: tests/test_schoolterms.py
-    status: planned
+    test: tests/Feature/Scenario/SchoolTermScenarioTest.php
+    nodeid: "tests/Feature/Scenario/SchoolTermScenarioTest.php::test_cen_schoolterm_021_auxiliar_de_periodo_de_inscricao"
+    status: implemented
+    justification: "Regra de modelo/helper sem interação de navegador distinta; verificado por teste de cenário PHPUnit no nível de modelo."
   - cen: CEN-SCHOOLTERM-022
     module: SCHOOLTERM
-    type: ui
+    type: non-ui
     priority: p0
-    test: tests/test_schoolterms.py
-    status: planned
+    test: tests/Feature/Scenario/SchoolTermScenarioTest.php
+    nodeid: "tests/Feature/Scenario/SchoolTermScenarioTest.php::test_cen_schoolterm_022_auxiliar_de_periodo_de_avaliacao"
+    status: implemented
+    justification: "Regra de modelo/helper sem interação de navegador distinta; verificado por teste de cenário PHPUnit no nível de modelo."
   - cen: CEN-SCHOOLCLASS-001
     module: SCHOOLCLASS
     type: hibrido
     priority: p1
     test: tests/test_schoolclasses.py
-    status: planned
+    nodeid: "tests/test_schoolclasses.py::test_cen_schoolclass_001_store_cria_turma_instrutores_horarios[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLCLASS-002
     module: SCHOOLCLASS
     type: hibrido
     priority: p1
     test: tests/test_schoolclasses.py
-    status: planned
+    nodeid: "tests/test_schoolclasses.py::test_cen_schoolclass_002_duplicada_sem_instrutores_anexa[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLCLASS-003
     module: SCHOOLCLASS
     type: hibrido
     priority: p1
     test: tests/test_schoolclasses.py
-    status: planned
+    nodeid: "tests/test_schoolclasses.py::test_cen_schoolclass_003_duplicada_com_instrutores_exibe_aviso[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLCLASS-004
     module: SCHOOLCLASS
     type: hibrido
     priority: p1
     test: tests/test_schoolclasses.py
-    status: planned
+    nodeid: "tests/test_schoolclasses.py::test_cen_schoolclass_004_validacoes_do_formulario[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLCLASS-005
     module: SCHOOLCLASS
     type: hibrido
     priority: p1
     test: tests/test_schoolclasses.py
-    status: planned
+    nodeid: "tests/test_schoolclasses.py::test_cen_schoolclass_005_update_reanexa_instrutores_e_horarios[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLCLASS-006
     module: SCHOOLCLASS
     type: hibrido
     priority: p1
     test: tests/test_schoolclasses.py
-    status: planned
+    nodeid: "tests/test_schoolclasses.py::test_cen_schoolclass_006_update_omite_campos_imutaveis[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLCLASS-007
     module: SCHOOLCLASS
     type: hibrido
     priority: p1
     test: tests/test_schoolclasses.py
-    status: planned
+    nodeid: "tests/test_schoolclasses.py::test_cen_schoolclass_007_destroy_exclui_turma_e_pivos[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLCLASS-008
     module: SCHOOLCLASS
     type: hibrido
     priority: p1
-    test: tests/test_schoolclasses.py
-    status: planned
+    test: tests/Feature/Scenario/SchoolClassScenarioTest.php
+    nodeid: "tests/Feature/Scenario/SchoolClassScenarioTest.php::test_cen_schoolclass_008_import_sincrono_quando_is_supervisor_config_falso"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-SCHOOLCLASS-009
     module: SCHOOLCLASS
     type: hibrido
     priority: p1
-    test: tests/test_schoolclasses.py
-    status: planned
+    test: tests/Feature/Scenario/SchoolClassScenarioTest.php
+    nodeid: "tests/Feature/Scenario/SchoolClassScenarioTest.php::test_cen_schoolclass_009_import_em_fila_quando_is_supervisor_config_true"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-SCHOOLCLASS-010
     module: SCHOOLCLASS
     type: hibrido
     priority: p1
     test: tests/test_schoolclasses.py
-    status: planned
+    nodeid: "tests/test_schoolclasses.py::test_cen_schoolclass_010_docente_ve_apenas_proprias_turmas[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLCLASS-011
     module: SCHOOLCLASS
     type: hibrido
     priority: p1
     test: tests/test_schoolclasses.py
-    status: planned
+    nodeid: "tests/test_schoolclasses.py::test_cen_schoolclass_011_membro_comissao_ve_apenas_departamento[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLCLASS-012
     module: SCHOOLCLASS
     type: hibrido
     priority: p1
     test: tests/test_schoolclasses.py
-    status: planned
+    nodeid: "tests/test_schoolclasses.py::test_cen_schoolclass_012_secretaria_e_admin_veem_todas[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLCLASS-013
     module: SCHOOLCLASS
     type: hibrido
     priority: p1
     test: tests/test_schoolclasses.py
-    status: planned
+    nodeid: "tests/test_schoolclasses.py::test_cen_schoolclass_013_index_seleciona_periodo_aberto[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLCLASS-014
     module: SCHOOLCLASS
     type: hibrido
     priority: p1
     test: tests/test_schoolclasses.py
-    status: planned
+    nodeid: "tests/test_schoolclasses.py::test_cen_schoolclass_014_busca_por_coddis[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLCLASS-015
     module: SCHOOLCLASS
     type: hibrido
     priority: p1
     test: tests/test_schoolclasses.py
-    status: planned
+    nodeid: "tests/test_schoolclasses.py::test_cen_schoolclass_015_views_de_inscricoes_e_monitores[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLCLASS-016
     module: SCHOOLCLASS
     type: hibrido
     priority: p1
     test: tests/test_schoolclasses.py
-    status: planned
+    nodeid: "tests/test_schoolclasses.py::test_cen_schoolclass_016_formulario_popula_departamentos[chromium]"
+    status: implemented
   - cen: CEN-INSTRUCTOR-001
     module: INSTRUCTOR
     type: ui
     priority: p2
     test: tests/test_instructors.py
-    status: planned
+    nodeid: "tests/test_instructors.py::test_cen_instructor_001_busca_json_por_codpes[chromium]"
+    status: implemented
   - cen: CEN-INSTRUCTOR-002
     module: INSTRUCTOR
     type: ui
     priority: p2
     test: tests/test_instructors.py
-    status: planned
+    nodeid: "tests/test_instructors.py::test_cen_instructor_002_busca_json_sem_vinculo_docente[chromium]"
+    status: implemented
   - cen: CEN-INSTRUCTOR-003
     module: INSTRUCTOR
     type: ui
     priority: p2
     test: tests/test_instructors.py
-    status: planned
+    nodeid: "tests/test_instructors.py::test_cen_instructor_003_index_ordena_por_solicitacoes[chromium]"
+    status: implemented
   - cen: CEN-INSTRUCTOR-004
     module: INSTRUCTOR
     type: ui
     priority: p2
     test: tests/test_instructors.py
-    status: planned
+    nodeid: "tests/test_instructors.py::test_cen_instructor_004_view_de_requisicoes[chromium]"
+    status: implemented
   - cen: CEN-INSTRUCTOR-005
     module: INSTRUCTOR
     type: ui
     priority: p2
     test: tests/test_instructors.py
-    status: planned
+    nodeid: "tests/test_instructors.py::test_cen_instructor_005_busca_por_codpes[chromium]"
+    status: implemented
   - cen: CEN-INSTRUCTOR-006
     module: INSTRUCTOR
-    type: ui
+    type: non-ui
     priority: p2
-    test: tests/test_instructors.py
-    status: planned
+    test: tests/Feature/Scenario/InstructorScenarioTest.php
+    nodeid: "tests/Feature/Scenario/InstructorScenarioTest.php::test_cen_instructor_006_metodos_crud_de_docente_sao_stubs_vazios"
+    status: implemented
+    justification: "Regra de modelo/helper sem interação de navegador distinta; verificado por teste de cenário PHPUnit no nível de modelo."
   - cen: CEN-REQUISITION-001
     module: REQUISITION
-    type: ui
+    type: hibrido
     priority: p0
-    test: tests/test_requisitions.py
-    status: planned
+    test: tests/Feature/Scenario/RequisitionScenarioTest.php
+    nodeid: "tests/Feature/Scenario/RequisitionScenarioTest.php::test_cen_requisition_001_acesso_ao_index_requer_papel_docente"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-REQUISITION-002
     module: REQUISITION
-    type: ui
+    type: hibrido
     priority: p0
-    test: tests/test_requisitions.py
-    status: planned
+    test: tests/Feature/Scenario/RequisitionScenarioTest.php
+    nodeid: "tests/Feature/Scenario/RequisitionScenarioTest.php::test_cen_requisition_002_index_com_periodo_de_solicitacao_inativo_redireciona_com_aviso"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-REQUISITION-003
     module: REQUISITION
-    type: ui
+    type: hibrido
     priority: p0
-    test: tests/test_requisitions.py
-    status: planned
+    test: tests/Feature/Scenario/RequisitionScenarioTest.php
+    nodeid: "tests/Feature/Scenario/RequisitionScenarioTest.php::test_cen_requisition_003_index_sem_periodo_aberto_redireciona_com_aviso"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-REQUISITION-004
     module: REQUISITION
-    type: ui
+    type: hibrido
     priority: p0
-    test: tests/test_requisitions.py
-    status: planned
+    test: tests/Feature/Scenario/RequisitionScenarioTest.php
+    nodeid: "tests/Feature/Scenario/RequisitionScenarioTest.php::test_cen_requisition_004_index_com_periodo_aberto_divergente_avisa_a_secretaria"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-REQUISITION-005
     module: REQUISITION
     type: ui
     priority: p0
     test: tests/test_requisitions.py
-    status: planned
+    nodeid: "tests/test_requisitions.py::test_cen_requisition_005_index_lista_apenas_turmas_do_docente[chromium]"
+    status: implemented
   - cen: CEN-REQUISITION-006
     module: REQUISITION
     type: ui
     priority: p0
     test: tests/test_requisitions.py
-    status: planned
+    nodeid: "tests/test_requisitions.py::test_cen_requisition_006_create_exige_instrutor[chromium]"
+    status: implemented
   - cen: CEN-REQUISITION-007
     module: REQUISITION
     type: ui
     priority: p0
     test: tests/test_requisitions.py
-    status: planned
+    nodeid: "tests/test_requisitions.py::test_cen_requisition_007_create_exige_periodo_de_solicitacao[chromium]"
+    status: implemented
   - cen: CEN-REQUISITION-008
     module: REQUISITION
     type: ui
     priority: p0
     test: tests/test_requisitions.py
-    status: planned
+    nodeid: "tests/test_requisitions.py::test_cen_requisition_008_store_cria_com_instrutor_autenticado[chromium]"
+    status: implemented
   - cen: CEN-REQUISITION-009
     module: REQUISITION
     type: ui
     priority: p0
     test: tests/test_requisitions.py
-    status: planned
+    nodeid: "tests/test_requisitions.py::test_cen_requisition_009_store_anexa_atividades[chromium]"
+    status: implemented
   - cen: CEN-REQUISITION-010
     module: REQUISITION
     type: ui
     priority: p0
     test: tests/test_requisitions.py
-    status: planned
+    nodeid: "tests/test_requisitions.py::test_cen_requisition_010_store_cria_recomendacoes[chromium]"
+    status: implemented
   - cen: CEN-REQUISITION-011
     module: REQUISITION
     type: ui
     priority: p0
     test: tests/test_requisitions.py
-    status: planned
+    nodeid: "tests/test_requisitions.py::test_cen_requisition_011_store_anexa_bolsas[chromium]"
+    status: implemented
   - cen: CEN-REQUISITION-012
     module: REQUISITION
     type: ui
     priority: p0
     test: tests/test_requisitions.py
-    status: planned
+    nodeid: "tests/test_requisitions.py::test_cen_requisition_012_validacao_do_formulario[chromium]"
+    status: implemented
   - cen: CEN-REQUISITION-013
     module: REQUISITION
     type: ui
     priority: p0
     test: tests/test_requisitions.py
-    status: planned
+    nodeid: "tests/test_requisitions.py::test_cen_requisition_013_update_substitui_atividades[chromium]"
+    status: implemented
   - cen: CEN-REQUISITION-014
     module: REQUISITION
     type: ui
     priority: p0
     test: tests/test_requisitions.py
-    status: planned
+    nodeid: "tests/test_requisitions.py::test_cen_requisition_014_update_recria_recomendacoes[chromium]"
+    status: implemented
   - cen: CEN-REQUISITION-015
     module: REQUISITION
     type: ui
     priority: p0
     test: tests/test_requisitions.py
-    status: planned
+    nodeid: "tests/test_requisitions.py::test_cen_requisition_015_update_ressincroniza_bolsas[chromium]"
+    status: implemented
   - cen: CEN-REQUISITION-016
     module: REQUISITION
     type: ui
     priority: p0
     test: tests/test_requisitions.py
-    status: planned
+    nodeid: "tests/test_requisitions.py::test_cen_requisition_016_edit_exige_turma_propria[chromium]"
+    status: implemented
   - cen: CEN-REQUISITION-017
     module: REQUISITION
-    type: ui
+    type: non-ui
     priority: p0
-    test: tests/test_requisitions.py
-    status: planned
+    test: tests/Feature/Scenario/RequisitionScenarioTest.php
+    nodeid: "tests/Feature/Scenario/RequisitionScenarioTest.php::test_cen_requisition_017_destroy_eh_stub_vazio"
+    status: implemented
+    justification: "Regra de modelo/helper sem interação de navegador distinta; verificado por teste de cenário PHPUnit no nível de modelo."
   - cen: CEN-REQUISITION-018
     module: REQUISITION
     type: ui
     priority: p0
     test: tests/test_requisitions.py
-    status: planned
+    nodeid: "tests/test_requisitions.py::test_cen_requisition_018_assinatura_do_instrutor_autenticado[chromium]"
+    status: implemented
   - cen: CEN-STUDENT-001
     module: STUDENT
     type: ui
     priority: p2
     test: tests/test_students.py
-    status: planned
+    nodeid: "tests/test_students.py::test_cen_student_001_busca_json_por_codpes[chromium]"
+    status: implemented
   - cen: CEN-STUDENT-002
     module: STUDENT
     type: ui
     priority: p2
     test: tests/test_students.py
-    status: planned
+    nodeid: "tests/test_students.py::test_cen_student_002_busca_json_por_codpes_inexistente[chromium]"
+    status: implemented
   - cen: CEN-STUDENT-003
     module: STUDENT
     type: ui
     priority: p2
     test: tests/test_students.py
-    status: planned
+    nodeid: "tests/test_students.py::test_cen_student_003_busca_json_por_nompes_filtra_alunos[chromium]"
+    status: implemented
   - cen: CEN-STUDENT-004
     module: STUDENT
-    type: ui
+    type: non-ui
     priority: p2
-    test: tests/test_students.py
-    status: planned
+    test: tests/Feature/Scenario/StudentSchoolRecordScenarioTest.php
+    nodeid: "tests/Feature/Scenario/StudentSchoolRecordScenarioTest.php::test_cen_student_004_metodos_de_criacao_edicao_sao_stubs"
+    status: implemented
+    justification: "Regra de modelo/helper sem interação de navegador distinta; verificado por teste de cenário PHPUnit no nível de modelo."
   - cen: CEN-SCHOOLRECORD-001
     module: SCHOOLRECORD
     type: ui
     priority: p2
     test: tests/test_schoolrecords.py
-    status: planned
+    nodeid: "tests/test_schoolrecords.py::test_cen_schoolrecord_001_create_exige_aluno_e_periodo[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLRECORD-002
     module: SCHOOLRECORD
     type: ui
     priority: p2
     test: tests/test_schoolrecords.py
-    status: planned
+    nodeid: "tests/test_schoolrecords.py::test_cen_schoolrecord_002_store_persiste_e_redireciona[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLRECORD-003
     module: SCHOOLRECORD
     type: ui
     priority: p2
     test: tests/test_schoolrecords.py
-    status: planned
+    nodeid: "tests/test_schoolrecords.py::test_cen_schoolrecord_003_validacao_arquivo_pdf[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLRECORD-004
     module: SCHOOLRECORD
     type: ui
     priority: p2
     test: tests/test_schoolrecords.py
-    status: planned
+    nodeid: "tests/test_schoolrecords.py::test_cen_schoolrecord_004_update_substitui_arquivo[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLRECORD-005
     module: SCHOOLRECORD
     type: ui
     priority: p2
     test: tests/test_schoolrecords.py
-    status: planned
+    nodeid: "tests/test_schoolrecords.py::test_cen_schoolrecord_005_download_valida_storage[chromium]"
+    status: implemented
   - cen: CEN-SCHOOLRECORD-006
     module: SCHOOLRECORD
-    type: ui
+    type: non-ui
     priority: p2
-    test: tests/test_schoolrecords.py
-    status: planned
+    test: tests/Feature/Scenario/StudentSchoolRecordScenarioTest.php
+    nodeid: "tests/Feature/Scenario/StudentSchoolRecordScenarioTest.php::test_cen_schoolrecord_006_demais_metodos_sao_stubs"
+    status: implemented
+    justification: "Regra de modelo/helper sem interação de navegador distinta; verificado por teste de cenário PHPUnit no nível de modelo."
   - cen: CEN-SCHOOLRECORD-007
     module: SCHOOLRECORD
-    type: ui
+    type: non-ui
     priority: p2
-    test: tests/test_schoolrecords.py
-    status: planned
+    test: tests/Feature/Scenario/StudentSchoolRecordScenarioTest.php
+    nodeid: "tests/Feature/Scenario/StudentSchoolRecordScenarioTest.php::test_cen_schoolrecord_007_unicidade_de_historico_por_aluno_e_periodo"
+    status: implemented
+    justification: "Regra de modelo/helper sem interação de navegador distinta; verificado por teste de cenário PHPUnit no nível de modelo."
   - cen: CEN-ENROLLMENT-001
     module: ENROLLMENT
     type: ui
     priority: p0
     test: tests/test_enrollments.py
-    status: planned
+    nodeid: "tests/test_enrollments.py::test_docente_nao_acessa_inscricao_de_aluno[chromium]"
+    status: implemented
   - cen: CEN-ENROLLMENT-002
     module: ENROLLMENT
-    type: ui
+    type: hibrido
     priority: p0
-    test: tests/test_enrollments.py
-    status: planned
+    test: tests/Feature/Scenario/EnrollmentScenarioTest.php
+    nodeid: "tests/Feature/Scenario/EnrollmentScenarioTest.php::test_cen_enrollment_002_index_fora_do_periodo_de_inscricoes_redireciona_com_aviso"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-ENROLLMENT-003
     module: ENROLLMENT
-    type: ui
+    type: hibrido
     priority: p0
-    test: tests/test_enrollments.py
-    status: planned
+    test: tests/Feature/Scenario/EnrollmentScenarioTest.php
+    nodeid: "tests/Feature/Scenario/EnrollmentScenarioTest.php::test_cen_enrollment_003_index_sem_periodo_aberto_ou_divergente_bloqueia"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-ENROLLMENT-004
     module: ENROLLMENT
     type: ui
     priority: p0
     test: tests/test_enrollments.py
-    status: planned
+    nodeid: "tests/test_enrollments.py::test_cen_enrollment_004_sem_historico_redireciona[chromium]"
+    status: implemented
   - cen: CEN-ENROLLMENT-005
     module: ENROLLMENT
     type: ui
     priority: p0
     test: tests/test_enrollments.py
-    status: planned
+    nodeid: "tests/test_enrollments.py::test_cen_enrollment_005_inscritas_primeiro[chromium]"
+    status: implemented
   - cen: CEN-ENROLLMENT-006
     module: ENROLLMENT
     type: ui
     priority: p0
     test: tests/test_enrollments.py
-    status: planned
+    nodeid: "tests/test_enrollments.py::test_cen_enrollment_006_guarda_de_maximo[chromium]"
+    status: implemented
   - cen: CEN-ENROLLMENT-007
     module: ENROLLMENT
     type: ui
     priority: p0
     test: tests/test_enrollments.py
-    status: planned
+    nodeid: "tests/test_enrollments.py::test_cen_enrollment_007_guarda_respeitada_no_limite[chromium]"
+    status: implemented
   - cen: CEN-ENROLLMENT-008
     module: ENROLLMENT
     type: ui
     priority: p0
     test: tests/test_enrollments.py
-    status: planned
+    nodeid: "tests/test_enrollments.py::test_cen_enrollment_008_store_inscreve_todas_da_mesma_coddis[chromium]"
+    status: implemented
   - cen: CEN-ENROLLMENT-009
     module: ENROLLMENT
     type: ui
     priority: p0
     test: tests/test_enrollments.py
-    status: planned
+    nodeid: "tests/test_enrollments.py::test_cen_enrollment_009_store_persiste_preferencias[chromium]"
+    status: implemented
   - cen: CEN-ENROLLMENT-010
     module: ENROLLMENT
     type: ui
     priority: p0
     test: tests/test_enrollments.py
-    status: planned
+    nodeid: "tests/test_enrollments.py::test_cen_enrollment_010_validacao_do_formulario[chromium]"
+    status: implemented
   - cen: CEN-ENROLLMENT-011
     module: ENROLLMENT
     type: ui
     priority: p0
     test: tests/test_enrollments.py
-    status: planned
+    nodeid: "tests/test_enrollments.py::test_cen_enrollment_011_update_propaga_mesma_coddis[chromium]"
+    status: implemented
   - cen: CEN-ENROLLMENT-012
     module: ENROLLMENT
     type: ui
     priority: p0
     test: tests/test_enrollments.py
-    status: planned
+    nodeid: "tests/test_enrollments.py::test_cen_enrollment_012_update_normaliza_booleanos[chromium]"
+    status: implemented
   - cen: CEN-ENROLLMENT-013
     module: ENROLLMENT
     type: ui
     priority: p0
     test: tests/test_enrollments.py
-    status: planned
+    nodeid: "tests/test_enrollments.py::test_cen_enrollment_013_delete_bloqueado_com_selecao[chromium]"
+    status: implemented
   - cen: CEN-ENROLLMENT-014
     module: ENROLLMENT
     type: ui
     priority: p0
     test: tests/test_enrollments.py
-    status: planned
+    nodeid: "tests/test_enrollments.py::test_cen_enrollment_014_delete_exclui_todas_da_coddis[chromium]"
+    status: implemented
   - cen: CEN-ENROLLMENT-015
     module: ENROLLMENT
     type: ui
     priority: p0
     test: tests/test_enrollments.py
-    status: planned
+    nodeid: "tests/test_enrollments.py::test_cen_enrollment_015_showall_lista_inscritos[chromium]"
+    status: implemented
   - cen: CEN-ENROLLMENT-016
     module: ENROLLMENT
     type: ui
     priority: p0
     test: tests/test_enrollments.py
-    status: planned
+    nodeid: "tests/test_enrollments.py::test_cen_enrollment_016_showall_sem_permissao[chromium]"
+    status: implemented
   - cen: CEN-SELECTION-001
     module: SELECTION
     type: ui
     priority: p0
     test: tests/test_selections.py
-    status: planned
+    nodeid: "tests/test_selections.py::test_cen_selection_001_index_exige_permissao[chromium]"
+    status: implemented
   - cen: CEN-SELECTION-002
     module: SELECTION
     type: ui
     priority: p0
     test: tests/test_selections.py
-    status: planned
+    nodeid: "tests/test_selections.py::test_cen_selection_002_admin_e_secretaria_listam_todas[chromium]"
+    status: implemented
   - cen: CEN-SELECTION-003
     module: SELECTION
     type: ui
     priority: p0
     test: tests/test_selections.py
-    status: planned
+    nodeid: "tests/test_selections.py::test_cen_selection_003_membro_ve_apenas_departamento[chromium]"
+    status: implemented
   - cen: CEN-SELECTION-004
     module: SELECTION
     type: ui
     priority: p0
     test: tests/test_selections.py
-    status: planned
+    nodeid: "tests/test_selections.py::test_cen_selection_004_store_substitui_selecao_existente[chromium]"
+    status: implemented
   - cen: CEN-SELECTION-005
     module: SELECTION
     type: ui
     priority: p0
     test: tests/test_selections.py
-    status: planned
+    nodeid: "tests/test_selections.py::test_cen_selection_005_store_preenche_vinculos[chromium]"
+    status: implemented
   - cen: CEN-SELECTION-006
     module: SELECTION
-    type: ui
+    type: hibrido
     priority: p0
-    test: tests/test_selections.py
-    status: planned
+    test: tests/Feature/Scenario/SelectionScenarioTest.php
+    nodeid: "tests/Feature/Scenario/SelectionScenarioTest.php::test_cen_selection_006_store_repopula_o_curso_do_aluno_no_periodo"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-SELECTION-007
     module: SELECTION
     type: ui
     priority: p0
     test: tests/test_selections.py
-    status: planned
+    nodeid: "tests/test_selections.py::test_cen_selection_007_bloqueia_aluno_eleito_em_outra_turma[chromium]"
+    status: implemented
   - cen: CEN-SELECTION-008
     module: SELECTION
     type: ui
     priority: p0
     test: tests/test_selections.py
-    status: planned
+    nodeid: "tests/test_selections.py::test_cen_selection_008_membro_so_seleciona_no_departamento[chromium]"
+    status: implemented
   - cen: CEN-SELECTION-009
     module: SELECTION
     type: ui
     priority: p0
     test: tests/test_selections.py
-    status: planned
+    nodeid: "tests/test_selections.py::test_cen_selection_009_store_cria_frequencias[chromium]"
+    status: implemented
   - cen: CEN-SELECTION-010
     module: SELECTION
     type: ui
     priority: p0
     test: tests/test_selections.py
-    status: planned
+    nodeid: "tests/test_selections.py::test_cen_selection_010_store_usa_first_or_create[chromium]"
+    status: implemented
   - cen: CEN-SELECTION-011
     module: SELECTION
     type: ui
     priority: p0
     test: tests/test_selections.py
-    status: planned
+    nodeid: "tests/test_selections.py::test_cen_selection_011_destroy_bloqueado_com_presenca[chromium]"
+    status: implemented
   - cen: CEN-SELECTION-012
     module: SELECTION
     type: ui
     priority: p0
     test: tests/test_selections.py
-    status: planned
+    nodeid: "tests/test_selections.py::test_cen_selection_012_destroy_sem_presenca_exclui[chromium]"
+    status: implemented
   - cen: CEN-SELECTION-013
     module: SELECTION
     type: ui
     priority: p0
     test: tests/test_selections.py
-    status: planned
+    nodeid: "tests/test_selections.py::test_cen_selection_013_membro_outro_departamento_nao_pretere[chromium]"
+    status: implemented
   - cen: CEN-SELECTION-014
     module: SELECTION
     type: ui
     priority: p0
     test: tests/test_selections.py
-    status: planned
+    nodeid: "tests/test_selections.py::test_cen_selection_014_enrollments_lista_inscricoes[chromium]"
+    status: implemented
   - cen: CEN-SELECTION-015
     module: SELECTION
     type: ui
     priority: p0
     test: tests/test_selections.py
-    status: planned
+    nodeid: "tests/test_selections.py::test_cen_selection_015_select_unenrolled_cria_tudo[chromium]"
+    status: implemented
   - cen: CEN-SELECTION-016
     module: SELECTION
     type: ui
     priority: p0
     test: tests/test_selections.py
-    status: planned
+    nodeid: "tests/test_selections.py::test_cen_selection_016_select_unenrolled_bloqueia_inscrito[chromium]"
+    status: implemented
   - cen: CEN-SELECTION-017
     module: SELECTION
     type: ui
     priority: p0
     test: tests/test_selections.py
-    status: planned
+    nodeid: "tests/test_selections.py::test_cen_selection_017_select_unenrolled_bloqueia_eleito_em_outra[chromium]"
+    status: implemented
   - cen: CEN-SELECTION-018
     module: SELECTION
     type: ui
     priority: p0
     test: tests/test_selections.py
-    status: planned
+    nodeid: "tests/test_selections.py::test_cen_selection_018_select_unenrolled_bloqueia_sem_historico[chromium]"
+    status: implemented
   - cen: CEN-FREQUENCY-001
     module: FREQUENCY
     type: hibrido
     priority: p0
     test: tests/test_frequencies.py
-    status: planned
+    nodeid: "tests/test_frequencies.py::test_docente_ve_monitor_ativo_na_frequencia[chromium]"
+    status: implemented
   - cen: CEN-FREQUENCY-002
     module: FREQUENCY
     type: hibrido
     priority: p0
     test: tests/test_frequencies.py
-    status: planned
+    nodeid: "tests/test_frequencies.py::test_aluno_nao_acessa_frequencia[chromium]"
+    status: implemented
   - cen: CEN-FREQUENCY-003
     module: FREQUENCY
     type: hibrido
     priority: p0
     test: tests/test_frequencies.py
-    status: planned
+    nodeid: "tests/test_frequencies.py::test_cen_frequency_003_show_via_url_assinada[chromium]"
+    status: implemented
   - cen: CEN-FREQUENCY-004
     module: FREQUENCY
     type: hibrido
     priority: p0
     test: tests/test_frequencies.py
-    status: planned
+    nodeid: "tests/test_frequencies.py::test_cen_frequency_004_show_por_instrutor_e_negado_para_outro[chromium]"
+    status: implemented
   - cen: CEN-FREQUENCY-005
     module: FREQUENCY
     type: hibrido
     priority: p0
     test: tests/test_frequencies.py
-    status: planned
+    nodeid: "tests/test_frequencies.py::test_cen_frequency_005_show_negado_para_tutor_de_outra_turma[chromium]"
+    status: implemented
   - cen: CEN-FREQUENCY-006
     module: FREQUENCY
     type: hibrido
     priority: p0
     test: tests/test_frequencies.py
-    status: planned
+    nodeid: "tests/test_frequencies.py::test_link_assinado_registra_frequencia[chromium]"
+    status: implemented
   - cen: CEN-FREQUENCY-007
     module: FREQUENCY
     type: hibrido
     priority: p0
-    test: tests/test_frequencies.py
-    status: planned
+    test: tests/Feature/Scenario/FrequencyScenarioTest.php
+    nodeid: "tests/Feature/Scenario/FrequencyScenarioTest.php::test_cen_frequency_007_update_bloqueado_quando_selecao_nao_ativa"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-FREQUENCY-008
     module: FREQUENCY
     type: hibrido
     priority: p0
     test: tests/test_frequencies.py
-    status: planned
+    nodeid: "tests/test_frequencies.py::test_cen_frequency_008_update_bloqueado_para_mes_futuro[chromium]"
+    status: implemented
   - cen: CEN-FREQUENCY-009
     module: FREQUENCY
     type: hibrido
     priority: p0
-    test: tests/test_frequencies.py
-    status: planned
+    test: tests/Feature/Scenario/FrequencyScenarioTest.php
+    nodeid: "tests/Feature/Scenario/FrequencyScenarioTest.php::test_cen_frequency_009_update_bloqueado_antes_do_dia_20_do_mes"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-FREQUENCY-010
     module: FREQUENCY
     type: hibrido
     priority: p0
     test: tests/test_frequencies.py
-    status: planned
+    nodeid: "tests/test_frequencies.py::test_link_assinado_registra_frequencia[chromium]"
+    status: implemented
   - cen: CEN-FREQUENCY-011
     module: FREQUENCY
     type: hibrido
     priority: p0
     test: tests/test_frequencies.py
-    status: planned
+    nodeid: "tests/test_frequencies.py::test_cen_frequency_011_update_requer_autorizacao[chromium]"
+    status: implemented
   - cen: CEN-TUTOR-001
     module: TUTOR
     type: ui
     priority: p0
     test: tests/test_tutors.py
-    status: planned
+    nodeid: "tests/test_tutors.py::test_cen_tutor_001_admin_secretaria_presidente_veem_todas[chromium]"
+    status: implemented
   - cen: CEN-TUTOR-002
     module: TUTOR
     type: ui
     priority: p0
     test: tests/test_tutors.py
-    status: planned
+    nodeid: "tests/test_tutors.py::test_cen_tutor_002_membro_ve_apenas_departamento[chromium]"
+    status: implemented
   - cen: CEN-TUTOR-003
     module: TUTOR
     type: ui
     priority: p0
     test: tests/test_tutors.py
-    status: planned
+    nodeid: "tests/test_tutors.py::test_cen_tutor_003_docente_ve_somente_suas_selecoes[chromium]"
+    status: implemented
   - cen: CEN-TUTOR-004
     module: TUTOR
     type: ui
     priority: p0
     test: tests/test_tutors.py
-    status: planned
+    nodeid: "tests/test_tutors.py::test_cen_tutor_004_aluno_recebe_403[chromium]"
+    status: implemented
   - cen: CEN-TUTOR-005
     module: TUTOR
     type: ui
     priority: p0
     test: tests/test_tutors.py
-    status: planned
+    nodeid: "tests/test_tutors.py::test_cen_tutor_005_revoke_exige_secretaria_admin[chromium]"
+    status: implemented
   - cen: CEN-TUTOR-006
     module: TUTOR
     type: ui
     priority: p0
     test: tests/test_tutors.py
-    status: planned
+    nodeid: "tests/test_tutors.py::test_cen_tutor_006_revoke_bloqueia_nao_ativo[chromium]"
+    status: implemented
   - cen: CEN-TUTOR-007
     module: TUTOR
     type: ui
     priority: p0
     test: tests/test_tutors.py
-    status: planned
+    nodeid: "tests/test_tutors.py::test_cen_tutor_007_revoke_exclui_frequencias_futuras[chromium]"
+    status: implemented
   - cen: CEN-TUTOR-008
     module: TUTOR
     type: ui
     priority: p0
     test: tests/test_tutors.py
-    status: planned
+    nodeid: "tests/test_tutors.py::test_cen_tutor_008_revoke_define_desligado[chromium]"
+    status: implemented
   - cen: CEN-TUTOR-009
     module: TUTOR
     type: ui
     priority: p0
     test: tests/test_tutors.py
-    status: planned
+    nodeid: "tests/test_tutors.py::test_cen_tutor_009_turn_into_volunteer[chromium]"
+    status: implemented
   - cen: CEN-TUTOR-010
     module: TUTOR
     type: ui
     priority: p0
     test: tests/test_tutors.py
-    status: planned
+    nodeid: "tests/test_tutors.py::test_cen_tutor_010_turn_into_non_volunteer[chromium]"
+    status: implemented
   - cen: CEN-TUTOR-011
     module: TUTOR
     type: ui
     priority: p0
     test: tests/test_tutors.py
-    status: planned
+    nodeid: "tests/test_tutors.py::test_cen_tutor_011_alternancia_nao_altera_outras_inscricoes[chromium]"
+    status: implemented
   - cen: CEN-CERTIFICATE-001
     module: CERTIFICATE
     type: ui
     priority: p0
     test: tests/test_certificates.py
-    status: planned
+    nodeid: "tests/test_certificates.py::test_cen_certificate_001_admin_lista_nao_desligados[chromium]"
+    status: implemented
   - cen: CEN-CERTIFICATE-002
     module: CERTIFICATE
     type: ui
     priority: p0
     test: tests/test_certificates.py
-    status: planned
+    nodeid: "tests/test_certificates.py::test_cen_certificate_002_aluno_lista_apenas_proprias[chromium]"
+    status: implemented
   - cen: CEN-CERTIFICATE-003
     module: CERTIFICATE
     type: ui
     priority: p0
     test: tests/test_certificates.py
-    status: planned
+    nodeid: "tests/test_certificates.py::test_cen_certificate_003_sem_papel_e_sem_historico_negado[chromium]"
+    status: implemented
   - cen: CEN-CERTIFICATE-004
     module: CERTIFICATE
     type: ui
     priority: p0
     test: tests/test_certificates.py
-    status: planned
+    nodeid: "tests/test_certificates.py::test_cen_certificate_004_aluno_sem_monitoria_avisa[chromium]"
+    status: implemented
   - cen: CEN-CERTIFICATE-005
     module: CERTIFICATE
     type: ui
     priority: p0
     test: tests/test_certificates.py
-    status: planned
+    nodeid: "tests/test_certificates.py::test_cen_certificate_005_make_exige_propriedade[chromium]"
+    status: implemented
   - cen: CEN-CERTIFICATE-006
     module: CERTIFICATE
     type: ui
     priority: p0
     test: tests/test_certificates.py
-    status: planned
+    nodeid: "tests/test_certificates.py::test_cen_certificate_006_make_concluido_gera_pdf[chromium]"
+    status: implemented
   - cen: CEN-CERTIFICATE-007
     module: CERTIFICATE
     type: ui
     priority: p0
     test: tests/test_certificates.py
-    status: planned
+    nodeid: "tests/test_certificates.py::test_cen_certificate_007_make_ativo_gera_pdf[chromium]"
+    status: implemented
   - cen: CEN-SELFEVAL-001
     module: SELFEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_selfeval_001_index_exige_permissao[chromium]"
+    status: implemented
   - cen: CEN-SELFEVAL-002
     module: SELFEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_selfeval_002_index_lista_do_periodo[chromium]"
+    status: implemented
   - cen: CEN-SELFEVAL-003
     module: SELFEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_selfeval_003_student_index_lista_proprias[chromium]"
+    status: implemented
   - cen: CEN-SELFEVAL-004
     module: SELFEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_selfeval_004_student_index_exige_aluno[chromium]"
+    status: implemented
   - cen: CEN-SELFEVAL-005
     module: SELFEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_selfeval_005_create_fora_da_janela[chromium]"
+    status: implemented
   - cen: CEN-SELFEVAL-006
     module: SELFEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_selfeval_006_create_na_janela_pelo_dono[chromium]"
+    status: implemented
   - cen: CEN-SELFEVAL-007
     module: SELFEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_selfeval_007_create_via_url_assinada[chromium]"
+    status: implemented
   - cen: CEN-SELFEVAL-008
     module: SELFEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_selfeval_008_create_por_outro_aluno_negado[chromium]"
+    status: implemented
   - cen: CEN-SELFEVAL-009
     module: SELFEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_selfeval_009_store_cria_e_atualiza[chromium]"
+    status: implemented
   - cen: CEN-SELFEVAL-010
     module: SELFEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_selfeval_010_store_por_link_assinado_valida_hash[chromium]"
+    status: implemented
   - cen: CEN-SELFEVAL-011
     module: SELFEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_selfeval_011_store_exige_dono[chromium]"
+    status: implemented
   - cen: CEN-SELFEVAL-012
     module: SELFEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_selfeval_012_validacao_do_store[chromium]"
+    status: implemented
   - cen: CEN-SELFEVAL-013
     module: SELFEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_selfeval_013_show_dono_ou_permissao[chromium]"
+    status: implemented
   - cen: CEN-SELFEVAL-014
     module: SELFEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_selfeval_014_edit_update_restrito_ao_dono[chromium]"
+    status: implemented
   - cen: CEN-SELFEVAL-015
     module: SELFEVAL
-    type: ui
+    type: non-ui
     priority: p0
-    test: tests/test_evaluations.py
-    status: planned
+    test: tests/Feature/Scenario/SelfEvaluationScenarioTest.php
+    nodeid: "tests/Feature/Scenario/SelfEvaluationScenarioTest.php::test_cen_selfeval_015_destroy_eh_stub_vazio"
+    status: implemented
+    justification: "Regra de modelo/helper sem interação de navegador distinta; verificado por teste de cenário PHPUnit no nível de modelo."
   - cen: CEN-INSEVAL-001
     module: INSEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_inseval_001_index_exige_permissao[chromium]"
+    status: implemented
   - cen: CEN-INSEVAL-002
     module: INSEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_inseval_002_instructor_index_lista_proprias[chromium]"
+    status: implemented
   - cen: CEN-INSEVAL-003
     module: INSEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_inseval_003_create_por_instrutor_ou_link[chromium]"
+    status: implemented
   - cen: CEN-INSEVAL-004
     module: INSEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_inseval_004_create_fora_da_janela[chromium]"
+    status: implemented
   - cen: CEN-INSEVAL-005
     module: INSEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_inseval_005_create_por_nao_instrutor_negado[chromium]"
+    status: implemented
   - cen: CEN-INSEVAL-006
     module: INSEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_inseval_006_store_cria_e_atualiza[chromium]"
+    status: implemented
   - cen: CEN-INSEVAL-007
     module: INSEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_inseval_007_store_por_link_valida_hash[chromium]"
+    status: implemented
   - cen: CEN-INSEVAL-008
     module: INSEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_inseval_008_validacao_do_store[chromium]"
+    status: implemented
   - cen: CEN-INSEVAL-009
     module: INSEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_inseval_009_show_dono_ou_permissao[chromium]"
+    status: implemented
   - cen: CEN-INSEVAL-010
     module: INSEVAL
     type: ui
     priority: p0
     test: tests/test_evaluations.py
-    status: planned
+    nodeid: "tests/test_evaluations.py::test_cen_inseval_010_edit_update_restrito_ao_instrutor[chromium]"
+    status: implemented
   - cen: CEN-MAILTEMPLATE-001
     module: MAILTEMPLATE
     type: ui
     priority: p0
     test: tests/test_mailtemplates.py
-    status: planned
+    nodeid: "tests/test_mailtemplates.py::test_cen_mailtemplate_001_crud_exige_permissao[chromium]"
+    status: implemented
   - cen: CEN-MAILTEMPLATE-002
     module: MAILTEMPLATE
     type: ui
     priority: p0
     test: tests/test_mailtemplates.py
-    status: planned
+    nodeid: "tests/test_mailtemplates.py::test_cen_mailtemplate_002_store_decodifica_campo[chromium]"
+    status: implemented
   - cen: CEN-MAILTEMPLATE-003
     module: MAILTEMPLATE
     type: ui
     priority: p0
     test: tests/test_mailtemplates.py
-    status: planned
+    nodeid: "tests/test_mailtemplates.py::test_cen_mailtemplate_003_store_rejeita_nome_duplicado[chromium]"
+    status: implemented
   - cen: CEN-MAILTEMPLATE-004
     module: MAILTEMPLATE
     type: ui
     priority: p0
     test: tests/test_mailtemplates.py
-    status: planned
+    nodeid: "tests/test_mailtemplates.py::test_cen_mailtemplate_004_validacao_de_campos[chromium]"
+    status: implemented
   - cen: CEN-MAILTEMPLATE-005
     module: MAILTEMPLATE
     type: ui
     priority: p0
     test: tests/test_mailtemplates.py
-    status: planned
+    nodeid: "tests/test_mailtemplates.py::test_cen_mailtemplate_005_update_rejeita_nome_duplicado[chromium]"
+    status: implemented
   - cen: CEN-MAILTEMPLATE-006
     module: MAILTEMPLATE
     type: ui
     priority: p0
     test: tests/test_mailtemplates.py
-    status: planned
+    nodeid: "tests/test_mailtemplates.py::test_cen_mailtemplate_006_update_rejeita_segundo_manual_ativo[chromium]"
+    status: implemented
   - cen: CEN-MAILTEMPLATE-007
     module: MAILTEMPLATE
     type: ui
     priority: p0
     test: tests/test_mailtemplates.py
-    status: planned
+    nodeid: "tests/test_mailtemplates.py::test_cen_mailtemplate_007_manual_limpa_data_e_hora[chromium]"
+    status: implemented
   - cen: CEN-MAILTEMPLATE-008
     module: MAILTEMPLATE
     type: ui
     priority: p0
     test: tests/test_mailtemplates.py
-    status: planned
+    nodeid: "tests/test_mailtemplates.py::test_cen_mailtemplate_008_activate_bloqueia_segundo_manual[chromium]"
+    status: implemented
   - cen: CEN-MAILTEMPLATE-009
     module: MAILTEMPLATE
     type: ui
     priority: p0
     test: tests/test_mailtemplates.py
-    status: planned
+    nodeid: "tests/test_mailtemplates.py::test_cen_mailtemplate_009_activate_valido[chromium]"
+    status: implemented
   - cen: CEN-MAILTEMPLATE-010
     module: MAILTEMPLATE
     type: ui
     priority: p0
     test: tests/test_mailtemplates.py
-    status: planned
+    nodeid: "tests/test_mailtemplates.py::test_cen_mailtemplate_010_deactivate[chromium]"
+    status: implemented
   - cen: CEN-MAILTEMPLATE-011
     module: MAILTEMPLATE
     type: ui
     priority: p0
     test: tests/test_mailtemplates.py
-    status: planned
+    nodeid: "tests/test_mailtemplates.py::test_cen_mailtemplate_011_test_envia_email[chromium]"
+    status: implemented
   - cen: CEN-MAILTEMPLATE-012
     module: MAILTEMPLATE
-    type: ui
+    type: hibrido
     priority: p0
-    test: tests/test_mailtemplates.py
-    status: planned
+    test: tests/Feature/Scenario/MailTemplateScenarioTest.php
+    nodeid: "tests/Feature/Scenario/MailTemplateScenarioTest.php::test_cen_mailtemplate_012_test_sem_registros_reais_falha_graciosamente"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-MAILTEMPLATE-013
     module: MAILTEMPLATE
     type: ui
     priority: p0
     test: tests/test_mailtemplates.py
-    status: planned
+    nodeid: "tests/test_mailtemplates.py::test_cen_mailtemplate_013_destroy_exclui[chromium]"
+    status: implemented
   - cen: CEN-EMAIL-001
     module: EMAIL
     type: hibrido
     priority: p1
     test: tests/test_emails.py
-    status: planned
+    nodeid: "tests/test_emails.py::test_cen_email_001_exige_permissao[chromium]"
+    status: implemented
   - cen: CEN-EMAIL-002
     module: EMAIL
     type: hibrido
     priority: p1
     test: tests/test_emails.py
-    status: planned
+    nodeid: "tests/test_emails.py::test_cen_email_002_index_selections_lista_turmas_com_selecoes[chromium]"
+    status: implemented
   - cen: CEN-EMAIL-003
     module: EMAIL
     type: hibrido
     priority: p1
     test: tests/test_emails.py
-    status: planned
+    nodeid: "tests/test_emails.py::test_cen_email_003_index_attendance_valida_meses_do_periodo[chromium]"
+    status: implemented
   - cen: CEN-EMAIL-004
     module: EMAIL
     type: hibrido
     priority: p1
     test: tests/test_emails.py
-    status: planned
+    nodeid: "tests/test_emails.py::test_cen_email_004_index_attendance_rejeita_mes_invalido[chromium]"
+    status: implemented
   - cen: CEN-EMAIL-005
     module: EMAIL
     type: hibrido
     priority: p1
     test: tests/test_emails.py
-    status: planned
+    nodeid: "tests/test_emails.py::test_cen_email_005_index_attendance_deriva_mes_atual[chromium]"
+    status: implemented
   - cen: CEN-EMAIL-006
     module: EMAIL
     type: hibrido
     priority: p1
     test: tests/test_emails.py
-    status: planned
+    nodeid: "tests/test_emails.py::test_cen_email_006_index_attendance_lista_nao_registradas[chromium]"
+    status: implemented
   - cen: CEN-EMAIL-007
     module: EMAIL
     type: hibrido
     priority: p1
     test: tests/test_emails.py
-    status: planned
+    nodeid: "tests/test_emails.py::test_cen_email_007_index_self_evaluations[chromium]"
+    status: implemented
   - cen: CEN-EMAIL-008
     module: EMAIL
     type: hibrido
     priority: p1
     test: tests/test_emails.py
-    status: planned
+    nodeid: "tests/test_emails.py::test_cen_email_008_index_instructor_evaluations[chromium]"
+    status: implemented
   - cen: CEN-EMAIL-009
     module: EMAIL
     type: hibrido
     priority: p1
     test: tests/test_emails.py
-    status: planned
+    nodeid: "tests/test_emails.py::test_cen_email_009_trigger_selections_exige_modelos[chromium]"
+    status: implemented
   - cen: CEN-EMAIL-010
     module: EMAIL
     type: hibrido
     priority: p1
     test: tests/test_emails.py
-    status: planned
+    nodeid: "tests/test_emails.py::test_cen_email_010_trigger_selections_envia[chromium]"
+    status: implemented
   - cen: CEN-EMAIL-011
     module: EMAIL
     type: hibrido
     priority: p1
     test: tests/test_emails.py
-    status: planned
+    nodeid: "tests/test_emails.py::test_cen_email_011_trigger_attendance_exige_modelo[chromium]"
+    status: implemented
   - cen: CEN-EMAIL-012
     module: EMAIL
     type: hibrido
     priority: p1
     test: tests/test_emails.py
-    status: planned
+    nodeid: "tests/test_emails.py::test_cen_email_012_trigger_attendance_envia_com_url_assinada[chromium]"
+    status: implemented
   - cen: CEN-EMAIL-013
     module: EMAIL
-    type: hibrido
+    type: non-ui
     priority: p1
-    test: tests/test_emails.py
-    status: planned
+    test: tests/Feature/Scenario/EmailControllerScenarioTest.php
+    nodeid: "tests/Feature/Scenario/EmailControllerScenarioTest.php::test_cen_email_013_mailable_de_frequencia_cancela_envio_se_selecao_nao_ativo"
+    status: implemented
+    justification: "Regra de modelo/helper sem interação de navegador distinta; verificado por teste de cenário PHPUnit no nível de modelo."
   - cen: CEN-EMAIL-014
     module: EMAIL
     type: hibrido
     priority: p1
     test: tests/test_emails.py
-    status: planned
+    nodeid: "tests/test_emails.py::test_cen_email_014_trigger_self_evaluations[chromium]"
+    status: implemented
   - cen: CEN-EMAIL-015
     module: EMAIL
     type: hibrido
     priority: p1
     test: tests/test_emails.py
-    status: planned
+    nodeid: "tests/test_emails.py::test_cen_email_015_trigger_instructor_evaluations[chromium]"
+    status: implemented
   - cen: CEN-EMAIL-016
     module: EMAIL
     type: hibrido
     priority: p1
     test: tests/test_emails.py
-    status: planned
+    nodeid: "tests/test_emails.py::test_cen_email_016_payload_valida_arrays[chromium]"
+    status: implemented
   - cen: CEN-USER-001
     module: USER
     type: ui
     priority: p2
     test: tests/test_users.py
-    status: planned
+    nodeid: "tests/test_users.py::test_cen_user_001_index_exige_permissao[chromium]"
+    status: implemented
   - cen: CEN-USER-002
     module: USER
     type: ui
     priority: p2
     test: tests/test_users.py
-    status: planned
+    nodeid: "tests/test_users.py::test_cen_user_002_index_ordena_papeis_especiais[chromium]"
+    status: implemented
   - cen: CEN-USER-003
     module: USER
     type: ui
     priority: p2
     test: tests/test_users.py
-    status: planned
+    nodeid: "tests/test_users.py::test_cen_user_003_update_desanexa_e_atribui_papel[chromium]"
+    status: implemented
   - cen: CEN-USER-004
     module: USER
     type: ui
     priority: p2
     test: tests/test_users.py
-    status: planned
+    nodeid: "tests/test_users.py::test_cen_user_004_validacao_do_user_request[chromium]"
+    status: implemented
   - cen: CEN-USER-005
     module: USER
     type: ui
     priority: p2
     test: tests/test_users.py
-    status: planned
+    nodeid: "tests/test_users.py::test_cen_user_005_search_filtra[chromium]"
+    status: implemented
   - cen: CEN-USER-006
     module: USER
     type: ui
     priority: p2
     test: tests/test_users.py
-    status: planned
+    nodeid: "tests/test_users.py::test_cen_user_006_loginas_renderiza[chromium]"
+    status: implemented
   - cen: CEN-USER-007
     module: USER
-    type: ui
+    type: non-ui
     priority: p2
-    test: tests/test_users.py
-    status: planned
+    test: tests/Feature/Scenario/UserScenarioTest.php
+    nodeid: "tests/Feature/Scenario/UserScenarioTest.php::test_cen_user_007_metodos_remanescentes_sao_stubs"
+    status: implemented
+    justification: "Regra de modelo/helper sem interação de navegador distinta; verificado por teste de cenário PHPUnit no nível de modelo."
   - cen: CEN-USER-008
     module: USER
-    type: ui
+    type: non-ui
     priority: p2
-    test: tests/test_users.py
-    status: planned
+    test: tests/Feature/Scenario/UserScenarioTest.php
+    nodeid: "tests/Feature/Scenario/UserScenarioTest.php::test_cen_user_008_save_sincroniza_papeis_aluno_docente_pelos_vinculos"
+    status: implemented
+    justification: "Regra de modelo/helper sem interação de navegador distinta; verificado por teste de cenário PHPUnit no nível de modelo."
   - cen: CEN-USER-009
     module: USER
-    type: ui
+    type: hibrido
     priority: p2
-    test: tests/test_users.py
-    status: planned
+    test: tests/Feature/Scenario/UserScenarioTest.php
+    nodeid: "tests/Feature/Scenario/UserScenarioTest.php::test_cen_user_009_log_as_administrator_concede_administrador_automaticamente"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-USER-010
     module: USER
     type: ui
     priority: p2
     test: tests/test_users.py
-    status: planned
+    nodeid: "tests/test_users.py::test_cen_user_010_login_cria_vinculo[chromium]"
+    status: implemented
   - cen: CEN-REPORT-001
     module: REPORT
     type: ui
     priority: p2
     test: tests/test_reports.py
-    status: planned
+    nodeid: "tests/test_reports.py::test_cen_report_001_index_exige_permissao[chromium]"
+    status: implemented
   - cen: CEN-REPORT-002
     module: REPORT
     type: ui
     priority: p2
     test: tests/test_reports.py
-    status: planned
+    nodeid: "tests/test_reports.py::test_cen_report_002_index_lista_periodos[chromium]"
+    status: implemented
   - cen: CEN-REPORT-003
     module: REPORT
     type: ui
     priority: p2
     test: tests/test_reports.py
-    status: planned
+    nodeid: "tests/test_reports.py::test_cen_report_003_make_gera_pdf[chromium]"
+    status: implemented
   - cen: CEN-REPORT-004
     module: REPORT
     type: ui
     priority: p2
     test: tests/test_reports.py
-    status: planned
+    nodeid: "tests/test_reports.py::test_cen_report_004_make_sem_permissao[chromium]"
+    status: implemented
   - cen: CEN-REPORT-005
     module: REPORT
     type: ui
     priority: p2
     test: tests/test_reports.py
-    status: planned
+    nodeid: "tests/test_reports.py::test_cen_report_005_external_valida_token_e_parametros[chromium]"
+    status: implemented
   - cen: CEN-REPORT-006
     module: REPORT
     type: ui
     priority: p2
     test: tests/test_reports.py
-    status: planned
+    nodeid: "tests/test_reports.py::test_cen_report_006_external_sem_sessao_gera_relatorio[chromium]"
+    status: implemented
   - cen: CEN-REPORT-007
     module: REPORT
     type: ui
     priority: p2
     test: tests/test_reports.py
-    status: planned
+    nodeid: "tests/test_reports.py::test_cen_report_007_external_periodo_inexistente[chromium]"
+    status: implemented
   - cen: CEN-OLDDB-001
     module: OLDDB
     type: hibrido
     priority: p1
     test: tests/test_olddb.py
-    status: planned
+    nodeid: "tests/test_olddb.py::test_cen_olddb_001_exige_administrador[chromium]"
+    status: implemented
   - cen: CEN-OLDDB-002
     module: OLDDB
     type: hibrido
     priority: p1
     test: tests/test_olddb.py
-    status: planned
+    nodeid: "tests/test_olddb.py::test_cen_olddb_002_validacao_do_arquivo[chromium]"
+    status: implemented
   - cen: CEN-OLDDB-003
     module: OLDDB
     type: hibrido
     priority: p1
     test: tests/test_olddb.py
-    status: planned
+    nodeid: "tests/test_olddb.py::test_cen_olddb_003_import_despacha_job[chromium]"
+    status: implemented
   - cen: CEN-OLDDB-004
     module: OLDDB
     type: hibrido
     priority: p1
-    test: tests/test_olddb.py
-    status: planned
+    test: tests/Feature/Scenario/OldDBImportScenarioTest.php
+    nodeid: "tests/Feature/Scenario/OldDBImportScenarioTest.php::test_cen_olddb_004_linha_valida_cria_a_cadeia_completa_de_registros"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-OLDDB-005
     module: OLDDB
     type: hibrido
     priority: p1
     test: tests/test_olddb.py
-    status: planned
+    nodeid: "tests/test_olddb.py::test_cen_olddb_005_linha_com_colunas_incorretas[chromium]"
+    status: implemented
   - cen: CEN-OLDDB-006
     module: OLDDB
-    type: hibrido
+    type: non-ui
     priority: p1
-    test: tests/test_olddb.py
-    status: planned
+    test: tests/Feature/Scenario/OldDBImportScenarioTest.php
+    nodeid: "tests/Feature/Scenario/OldDBImportScenarioTest.php::test_cen_olddb_006_erros_por_falta_de_dados_no_replicado_sao_reportados"
+    status: implemented
+    justification: "Regra de controller/HTTP sem tela própria para o micro-fluxo; verificado por teste de cenário PHPUnit através da pilha HTTP. A superfície de UI do módulo é coberta pelos testes Playwright correspondentes."
   - cen: CEN-JOB-001
     module: JOB
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/JobScenarioTest.php
+    nodeid: "tests/Feature/Scenario/JobScenarioTest.php::test_cen_job_001_process_school_classes_sincroniza_turmas"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-JOB-002
     module: JOB
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/JobScenarioTest.php
+    nodeid: "tests/Feature/Scenario/JobScenarioTest.php::test_cen_job_002_configuracao_do_job_de_turmas"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-JOB-003
     module: JOB
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/JobScenarioTest.php
+    nodeid: "tests/Feature/Scenario/JobScenarioTest.php::test_cen_job_003_process_import_old_db_eh_monitorado_com_timeout_alto"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-JOB-004
     module: JOB
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/JobScenarioTest.php
+    nodeid: "tests/Feature/Scenario/JobScenarioTest.php::test_cen_job_004_progresso_consultavel_pelo_monitor_controller"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-KERNEL-001
     module: KERNEL
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/KernelScenarioTest.php
+    nodeid: "tests/Feature/Scenario/KernelScenarioTest.php::test_cen_kernel_001_disparo_unica_exige_data_e_hora_atuais"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-KERNEL-002
     module: KERNEL
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/KernelScenarioTest.php
+    nodeid: "tests/Feature/Scenario/KernelScenarioTest.php::test_cen_kernel_002_disparo_mensal_agenda_monthly_on"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-KERNEL-003
     module: KERNEL
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/KernelScenarioTest.php
+    nodeid: "tests/Feature/Scenario/KernelScenarioTest.php::test_cen_kernel_003_disparo_inicio_do_periodo_de_avaliacao"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-KERNEL-004
     module: KERNEL
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/KernelScenarioTest.php
+    nodeid: "tests/Feature/Scenario/KernelScenarioTest.php::test_cen_kernel_004_disparo_final_do_periodo_de_avaliacao"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-KERNEL-005
     module: KERNEL
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/KernelScenarioTest.php
+    nodeid: "tests/Feature/Scenario/KernelScenarioTest.php::test_cen_kernel_005_fechamento_converte_selecoes_ativo_em_concluido"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-KERNEL-006
     module: KERNEL
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/KernelScenarioTest.php
+    nodeid: "tests/Feature/Scenario/KernelScenarioTest.php::test_cen_kernel_006_fechamento_nao_afeta_selecoes_desligado"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-KERNEL-007
     module: KERNEL
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/KernelScenarioTest.php
+    nodeid: "tests/Feature/Scenario/KernelScenarioTest.php::test_cen_kernel_007_emails_de_frequencia_usam_urls_assinadas"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-KERNEL-008
     module: KERNEL
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/KernelScenarioTest.php
+    nodeid: "tests/Feature/Scenario/KernelScenarioTest.php::test_cen_kernel_008_modelos_ativos_nao_manual_programados_mas_manual_nao"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-CMD-001
     module: CMD
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ConsoleCommandScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ConsoleCommandScenarioTest.php::test_cen_cmd_001_compare_classes_valida_ambiente"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-CMD-002
     module: CMD
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ConsoleCommandScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ConsoleCommandScenarioTest.php::test_cen_cmd_002_compare_classes_resolve_o_periodo"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-CMD-003
     module: CMD
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ConsoleCommandScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ConsoleCommandScenarioTest.php::test_cen_cmd_003_compare_classes_classifica_diferencas"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-CMD-004
     module: CMD
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ConsoleCommandScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ConsoleCommandScenarioTest.php::test_cen_cmd_004_compare_classes_gera_formatos_de_saida"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-CMD-005
     module: CMD
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ConsoleCommandScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ConsoleCommandScenarioTest.php::test_cen_cmd_005_compare_classes_retorna_codigo_de_saida"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-CMD-006
     module: CMD
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ConsoleCommandScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ConsoleCommandScenarioTest.php::test_cen_cmd_006_sync_class_instructors_dry_run_retorna_preview"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-CMD-007
     module: CMD
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ConsoleCommandScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ConsoleCommandScenarioTest.php::test_cen_cmd_007_sync_class_instructors_aplica_mudancas_em_transacao"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-CMD-008
     module: CMD
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ConsoleCommandScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ConsoleCommandScenarioTest.php::test_cen_cmd_008_sync_class_instructors_e_apenas_aditivo"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-CMD-009
     module: CMD
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ConsoleCommandScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ConsoleCommandScenarioTest.php::test_cen_cmd_009_sync_class_instructors_com_falha_faz_rollback"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-CMD-010
     module: CMD
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ConsoleCommandScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ConsoleCommandScenarioTest.php::test_cen_cmd_010_sync_class_instructors_com_class_limita_escopo"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-REPLICADO-001
     module: REPLICADO
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ReplicadoScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ReplicadoScenarioTest.php::test_cen_replicado_001_student_get_from_replicado_by_codpes"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-REPLICADO-002
     module: REPLICADO
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ReplicadoScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ReplicadoScenarioTest.php::test_cen_replicado_002_student_get_from_replicado_by_nompes_filtra_nao_alunos"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-REPLICADO-003
     module: REPLICADO
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ReplicadoScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ReplicadoScenarioTest.php::test_cen_replicado_003_instrutor_obtido_com_tipfnc_docente"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-REPLICADO-004
     module: REPLICADO
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ReplicadoScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ReplicadoScenarioTest.php::test_cen_replicado_004_turmas_do_replicado_por_escola_ou_termo"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-REPLICADO-005
     module: REPLICADO
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ReplicadoScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ReplicadoScenarioTest.php::test_cen_replicado_005_determinacao_de_vinculo_de_aluno_no_periodo"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-REPLICADO-006
     module: REPLICADO
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ReplicadoScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ReplicadoScenarioTest.php::test_cen_replicado_006_estimativa_de_matriculas_por_turma"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-REPLICADO-007
     module: REPLICADO
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ReplicadoScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ReplicadoScenarioTest.php::test_cen_replicado_007_departments_obtidos_pelo_instituto"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-REPLICADO-008
     module: REPLICADO
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ReplicadoScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ReplicadoScenarioTest.php::test_cen_replicado_008_course_get_course_from_replicado"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
   - cen: CEN-REPLICADO-009
     module: REPLICADO
     type: non-ui
     priority: p1
-    test: tests/test_commands_jobs_kernel.py
-    status: planned
+    test: tests/Feature/Scenario/ReplicadoScenarioTest.php
+    nodeid: "tests/Feature/Scenario/ReplicadoScenarioTest.php::test_cen_replicado_009_vinculos_de_usuario"
+    status: implemented
+    justification: "Sem superfície de navegador (fila/agendador/console/consulta Replicado); o contrato é exercitado por teste de integração PHPUnit."
 
   # Regressão da UI legada recuperada do bundle antigo (app-legacy.js).
   - cen: CEN-UI-LEGACY-001
@@ -1573,3 +1882,12 @@ implemented_tests:
   - tests/test_ui_legacy.py::test_ui_legacy_modal_remocao_define_action_do_form[chromium]
   - tests/test_ui_legacy.py::test_ui_legacy_modal_revogacao_define_action_do_form[chromium]
   - tests/test_ui_legacy.py::test_ui_legacy_modal_indicacao_busca_e_adiciona_aluno[chromium]
+# Resumo: 244/244 cenários CEN-* com destino executável (+10 CEN-UI-LEGACY-*).
+summary:
+  total: 244
+  e2e_playwright: 181
+  phpunit_scenario: 63
+  implemented: 244
+  planned: 0
+  blocked: 0
+  ui_legacy: 10

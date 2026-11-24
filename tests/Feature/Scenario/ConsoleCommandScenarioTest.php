@@ -120,4 +120,32 @@ class ConsoleCommandScenarioTest extends ScenarioTestCase
         $this->artisan('sync:class-instructors', ['--schoolterm' => $term->id, '--class' => $class->id])
             ->assertExitCode(0);
     }
+    public function test_cen_cmd_009_sync_class_instructors_com_falha_faz_rollback()
+    {
+        $this->setEnv('UNIDADE', 'IME');
+        $term = $this->createOpenTerm();
+        $instructor = $this->createInstructor(['codpes' => '2000']);
+        $class = $this->createSchoolClass([
+            'school_term_id' => $term->id,
+            'codtur' => '2026101',
+            'coddis' => 'MAC0110',
+            'instructors' => [],
+        ]);
+
+        $real = app("db");
+        $db = \Illuminate\Support\Facades\DB::partialMock();
+        $db->shouldReceive("connection")->andReturnUsing(fn (...$args) => $real->connection(...$args));
+        $db->shouldReceive("beginTransaction")->andReturnUsing(fn () => $real->beginTransaction());
+        $db->shouldReceive("commit")->once()->andThrow(new \Exception("falha forçada no commit"));
+        $db->shouldReceive("rollback")->andReturnUsing(fn () => $real->rollback());
+
+        $this->artisan("sync:class-instructors", ["--schoolterm" => $term->id])->assertExitCode(0);
+        \Illuminate\Support\Facades\DB::swap($real);
+
+        $this->assertDatabaseMissing('instructor_school_class', [
+            'school_class_id' => $class->id,
+            'instructor_id' => $instructor->id,
+        ]);
+    }
+
 }
