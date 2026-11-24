@@ -40,6 +40,8 @@ WORKDIR /var/www
 EXPOSE 9000
 
 FROM base AS test
+RUN apt-get update && apt-get install -y --no-install-recommends git unzip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 COPY --from=composer:2@sha256:50ea4d33fdcde1adb0f045547295faa1548b33872e5f789dae5b02ce2fb5de93 /usr/bin/composer /usr/bin/composer
 
 FROM base AS runtime
