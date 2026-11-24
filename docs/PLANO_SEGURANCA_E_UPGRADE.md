@@ -18,8 +18,8 @@ O projeto está funcional e com a suíte de testes verde, mas roda sobre uma pil
 - **Laravel 8.83.23** (EOL em 2023-01-24; a série 8 não recebe mais correções de segurança)
 - **Symfony 5.4** com patches antigos (há correções disponíveis na própria série 5.4)
 - **Node.js 16** no build (EOL em 2023-09-11)
-- **MySQL 5.7** (EOL em 2023-10-31) — **mantido por decisão de negócio** (banco legado; ver seção 10)
-- **MariaDB 10.5** no stack E2E (EOL em 2025-06-24; apenas ambiente de teste)
+- **MariaDB 10.5.21** (produção; EOL em 2025-06-24) — **mantido por decisão de negócio** (banco legado; ver seção 10)
+- **MariaDB 10.5.29** no stack E2E/local (mesma linha 10.5; EOL em 2025-06-24; apenas teste/desenvolvimento)
 - Imagens `nginx:alpine` e `redis:alpine` sem versão/digest fixos — corrigido: **nginx 1.30.7** e **Redis 8.2** pinados
 
 Resultados da análise inicial:
@@ -35,8 +35,8 @@ Resultados da análise inicial:
 | Achados críticos no código | 2 (RCE autenticado via template de e-mail; escalada de privilégio via edição de usuário) |
 | Fases de upgrade propostas | **9 fases** (0 a 8), aproximadamente **12 PRs** |
 | Esforço estimado | **4 a 6 semanas** com 1 desenvolvedor experiente; 2 a 3 semanas com 2 desenvolvedores |
-| Alvo recomendado | **Laravel 13.43.0 + PHP 8.5 + Symfony 8.1 + MySQL 5.7 legado (exceção) + Node 22 LTS** |
-| Mínimo suportado aceitável | **Laravel 12.73.0 + PHP 8.3 + Symfony 7.4 + MySQL 5.7 legado (exceção)** |
+| Alvo recomendado | **Laravel 13.43.0 + PHP 8.5 + Symfony 8.1 + MariaDB 10.5 legado (exceção) + Node 22 LTS** |
+| Mínimo suportado aceitável | **Laravel 12.73.0 + PHP 8.3 + Symfony 7.4 + MariaDB 10.5 legado (exceção)** |
 
 Mensagem principal: **não existe uma versão segura de Laravel 8**. O patch para 8.83.29 corrige apenas uma das falhas conhecidas; a falha crítica `CVE-2026-114509` (bypass de autenticação no TokenGuard) e a `CVE-2025-27515` (bypass de validação de arquivo) não têm correção na série 8. O upgrade de framework é obrigatório, não opcional.
 
@@ -52,14 +52,14 @@ Além das dependências, foram encontrados dois problemas críticos que **não s
 - **Fase 4 concluída:** Laravel **11.57.1**, PHP **8.3.37**, Symfony **7.4.23**, Carbon **3.15.1**, Sanctum **4.4.0**, Tinker **3.1.0**, PHPUnit **11.5.58**, Collision **8.9.6**, Ignition **2.12.1**, LaraTeX **1.3.2**, Staudenmeir **2.16.4/1.20.7**, Spatie **6.25.0** e QueueMonitor **5.4.5**. Migração estrutural para `bootstrap/app.php`/`bootstrap/providers.php`; `Http\Kernel`, `Console\Kernel`, `Exceptions\Handler` e `RouteServiceProvider` foram removidos; o schedule foi para `app/Console/ScheduledTasks` + `routes/console.php`. Docker migrado para PHP 8.3.
 - **Fase 5 concluída:** Laravel **12.73.0**, PHP **8.3.37**, Symfony **7.4.23**, PHPUnit **12.5.45**, Spatie **8.5.0**, Sanctum **4.5.0**, Tinker **3.2.0**, QueueMonitor **5.5.0**, Staudenmeir **2.17/1.21.3** e Socialite **5.33.0**. **Composer audit: 0 avisos de segurança.**
 - **Fase 6 concluída:** Laravel **13.43.0**, PHP **8.5.13**, Symfony **8.1.11**, Staudenmeir **2.18/1.22.1**, Ignition **2.13.0**, Sanctum **4.5.0**, Spatie **8.5.0**, QueueMonitor **5.5.0** e PHPUnit **12.5.45**. Docker migrado para PHP 8.5; corrigida a depreciação `PDO::MYSQL_ATTR_SSL_CA` para `Pdo\Mysql::ATTR_SSL_CA`. **Composer audit: 0 avisos.**
-- **Fase 7 concluída (MySQL fora de escopo):** nginx atualizado de **1.29.8** (vulnerável a `CVE-2026-123007` major, `CVE-2026-118899` major e `CVE-2026-113425` major) para **1.30.7-alpine** pinado por digest; Redis **8.2-alpine** pinado; `nginx` e `supervisor` removidos da imagem da aplicação. Frontend migrado de Laravel Mix para **Vite 8.3.8 + laravel-vite-plugin 3.2.1**; `axios`, `lodash`, `laravel-mix` e `webpack` removidos; o código de UI que existia apenas no bundle antigo foi recuperado para `resources/js/app-legacy.js`; `parent.blade.php` usa `@vite`; `package-lock.json` versionado e assets em `public/build`. E2E atualizado para pytest **9.2.0** e Playwright **1.65.2** pinado. **MySQL 5.7 mantido por decisão de negócio** (risco aceito e mitigações na seção 10).
+- **Fase 7 concluída (MariaDB 10.5 fora de escopo):** nginx atualizado de **1.29.8** (vulnerável a `CVE-2026-123007` major, `CVE-2026-118899` major e `CVE-2026-113425` major) para **1.30.7-alpine** pinado por digest; Redis **8.2-alpine** pinado; `nginx` e `supervisor` removidos da imagem da aplicação. Frontend migrado de Laravel Mix para **Vite 8.3.8 + laravel-vite-plugin 3.2.1**; `axios`, `lodash`, `laravel-mix` e `webpack` removidos; o código de UI que existia apenas no bundle antigo foi recuperado para `resources/js/app-legacy.js`; `parent.blade.php` usa `@vite`; `package-lock.json` versionado e assets em `public/build`. E2E atualizado para pytest **9.2.0** e Playwright **1.65.2** pinado. **MariaDB 10.5 mantido por decisão de negócio** (risco aceito e mitigações na seção 10).
 - **Fase 8 (parcial):** SEC-01 corrigido com **Twig 3.31 sandbox** e contexto sanitizado (apenas campos whitelisted; loops/condicionais/métodos documentados suportados via conversão Blade-like). SEC-10 aplicado: `SESSION_ENCRYPT=true`, cookie `Secure` automático em produção e HSTS em produção/HTTPS. `TrustHosts` habilitado com o host de `APP_URL` (localhost/127.0.0.1 apenas fora de produção). SEC-11 aplicado: rotas protegidas agrupadas em `auth`, com whitelist explícita de rotas públicas (home, edital, relatório por token e links assinados) e testes de baseline. CI criado em `.github/workflows/ci.yml` (PHPUnit, auditorias e E2E via Docker). SEC-08 fica aguardando confirmação do consumidor; CORS mantém wildcard por decisão.
 - **Auditoria atual:** **0 avisos** no `composer audit` e **0 avisos** no `npm audit` completo (não apenas no `--omit=dev`). A árvore vulnerável do Laravel Mix/webpack-dev-server foi eliminada com a migração para Vite.
 - **Correções de código aplicadas:** SEC-01 (RCE de template eliminado), SEC-02 (escalada de privilégio), SEC-03 (PII não autenticada), SEC-04 (XSS armazenado), SEC-05 (download arbitrário), SEC-06 (bug de variável e determinismo), SEC-07 (substring de admin), SEC-10 (cookies/HSTS), SEC-11 (baseline de autenticação), SEC-14 (IDOR em autoavaliação), TrustHosts e CI.
-- **Testes após as Fases 6/7/8:** **281 testes PHPUnit 12, 0 falhas, 0 skipped** e **41 testes E2E aprovados** no PHP 8.5 com nginx 1.30.7, build Vite e Twig sandbox.
+- **Testes após as Fases 6/7/8:** **283 testes PHPUnit 12, 0 falhas, 0 skipped** contra **MariaDB 10.5.29** e **41 testes E2E aprovados** no PHP 8.5 com nginx 1.30.7, build Vite e Twig sandbox.
 - **Regressão da UI legada:** 10 testes E2E novos em `e2e/tests/test_ui_legacy.py` cobrem datepicker, modal de horário (válido/inválido), busca e inclusão de docente, busca de aluno por codpes/nome/não encontrado, modal de indicação, DataTable com botões de exportação e modais de remoção/revogação.
 - **Pendências:** SEC-08 (token do relatório externo; aguardando consumidor), pinagem opcional do digest da imagem Node, execução/ajuste do workflow de CI no GitHub, CSP/rate limit/rotação de segredos/Trivy/gitleaks e teste de rollback. CORS wildcard foi mantido por decisão. SEC-13 coberto por guarda de `APP_DEBUG` em produção e `E2E_MODE` já restrito a testing.
-- **Decisão de negócio:** o MySQL 5.7 **não será atualizado** (banco legado). A decisão, os riscos aceitos e as mitigações estão registrados na seção 10; o `config/database.php` já foi preparado para não impedir uma futura migração.
+- **Decisão de negócio:** o MariaDB 10.5 **não será atualizado** (banco legado). A decisão, os riscos aceitos e as mitigações estão registrados na seção 10; o `config/database.php` já foi preparado para não impedir uma futura migração.
 - **Observação:** o Composer 2.10 bloqueia a instalação de qualquer versão do Laravel 8 por advisory de segurança. O hotfix usou `--no-blocking` de forma consciente e documentada; a dívida residual está listada na seção 5.
 
 ## 2. Metodologia
@@ -96,7 +96,7 @@ Limitações:
 | Spatie Laravel Permission | 4.4.3 | Desatualizado | — |
 | Node.js (build) | 16 | **EOL** | 2023-09-11 |
 | Composer | 2.10.2 | OK | — |
-| MySQL (produção) | 5.7 | **EOL** | 2023-10-31 |
+| MariaDB (produção) | 10.5.21 | **EOL** | 2025-06-24 |
 | MariaDB (E2E) | 10.5 | **EOL** | 2025-06-24 |
 | nginx | `nginx:alpine` (sem pin) | Versão indeterminada | 1.27 (se for a usada) EOL em 2025-06-24 |
 | Redis | `redis:alpine` (sem pin) | Versão indeterminada | — |
@@ -355,8 +355,7 @@ O `e2e/requirements.txt` fixa apenas as dependências de topo. `playwright`, `gr
 |---|---|---|
 | `php:8.5-fpm-bookworm` (Dockerfile) | Atualizada; tag sem digest | Pinar o digest no Dockerfile |
 | `php:8.5-fpm-bookworm@sha256:bad1...` (E2E) | Atualizada, digest fixo | OK |
-| `mysql:5.7` (compose) | **EOL, mantido por decisão de negócio** | Risco aceito; não expor 3306; aplicar mitigações da seção 10 |
-| `mariadb:10.5` (E2E) | EOL, apenas ambiente de teste | Opcional: MariaDB 11.8 LTS (test only) |
+| `mariadb:10.5.29` (compose/E2E) | **EOL, mantido por decisão de negócio** | Risco aceito; não expor 3306; aplicar mitigações da seção 10 |
 | `nginx:1.30.7-alpine@sha256:caf4...` | Atualizado e pinado | OK; residual `CVE-2026-132779` não aplicável (sem `ssl_early_data`) |
 | `redis:8.2-alpine@sha256:da23...` | Pinado | OK; o serviço não é usado pela aplicação no momento |
 | Node.js 22 no Dockerfile | Atualizado; tag sem digest | Pinar o digest da imagem Node |
@@ -381,7 +380,7 @@ A configuração interna usa apenas HTTP/1.1 na porta 80, sem TLS, HTTP/3 ou mai
 | Laravel | 13.43.0 | 2028-03-17 | Suportado |
 | Symfony | 8.1.11 | — | Suportado |
 | Node.js | 22.23.5 | 2027-04-30 | Suportado (24 LTS é opcional) |
-| MySQL | 5.7 | 2023-10-31 | **EOL; mantido por decisão de negócio (risco aceito)** |
+| MariaDB | 10.5.21 (produção) / 10.5.29 (E2E) | 2025-06-24 | **EOL; mantido por decisão de negócio (risco aceito)** |
 | MariaDB (E2E) | 10.5 | 2025-06-24 | EOL; apenas ambiente de teste |
 | nginx | 1.30.7 | — | Suportado; residual `CVE-2026-132779` não aplicável |
 | Redis | 8.2 | 2030-09-01 | Suportado; não usado pela aplicação |
@@ -500,7 +499,7 @@ Pontos fortes:
 | **Testes dependentes de data** | `FrequencyScenarioTest` pula testes conforme o dia do mês; a suíte não roda 100% em qualquer data |
 | **Sem testes de frontend/JS** | O upgrade de axios/postcss/webpack pode quebrar interações e não será detectado |
 | **Sem teste com Replicado real** | Os testes usam `ReplicadoStubs`/fixtures; o upgrade de `uspdev/replicado`, PHP 8 e `pdo_dblib` pode quebrar SQL/Sybase sem ser detectado |
-| **Sem teste com MySQL 8.4** | Não aplicável: o MySQL 5.7 é mantido por decisão; o E2E usa MariaDB 10.5 como test double |
+| **Sem teste com MariaDB 11.8** | Não aplicável no momento: o MariaDB 10.5 é mantido por decisão; o E2E usa a mesma linha 10.5 da produção |
 | **PDF não é validado de verdade** | `CertificateScenarioTest` mocka `LaraTeX`; nenhum teste gera PDF real e verifica conteúdo |
 | **E-mail não é renderizado de verdade** | `Mail::fake()` impede o `build()`; o E2E de templates não envia e-mail; RCE e regressões de Symfony Mailer passam despercebidos |
 | **Sem testes de segurança** | Os testes atuais **validam comportamento inseguro** (ex.: `/students` sem login e `/schoolterms/download` sem login) e não cobrem escalada de privilégio, XSS ou RCE |
@@ -513,7 +512,7 @@ Pontos fortes:
 1. Adicionar cobertura PHP com Xdebug/PCOV e meta mínima (ex.: 70% global, 90% nos módulos críticos).
 2. Congelar o tempo nos testes de frequência (`Carbon::setTestNow`) e remover skips por data.
 3. Adicionar testes de segurança (não autenticado, matriz de roles, XSS, RCE de template, IDOR, CSRF).
-4. Adicionar testes de integração reais: MySQL 5.7 (produção), Replicado/Sybase de staging, geração de PDF, envio SMTP para Mailpit.
+4. Adicionar testes de integração reais: MariaDB 10.5 (produção), Replicado/Sybase de staging, geração de PDF, envio SMTP para Mailpit.
 5. Adicionar testes de contrato para os endpoints JSON e para os links assinados.
 6. Adicionar smoke tests pós-deploy em staging com dados anonimizados de produção.
 
@@ -539,12 +538,12 @@ Sem esses itens, o risco de regressão silenciosa é alto, especialmente em aute
 |---|---|---|---:|---|---:|---|
 | 0 | Baseline e guardrails | 8.83.23 | 7.4 | CI, cobertura, pinagem, locks, auditoria | 1–2 d | Pipeline verde com auditoria e cobertura |
 | 1 | Hotfix de segurança na stack atual | 8.83.29 | 7.4 | Guzzle, CommonMark, Carbon, Symfony 5.4.56, Sentry, Replicado, PHPUnit; Node 24; axios/postcss | 2–3 d | Testes verdes; avisos reduzidos; residual documentado |
-| 2 | Laravel 8 → 9 | 9.52.23 | 8.2 | Symfony 6.4, Flysystem 3, Symfony Mailer, remove fruitcake, Sanctum 3, Spatie 5 | 3–5 d | Testes verdes em MySQL 5.7 staging |
+| 2 | Laravel 8 → 9 | 9.52.23 | 8.2 | Symfony 6.4, Flysystem 3, Symfony Mailer, remove fruitcake, Sanctum 3, Spatie 5 | 3–5 d | Testes verdes em MariaDB 10.5 staging |
 | 3 | Laravel 9 → 10 | 10.50.4 | 8.2 | Monolog 3, Sanctum 3.3, Spatie 6, QueueMonitor 5.4, PHPUnit 10 | 1–3 d | Testes verdes; Carbon 2.73 |
 | 4 | Laravel 10 → 11 | 11.57.1 | 8.3 | Nova estrutura `bootstrap/app.php`, remove Kernel/Handler, Spatie 6, Sanctum 4, LaraTeX 1.3.2, Tinker 3, USP Theme oficial | 4–6 d | Testes verdes; schedule migrado; e2e p0 |
 | 5 | Laravel 11 → 12 | 12.73.0 | 8.4 | Carbon 3, Spatie 8, QueueMonitor 5.5, Staudenmeir 12, Sanctum 4.5 | 2–3 d | Testes verdes; PHPUnit 12 |
 | 6 | Laravel 12 → 13 | 13.43.0 | 8.5 | Symfony 7.4/8.0, Guzzle 7.15/8, Staudenmeir 13, ajustes finais | 2–3 d | Testes verdes; auditoria limpa |
-| 7 | Infra final (parcial) | 13.43.0 | 8.5 | nginx 1.30.7, Redis 8.2, Node/axios, pytest 9; MySQL 5.7 mantido por decisão | 2–3 d | Imagens pinadas; risco MySQL aceito |
+| 7 | Infra final (parcial) | 13.43.0 | 8.5 | nginx 1.30.7, Redis 8.2, Node/axios, pytest 9; MariaDB 10.5 mantido por decisão | 2–3 d | Imagens pinadas; risco MariaDB aceito |
 | 8 | Hardening e encerramento | 13.43.0 | 8.5 | Correções SEC-01..SEC-13, políticas, CORS, cookies, rate limit, secrets | 3–5 d | Checklist de segurança concluído |
 
 **Total:** 9 fases, ~12 PRs, **21–35 dias ideais** (4–6 semanas com um desenvolvedor; 2–3 semanas com dois). Adicionar buffer para imprevistos de Replicado/LaTeX e para janelas de banco.
@@ -619,7 +618,7 @@ Nota: `uspdev/replicado` 1.28.9 e `uspdev/senhaunica-socialite` 4.5.12 só funci
 
 #### P2 — Fase 7 e 8
 
-- MySQL 5.7 mantido por decisão; aplicar mitigações da seção 10.
+- MariaDB 10.5 mantido por decisão; aplicar mitigações da seção 10.
 - nginx 1.30.7-alpine pinado por digest; monitorar 1.30.8+ para o residual `CVE-2026-132779`.
 - Redis 8.2-alpine pinado (se usado).
 - Python 3.14 e pytest 9.0.3+, com lock de dependências.
@@ -690,7 +689,7 @@ Mudanças estruturais:
 - Remover `$namespace` do `RouteServiceProvider` se não estiver em uso.
 - Revisar `config/mail.php` para o formato do Symfony Mailer (`MAIL_SCHEME`, `MAIL_ENCRYPTION`).
 
-Testes obrigatórios: e-mail real via Mailpit, PDF real, uploads/downloads, fila/worker, Replicado staging, MySQL 5.7.
+Testes obrigatórios: e-mail real via Mailpit, PDF real, uploads/downloads, fila/worker, Replicado staging, MariaDB 10.5.
 
 **Resultado da execução (2026-11-23):** etapa concluída. Laravel 9.52.23, PHP 8.2.36, Symfony 6.4.50, Flysystem 3.36.0, Symfony Mailer, Sanctum 3.3.3, Spatie 5.11.1, Replicado 1.28.9, Senhaunica 4.5.12, QueueMonitor 5.3.7, Staudenmeir 2.12.1/1.17.3 e LaraTeX 1.3.0-p1. **264 testes PHPUnit + 31 E2E verdes**. Ajustes adicionais: migrations e config do QueueMonitor 5.x, remoção de `NO_AUTO_CREATE_USER` do `config/database.php`, CORS nativo (`Illuminate\Http\Middleware\HandleCors`) e `FakeReplicadoDb` com `getQuery()`/`obterCursoAtivo()`. O `uspdev/laravel-usp-theme` continua no fork pinado porque a versão oficial exige `cadastros-auxiliares-client`/Laravel 11+.
 
@@ -765,10 +764,10 @@ Laravel 12 é o mínimo suportado hoje (EOL 2027-02-24). Se o tempo apertar, est
 
 ### 9.11 Fase 7 — Infraestrutura final
 
-#### Banco de dados — MySQL 5.7 mantido por decisão
+#### Banco de dados — MariaDB 10.5 mantido por decisão
 
-1. **Decisão de negócio:** não atualizar o MySQL 5.7 (banco legado).
-2. O `NO_AUTO_CREATE_USER` já foi removido do `config/database.php`; a configuração atual funciona no MySQL 5.7 e não bloqueia uma futura migração.
+1. **Decisão de negócio:** não atualizar o MariaDB 10.5 (banco legado).
+2. O `NO_AUTO_CREATE_USER` já foi removido do `config/database.php`; a configuração atual funciona no MariaDB 10.5 e não bloqueia uma futura migração.
 3. Aplicar as mitigações da seção 10: porta 3306 não exposta, usuário de aplicação com privilégios mínimos, backups com restore testado, monitoramento e segmentação de rede.
 4. Registrar a exceção no inventário de riscos e revisar periodicamente.
 5. O E2E continua usando MariaDB 10.5 por compatibilidade com o dump; isso é aceitável apenas como ambiente de teste.
@@ -785,12 +784,12 @@ Laravel 12 é o mínimo suportado hoje (EOL 2027-02-24). Se o tempo apertar, est
 
 1. `php:8.5-fpm-bookworm` (já aplicado); pinar o digest no Dockerfile.
 2. `nginx:1.30.7-alpine` pinado por digest (já aplicado); monitorar 1.30.8+ para o residual `CVE-2026-132779`.
-3. `mysql:5.7` mantido por decisão; não expor a porta e aplicar mitigações da seção 10.
+3. `mariadb:10.5` mantido por decisão; não expor a porta e aplicar mitigações da seção 10.
 4. `redis:8.2-alpine` pinado por digest (já aplicado).
 5. `python:3.12-slim` no E2E (ou 3.14) com digest; fixar transitivas.
 6. Trivy/Grype sem vulnerabilidades critical/high não mitigadas.
 
-**Resultado da execução (2026-11-23):** nginx 1.30.7-alpine pinado; Redis 8.2-alpine pinado; frontend migrado para Vite 8.3.8, `package-lock.json` versionado, `public/build` gerado e código legado recuperado; pytest 9.2.0 e Playwright 1.65.2; **`npm audit` completo = 0**; **31 E2E verdes** com Vite e nginx 1.30.7. MySQL 5.7 mantido por decisão de negócio (seção 10). A imagem Node ainda usa a tag 22.x do NodeSource (pinar digest é opcional).
+**Resultado da execução (2026-11-23):** nginx 1.30.7-alpine pinado; Redis 8.2-alpine pinado; frontend migrado para Vite 8.3.8, `package-lock.json` versionado, `public/build` gerado e código legado recuperado; pytest 9.2.0 e Playwright 1.65.2; **`npm audit` completo = 0**; **31 E2E verdes** com Vite e nginx 1.30.7. MariaDB 10.5 mantido por decisão de negócio (seção 10). A imagem Node ainda usa a tag 22.x do NodeSource (pinar digest é opcional).
 
 ### 9.12 Fase 8 — Hardening e encerramento
 
@@ -809,27 +808,28 @@ Laravel 12 é o mínimo suportado hoje (EOL 2027-02-24). Se o tempo apertar, est
 
 ---
 
-## 10. Banco de dados: decisão de manter o MySQL 5.7 (legado)
+## 10. Banco de dados: decisão de manter o MariaDB 10.5 (legado)
 
-**Decisão de negócio (2026-11-23):** o MySQL 5.7 **não será atualizado**. O banco é legado e não há possibilidade de migração no momento. Esta é uma **exceção formal** ao plano de upgrade; o risco de EOL (2023-10-31, sem novos patches de segurança) é aceito pelos responsáveis.
+**Decisão de negócio (2026-11-23):** a produção usa **MariaDB 10.5.21** e o banco **não será atualizado** no momento. O banco é legado e não há possibilidade de migração agora. Esta é uma **exceção formal** ao plano de upgrade; o risco de EOL (2025-06-24, sem novos patches de segurança) é aceito pelos responsáveis. O stack local/E2E usa **MariaDB 10.5.29**, mesma linha 10.5, compatível com o dump de produção.
 
-Mitigações obrigatórias enquanto o MySQL 5.7 for mantido:
+Mitigações obrigatórias enquanto o MariaDB 10.5 for mantido:
 
-1. **Não expor a porta 3306** fora da rede interna do Docker; o compose atual não publica a porta.
+1. **Não expor a porta 3306** fora da rede interna; o compose atual não publica a porta.
 2. Apenas `app` e `worker` devem conseguir alcançar o banco; restringir a rede/firewall.
 3. Usar usuário de aplicação com privilégios mínimos no schema (sem `FILE`, `SUPER`, `PROCESS`).
 4. Manter backups automáticos e **testar restore** periodicamente.
-5. Monitorar logs de erro, tentativas de acesso e CVEs novas para MySQL 5.7; aplicar mitigações compensatórias (WAF, rate limit, segmentação).
-6. Não introduzir funcionalidades que dependam de recursos exclusivos do MySQL 8+.
+5. Monitorar logs de erro, tentativas de acesso e CVEs novas para MariaDB 10.5; aplicar mitigações compensatórias (WAF, rate limit, segmentação).
+6. Não introduzir funcionalidades que dependam de recursos exclusivos de MariaDB 11+.
 7. Registrar a exceção no inventário de riscos e revisá-la se houver mudança de compliance, incidente ou possibilidade de janela de migração.
 
 Preparação para uma futura migração (sem executar agora):
 
-- O `config/database.php` já teve `NO_AUTO_CREATE_USER` removido; esse modo foi removido no MySQL 8.0.11 e impedia a conexão com versões novas. A remoção é segura no MySQL 5.7.
-- O schema usa `utf8mb4_unicode_ci` explícito; manter assim para evitar mudança para `utf8mb4_0900_ai_ci`.
+- O `config/database.php` já teve `NO_AUTO_CREATE_USER` removido; esse modo é específico do MySQL e não é necessário no MariaDB 10.5. A remoção é segura e não bloqueia o runtime atual.
+- O schema usa `utf8mb4_unicode_ci` explícito; manter assim. O collation `utf8mb4_0900_ai_ci` é específico do MySQL 8 e não deve ser usado no MariaDB.
 - O `sql_mode` atual não habilita `ONLY_FULL_GROUP_BY`; validar consultas se o modo mudar.
-- O roteiro futuro seria: dump lógico (`--routines --triggers --events`) → restore em MySQL 8.0 → 8.4 LTS → `php artisan migrate` → testes de regressão → janela de manutenção com rollback.
-- O E2E usa MariaDB 10.5 por compatibilidade com o dump; ele **não** valida MySQL 8.4 e não deve ser usado como evidência de compatibilidade futura.
+- O roteiro futuro seria: dump lógico (`--routines --triggers --events`) → restore em MariaDB 11.8 LTS (EOL 2028-06-04) ou 12.3 LTS → `php artisan migrate` → testes de regressão → janela de manutenção com rollback.
+- O E2E usa MariaDB 10.5.29 por compatibilidade com o dump e com a produção 10.5.21; ele **não** valida MariaDB 11.8. A migração futura deve incluir um teste dedicado com a versão alvo.
+- Ao trocar o compose local de MySQL 5.7 para MariaDB 10.5, o volume `mysql-data` antigo não é compatível; recrie o volume (`docker compose down -v`) ou faça dump/restore.
 
 ---
 
@@ -841,7 +841,7 @@ Preparação para uma futura migração (sem executar agora):
 | `pdo_dblib`/FreeTDS não funcionar em PHP 8.5 | Média | Alto | Testar Replicado real em staging antes da fase 6; manter fallback PHP 8.4 |
 | PDF/LaTeX quebrar com LaraTeX 1.3.2 | Média | Alto | Teste de geração real de PDF; comparar conteúdo; manter versão anterior |
 | Symfony Mailer alterar formatação/entrega | Média | Médio | Teste com Mailpit; validar DKIM/SPF/TLS; comparar e-mails |
-| MySQL 5.7 EOL sem patches | Alta | Alto | Risco aceito formalmente (seção 10); não expor 3306; backups; monitoramento; segmentação |
+| MariaDB 10.5 EOL sem patches | Alta | Alto | Risco aceito formalmente (seção 10); não expor 3306; backups; monitoramento; segmentação |
 | nginx desatualizado (1.29.8) | Alta | Alto | Corrigido para 1.30.7 pinado; residual `CVE-2026-132779` não aplicável; monitorar 1.30.8+ |
 | Testes não cobrirem regressões | Alta | Alto | Implementar lacunas da seção 8 antes das fases 4–6 |
 | RCE por template | Baixa | Crítico | Twig sandbox + contexto sanitizado + permissão restrita; monitorar novos filtros/tags |
@@ -855,8 +855,8 @@ Preparação para uma futura migração (sem executar agora):
 
 Antes de considerar o upgrade concluído:
 
-- [ ] Nenhum runtime EOL (PHP, Laravel, Node, nginx); MySQL 5.7 é exceção formal aprovada.
-- [x] MySQL 5.7 mantido com as mitigações da seção 10 e exceção registrada.
+- [ ] Nenhum runtime EOL (PHP, Laravel, Node, nginx); MariaDB 10.5 é exceção formal aprovada.
+- [x] MariaDB 10.5 mantido com as mitigações da seção 10 e exceção registrada.
 - [x] nginx em 1.30.7+ pinado por digest.
 - [x] `composer audit` sem critical/high não mitigados (0 avisos).
 - [x] `npm audit --omit=dev` = 0 e `npm audit` = 0 (Vite; sem árvore de build vulnerável).
@@ -866,6 +866,7 @@ Antes de considerar o upgrade concluído:
 - [x] E2E completo verde (41 verdes); matriz `coverage.yaml` atualizada com os 10 cenários de UI legada.
 - [ ] Cobertura PHP medida e acima da meta.
 - [ ] Teste com Replicado real em staging.
+- [x] PHPUnit e E2E executados contra MariaDB 10.5 (mesma linha da produção 10.5.21).
 - [ ] Geração real de PDF e envio real de e-mail validados.
 - [x] SEC-01 e SEC-02 corrigidos e com testes de regressão.
 - [ ] SEC-03 a SEC-13 corrigidos ou aceitos formalmente com prazo (SEC-03/04/05/06/07/10/11/14 e TrustHosts concluídos).

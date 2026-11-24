@@ -40,20 +40,20 @@ services:
       - app
 
   mysql:
-    image: mysql:5.7
-    container_name: monitoria-mysql
+    # Produção: MariaDB 10.5.21 (EOL, exceção aprovada).
+    # Local/E2E: MariaDB 10.5.29, mesma linha 10.5, compatível com o dump.
+    image: mariadb:10.5@sha256:a530aeeefd82f4fa5150f391b6c75462140904780338766f6b03acecb1cca3ce
+    container_name: monitoria-mariadb
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-laravel}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-root}
-      MYSQL_USER: ${DB_USERNAME:-laravel}
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
+      MARIADB_DATABASE: ${DB_DATABASE:-laravel}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-root}
+      MARIADB_USER: ${DB_USERNAME:-laravel}
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mariadb-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mariadb-admin", "ping", "-h", "127.0.0.1", "-uroot", "-proot", "--silent"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -87,4 +87,4 @@ networks:
     external: true
 
 volumes:
-  mysql-data:
+  mariadb-data:

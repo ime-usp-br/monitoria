@@ -1,4 +1,4 @@
-FROM php:8.5-fpm-bookworm
+FROM php:8.5-fpm-bookworm@sha256:bad1d3498eaa489efe88c1d532e47e2f4111304c3f0b19fbc428842c39ec155c
 
 # Arguments defined in docker-compose.yml
 ARG user=monitoria
@@ -35,7 +35,7 @@ RUN curl -o /usr/local/bin/gosu -sSL "https://github.com/tianon/gosu/releases/do
     && chmod +x /usr/local/bin/gosu
 
 # Get Composer 2
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2@sha256:50ea4d33fdcde1adb0f045547295faa1548b33872e5f789dae5b02ce2fb5de93 /usr/bin/composer /usr/bin/composer
 
 # Install Node.js 22 LTS (required for Laravel Mix / webpack)
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \

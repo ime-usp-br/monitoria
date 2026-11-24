@@ -50,7 +50,7 @@ Esta documentação define como os testes E2E de navegador do Sistema de Monitor
 ### 1.1 O que é teste E2E neste projeto
 
 - Navegador real (Chromium via Playwright) interagindo com a aplicação Laravel em execução.
-- Aplicação real, banco MySQL próprio, filas, storage e e-mail controlados.
+- Aplicação real, banco MariaDB próprio, filas, storage e e-mail controlados.
 - Autenticação pelo fluxo OAuth simulado do `senhaunica-faker`, mantendo o caminho de login real do `senhaunica-socialite`.
 - Replicado simulado por um Sybase ASE separado, com schema e fixtures mínimos.
 - Dados determinísticos, criados por seed dedicado e descartados ao final da execução.
@@ -78,7 +78,7 @@ Esta documentação define como os testes E2E de navegador do Sistema de Monitor
 |---|---|---|
 | D1 | Playwright com Python + `pytest-playwright` | Mesmo padrão dos projetos `sistema_cea` e `verao`; container Python com Chromium é simples e já validado pela equipe. |
 | D2 | `docker-compose.e2e.yml` dedicado, projeto `monitoria_e2e` | Não interfere no `docker-compose.yml` de desenvolvimento nem no banco local. |
-| D3 | Banco MySQL dedicado e descartável | Base própria, sem dados de desenvolvimento; reset garantido com `down -v`. |
+| D3 | Banco MariaDB dedicado e descartável | Base própria, sem dados de desenvolvimento; reset garantido com `down -v`. |
 | D4 | `senhaunica-faker` como provedor OAuth | Mantém o fluxo real de login do `senhaunica-socialite`, sem tocar na USP. |
 | D5 | Replicado real via `uspdev/asedocker`; fallback JSON quando o ASE não roda | Mantém o SQL real onde possível. O ASE 16 sofre SIGSEGV em kernels 7.x, então o padrão no ambiente atual é o fallback (`E2E_REPLICADO_FAKE=true`). |
 | D6 | Mailpit para e-mail | Captura SMTP e expõe API para asserts de destinatário, assunto, corpo e links assinados. |
@@ -991,7 +991,7 @@ A implementação futura será considerada concluída quando:
 | Fila/agendador em processos separados | Médio | `sync` por padrão; profile `async` explícito e asserts por efeito no banco/Mailpit. |
 | Sessões/cookies entre papéis | Médio | Um `browser_context` por papel; não compartilhar storage state em testes de autorização. |
 | Testes paralelos colidindo no banco | Médio | Primeira versão serial; se paralelizar, banco/schema por worker e dados com sufixo. |
-| MySQL 5.7 / MariaDB antigo | Baixo | A stack usa MariaDB 10.5, a mesma versão do dump de produção. |
+| MariaDB 10.5 EOL | Baixo | A stack usa MariaDB 10.5, a mesma linha da produção (10.5.21); exceção formal aprovada. |
 | `APP_URL`/host divergente no OAuth | Médio | Fixar `http://web` na stack e usar o mesmo host no Playwright. |
 | Dados sensíveis em fixtures | Alto | Apenas dados fictícios; nenhum dump real do Replicado ou do banco antigo. |
 
