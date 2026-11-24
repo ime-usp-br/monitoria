@@ -39,10 +39,6 @@ class AppServiceProvider extends ServiceProvider
             @chmod($replicadoLog, 0664);
         }
         putenv('REPLICADO_PATHLOG=' . $replicadoLog);
-
-        if (env('APP_ENV') === 'production') {
-            $this->app['request']->server->set('HTTPS', true);
-        }
     }
 
     protected function isAbsolutePath(string $path): bool
