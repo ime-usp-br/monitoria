@@ -1,0 +1,8 @@
+services:
+  app:
+    build:
+      target: test
+
+  worker:
+    build:
+      target: test

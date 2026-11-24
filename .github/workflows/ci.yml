@@ -53,11 +53,11 @@ jobs:
           exit 1
 
       - name: Build da imagem da aplicação
-        run: docker compose build app
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml build app
 
       - name: Instalar dependências, migrar o banco e rodar PHPUnit com cobertura
         run: |
-          docker compose run --rm --no-deps --entrypoint sh app -lc '
+          docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm --no-deps --entrypoint sh app -lc '
             git config --global --add safe.directory /var/www &&
             apt-get update -qq &&
             apt-get install -y -qq $PHPIZE_DEPS >/dev/null &&
@@ -81,7 +81,7 @@ jobs:
 
       - name: Composer audit
         run: |
-          docker compose run --rm --no-deps --entrypoint sh app -lc '
+          docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm --no-deps --entrypoint sh app -lc '
             git config --global --add safe.directory /var/www &&
             composer audit --locked
           '
