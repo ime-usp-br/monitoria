@@ -168,6 +168,8 @@ class SchoolClassController extends Controller
             abort(403);
         }
 
+        $this->authorize('update', $schoolclass);
+
         $turma = $schoolclass;
 
         return view('schoolclasses.edit', compact('turma'));
@@ -185,6 +187,8 @@ class SchoolClassController extends Controller
         if(!Gate::allows('editar turma')){
             abort(403);
         }
+
+        $this->authorize('update', $schoolclass);
 
         $validated = $request->validated();
 
@@ -280,9 +284,7 @@ class SchoolClassController extends Controller
 
     public function enrollments(SchoolClass $schoolclass)
     {
-        if(!Gate::allows('visualizar inscrição')){
-            abort(403);
-        }
+        $this->authorize('viewEnrollments', $schoolclass);
 
         $turma = $schoolclass;
 

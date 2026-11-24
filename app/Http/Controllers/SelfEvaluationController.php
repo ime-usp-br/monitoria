@@ -216,6 +216,8 @@ class SelfEvaluationController extends Controller
             return redirect("login");
         }
 
+        $this->authorize("update", $selfevaluation);
+
         $validated = $request->validated();
 
         $selfevaluation->update($validated);

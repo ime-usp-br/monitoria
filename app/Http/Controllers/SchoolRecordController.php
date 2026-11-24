@@ -113,6 +113,8 @@ class SchoolRecordController extends Controller
             return redirect('/');
         }
 
+        $this->authorize("update", $schoolRecord);
+
         $validated = $request->validated();
 
         $schoolterm = SchoolTerm::getSchoolTermInEnrollmentPeriod();

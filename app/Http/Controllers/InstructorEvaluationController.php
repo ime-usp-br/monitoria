@@ -213,6 +213,8 @@ class InstructorEvaluationController extends Controller
             return redirect("login");
         }
 
+        $this->authorize("update", $instructorevaluation);
+
         $validated = $request->validated();
 
         $instructorevaluation->update($validated);

@@ -112,7 +112,6 @@ class RolesAndPermissionsSeeder extends Seeder
         Role::firstOrCreate(['name' => 'Aluno'])
             ->givePermissionTo('visualizar periodo letivo')
             ->givePermissionTo('visualizar turma')
-            ->givePermissionTo('visualizar inscrição')
             ->givePermissionTo('fazer inscrição')
             ->givePermissionTo('editar inscrição')
             ->givePermissionTo('Emitir Atestado')

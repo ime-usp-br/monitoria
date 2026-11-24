@@ -10,85 +10,38 @@ class EnrollmentPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
-        //
+        return $user->hasPermissionTo('visualizar todos inscritos');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Enrollment  $enrollment
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function view(User $user, Enrollment $enrollment)
+    public function view(User $user, Enrollment $enrollment): bool
     {
-        //
+        return $this->owns($user, $enrollment)
+            || $user->hasPermissionTo('visualizar todos inscritos');
     }
 
-    /**
-     * Determine whether the user can create models.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function create(User $user)
+    public function create(User $user): bool
     {
-        //
+        return $user->hasRole('Aluno');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Enrollment  $enrollment
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function update(User $user, Enrollment $enrollment)
+    public function update(User $user, Enrollment $enrollment): bool
     {
-        //
+        return $user->hasRole('Aluno')
+            && $user->hasPermissionTo('editar inscrição')
+            && $this->owns($user, $enrollment);
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Enrollment  $enrollment
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function delete(User $user, Enrollment $enrollment)
+    public function delete(User $user, Enrollment $enrollment): bool
     {
-        //
+        return $user->hasRole('Aluno')
+            && $user->hasPermissionTo('deletar inscrição')
+            && $this->owns($user, $enrollment);
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Enrollment  $enrollment
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function restore(User $user, Enrollment $enrollment)
+    private function owns(User $user, Enrollment $enrollment): bool
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Enrollment  $enrollment
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function forceDelete(User $user, Enrollment $enrollment)
-    {
-        //
+        return (string) $user->codpes === (string) $enrollment->student->codpes;
     }
 }

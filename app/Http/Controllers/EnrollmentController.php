@@ -162,6 +162,8 @@ class EnrollmentController extends Controller
             return redirect('/');
         } 
 
+        $this->authorize("update", $enrollment);
+
         $inscricao = $enrollment;
 
         $estudante = $enrollment->student;
@@ -187,6 +189,8 @@ class EnrollmentController extends Controller
             Session::flash('alert-warning', 'Período de inscrições encerrado');
             return redirect('/');
         } 
+
+        $this->authorize("update", $enrollment);
 
         $validated = $request->validated();
 
@@ -238,6 +242,8 @@ class EnrollmentController extends Controller
             Session::flash('alert-warning', 'Período de inscrições encerrado');
             return redirect('/');
         } 
+
+        $this->authorize("delete", $enrollment);
 
         $enrollments = Enrollment::whereHas("schoolclass", function($query)use($enrollment){
             $query->whereBelongsTo($enrollment->schoolclass->schoolterm)

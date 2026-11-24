@@ -10,85 +10,29 @@ class SchoolRecordPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function viewAny(User $user)
+    public function view(User $user, SchoolRecord $schoolRecord): bool
     {
-        //
+        return $this->owns($user, $schoolRecord)
+            || $user->hasPermissionTo('baixar histórico escolar');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\SchoolRecord  $schoolRecord
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function view(User $user, SchoolRecord $schoolRecord)
+    public function create(User $user): bool
     {
-        //
+        return $user->hasRole('Aluno');
     }
 
-    /**
-     * Determine whether the user can create models.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function create(User $user)
+    public function update(User $user, SchoolRecord $schoolRecord): bool
     {
-        //
+        return $user->hasRole('Aluno') && $this->owns($user, $schoolRecord);
     }
 
-    /**
-     * Determine whether the user can update the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\SchoolRecord  $schoolRecord
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function update(User $user, SchoolRecord $schoolRecord)
+    public function download(User $user, SchoolRecord $schoolRecord): bool
     {
-        //
+        return $user->hasPermissionTo('baixar histórico escolar');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\SchoolRecord  $schoolRecord
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function delete(User $user, SchoolRecord $schoolRecord)
+    private function owns(User $user, SchoolRecord $schoolRecord): bool
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\SchoolRecord  $schoolRecord
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function restore(User $user, SchoolRecord $schoolRecord)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\SchoolRecord  $schoolRecord
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function forceDelete(User $user, SchoolRecord $schoolRecord)
-    {
-        //
+        return (string) $user->codpes === (string) $schoolRecord->student->codpes;
     }
 }

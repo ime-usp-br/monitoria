@@ -144,16 +144,14 @@ class RequisitionController extends Controller
             abort(403);
         }
 
+        $this->authorize('update', $requisition);
+
         $turma = $requisition->schoolclass;
-        if($turma->isInstructor(Auth::user()->codpes)){
-            if($turma->isRequisitionPeriod()){
-                return view('requisitions.edit', compact('turma'));
-            }else{
-                Session::flash('alert-warning', 'Período de solicitação de monitores encerrado');
-                return redirect('/requisitions');
-            }
+        if($turma->isRequisitionPeriod()){
+            return view('requisitions.edit', compact('turma'));
         }else{
-            abort(403);
+            Session::flash('alert-warning', 'Período de solicitação de monitores encerrado');
+            return redirect('/requisitions');
         }
         
     }
@@ -169,6 +167,13 @@ class RequisitionController extends Controller
     {
         if(!Gate::allows('editar solicitação de monitor')){
             abort(403);
+        }
+
+        $this->authorize("update", $requisition);
+
+        if(!$requisition->schoolclass->isRequisitionPeriod()){
+            Session::flash("alert-warning", "Período de solicitação de monitores encerrado");
+            return redirect("/requisitions");
         }
 
         $validated = $request->validated();
