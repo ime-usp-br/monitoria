@@ -48,7 +48,7 @@
                                 @if($inscricao->student->schoolrecords()->whereBelongsTo($inscricao->schoolclass->schoolterm)->first())
                                     <form method="POST" action="{{ route('schoolrecords.download') }}" target="_blank">
                                         @csrf
-                                        <input type='hidden' name='path' value="{{ $inscricao->student->schoolrecords()->whereBelongsTo($inscricao->schoolclass->schoolterm)->first()->file_path }}">
+                                        <input type='hidden' name='schoolrecord_id' value="{{ $inscricao->student->schoolrecords()->whereBelongsTo($inscricao->schoolclass->schoolterm)->first()->id }}">
                                         <button class="btn btn-link"
                                             data-toggle="tooltip" data-placement="top"
                                             title="Download"

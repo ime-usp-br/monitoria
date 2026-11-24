@@ -164,25 +164,34 @@ class StudentSchoolRecordScenarioTest extends ScenarioTestCase
 
     public function test_cen_schoolrecord_005_download_valida_existencia_no_storage()
     {
-        Storage::put('20261/historico.pdf', 'conteudo');
+        $term = $this->createOpenTerm();
+        $student = $this->createStudent();
+        $record = $this->createSchoolRecord($student, $term);
+
+        Storage::put($record->file_path, 'conteudo');
 
         $secretaria = $this->secretaria();
-        $resp = $this->actingAs($secretaria)->post('/schoolrecords/download', ['path' => '20261/historico.pdf']);
+        $resp = $this->actingAs($secretaria)->post('/schoolrecords/download', ['schoolrecord_id' => $record->id]);
         $resp->assertOk();
         $this->assertStringContainsString('20261.pdf', (string) $resp->headers->get('content-disposition'));
 
-        // arquivo inexistente falha com mensagem do StorageFileExists
-        $this->from('/enrollments')->actingAs($secretaria)
-            ->post('/schoolrecords/download', ['path' => '20261/nao-existe.pdf'])
-            ->assertSessionHasErrors('path');
+        Storage::delete($record->file_path);
+
+        $this->actingAs($secretaria)
+            ->post('/schoolrecords/download', ['schoolrecord_id' => $record->id])
+            ->assertNotFound();
     }
 
     public function test_cen_schoolrecord_005b_download_nome_primeiro_segmento_do_caminho()
     {
-        Storage::put('20261/historico.pdf', 'conteudo');
+        $term = $this->createOpenTerm();
+        $student = $this->createStudent();
+        $record = $this->createSchoolRecord($student, $term);
+
+        Storage::put($record->file_path, 'conteudo');
         $secretaria = $this->secretaria();
 
-        $resp = $this->actingAs($secretaria)->post('/schoolrecords/download', ['path' => '20261/historico.pdf']);
+        $resp = $this->actingAs($secretaria)->post('/schoolrecords/download', ['schoolrecord_id' => $record->id]);
         $this->assertStringContainsString('20261.pdf', (string) $resp->headers->get('content-disposition'));
     }
 

@@ -147,8 +147,12 @@ class SchoolRecordController extends Controller
             abort(403);
         }
 
-        $validated = $request->validated();
+        $schoolRecord = SchoolRecord::findOrFail($request->validated()["schoolrecord_id"]);
 
-        return Storage::download($validated['path'], explode('/',$validated['path'])[0] . '.pdf');
+        $this->authorize("download", $schoolRecord);
+
+        abort_unless(Storage::exists($schoolRecord->file_path), 404);
+
+        return Storage::download($schoolRecord->file_path, explode("/", $schoolRecord->file_path)[0].".pdf");
     }
 }

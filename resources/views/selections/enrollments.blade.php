@@ -98,7 +98,7 @@
                             <td>
                                 <form method="POST" action="{{ route('schoolrecords.download') }}" target="_blank">
                                     @csrf
-                                    <input type='hidden' name='path' value="{{ $inscricao->student->getSchoolRecordFromOpenSchoolTerm()->file_path }}">
+                                    <input type='hidden' name='schoolrecord_id' value="{{ $inscricao->student->getSchoolRecordFromOpenSchoolTerm()->id }}">
                                     <button class="btn btn-link"
                                         data-toggle="tooltip" data-placement="top"
                                         title="Baixar Histórico Escolar"

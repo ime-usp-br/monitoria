@@ -176,6 +176,24 @@ class AuthorizationMatrixTest extends ScenarioTestCase
             ->assertOk();
     }
 
+    public function test_school_record_download_requires_record_id_and_permission(): void
+    {
+        $env = $this->seedEnvironment();
+        \Illuminate\Support\Facades\Storage::put($env["school_record"]->file_path, "pdf");
+
+        $this->actingAs($env["secretaria"])
+            ->post("/schoolrecords/download", ["path" => $env["school_record"]->file_path])
+            ->assertSessionHasErrors("schoolrecord_id");
+
+        $this->actingAs($env["secretaria"])
+            ->post("/schoolrecords/download", ["schoolrecord_id" => $env["school_record"]->id])
+            ->assertOk();
+
+        $this->actingAs($env["aluno"])
+            ->post("/schoolrecords/download", ["schoolrecord_id" => $env["school_record"]->id])
+            ->assertForbidden();
+    }
+
     private function requisitionPayload(int $requestedNumber = 1): array
     {
         return [

@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\StorageFileExists;
 
 class DownloadSchoolRecordRequest extends FormRequest
 {
@@ -24,10 +23,8 @@ class DownloadSchoolRecordRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
-            'path' => new StorageFileExists(),
+        return [
+            'schoolrecord_id' => 'required|integer|exists:school_records,id',
         ];
-
-        return $rules;
     }
 }
