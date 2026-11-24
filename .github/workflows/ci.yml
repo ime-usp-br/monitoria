@@ -73,6 +73,10 @@ jobs:
             npm audit
           '
 
+      - name: Corrigir permissões do workspace
+        run: |
+          sudo chown -R "$(id -u):$(id -g)" storage bootstrap/cache public/vendor 2>/dev/null || true
+
       - name: E2E Playwright
         run: bash ./scripts/run_e2e.sh
 
