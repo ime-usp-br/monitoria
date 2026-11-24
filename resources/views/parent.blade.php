@@ -169,7 +169,7 @@
         <div class="alert alert-danger">
             <ul>
                 @foreach ($errors->all() as $error)
-                    <li>{!! $error !!}</li>
+                    <li>{{ $error }}</li>
                 @endforeach
             </ul>
         </div>
@@ -177,7 +177,7 @@
     <div class="flash-message">
     @foreach (['danger', 'warning', 'success', 'info'] as $msg)
         @if(Session::has('alert-' . $msg))
-        <p class="alert alert-{{ $msg }}">{!! Session::get('alert-' . $msg) !!}</p>
+        <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }}</p>
         <?php Session::forget('alert-' . $msg) ?>
         @endif
     @endforeach

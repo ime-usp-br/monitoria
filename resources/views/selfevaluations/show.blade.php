@@ -95,7 +95,7 @@
                                 <label>Atividades além do atendimento aos alunos e correção de listas de exercícios:</label>
                             </div>
                             <div class="col-lg-auto">
-                                {!! $se->secondary_activity !!}
+                                {!! nl2br(e($se->secondary_activity)) !!}
                             </div>
                         </div>
                     </div>
@@ -108,7 +108,7 @@
                             </div>
                             @if($se->workload_reason)
                                 <div class="col-lg-auto">
-                                    {!! $se->workload_reason !!}
+                                    {!! nl2br(e($se->workload_reason)) !!}
                                 </div>
                             @endif
                         </div>
