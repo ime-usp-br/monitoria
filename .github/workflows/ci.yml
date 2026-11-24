@@ -2,7 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - 'homolog/**'
   pull_request:
 
 concurrency:
@@ -35,7 +37,7 @@ jobs:
         run: |
           docker compose up -d mysql redis
           for i in $(seq 1 60); do
-            if docker compose exec -T mysql mysqladmin ping -h localhost -uroot -proot --silent >/dev/null 2>&1; then
+            if docker compose exec -T mysql mariadb-admin ping -h 127.0.0.1 -uroot -proot --silent >/dev/null 2>&1; then
               exit 0
             fi
             sleep 2
