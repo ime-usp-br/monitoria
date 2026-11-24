@@ -15,6 +15,7 @@ class SecurityHeaders
         $response->headers->set('X-Content-Type-Options', 'nosniff');
         $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
+        $response->headers->set('Reporting-Endpoints', 'csp-endpoint="/csp-report"');
         $response->headers->set(
             'Content-Security-Policy-Report-Only',
             "default-src 'self'; ".
@@ -25,7 +26,9 @@ class SecurityHeaders
             "connect-src 'self' https:; ".
             "frame-ancestors 'self'; ".
             "base-uri 'self'; ".
-            "form-action 'self';"
+            "form-action 'self'; ".
+            "report-uri /csp-report; ".
+            "report-to csp-endpoint;"
         );
 
         if (app()->isProduction() && $request->isSecure()) {

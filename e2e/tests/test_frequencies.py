@@ -1,8 +1,7 @@
-from datetime import datetime
-
 import pytest
 from playwright.sync_api import expect
 
+from support import clock
 from support.db import fetch_one
 from support.manifest import BASE_URL
 
@@ -29,7 +28,7 @@ def test_link_assinado_registra_frequencia(page_as, manifest):
         for key in manifest["frequencies"]
         if key.startswith("nao_registrada_")
     )
-    today = datetime.now()
+    today = clock.now()
     target = next(
         (month for month in months if month < today.month or (month == today.month and today.day >= 20)),
         None,
@@ -117,7 +116,7 @@ def test_cen_frequency_008_update_bloqueado_para_mes_futuro(anonymous_page, mani
     }
     assert future, "Fixture de frequência futura ausente"
     month, _ = next(iter(future.items()))
-    if month <= datetime.now().month:
+    if month <= clock.now().month:
         pytest.skip("Mês futuro não disponível no calendário atual")
 
     anonymous_page.goto(manifest["urls"]["frequency_signed"])

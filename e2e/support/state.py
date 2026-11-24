@@ -7,13 +7,14 @@ repetíveis na mesma stack.
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import timedelta
+from uuid import uuid4
 
-from support import db
+from support import clock, db
 
 
 def _now() -> str:
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return clock.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def add_term(
@@ -25,10 +26,10 @@ def add_term(
     max_enrollments: int = 5,
     public_notice_file_path: str = "20262/edital_e2e.pdf",
 ) -> int:
-    today = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    today = clock.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def offset(days: int) -> str:
-        return (datetime.now() + timedelta(days=days)).strftime("%Y-%m-%d %H:%M:%S")
+        return (clock.now() + timedelta(days=days)).strftime("%Y-%m-%d %H:%M:%S")
 
     term_id = db.insert(
         "insert into school_terms "
@@ -73,7 +74,7 @@ def add_class(
 ) -> int:
     term_id = term_id or manifest["terms"]["open"]["id"]
     department_id = department_id or manifest["departments"]["MAC"]
-    codtur = codtur or ("9" + datetime.now().strftime("%H%M%S%f")[:12])
+    codtur = codtur or ("9" + uuid4().hex[:12])
     class_id = db.insert(
         "insert into school_classes "
         "(school_term_id, department_id, codtur, coddis, nomdis, tiptur, created_at, updated_at) "

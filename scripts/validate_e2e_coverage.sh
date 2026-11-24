@@ -14,16 +14,21 @@ fi
 total="$(grep -c '^  - cen: CEN-' "$coverage" || true)"
 legacy="$(grep -c '^  - cen: CEN-UI-LEGACY-' "$coverage" || true)"
 core=$((total - legacy))
+legacy_nodeids="$(awk '/^  - cen: CEN-UI-LEGACY-/ { cen=$3 } /^    nodeid: "/ { if (cen ~ /^CEN-UI-LEGACY-/) print cen }' "$coverage" | wc -l)"
 implemented="$(grep -c '^    status: implemented$' "$coverage" || true)"
 planned="$(grep -c '^    status: planned$' "$coverage" || true)"
 
-echo "CENs: $core; UI legada: $legacy; implemented: $implemented; planned: $planned"
+echo "CENs: $core; UI legada: $legacy (nodeids: $legacy_nodeids); implemented: $implemented; planned: $planned"
 if [[ "$core" -ne 244 ]]; then
   echo "ERRO: esperados 244 CENs, encontrados $core" >&2
   errors=$((errors + 1))
 fi
 if [[ "$legacy" -ne 10 ]]; then
   echo "ERRO: esperados 10 CEN-UI-LEGACY, encontrados $legacy" >&2
+  errors=$((errors + 1))
+fi
+if [[ "$legacy_nodeids" -ne 10 ]]; then
+  echo "ERRO: esperados 10 nodeids de CEN-UI-LEGACY, encontrados $legacy_nodeids" >&2
   errors=$((errors + 1))
 fi
 if [[ "$planned" -ne 0 ]]; then

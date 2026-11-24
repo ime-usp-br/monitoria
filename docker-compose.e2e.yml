@@ -52,6 +52,7 @@ x-app-env: &app-env
   IS_SUPERVISOR_CONFIG: "false"
   LOG_AS_ADMINISTRATOR: ""
   E2E_MODE: "true"
+  E2E_FROZEN_NOW: "2026-11-24 12:00:00"
   # O asedocker (ASE 16) não roda em kernels 7.x (SIGSEGV no boot).
   # Padrão: Replicado falso em JSON gerado pelo e2e:seed.
   # Para usar o ASE, suba o profile `asedocker` e mude para "false".
@@ -185,6 +186,7 @@ services:
       E2E_DB_NAME: monitoria_e2e
       E2E_DB_USER: e2e
       E2E_DB_PASSWORD: e2e
+      E2E_FROZEN_NOW: "2026-11-24 12:00:00"
     volumes:
       - ./e2e:/e2e
       - ./e2e/artifacts:/e2e-artifacts

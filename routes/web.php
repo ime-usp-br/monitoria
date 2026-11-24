@@ -17,6 +17,7 @@ use App\Http\Controllers\FrequencyController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TutorController;
 use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\CspReportController;
 use App\Http\Controllers\MailTemplateController;
 use App\Http\Controllers\SelfEvaluationController;
 use App\Http\Controllers\InstructorEvaluationController;
@@ -35,6 +36,7 @@ use App\Http\Controllers\OldDBController;
 
 // Público
 Route::get('/', [MainController::class, 'index'])->name('home');
+Route::post('/csp-report', CspReportController::class)->name('csp.report')->middleware('throttle:30,1');
 Route::post('/schoolterms/download', [SchoolTermController::class, 'download'])->name('schoolterms.download');
 Route::get('/reports/external', [ReportController::class, 'external'])->name('reports.external')->middleware('throttle:20,1');
 Route::get('/frequencies/{schoolclass}/{tutor}', [FrequencyController::class, 'show'])->name('frequencies.show');

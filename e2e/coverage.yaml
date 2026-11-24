@@ -1782,106 +1782,71 @@ scenarios:
     type: ui
     priority: p0
     test: tests/test_ui_legacy.py
+    nodeid: "tests/test_ui_legacy.py::test_ui_legacy_datepicker_inicializa_e_abre_calendario[chromium]"
     status: implemented
   - cen: CEN-UI-LEGACY-002
     module: UI_LEGACY
     type: ui
     priority: p0
     test: tests/test_ui_legacy.py
+    nodeid: "tests/test_ui_legacy.py::test_ui_legacy_modal_horario_adiciona_horario_valido[chromium]"
     status: implemented
   - cen: CEN-UI-LEGACY-003
     module: UI_LEGACY
     type: ui
     priority: p1
     test: tests/test_ui_legacy.py
+    nodeid: "tests/test_ui_legacy.py::test_ui_legacy_modal_horario_valida_campos_obrigatorios[chromium]"
     status: implemented
   - cen: CEN-UI-LEGACY-004
     module: UI_LEGACY
     type: ui
     priority: p0
     test: tests/test_ui_legacy.py
+    nodeid: "tests/test_ui_legacy.py::test_ui_legacy_modal_instrutor_busca_e_adiciona_docente[chromium]"
     status: implemented
   - cen: CEN-UI-LEGACY-005
     module: UI_LEGACY
     type: ui
     priority: p1
     test: tests/test_ui_legacy.py
+    nodeid: "tests/test_ui_legacy.py::test_ui_legacy_modal_instrutor_rejeita_codpes_inexistente[chromium]"
     status: implemented
   - cen: CEN-UI-LEGACY-006
     module: UI_LEGACY
     type: ui
     priority: p0
     test: tests/test_ui_legacy.py
+    nodeid: "tests/test_ui_legacy.py::test_ui_legacy_busca_aluno_no_modal_de_selecao[chromium]"
     status: implemented
   - cen: CEN-UI-LEGACY-007
     module: UI_LEGACY
     type: ui
     priority: p0
     test: tests/test_ui_legacy.py
+    nodeid: "tests/test_ui_legacy.py::test_ui_legacy_modal_indicacao_busca_e_adiciona_aluno[chromium]"
     status: implemented
   - cen: CEN-UI-LEGACY-008
     module: UI_LEGACY
     type: ui
     priority: p1
     test: tests/test_ui_legacy.py
+    nodeid: "tests/test_ui_legacy.py::test_ui_legacy_datatable_inicializa_com_botoes_de_exportacao[chromium]"
     status: implemented
   - cen: CEN-UI-LEGACY-009
     module: UI_LEGACY
     type: ui
     priority: p1
     test: tests/test_ui_legacy.py
+    nodeid: "tests/test_ui_legacy.py::test_ui_legacy_modal_remocao_define_action_do_form[chromium]"
     status: implemented
   - cen: CEN-UI-LEGACY-010
     module: UI_LEGACY
     type: ui
     priority: p0
     test: tests/test_ui_legacy.py
+    nodeid: "tests/test_ui_legacy.py::test_ui_legacy_modal_revogacao_define_action_do_form[chromium]"
     status: implemented
-
-# Testes implementados nesta primeira entrega (41).
-# A matriz acima continua com status planned para a cobertura completa dos CEN-*.
-implemented_tests:
-  - tests/test_auth.py::test_admin_login_exibe_menu_administrativo[chromium]
-  - tests/test_auth.py::test_aluno_login_exibe_menu_de_inscricao[chromium]
-  - tests/test_auth.py::test_servidor_sem_papel_recebe_403[chromium]
-  - tests/test_certificates.py::test_admin_lista_atestados_do_periodo_aberto[chromium]
-  - tests/test_certificates.py::test_aluno_sem_monitoria_recebe_aviso[chromium]
-  - tests/test_enrollments.py::test_aluno_ve_turmas_do_periodo_de_inscricao[chromium]
-  - tests/test_enrollments.py::test_aluno_edita_inscricao_e_propaga_preferencia[chromium]
-  - tests/test_enrollments.py::test_docente_nao_acessa_inscricao_de_aluno[chromium]
-  - tests/test_evaluations.py::test_link_assinado_abre_autoavaliacao[chromium]
-  - tests/test_evaluations.py::test_link_assinado_abre_avaliacao_do_docente[chromium]
-  - tests/test_evaluations.py::test_link_adulterado_e_rejeitado[chromium]
-  - tests/test_frequencies.py::test_docente_ve_monitor_ativo_na_frequencia[chromium]
-  - tests/test_frequencies.py::test_link_assinado_registra_frequencia[chromium]
-  - tests/test_frequencies.py::test_aluno_nao_acessa_frequencia[chromium]
-  - tests/test_mailtemplates.py::test_admin_lista_modelos_de_email[chromium]
-  - tests/test_mailtemplates.py::test_admin_acessa_area_de_disparos[chromium]
-  - tests/test_mailtemplates.py::test_docente_nao_edita_modelos[chromium]
-  - tests/test_reports.py::test_admin_acessa_tela_de_relatorios[chromium]
-  - tests/test_reports.py::test_aluno_nao_gera_relatorio[chromium]
-  - tests/test_requisitions.py::test_docente_ve_suas_turmas_no_periodo_de_solicitacao[chromium]
-  - tests/test_requisitions.py::test_aluno_nao_acessa_solicitacoes[chromium]
-  - tests/test_schoolterms.py::test_index_lista_periodo_aberto[chromium]
-  - tests/test_schoolterms.py::test_cria_periodo_fechado_com_edital[chromium]
-  - tests/test_schoolterms.py::test_bloqueia_segundo_periodo_aberto[chromium]
-  - tests/test_selections.py::test_membro_comissao_ve_apenas_solicitacoes_do_departamento[chromium]
-  - tests/test_selections.py::test_membro_comissao_elege_monitor[chromium]
-  - tests/test_selections.py::test_membro_de_outro_departamento_nao_elege[chromium]
-  - tests/test_tutors.py::test_admin_ve_monitor_ativo[chromium]
-  - tests/test_tutors.py::test_membro_mae_nao_ve_monitor_do_mac[chromium]
-  - tests/test_users.py::test_admin_lista_usuarios[chromium]
-  - tests/test_users.py::test_secretaria_acessa_usuarios[chromium]
-  - tests/test_ui_legacy.py::test_ui_legacy_datepicker_inicializa_e_abre_calendario[chromium]
-  - tests/test_ui_legacy.py::test_ui_legacy_modal_horario_adiciona_horario_valido[chromium]
-  - tests/test_ui_legacy.py::test_ui_legacy_modal_horario_valida_campos_obrigatorios[chromium]
-  - tests/test_ui_legacy.py::test_ui_legacy_modal_instrutor_busca_e_adiciona_docente[chromium]
-  - tests/test_ui_legacy.py::test_ui_legacy_modal_instrutor_rejeita_codpes_inexistente[chromium]
-  - tests/test_ui_legacy.py::test_ui_legacy_busca_aluno_no_modal_de_selecao[chromium]
-  - tests/test_ui_legacy.py::test_ui_legacy_datatable_inicializa_com_botoes_de_exportacao[chromium]
-  - tests/test_ui_legacy.py::test_ui_legacy_modal_remocao_define_action_do_form[chromium]
-  - tests/test_ui_legacy.py::test_ui_legacy_modal_revogacao_define_action_do_form[chromium]
-  - tests/test_ui_legacy.py::test_ui_legacy_modal_indicacao_busca_e_adiciona_aluno[chromium]
 # Resumo: 244/244 cenários CEN-* com destino executável (+10 CEN-UI-LEGACY-*).
 summary:
   total: 244

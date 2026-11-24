@@ -43,6 +43,10 @@ class E2eSeed extends Command
             return 1;
         }
 
+        if ($frozen = env('E2E_FROZEN_NOW')) {
+            Carbon::setTestNow(Carbon::parse($frozen, config('app.timezone')));
+        }
+
         $this->seedRoles();
         $this->seedCatalogs();
         $this->seedTerms();

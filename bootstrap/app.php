@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\FreezeE2eClock;
 use App\Http\Middleware\RateLimitLogin;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\SecurityHeaders;
@@ -17,8 +18,15 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->prepend(TrustHosts::class);
+
+        if (env('E2E_FROZEN_NOW')) {
+            $middleware->web(append: [FreezeE2eClock::class]);
+        }
+
         $middleware->append(RateLimitLogin::class);
         $middleware->append(SecurityHeaders::class);
+
+        $middleware->validateCsrfTokens(except: ['csp-report']);
 
         $middleware->alias([
             'guest' => RedirectIfAuthenticated::class,

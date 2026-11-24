@@ -17,9 +17,12 @@ use InvalidArgumentException;
 
 class MailTemplateContext
 {
+    private bool $includePronoun = false;
+
     public function build(array $context, string $template): array
     {
         $includeSexo = str_contains($template, 'sexo');
+        $this->includePronoun = str_contains($template, 'pronoun');
 
         return array_map(
             fn ($value) => $this->value($value, $includeSexo),
@@ -88,6 +91,7 @@ class MailTemplateContext
     {
         $data = [
             'nompes' => $student->nompes,
+            'primeiro_nome' => explode(' ', trim((string) $student->nompes))[0] ?? '',
             'codpes' => $student->codpes,
             'codema' => $student->codema,
             'sexpes' => $student->sexpes,
@@ -100,20 +104,25 @@ class MailTemplateContext
         return $data;
     }
 
-    private function schoolClass(SchoolClass $schoolclass, bool $includeSexo): array
+    private function schoolClass(SchoolClass $schoolclass, bool $includeSexo, bool $withSelections = true): array
     {
-        return [
+        $data = [
             'id' => $schoolclass->id,
             'nomdis' => $schoolclass->nomdis,
             'coddis' => $schoolclass->coddis,
             'codtur' => $schoolclass->codtur,
             'schoolterm' => $schoolclass->schoolterm ? $this->schoolTerm($schoolclass->schoolterm) : null,
             'requisition' => $schoolclass->requisition ? $this->requisition($schoolclass->requisition, $includeSexo) : null,
-            'selections' => $schoolclass->selections
+        ];
+
+        if ($withSelections) {
+            $data['selections'] = $schoolclass->selections
                 ->map(fn (Selection $selection) => $this->selection($selection, $includeSexo))
                 ->values()
-                ->all(),
-        ];
+                ->all();
+        }
+
+        return $data;
     }
 
     private function schoolTerm(SchoolTerm $schoolterm): array
@@ -135,18 +144,26 @@ class MailTemplateContext
             'sitatl' => $selection->sitatl,
             'voluntario' => $selection->voluntario,
             'student' => $selection->student ? $this->student($selection->student, $includeSexo) : null,
+            'requisition' => $selection->requisition ? $this->requisition($selection->requisition, $includeSexo) : null,
+            'schoolclass' => $selection->schoolclass ? $this->schoolClass($selection->schoolclass, $includeSexo, false) : null,
         ];
     }
 
     private function instructor(Instructor $instructor, bool $includeSexo): array
     {
-        return [
+        $data = [
             'id' => $instructor->id,
             'nompes' => $instructor->nompes,
             'codpes' => $instructor->codpes,
             'codema' => $instructor->codema,
             'department' => $instructor->department ? $this->department($instructor->department) : null,
         ];
+
+        if ($this->includePronoun) {
+            $data['pronoun_treatment'] = $instructor->getPronounTreatment();
+        }
+
+        return $data;
     }
 
     private function department(Department $department): array

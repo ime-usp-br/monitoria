@@ -1,9 +1,7 @@
-from datetime import datetime
-
 import pytest
 from playwright.sync_api import expect
 
-from support import db, http, state
+from support import clock, db, http, state
 from support.manifest import BASE_URL
 
 
@@ -104,7 +102,7 @@ def test_cen_tutor_006_revoke_bloqueia_nao_ativo(page_as, manifest):
 def test_cen_tutor_007_revoke_exclui_frequencias_futuras(page_as, manifest, temp):
     class_id, enrollment_id, selection_id = _selection_fixture(manifest, temp)
     student_id = manifest["students"]["160004"]
-    current = datetime.now().month
+    current = clock.now().month
     past = min(8, current - 1)
     future = min(12, current + 1)
     state.add_frequency(temp, student_id=student_id, class_id=class_id, month=past, registered=True)
@@ -138,7 +136,7 @@ def test_cen_tutor_008_revoke_define_desligado(page_as, manifest, temp):
     row = db.fetch_one("select sitatl, motdes, dtafimvin from selections where id=%s", (selection_id,))
     assert row["sitatl"] == "Desligado"
     assert row["motdes"] == "Motivo E2E"
-    today = datetime.now()
+    today = clock.now()
     assert row["dtafimvin"] in (today.strftime("%d/%m/%Y"), today.strftime("%Y-%m-%d"), today.strftime("%Y-%m-%d 00:00:00")) or row["dtafimvin"].startswith(today.strftime("%Y-%m-%d"))
 
 

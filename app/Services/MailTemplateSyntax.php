@@ -68,11 +68,41 @@ class MailTemplateSyntax
         return $source;
     }
 
+    public function unsupportedPlaceholders(string $source): array
+    {
+        preg_match_all('/\{\{\s*(.*?)\s*\}\}|\{!!\s*(.*?)\s*!!\}/s', $source, $matches, PREG_SET_ORDER);
+
+        $problems = [];
+
+        foreach ($matches as $match) {
+            $expression = $match[1] !== '' ? $match[1] : ($match[2] ?? '');
+
+            preg_match_all('/->([A-Za-z_][A-Za-z0-9_]*)\s*\(/', $expression, $methods);
+            foreach ($methods[1] as $method) {
+                if (! in_array($method, ['getSexo', 'getPronounTreatment'], true)) {
+                    $problems[] = 'método '.$method.'()';
+                }
+            }
+
+            $clean = preg_replace('/\b(getSexo|getPronounTreatment)\s*\(\s*\)/', '', $expression);
+            $clean = preg_replace('/explode\(\s*([\'"])\s*\1\s*,\s*.*?\)\s*\[\s*0\s*\]/', '', $clean);
+
+            preg_match_all('/\b([A-Za-z_][A-Za-z0-9_]*)\s*\(/', $clean, $functions);
+            foreach ($functions[1] as $function) {
+                if (! in_array($function, ['count'], true)) {
+                    $problems[] = 'função '.$function.'()';
+                }
+            }
+        }
+
+        return array_values(array_unique($problems));
+    }
+
     public function unsupportedDirectives(string $source): array
     {
-        preg_match_all('/@([A-Za-z_][A-Za-z0-9_]*)/', $source, $matches);
+        preg_match_all('/(^|[^A-Za-z0-9_])@([A-Za-z_][A-Za-z0-9_]*)/', $source, $matches);
 
-        return array_values(array_unique(array_diff($matches[1], [
+        return array_values(array_unique(array_diff($matches[2], [
             'foreach', 'endforeach', 'if', 'elseif', 'else', 'endif',
             'isset', 'endisset',
         ])));
@@ -83,6 +113,12 @@ class MailTemplateSyntax
         $expression = str_replace('->', '.', $expression);
         $expression = preg_replace('/\$(?=[A-Za-z_])/', '', $expression);
         $expression = preg_replace('/\bgetSexo\s*\(\s*\)/i', 'sexo', $expression);
+        $expression = preg_replace('/\bgetPronounTreatment\s*\(\s*\)/i', 'pronoun_treatment', $expression);
+        $expression = preg_replace(
+            '/explode\(\s*([\'"])\s*\1\s*,\s*([A-Za-z_][A-Za-z0-9_.]*?)\s*\.nompes\s*\)\s*\[\s*0\s*\]/',
+            '$2.primeiro_nome',
+            $expression
+        );
 
         if (preg_match('/^(.+?)\s*\?\?\s*(.+)$/s', $expression, $matches)) {
             $expression = $matches[1].'|default('.$matches[2].')';

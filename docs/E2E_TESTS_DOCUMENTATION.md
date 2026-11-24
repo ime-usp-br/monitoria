@@ -985,8 +985,8 @@ Pipeline previsto (GitHub Actions ou equivalente):
 3. build das imagens com cache de camadas;
 4. `down -v` preventivo;
 5. `up -d --build --wait`;
-6. executar a suíte PHPUnit de cenário (249 testes; 1 skip condicional de data);
-7. executar `pytest` completo (201 testes);
+6. executar a suíte PHPUnit de cenário (269 testes; 1 skip condicional de data);
+7. executar `pytest` completo (211 testes);
 8. publicar `e2e/artifacts` como artifact em sucesso/falha;
 9. `down -v` sempre;
 10. timeout do job (ex.: 60 min) e timeout por teste.

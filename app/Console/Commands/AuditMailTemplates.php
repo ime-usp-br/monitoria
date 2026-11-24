@@ -31,7 +31,7 @@ class AuditMailTemplates extends Command
             $placeholders = [];
 
             foreach (['subject', 'body'] as $field) {
-                $value = (string) $template->{$field};
+                $value = html_entity_decode((string) $template->{$field});
 
                 try {
                     $syntax->toTwig($value);
@@ -43,6 +43,12 @@ class AuditMailTemplates extends Command
 
                 if (! empty($unsupported)) {
                     $problems[] = $field.' diretivas: '.implode(', ', $unsupported);
+                }
+
+                $unsupported = $syntax->unsupportedPlaceholders($value);
+
+                if (! empty($unsupported)) {
+                    $problems[] = $field.' placeholders: '.implode(', ', $unsupported);
                 }
 
                 preg_match_all('/\{\{\s*(.*?)\s*\}\}/s', $value, $matches);
