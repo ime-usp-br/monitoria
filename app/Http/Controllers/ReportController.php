@@ -38,17 +38,21 @@ class ReportController extends Controller
 
     public function external(Request $request)
     {
-        if($request->has("token")){
-            if(env("EXTERNAL_REPORT_TOKEN")!=$request->get("token")){
-                return response()->json([
-                    "status"=>false,
-                    "message"=>"Token incorreto."
-                ]);
-            }
-        }else{
+        $token = $request->bearerToken() ?: $request->input('token');
+
+        if (empty($token)) {
             return response()->json([
                 "status"=>false,
                 "message"=>"Não foi encontrado o token."
+            ]);
+        }
+
+        $expectedToken = (string) config('services.external_report.token');
+
+        if (!hash_equals($expectedToken, (string) $token)) {
+            return response()->json([
+                "status"=>false,
+                "message"=>"Token incorreto."
             ]);
         }
 

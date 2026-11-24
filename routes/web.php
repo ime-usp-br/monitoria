@@ -36,9 +36,10 @@ use App\Http\Controllers\OldDBController;
 // Público
 Route::get('/', [MainController::class, 'index'])->name('home');
 Route::post('/schoolterms/download', [SchoolTermController::class, 'download'])->name('schoolterms.download');
-Route::get('/reports/external', [ReportController::class, 'external'])->name('reports.external');
+Route::get('/reports/external', [ReportController::class, 'external'])->name('reports.external')->middleware('throttle:20,1');
 Route::get('/frequencies/{schoolclass}/{tutor}', [FrequencyController::class, 'show'])->name('frequencies.show');
-Route::get('frequencies/{frequency}', [FrequencyController::class, 'update'])->name('frequencies.update');
+Route::get('frequencies/{frequency}', [FrequencyController::class, 'confirm'])->name('frequencies.confirm');
+Route::patch('frequencies/{frequency}', [FrequencyController::class, 'update'])->name('frequencies.update');
 
 Route::get('/selfevaluations/create', [SelfEvaluationController::class, 'create'])->name('selfevaluations.create');
 Route::post('/selfevaluations', [SelfEvaluationController::class, 'store'])->name('selfevaluations.store');
@@ -46,7 +47,7 @@ Route::get('/instructorevaluations/create', [InstructorEvaluationController::cla
 Route::post('/instructorevaluations', [InstructorEvaluationController::class, 'store'])->name('instructorevaluations.store');
 
 // Autenticado
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'throttle:authenticated'])->group(function () {
     Route::get('/users/loginas', [UserController::class, 'loginas'])->name('users.loginas');
     Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
     Route::resource('users', UserController::class);

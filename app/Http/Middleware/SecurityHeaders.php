@@ -15,6 +15,18 @@ class SecurityHeaders
         $response->headers->set('X-Content-Type-Options', 'nosniff');
         $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
+        $response->headers->set(
+            'Content-Security-Policy-Report-Only',
+            "default-src 'self'; ".
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https: data:; ".
+            "style-src 'self' 'unsafe-inline' https:; ".
+            "img-src 'self' data: https:; ".
+            "font-src 'self' data: https:; ".
+            "connect-src 'self' https:; ".
+            "frame-ancestors 'self'; ".
+            "base-uri 'self'; ".
+            "form-action 'self';"
+        );
 
         if (app()->isProduction() && $request->isSecure()) {
             $response->headers->set(

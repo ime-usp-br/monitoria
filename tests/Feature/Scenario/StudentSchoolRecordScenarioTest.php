@@ -20,6 +20,11 @@ class StudentSchoolRecordScenarioTest extends ScenarioTestCase
         $this->getJson('/students?codpes=1234567')->assertStatus(401);
     }
 
+    public function test_cen_student_000b_busca_json_bloqueia_aluno()
+    {
+        $this->actingAs($this->aluno())->getJson('/students?codpes=1234567')->assertForbidden();
+    }
+
     public function test_cen_student_001_busca_json_por_codpes_retorna_dados_do_aluno()
     {
         $response = $this->actingAs($this->docente())->getJson('/students?codpes=1234567');

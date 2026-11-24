@@ -32,9 +32,9 @@
                                     <td>{{ $frequencia->registered ? 'Sim' : 'Não' }}</td>
 
                                     @if($frequencia->registered)
-                                        <td style="width: 150px;"><a href="{{ \Illuminate\Support\Facades\URL::signedRoute('frequencies.update',['frequency'=>$frequencia->id]) }}" class="btn btn-outline-danger btn-sm">Desmarcar</a></td>
+                                        <td style="width: 150px;"><a href="{{ \Illuminate\Support\Facades\URL::signedRoute('frequencies.confirm',['frequency'=>$frequencia->id]) }}" class="btn btn-outline-danger btn-sm">Desmarcar</a></td>
                                     @else  
-                                        <td style="width: 150px;"><a href="{{ \Illuminate\Support\Facades\URL::signedRoute('frequencies.update',['frequency'=>$frequencia->id]) }}" class="btn btn-outline-success btn-sm">Registrar</a></td>
+                                        <td style="width: 150px;"><a href="{{ \Illuminate\Support\Facades\URL::signedRoute('frequencies.confirm',['frequency'=>$frequencia->id]) }}" class="btn btn-outline-success btn-sm">Registrar</a></td>
                                     @endif
                                 </tr>
                             @endforeach

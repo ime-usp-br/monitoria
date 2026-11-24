@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\RateLimitLogin;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\TrustHosts;
@@ -16,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->prepend(TrustHosts::class);
+        $middleware->append(RateLimitLogin::class);
         $middleware->append(SecurityHeaders::class);
 
         $middleware->alias([

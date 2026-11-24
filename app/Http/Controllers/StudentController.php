@@ -18,6 +18,19 @@ class StudentController extends Controller
      */
     public function index(IndexStudentRequest $request)
     {
+        $operationalRoles = [
+            'Administrador',
+            'Secretaria',
+            'Docente',
+            'Presidente de Comissão',
+            'Vice Presidente de Comissão',
+            'Membro Comissão',
+        ];
+
+        if (!Auth::check() || !Auth::user()->hasAnyRole($operationalRoles)) {
+            abort(403);
+        }
+
         $validated = $request->validated();
         
         if($request->expectsJson()){

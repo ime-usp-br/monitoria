@@ -71,4 +71,17 @@ class ReportScenarioTest extends ScenarioTestCase
         // retorna JSON (não redireciona para login)
         $this->assertFalse($resp->isRedirect());
     }
+
+    public function test_cen_report_008_external_aceita_bearer_header()
+    {
+        $this->setEnv('EXTERNAL_REPORT_TOKEN', 'segredo-token');
+
+        $resp = $this->withHeader('Authorization', 'Bearer segredo-token')
+            ->get('/reports/external');
+
+        $resp->assertJson([
+            'status' => false,
+            'message' => 'Não foi encontrado o ano.',
+        ]);
+    }
 }

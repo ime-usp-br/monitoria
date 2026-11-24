@@ -52,6 +52,10 @@ def test_link_assinado_registra_frequencia(page_as, manifest):
     row.get_by_role("link", name="Registrar", exact=True).click()
     page.wait_for_load_state("domcontentloaded")
 
+    expect(page.get_by_role("heading", name="Confirmar Frequência")).to_be_visible()
+    page.get_by_role("button", name="Confirmar registro").click()
+    page.wait_for_load_state("domcontentloaded")
+
     after = fetch_one(
         "select registered from frequencies where student_id = %s and school_class_id = %s and month = %s",
         (

@@ -19,6 +19,10 @@ class SecurityHeadersTest extends TestCase
         $this->assertSame('nosniff', $response->headers->get('X-Content-Type-Options'));
         $this->assertSame('SAMEORIGIN', $response->headers->get('X-Frame-Options'));
         $this->assertSame('strict-origin-when-cross-origin', $response->headers->get('Referrer-Policy'));
+        $this->assertStringContainsString(
+            "default-src 'self'",
+            (string) $response->headers->get('Content-Security-Policy-Report-Only')
+        );
     }
 
     public function test_hsts_somente_em_producao_e_https(): void

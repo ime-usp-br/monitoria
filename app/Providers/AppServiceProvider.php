@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 
@@ -54,9 +57,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-	if ($this->app->isProduction() && config('app.debug')) {
+        if ($this->app->isProduction() && config('app.debug')) {
             throw new \RuntimeException('APP_DEBUG deve ser false em produção.');
         }
+
+        RateLimiter::for('authenticated', function (Request $request) {
+            $maxAttempts = app()->environment('testing') ? 1000 : 60;
+
+            return Limit::perMinute($maxAttempts)->by($request->user()?->id ?: $request->ip());
+        });
 
 	Schema::defaultStringLength(191);
 	

@@ -453,5 +453,9 @@ abstract class ScenarioTestCase extends TestCase
         $_ENV[$key] = $value;
         $_SERVER[$key] = $value;
         $this->app['config']->set($key, $value);
+
+        if ($key === 'EXTERNAL_REPORT_TOKEN') {
+            $this->app['config']->set('services.external_report.token', $value);
+        }
     }
 }

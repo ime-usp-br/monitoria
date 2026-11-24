@@ -117,6 +117,33 @@ class FrequencyController extends Controller
     }
 
     /**
+     * Confirm the frequency update before changing state.
+     *
+     * @param  \App\Http\Requests\UpdateFrequencyRequest  $request
+     * @param  \App\Models\Frequency  $frequency
+     * @return \Illuminate\Http\Response
+     */
+    public function confirm(UpdateFrequencyRequest $request, Frequency $frequency)
+    {
+        $this->authorizeFrequency($request, $frequency);
+
+        $selection = Selection::whereBelongsTo($frequency->schoolclass)
+            ->whereBelongsTo($frequency->student)
+            ->first();
+
+        abort_unless($selection, 404);
+
+        $meses = $this->meses();
+
+        return view('frequencies.confirm', [
+            'frequency' => $frequency,
+            'selection' => $selection,
+            'meses' => $meses,
+            'blockedReason' => $this->frequencyBlockedReason($frequency, $selection, $meses),
+        ]);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateFrequencyRequest  $request
@@ -125,26 +152,18 @@ class FrequencyController extends Controller
      */
     public function update(UpdateFrequencyRequest $request, Frequency $frequency)
     {
-        if($request->has("signature")){
-            if(!$request->hasValidSignature()){
-                abort(403);
-            }
-        }elseif(Auth::check()){
-            if(!$frequency->schoolclass->isInstructor(Auth::user()->codpes)){
-                abort(403);
-            }
-        }else{
-            abort(403);
-        }
+        $this->authorizeFrequency($request, $frequency);
 
         $selection = Selection::whereBelongsTo($frequency->schoolclass)->whereBelongsTo($frequency->student)->first();
+
+        abort_unless($selection, 404);
 
         if($selection->sitatl != "Ativo"){
             Session::flash('alert-warning', 'Esta monitoria encontra-se com status '.$selection->sitatl.'.');
             return back();  
         }
-        
-        $meses = [1=>"janeiro", 2=>"fevereiro", 3=>"março", 4=>"abril", 5=>"maio", 6=>"junho", 7=>"julho", 8=>"agosto", 9=>"setembro", 10=>"outubro", 11=>"novembro", 12=>"dezembro"];
+
+        $meses = $this->meses();
 
         if($frequency->month > now()->month or ($frequency->month == now()->month and now()->day < 20)){
             Session::flash('alert-warning', 'A frequência de '.$meses[$frequency->month].' só será liberada a partir do dia 20/'.$frequency->month.'.');
@@ -153,7 +172,61 @@ class FrequencyController extends Controller
 
         $frequency->registered  = !$frequency->registered;
         $frequency->save();
+
+        Session::flash('alert-success', 'Frequência atualizada com sucesso.');
         return back();
+    }
+
+    private function authorizeFrequency(Request $request, Frequency $frequency): void
+    {
+        if ($request->has('signature')) {
+            if (! $request->hasValidSignature()) {
+                abort(403);
+            }
+
+            return;
+        }
+
+        if (Auth::check()) {
+            if (! $frequency->schoolclass->isInstructor(Auth::user()->codpes)) {
+                abort(403);
+            }
+
+            return;
+        }
+
+        abort(403);
+    }
+
+    private function meses(): array
+    {
+        return [
+            1 => 'janeiro',
+            2 => 'fevereiro',
+            3 => 'março',
+            4 => 'abril',
+            5 => 'maio',
+            6 => 'junho',
+            7 => 'julho',
+            8 => 'agosto',
+            9 => 'setembro',
+            10 => 'outubro',
+            11 => 'novembro',
+            12 => 'dezembro',
+        ];
+    }
+
+    private function frequencyBlockedReason(Frequency $frequency, Selection $selection, array $meses): ?string
+    {
+        if ($selection->sitatl != 'Ativo') {
+            return 'Esta monitoria encontra-se com status '.$selection->sitatl.'.';
+        }
+
+        if ($frequency->month > now()->month or ($frequency->month == now()->month and now()->day < 20)) {
+            return 'A frequência de '.$meses[$frequency->month].' só será liberada a partir do dia 20/'.$frequency->month.'.';
+        }
+
+        return null;
     }
 
     /**

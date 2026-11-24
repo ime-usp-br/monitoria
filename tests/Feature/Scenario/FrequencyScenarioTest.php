@@ -113,13 +113,16 @@ class FrequencyScenarioTest extends ScenarioTestCase
             'registered' => false,
         ]);
 
-        $url = URL::signedRoute('frequencies.update', ['frequency' => $frequency->id]);
+        $confirmUrl = URL::signedRoute('frequencies.confirm', ['frequency' => $frequency->id]);
+        $updateUrl = URL::signedRoute('frequencies.update', ['frequency' => $frequency->id]);
 
-        $this->from('/')->get($url)->assertRedirect('/');
+        $this->get($confirmUrl)->assertOk()->assertSee('Confirmar Frequência');
+        $this->assertSame(0, (int) $frequency->fresh()->registered);
 
+        $this->from('/')->patch($updateUrl)->assertRedirect('/');
         $this->assertSame(1, (int) $frequency->fresh()->registered);
 
-        $this->from('/')->get($url)->assertRedirect('/');
+        $this->from('/')->patch($updateUrl)->assertRedirect('/');
         $this->assertSame(0, (int) $frequency->fresh()->registered);
     }
 
@@ -132,9 +135,11 @@ class FrequencyScenarioTest extends ScenarioTestCase
             'month' => min(12, now()->month + 1),
         ]);
 
-        $url = URL::signedRoute('frequencies.update', ['frequency' => $frequency->id]);
+        $confirmUrl = URL::signedRoute('frequencies.confirm', ['frequency' => $frequency->id]);
+        $updateUrl = URL::signedRoute('frequencies.update', ['frequency' => $frequency->id]);
 
-        $this->from('/frequencies')->get($url)->assertRedirect('/frequencies');
+        $this->get($confirmUrl)->assertOk()->assertSee('Esta monitoria encontra-se com status Concluido.');
+        $this->from('/frequencies')->patch($updateUrl)->assertRedirect('/frequencies');
         $this->assertSessionHasWarningContaining('status');
         $this->assertSame(0, (int) $frequency->fresh()->registered);
     }
@@ -148,9 +153,11 @@ class FrequencyScenarioTest extends ScenarioTestCase
             'month' => min(12, now()->month + 1),
         ]);
 
-        $url = URL::signedRoute('frequencies.update', ['frequency' => $frequency->id]);
+        $confirmUrl = URL::signedRoute('frequencies.confirm', ['frequency' => $frequency->id]);
+        $updateUrl = URL::signedRoute('frequencies.update', ['frequency' => $frequency->id]);
 
-        $this->from('/frequencies')->get($url)->assertRedirect('/frequencies');
+        $this->get($confirmUrl)->assertOk()->assertSee('liberada');
+        $this->from('/frequencies')->patch($updateUrl)->assertRedirect('/frequencies');
         $this->assertSessionHasWarningContaining('liberada');
         $this->assertSame(0, (int) $frequency->fresh()->registered);
     }
@@ -166,9 +173,11 @@ class FrequencyScenarioTest extends ScenarioTestCase
             'month' => now()->month,
         ]);
 
-        $url = URL::signedRoute('frequencies.update', ['frequency' => $frequency->id]);
+        $confirmUrl = URL::signedRoute('frequencies.confirm', ['frequency' => $frequency->id]);
+        $updateUrl = URL::signedRoute('frequencies.update', ['frequency' => $frequency->id]);
 
-        $this->from('/frequencies')->get($url)->assertRedirect('/frequencies');
+        $this->get($confirmUrl)->assertOk()->assertSee('liberada');
+        $this->from('/frequencies')->patch($updateUrl)->assertRedirect('/frequencies');
         $this->assertSessionHasWarningContaining('liberada');
     }
 
@@ -181,9 +190,11 @@ class FrequencyScenarioTest extends ScenarioTestCase
             'month' => now()->month,
         ]);
 
-        $url = URL::signedRoute('frequencies.update', ['frequency' => $frequency->id]);
+        $confirmUrl = URL::signedRoute('frequencies.confirm', ['frequency' => $frequency->id]);
+        $updateUrl = URL::signedRoute('frequencies.update', ['frequency' => $frequency->id]);
 
-        $this->from('/')->get($url)->assertRedirect('/');
+        $this->get($confirmUrl)->assertOk();
+        $this->from('/')->patch($updateUrl)->assertRedirect('/');
         $this->assertSame(1, (int) $frequency->fresh()->registered);
     }
 
@@ -193,8 +204,9 @@ class FrequencyScenarioTest extends ScenarioTestCase
         $selection = $this->createSelection(['enrollment_id' => $env['enrollment']->id]);
         $frequency = $this->createFrequency(['selection_id' => $selection->id]);
 
-        // sem URL assinada e sem usuário => 403
+        // sem URL assinada e sem usuário => 403 na confirmação e na atualização
         $this->get('/frequencies/'.$frequency->id)->assertForbidden();
+        $this->patch('/frequencies/'.$frequency->id)->assertForbidden();
     }
 
     public function test_cen_frequency_012_update_autenticado_como_instrutor_alterna_registered()
@@ -208,8 +220,12 @@ class FrequencyScenarioTest extends ScenarioTestCase
         ]);
 
         $this->actingAs($env['docente'])
+            ->get(route('frequencies.confirm', ['frequency' => $frequency->id]))
+            ->assertOk();
+
+        $this->actingAs($env['docente'])
             ->from('/frequencies')
-            ->get(route('frequencies.update', ['frequency' => $frequency->id]))
+            ->patch(route('frequencies.update', ['frequency' => $frequency->id]))
             ->assertRedirect('/frequencies');
 
         $this->assertSame(1, (int) $frequency->fresh()->registered);
@@ -225,7 +241,11 @@ class FrequencyScenarioTest extends ScenarioTestCase
         ]);
 
         $this->actingAs($this->docente())
-            ->get(route('frequencies.update', ['frequency' => $frequency->id]))
+            ->get(route('frequencies.confirm', ['frequency' => $frequency->id]))
+            ->assertForbidden();
+
+        $this->actingAs($this->docente())
+            ->patch(route('frequencies.update', ['frequency' => $frequency->id]))
             ->assertForbidden();
 
         $this->assertSame(0, (int) $frequency->fresh()->registered);
