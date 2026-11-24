@@ -21,10 +21,10 @@ return [
 
     // define as rotas para o gerenciador de usuários interno, dentro de prefix
     // se vazio, desabilita a rota de gerenciamento de usuários interna
-    'userRoutes' => 'usuarios',
+    'userRoutes' => '',
 
     // se true, habilita botão para remover usuário (destroy)
-    'destroyUser' => true,
+    'destroyUser' => false,
 
     // view para editar campo de usuário personalizado
     // é passado $user para a view

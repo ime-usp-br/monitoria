@@ -1,31 +1,36 @@
+import os
+import sys
+from urllib.parse import quote_plus
+
 try:
-    import sys
     import matplotlib.pyplot as plt
     import seaborn as sns
     import pandas as pd
     import pymysql
     import sqlalchemy as db
     from dotenv import load_dotenv
-    import os
 
     load_dotenv()
     sns.set()
 
-    st_id = sys.argv[1]
+    if len(sys.argv) < 2 or not sys.argv[1].isdigit():
+        raise ValueError("O identificador do período letivo deve ser numérico.")
 
-    path = os.environ.get("BASE_PATH")+"/storage/app/graphs/"
-    if not os.path.isdir(path):
-        os.mkdir(path)
+    st_id = int(sys.argv[1])
+
+    base_path = os.environ.get("BASE_PATH", "")
+    path = os.path.join(base_path, "storage", "app", "graphs") + os.sep
+    os.makedirs(path, exist_ok=True)
 
     engine = db.create_engine("mysql+pymysql://%s:%s@%s:%s/%s"%(
-                                                                    os.environ.get("DB_USERNAME"),
-                                                                    os.environ.get("DB_PASSWORD"),
+                                                                    quote_plus(os.environ.get("DB_USERNAME", "")),
+                                                                    quote_plus(os.environ.get("DB_PASSWORD", "")),
                                                                     os.environ.get("DB_HOST"),
                                                                     os.environ.get("DB_PORT"),
                                                                     os.environ.get("DB_DATABASE")
                                                                 ))
 
-    st = pd.read_sql("select * from school_terms where id="+st_id, engine).iloc[0].to_dict()
+    st = pd.read_sql(db.text("select * from school_terms where id=:id"), engine, params={"id": st_id}).iloc[0].to_dict()
     sts = pd.read_sql("select * from school_terms", engine)
     selections = pd.read_sql("select * from selections", engine)
     scs = pd.read_sql("select * from school_classes", engine)
@@ -62,7 +67,7 @@ try:
     fig.subplots_adjust(bottom=0.2)
     plt.savefig(path+"monitorias_por_departamento.jpg")
 
-    courses = pd.read_sql("select * from courses where schoolterm_id="+st_id, engine)
+    courses = pd.read_sql(db.text("select * from courses where schoolterm_id=:id"), engine, params={"id": st_id})
     courses["Tipo"] = courses.apply(lambda row: "Pós Graduação" if "Doutorado" in row["nomcur"] or "Mestrado" in row["nomcur"] else "Graduação", axis=1)
     courses["Local"] = courses.apply(lambda row: "IME" if "IME" == row["sglund"] else "Fora do IME", axis=1)
     courses_grouped = courses.groupby(["Tipo","Local"]).count().loc[:,["id"]].rename(columns={"id":"Monitorias"}).reset_index()
@@ -86,7 +91,8 @@ except Exception as ex:
     for trace in trace_back:
         stack_trace.append("File : %s , Line : %d, Func.Name : %s, Message : %s" % (trace[0], trace[1], trace[2], trace[3]))
 
-    print("Exception type : %s " % ex_type.__name__)
-    print("Exception message : %s" %ex_value)
-    print("Stack trace : %s" %stack_trace)
+    print("Exception type : %s " % ex_type.__name__, file=sys.stderr)
+    print("Exception message : %s" %ex_value, file=sys.stderr)
+    print("Stack trace : %s" %stack_trace, file=sys.stderr)
+    sys.exit(1)
 

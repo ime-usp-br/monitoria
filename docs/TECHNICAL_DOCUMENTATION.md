@@ -2,7 +2,7 @@
 
 **Projeto:** Sistema de Monitoria do IME (Instituto de Matemática e Estatística, USP)
 **URL:** https://monitoria.ime.usp.br
-**Stack:** Laravel 13 (PHP ^8.3), MariaDB 10.5 (legado, mantido por decisão), Laravel Sanctum, Spatie Permission, `uspdev/senhaunica-socialite`, `uspdev/replicado`, `ismaielw/laratex`, `romanzipp/laravel-queue-monitor`, Vite.
+**Stack:** Laravel 13 (PHP ^8.5), MariaDB 10.5 (legado, mantido por decisão), Laravel Sanctum, Spatie Permission, `uspdev/senhaunica-socialite`, `uspdev/replicado`, `ismaielw/laratex`, `romanzipp/laravel-queue-monitor`, Vite.
 
 Este documento é uma referência técnica exaustiva, derivada diretamente da análise do código-fonte. Ele detalha todas as funcionalidades e mapeia todos os fluxos de trabalho, servindo como base primária para a geração de testes baseados em cenários.
 

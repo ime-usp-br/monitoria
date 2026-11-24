@@ -34,4 +34,8 @@ return [
         'token' => env('EXTERNAL_REPORT_TOKEN'),
     ],
 
+    'report' => [
+        'python_cmd' => env('PYTHON_CMD', '/usr/bin/python3'),
+    ],
+
 ];

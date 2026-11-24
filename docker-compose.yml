@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------
-# Monitoria — docker-compose único (Laravel 13 / PHP 8.5)
+# Monitoria — docker-compose (Laravel 13 / PHP 8.5)
 #
 # Os serviços se comunicam na rede bridge default do projeto. O serviço `nginx`
 # também ingressa numa rede externa (`web`, reverse proxy) para exposição via
@@ -18,10 +18,17 @@ services:
     container_name: monitoria-app
     restart: unless-stopped
     working_dir: /var/www
+    environment:
+      ALLOW_DEV_ENV: ${ALLOW_DEV_ENV:-false}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
     volumes:
       - .:/var/www
+      - monitoria-storage:/var/www/storage
+      - monitoria-cache:/var/www/bootstrap/cache
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     entrypoint: ["sh", "./docker/entrypoint.sh"]
+    security_opt:
+      - no-new-privileges:true
     depends_on:
       - mysql
       - redis
@@ -47,13 +54,13 @@ services:
     restart: unless-stopped
     environment:
       MARIADB_DATABASE: ${DB_DATABASE:-laravel}
-      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
       MARIADB_PASSWORD: ${DB_PASSWORD:-root}
       MARIADB_USER: ${DB_USERNAME:-laravel}
     volumes:
       - mariadb-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mariadb-admin", "ping", "-h", "127.0.0.1", "-uroot", "-proot", "--silent"]
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -uroot -p\"$${MARIADB_ROOT_PASSWORD}\" --silent"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -63,7 +70,6 @@ services:
     container_name: monitoria-redis
     restart: unless-stopped
 
-  # Queue worker — runs as www-data to avoid permission conflicts with Laravel storage/cache
   worker:
     build:
       context: .
@@ -74,10 +80,17 @@ services:
     container_name: monitoria-worker
     restart: unless-stopped
     working_dir: /var/www
+    environment:
+      ALLOW_DEV_ENV: ${ALLOW_DEV_ENV:-false}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
     volumes:
       - .:/var/www
+      - monitoria-storage:/var/www/storage
+      - monitoria-cache:/var/www/bootstrap/cache
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     entrypoint: ["sh", "./docker/worker-entrypoint.sh"]
+    security_opt:
+      - no-new-privileges:true
     depends_on:
       - mysql
       - redis
@@ -88,3 +101,5 @@ networks:
 
 volumes:
   mariadb-data:
+  monitoria-storage:
+  monitoria-cache:

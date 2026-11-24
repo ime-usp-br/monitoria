@@ -1,34 +1,31 @@
 #!/bin/sh
-set -e
-
-# -----------------------------------------------------------------------------
-# Worker Entrypoint — Monitoria
-# Aguarda o app terminar de instalar dependências (vendor/autoload.php)
-# e o MySQL ficar pronto antes de iniciar o queue:work.
-# ---------------------------------------------------------------------------
+set -eu
 
 LARAVEL_USER="www-data"
 LARAVEL_GROUP="www-data"
 
-# Aguarda vendor/autoload.php existir (app pode ainda estar no composer install)
-echo "[worker] Aguardando vendor/autoload.php..."
-until [ -f "vendor/autoload.php" ]; do
+env_value() {
+    grep -E "^${1}=" .env | tail -n 1 | cut -d= -f2- | sed 's/^"//; s/"$//'
+}
+
+[ -f .env ] || { echo "ERRO: .env não encontrado." >&2; exit 1; }
+[ -f vendor/autoload.php ] || { echo "ERRO: vendor/autoload.php ausente." >&2; exit 1; }
+
+mkdir -p storage/logs
+touch storage/logs/replicado.log
+chown "${LARAVEL_USER}:${LARAVEL_GROUP}" storage/logs/replicado.log
+chmod 640 storage/logs/replicado.log
+
+DB_HOST_VALUE="$(env_value DB_HOST)"
+DB_PORT_VALUE="$(env_value DB_PORT)"
+DB_USERNAME_VALUE="$(env_value DB_USERNAME)"
+DB_PASSWORD_VALUE="$(env_value DB_PASSWORD)"
+
+echo "[worker] Aguardando o banco de dados..."
+until DB_HOST="$DB_HOST_VALUE" DB_PORT="$DB_PORT_VALUE" DB_USERNAME="$DB_USERNAME_VALUE" DB_PASSWORD="$DB_PASSWORD_VALUE" \
+    php -r 'new PDO("mysql:host=".getenv("DB_HOST").";port=".getenv("DB_PORT"), getenv("DB_USERNAME"), getenv("DB_PASSWORD"));' 2>/dev/null; do
     sleep 2
 done
-echo "[worker] vendor encontrado."
 
-# Log do uspdev/replicado: garante o arquivo com ownership correto antes do worker
-# escrever nele (evita "Permission denied" no /tmp/replicado.log).
-touch storage/logs/replicado.log 2>/dev/null || true
-chown "${LARAVEL_USER}:${LARAVEL_GROUP}" storage/logs/replicado.log 2>/dev/null || true
-chmod u+rw,go+r storage/logs/replicado.log 2>/dev/null || true
-
-# Aguarda MySQL estar acessivel antes de iniciar o worker.
-echo "[worker] Aguardando MySQL..."
-until php -r "new PDO('mysql:host=${DB_HOST:-mysql};port=${DB_PORT:-3306}', '${DB_USERNAME:-laravel}', '${DB_PASSWORD:-root}');" 2>/dev/null; do
-    sleep 2
-done
-echo "[worker] MySQL pronto. Iniciando queue:listen..."
-
-# queue:listen rele o codigo a cada job, util em desenvolvimento.
-exec gosu "${LARAVEL_USER}" php artisan queue:listen --tries=3 --sleep=3
+exec setpriv --reuid="${LARAVEL_USER}" --regid="${LARAVEL_GROUP}" --init-groups \
+    php artisan queue:work --tries=3 --timeout=120 --max-time=3600 --sleep=3

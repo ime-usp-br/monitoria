@@ -1,5 +1,8 @@
 name: CI
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
@@ -82,6 +85,9 @@ jobs:
             git config --global --add safe.directory /var/www &&
             composer audit --locked
           '
+
+      - name: Verificar assets externos
+        run: bash ./scripts/check_external_assets.sh
 
       - name: npm ci + npm audit
         run: |

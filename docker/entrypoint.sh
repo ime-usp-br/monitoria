@@ -1,126 +1,71 @@
 #!/bin/sh
-set -e
-
-# -----------------------------------------------------------------------------
-# Laravel Docker Entrypoint — Monitoria
-# Resolve problemas de permissão entre root, www-data e host e prepara o .env
-# com valores compatíveis com o ambiente Docker.
-# -----------------------------------------------------------------------------
+set -eu
 
 LARAVEL_USER="www-data"
 LARAVEL_GROUP="www-data"
+ALLOW_DEV_ENV="${ALLOW_DEV_ENV:-false}"
 
-# Detecta o UID/GID do host usando um arquivo imutável (mantém owner original)
-HOST_UID=$(stat -c '%u' composer.json)
-HOST_GID=$(stat -c '%g' composer.json)
+env_value() {
+    grep -E "^${1}=" .env | tail -n 1 | cut -d= -f2- | sed 's/^"//; s/"$//'
+}
 
-# Ensure storage directories exist with correct ownership before ANY command runs
-mkdir -p storage/framework/cache/data
-mkdir -p storage/framework/sessions
-mkdir -p storage/framework/views
-mkdir -p storage/framework/testing
-mkdir -p storage/logs
-mkdir -p storage/app/public
-mkdir -p bootstrap/cache
+if [ ! -f .env ]; then
+    echo "ERRO: .env não encontrado. O container não cria .env em produção." >&2
+    exit 1
+fi
 
-# Fix ownership and permissions BEFORE running artisan commands.
+if [ "$ALLOW_DEV_ENV" != "true" ]; then
+    APP_ENV_VALUE="$(env_value APP_ENV)"
+    APP_DEBUG_VALUE="$(env_value APP_DEBUG)"
+    APP_KEY_VALUE="$(env_value APP_KEY)"
+    APP_URL_VALUE="$(env_value APP_URL)"
+    DB_PASSWORD_VALUE="$(env_value DB_PASSWORD)"
+
+    [ "$APP_ENV_VALUE" = "production" ] || { echo "ERRO: APP_ENV deve ser production." >&2; exit 1; }
+    [ "$APP_DEBUG_VALUE" = "false" ] || { echo "ERRO: APP_DEBUG deve ser false." >&2; exit 1; }
+    [ -n "$APP_KEY_VALUE" ] || { echo "ERRO: APP_KEY não configurada." >&2; exit 1; }
+    [ -n "$DB_PASSWORD_VALUE" ] && [ "$DB_PASSWORD_VALUE" != "root" ] || { echo "ERRO: DB_PASSWORD deve ser definida e diferente de root." >&2; exit 1; }
+
+    case "$APP_URL_VALUE" in
+        https://*) ;;
+        *) echo "ERRO: APP_URL deve usar https." >&2; exit 1 ;;
+    esac
+fi
+
+[ -d vendor ] || { echo "ERRO: vendor ausente. Rode composer install --no-dev antes do deploy." >&2; exit 1; }
+[ -f public/build/manifest.json ] || { echo "ERRO: assets não compilados. Rode npm ci && npm run build antes do deploy." >&2; exit 1; }
+
+mkdir -p storage/framework/cache/data \
+         storage/framework/sessions \
+         storage/framework/views \
+         storage/framework/testing \
+         storage/logs \
+         storage/app/public \
+         bootstrap/cache
+
 chown -R "${LARAVEL_USER}:${LARAVEL_GROUP}" storage bootstrap/cache
-chmod -R u+rwx storage bootstrap/cache
+chmod -R u+rwX storage bootstrap/cache
 
-# Log do uspdev/replicado: garante que o arquivo exista e pertença ao usuário
-# da aplicação (evita "Permission denied" quando web/worker rodam como www-data).
 touch storage/logs/replicado.log
-chown "${LARAVEL_USER}:${LARAVEL_GROUP}" storage/logs/replicado.log 2>/dev/null || true
-chmod u+rw,go+r storage/logs/replicado.log 2>/dev/null || true
+chown "${LARAVEL_USER}:${LARAVEL_GROUP}" storage/logs/replicado.log
+chmod 640 storage/logs/replicado.log
 
-# If cache driver is file, ensure existing cache files are not owned by root.
-if [ -d "storage/framework/cache/data" ]; then
-    find storage/framework/cache/data -user root -exec chown "${LARAVEL_USER}:${LARAVEL_GROUP}" {} + 2>/dev/null || true
+if [ ! -e public/storage ]; then
+    setpriv --reuid="${LARAVEL_USER}" --regid="${LARAVEL_GROUP}" --init-groups php artisan storage:link || true
 fi
 
-# Install dependencies if vendor is missing (run as root to avoid permission issues with composer cache)
-if [ ! -d "vendor" ]; then
-    echo "Installing PHP dependencies..."
-    composer install --no-interaction --optimize-autoloader
-fi
+DB_HOST_VALUE="$(env_value DB_HOST)"
+DB_PORT_VALUE="$(env_value DB_PORT)"
+DB_USERNAME_VALUE="$(env_value DB_USERNAME)"
+DB_PASSWORD_VALUE="$(env_value DB_PASSWORD)"
 
-# Install node_modules if missing
-if [ ! -d "node_modules" ]; then
-    echo "Installing Node dependencies..."
-    if [ -f "package-lock.json" ]; then
-        npm ci
-    else
-        npm install
-    fi
-fi
-
-# Build assets only if the Vite manifest is missing
-if [ ! -f "public/build/manifest.json" ]; then
-    echo "Building assets..."
-    npm run build
-fi
-
-# Copy .env if it does not exist, ajustando valores para o ambiente Docker
-if [ ! -f ".env" ]; then
-    echo "Creating .env file from .env.example (docker defaults)..."
-    cp .env.example .env
-    sed -i 's|^DB_HOST=.*|DB_HOST=mysql|'        .env
-    sed -i 's|^DB_PORT=.*|DB_PORT=3306|'          .env
-    sed -i 's|^DB_USERNAME=.*|DB_USERNAME=laravel|' .env
-    sed -i 's|^DB_PASSWORD=.*|DB_PASSWORD=root|'  .env
-    sed -i 's|^REDIS_HOST=.*|REDIS_HOST=redis|'   .env
-    sed -i 's|^REDIS_PORT=.*|REDIS_PORT=6379|'    .env
-    sed -i 's|^QUEUE_CONNECTION=.*|QUEUE_CONNECTION=database|' .env
-    sed -i 's|^BASE_PATH=.*|BASE_PATH="/var/www"|' .env
-    sed -i 's|^PYTHON_CMD=.*|PYTHON_CMD="/usr/bin/python3"|' .env
-fi
-
-# Ensure .env is writable by the Laravel user before any artisan command that modifies it
-chown "${HOST_UID}:${LARAVEL_GROUP}" .env 2>/dev/null || true
-chmod u+rwx,g+rw .env 2>/dev/null || true
-
-# Generate app key if missing (run as www-data so .env remains writable by php-fpm)
-if [ -z "$(grep '^APP_KEY=' .env | cut -d '=' -f2)" ]; then
-    echo "Generating application key..."
-    gosu "${LARAVEL_USER}" php artisan key:generate
-fi
-
-# Wait for MySQL to be ready before running migrations
-echo "Waiting for MySQL..."
-until php -r "new PDO('mysql:host=${DB_HOST:-mysql};port=${DB_PORT:-3306}', '${DB_USERNAME:-laravel}', '${DB_PASSWORD:-root}');" 2>/dev/null; do
+echo "Aguardando o banco de dados..."
+until DB_HOST="$DB_HOST_VALUE" DB_PORT="$DB_PORT_VALUE" DB_USERNAME="$DB_USERNAME_VALUE" DB_PASSWORD="$DB_PASSWORD_VALUE" \
+    php -r 'new PDO("mysql:host=".getenv("DB_HOST").";port=".getenv("DB_PORT"), getenv("DB_USERNAME"), getenv("DB_PASSWORD"));' 2>/dev/null; do
     sleep 2
 done
-echo "MySQL ready."
 
-# Run migrations as www-data so any created files are not root-owned
-echo "Running migrations..."
-gosu "${LARAVEL_USER}" php artisan migrate --force || true
+echo "Executando migrations..."
+setpriv --reuid="${LARAVEL_USER}" --regid="${LARAVEL_GROUP}" --init-groups php artisan migrate --force
 
-# Ensure public directory is writable by www-data for storage:link
-chown "${HOST_UID}:${LARAVEL_GROUP}" public 2>/dev/null || true
-chmod u+rwx,g+rwxs public 2>/dev/null || true
-
-# Storage link as www-data
-gosu "${LARAVEL_USER}" php artisan storage:link || true
-
-# Clear and rebuild cache as www-data so cache files are owned by www-data, not root.
-echo "Clearing caches to ensure correct ownership..."
-gosu "${LARAVEL_USER}" php artisan cache:clear || true
-gosu "${LARAVEL_USER}" php artisan config:clear || true
-gosu "${LARAVEL_USER}" php artisan view:clear || true
-
-# Final permission fix in case any command above created files
-chown -R "${LARAVEL_USER}:${LARAVEL_GROUP}" storage bootstrap/cache
-chmod -R u+rwx storage bootstrap/cache
-
-# Restore ownership of vendor/node_modules to the host user so the developer
-# can edit/delete files without sudo. Also fix .env ownership.
-chown -R "${HOST_UID}:${HOST_GID}" vendor node_modules .env 2>/dev/null || true
-chmod -R u+rx vendor node_modules 2>/dev/null || true
-
-# Ensure the main project directory is readable/writeable by both host user and www-data.
-chown "${HOST_UID}:${LARAVEL_GROUP}" . 2>/dev/null || true
-chmod u+rwx,g+rxs . 2>/dev/null || true
-
-# Start php-fpm
 exec php-fpm
