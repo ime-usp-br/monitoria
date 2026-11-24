@@ -49,11 +49,13 @@ jobs:
       - name: Build da imagem da aplicação
         run: docker compose build app
 
-      - name: Instalar dependências, gerar chave e rodar PHPUnit
+      - name: Instalar dependências, migrar o banco de teste e rodar PHPUnit
         run: |
           docker compose run --rm --no-deps --entrypoint sh app -lc '
+            git config --global --add safe.directory /var/www &&
             composer install --no-interaction --prefer-dist --no-progress &&
             php artisan key:generate --force &&
+            php artisan migrate --force &&
             php vendor/bin/phpunit --colors=never
           '
 
