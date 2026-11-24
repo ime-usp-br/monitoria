@@ -63,6 +63,8 @@ jobs:
             apt-get install -y -qq $PHPIZE_DEPS >/dev/null &&
             pecl install pcov >/dev/null &&
             docker-php-ext-enable pcov &&
+            mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/framework/testing storage/logs bootstrap/cache &&
+            chown -R www-data:www-data storage bootstrap/cache &&
             composer install --no-interaction --prefer-dist --no-progress &&
             php artisan key:generate --force &&
             php artisan migrate --force &&
