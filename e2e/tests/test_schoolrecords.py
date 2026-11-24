@@ -94,15 +94,18 @@ def test_cen_schoolrecord_004_update_substitui_arquivo(page_as, manifest, temp):
 @pytest.mark.p0
 def test_cen_schoolrecord_005_download_valida_storage(page_as, manifest):
     page = page_as("admin")
+    row = db.fetch_one(
+        "select id from school_records where file_path=%s", (manifest["files"]["historico"],)
+    )
     page.goto(BASE_URL)
     response = http.submit(
-        page, "POST", "/schoolrecords/download", {"path": manifest["files"]["historico"]}
+        page, "POST", "/schoolrecords/download", {"schoolrecord_id": row["id"]}
     )
     assert response.status == 200
     assert "pdf" in (response.headers.get("content-type") or "")
     assert response.body().startswith(b"%PDF")
 
-    page.goto(BASE_URL)
-    response = http.submit(page, "POST", "/schoolrecords/download", {"path": "99999/nao.pdf"})
-    http.goto_response(page, response)
-    assert "O arquivo não foi encontrado no servidor" in page.locator("body").inner_text()
+    response = http.submit(
+        page, "POST", "/schoolrecords/download", {"schoolrecord_id": 99999}
+    )
+    assert response.status == 302

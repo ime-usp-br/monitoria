@@ -2,6 +2,10 @@ import os
 import sys
 from urllib.parse import quote_plus
 
+os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
+os.environ.setdefault("XDG_CACHE_HOME", "/tmp/.cache")
+os.makedirs("/tmp/.cache", exist_ok=True)
+
 try:
     import matplotlib.pyplot as plt
     import seaborn as sns
@@ -41,10 +45,10 @@ try:
     selections["school_term_id"] = selections["school_term_id"].astype("category")
     selections["Departamento"] = selections["Departamento"].astype("category")
 
-    monitorias_por_departamento = selections[selections["sitatl"]!="Desligado"].groupby(["school_term_id","Departamento"]).count().rename(columns={"id_x":"Monitorias"}).loc[:,["Monitorias"]]
+    monitorias_por_departamento = selections[selections["sitatl"]!="Desligado"].groupby(["school_term_id","Departamento"], observed=True).count().rename(columns={"id_x":"Monitorias"}).loc[:,["Monitorias"]]
     monitorias_por_departamento = monitorias_por_departamento.reset_index()
     monitorias_por_departamento = pd.merge(sts.loc[:,["id","year","period"]],monitorias_por_departamento,left_on="id", right_on="school_term_id").loc[:,["year","period","Monitorias", "Departamento"]]
-    monitorias_por_departamento["Semestre"] = monitorias_por_departamento[["year","period"]].apply(lambda x: str(x[0])+" "+x[1].split(" ")[0]+" Sem", axis=1)
+    monitorias_por_departamento["Semestre"] = monitorias_por_departamento[["year","period"]].apply(lambda x: str(x["year"])+" "+x["period"].split(" ")[0]+" Sem", axis=1)
     monitorias_por_departamento = monitorias_por_departamento.loc[:,["Departamento","Monitorias","Semestre"]]
     monitorias_por_departamento = pd.concat([monitorias_por_departamento, pd.DataFrame([["MAC",0,"2022 1° Sem"],["MAE",0,"2022 1° Sem"],["MAT",0,"2022 1° Sem"],["MAP",0,"2022 1° Sem"]], columns=["Departamento","Monitorias","Semestre"])],ignore_index=True)
     monitorias_por_departamento.sort_values(by=["Semestre"], inplace=True)
@@ -68,10 +72,14 @@ try:
     plt.savefig(path+"monitorias_por_departamento.jpg")
 
     courses = pd.read_sql(db.text("select * from courses where schoolterm_id=:id"), engine, params={"id": st_id})
-    courses["Tipo"] = courses.apply(lambda row: "Pós Graduação" if "Doutorado" in row["nomcur"] or "Mestrado" in row["nomcur"] else "Graduação", axis=1)
-    courses["Local"] = courses.apply(lambda row: "IME" if "IME" == row["sglund"] else "Fora do IME", axis=1)
-    courses_grouped = courses.groupby(["Tipo","Local"]).count().loc[:,["id"]].rename(columns={"id":"Monitorias"}).reset_index()
-    courses_grouped["label"] = courses_grouped.apply(lambda row: row["Tipo"]+" "+row["Local"] if "Fora" in row["Local"] else row["Tipo"]+" no "+row["Local"], axis=1)
+    courses = courses.loc[:, ~courses.columns.duplicated()]
+    courses["Tipo"] = courses["nomcur"].astype(str).apply(lambda value: "Pós Graduação" if "Doutorado" in value or "Mestrado" in value else "Graduação")
+    courses["Local"] = courses["sglund"].astype(str).apply(lambda value: "IME" if value == "IME" else "Fora do IME")
+    courses_grouped = courses.groupby(["Tipo","Local"], observed=True).count().loc[:,["id"]].rename(columns={"id":"Monitorias"}).reset_index()
+    courses_grouped = courses_grouped.loc[:, ~courses_grouped.columns.duplicated()]
+    courses_grouped["label"] = courses_grouped["Tipo"].astype(str) + " " + courses_grouped["Local"].astype(str)
+    outside = courses_grouped["Local"].astype(str).str.contains("Fora")
+    courses_grouped.loc[~outside, "label"] = courses_grouped.loc[~outside, "Tipo"].astype(str) + " no " + courses_grouped.loc[~outside, "Local"].astype(str)
 
     fig, ax = plt.subplots(figsize=(10,7))
     plt.title("Perfil dos Monitores no "+st["period"]+" de "+str(st["year"]))

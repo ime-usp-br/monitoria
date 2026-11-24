@@ -28,6 +28,7 @@ RUN apt-get update && apt-get install -y \
     freetds-dev \
     freetds-common \
     python3 \
+    python3-pip \
     texlive-latex-base \
     texlive-latex-extra \
     texlive-fonts-recommended \
@@ -39,6 +40,10 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2@sha256:50ea4d33fdcde1adb0f045547295faa1548b33872e5f789dae5b02ce2fb5de93 /usr/bin/composer /usr/bin/composer
+
+COPY app/Scripts/Python/requirements.txt /tmp/python-requirements.txt
+RUN pip3 install --break-system-packages --no-cache-dir -r /tmp/python-requirements.txt \
+    && rm -f /tmp/python-requirements.txt
 
 WORKDIR /var/www
 
