@@ -61,7 +61,10 @@ jobs:
 
       - name: Composer audit
         run: |
-          docker compose run --rm --no-deps --entrypoint sh app -lc 'composer audit --locked'
+          docker compose run --rm --no-deps --entrypoint sh app -lc '
+            git config --global --add safe.directory /var/www &&
+            composer audit --locked
+          '
 
       - name: npm ci + npm audit
         run: |
