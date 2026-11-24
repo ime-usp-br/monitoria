@@ -74,7 +74,7 @@ jobs:
           '
 
       - name: E2E Playwright
-        run: ./scripts/run_e2e.sh
+        run: bash ./scripts/run_e2e.sh
 
       - name: Guardar artefatos do E2E
         if: failure()
