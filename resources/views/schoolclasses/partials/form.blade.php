@@ -72,7 +72,7 @@
                 <a class="btn btn-link btn-sm text-dark text-decoration-none"
                     style="padding-left:0px"
                     id="btn-remove-horario-{{ $horario->id }}"
-                    onclick="removeHorario({{ $horario->id }})"
+                    data-remove-horario="{{ $horario->id }}"
                     title="Remover"
                 >
                     <i class="fas fa-trash-alt"></i>
@@ -90,12 +90,7 @@
             <i class="fas fa-plus-circle"></i>
         </a>
 
-        <script>
-            function removeHorario(id){
-                document.getElementById("horario-"+id).remove();
-            }
-        </script>
-    </div>
+        </div>
 </div>
 
 <div class="row custom-form-group justify-content-center">
@@ -111,7 +106,7 @@
                 <a class="btn btn-link btn-sm text-dark text-decoration-none"
                     style="padding-left:0px"
                     id="btn-remove-instrutor-{{ $instrutor->id }}"
-                    onclick="removeInstrutor({{ $instrutor->id }})"
+                    data-remove-instrutor="{{ $instrutor->id }}"
                     title="Remover"
                 >
                     <i class="fas fa-trash-alt"></i>
@@ -129,12 +124,7 @@
             <i class="fas fa-plus-circle"></i>
         </a>
 
-        <script>
-            function removeInstrutor(id){
-                document.getElementById("instrutor-"+id).remove();
-            }
-        </script>
-    </div>
+        </div>
 </div>
 
 <div class="row custom-form-group justify-content-center">

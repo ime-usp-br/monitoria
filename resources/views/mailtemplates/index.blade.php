@@ -82,7 +82,7 @@
                                     @method('delete')
                                     @csrf
                                     <button class="btn px-0"
-                                        onclick="return confirm('Você tem certeza que deseja excluir esse modelo?')" 
+                                        data-confirm="Você tem certeza que deseja excluir esse modelo?"
                                         title="Excluir Modelo" >
                                         <i class="fas fa-trash-alt"></i>
                                     </button>

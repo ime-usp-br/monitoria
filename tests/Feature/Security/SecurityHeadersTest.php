@@ -52,4 +52,28 @@ class SecurityHeadersTest extends TestCase
 
         $this->assertNull($response->headers->get('Strict-Transport-Security'));
     }
+
+    public function test_csp_enforce_em_producao_sem_unsafe_inline_ou_eval(): void
+    {
+        $original = $this->app['env'];
+        $this->app['env'] = 'production';
+
+        try {
+            $request = Request::create('https://example.com/', 'GET', [], [], [], ['HTTPS' => 'on']);
+            $response = (new SecurityHeaders)->handle($request, fn () => new Response('ok'));
+            $csp = (string) $response->headers->get('Content-Security-Policy');
+
+            $this->assertNotSame('', $csp);
+            $this->assertStringContainsString("script-src 'self'", $csp);
+            $this->assertStringNotContainsString('https:', $csp);
+
+            preg_match('/script-src ([^;]+);/', $csp, $matches);
+            $scriptSrc = $matches[1] ?? '';
+
+            $this->assertStringNotContainsString('unsafe-inline', $scriptSrc);
+            $this->assertStringNotContainsString('unsafe-eval', $scriptSrc);
+        } finally {
+            $this->app['env'] = $original;
+        }
+    }
 }

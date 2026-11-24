@@ -127,7 +127,7 @@
         <div class="row custom-form-group">
             <div class="col-lg">
                     <label class="pb-1" >Comentários:</label>
-                    <input class="custom-form-control" type="text" name="comments" id="tinymcetextarea"
+                    <input class="custom-form-control" type="text" name="comments"
                         value="{{ old('comments') ?? $selection->instructorevaluation->comments ?? ''}}"
                     />
             </div>

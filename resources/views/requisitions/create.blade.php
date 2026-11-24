@@ -25,11 +25,4 @@
 
 @section('javascripts_bottom')
  @parent
-<script>
-    tinymce.init({
-    selector: '#tinymcetextarea',
-    plugins: 'link,code',
-    link_default_target: '_blank'
-    });
-</script>
 @endsection

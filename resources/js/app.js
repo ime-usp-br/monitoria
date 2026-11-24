@@ -1,1 +1,2 @@
-import './app-legacy';
+import '../css/app.css';
+import './globals.js';

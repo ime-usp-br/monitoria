@@ -91,7 +91,7 @@
         <div class="row custom-form-group">
             <div class="col-lg">
                     <label class="pb-1" >Quais atividades você desempenhou além do atendimento aos alunos e correção das listas de exercícios?</label>
-                    <input class="custom-form-control" type="text" name="secondary_activity" id="tinymcetextarea"
+                    <input class="custom-form-control" type="text" name="secondary_activity"
                         value="{{ old('secondary_activity') ?? $selection->selfevaluation->secondary_activity ?? ''}}"
                     />
             </div>
@@ -119,7 +119,7 @@
 
         <div class="row custom-form-group">
             <div class="col-lg">
-                    <input class="custom-form-control" type="text" name="workload_reason" id="tinymcetextarea"
+                    <input class="custom-form-control" type="text" name="workload_reason"
                         value="{{ old('workload_reason') ?? $selection->selfevaluation->workload_reason ?? ''}}"
                     />
             </div>
@@ -128,7 +128,7 @@
         <div class="row custom-form-group">
             <div class="col-lg">
                     <label class="pb-1" >Comentários, reclamações ou sugestões:</label>
-                    <input class="custom-form-control" type="text" name="comments" id="tinymcetextarea"
+                    <input class="custom-form-control" type="text" name="comments"
                         value="{{ old('comments') ?? $selection->selfevaluation->comments ?? ''}}"
                     />
             </div>

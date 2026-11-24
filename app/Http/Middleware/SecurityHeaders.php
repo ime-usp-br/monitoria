@@ -16,19 +16,27 @@ class SecurityHeaders
         $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->headers->set('Reporting-Endpoints', 'csp-endpoint="/csp-report"');
-        $response->headers->set(
-            'Content-Security-Policy-Report-Only',
-            "default-src 'self'; ".
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https: data:; ".
-            "style-src 'self' 'unsafe-inline' https:; ".
-            "img-src 'self' data: https:; ".
-            "font-src 'self' data: https:; ".
-            "connect-src 'self' https:; ".
+
+        $scriptSrc = app()->isProduction()
+            ? "'self'"
+            : "'self' 'unsafe-inline' 'unsafe-eval' http://localhost:5173 http://127.0.0.1:5173";
+
+        $csp = "default-src 'self'; ".
+            "script-src {$scriptSrc}; ".
+            "style-src 'self' 'unsafe-inline'; ".
+            "img-src 'self' data:; ".
+            "font-src 'self'; ".
+            "connect-src 'self'; ".
             "frame-ancestors 'self'; ".
             "base-uri 'self'; ".
             "form-action 'self'; ".
+            "object-src 'none'; ".
             "report-uri /csp-report; ".
-            "report-to csp-endpoint;"
+            "report-to csp-endpoint;";
+
+        $response->headers->set(
+            app()->isProduction() ? 'Content-Security-Policy' : 'Content-Security-Policy-Report-Only',
+            $csp
         );
 
         if (app()->isProduction() && $request->isSecure()) {

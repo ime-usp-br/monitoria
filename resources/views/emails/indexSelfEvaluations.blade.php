@@ -69,21 +69,4 @@
 @endsection
 
 @section('javascripts_bottom')
-    <script>
-        $( function() {        
-            $('#btn-dispatchEmails').on('click', function(){
-                if($('#btn-dispatchEmails').val() == 1){
-                    $('input:checkbox').prop('checked', false);
-                    $('#btn-dispatchEmails').val(0);
-                    $('#btn-dispatchEmails').text(' Marcar Todos');
-                    $('#btn-dispatchEmails').prepend("<i class='icon-check'></i>");
-                }else{
-                    $('input:checkbox').prop('checked', true);
-                    $('#btn-dispatchEmails').val(1);
-                    $('#btn-dispatchEmails').text(' Desmarcar Todos');
-                    $('#btn-dispatchEmails').prepend("<i class='icon-check-empty'></i>");
-                }
-            })
-        });
-    </script>
-@endsection
+    @endsection

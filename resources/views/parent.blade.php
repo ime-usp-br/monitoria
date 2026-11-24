@@ -2,28 +2,13 @@
 
 @section('styles')
   @parent
-  @vite('resources/css/app.css')
   <link rel="stylesheet" href="{{ asset('css/listmenu_v.css').'?version=2' }}" />
-  <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/datatables.min.css"/>
 @endsection
 
 @section('javascripts_bottom')
 @parent
-  <script type="text/javascript">
-    let baseURL = "{{ env('APP_URL') }}";
-  </script>
   @vite('resources/js/app.js')
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script src="{{ asset('js/datepicker-pt-BR.js') }}"></script>
-  <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/datatables.min.js"></script>
-  <script src="https://cdn.tiny.cloud/1/fluxyozlgidop2o9xx3484rluezjjiwtcodjylbuwavcfnjg/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-
-  <script>
-  $( "#menulateral" ).menu();
-  </script>
 @endsection
-
 
 @section('content')
 @if(Auth::check())
@@ -97,7 +82,7 @@
           <li>
               <form style="padding:0px;" action="{{ route('logout') }}" method="POST" id="logout_form2">
                   @csrf
-                  <a onclick="document.getElementById('logout_form2').submit(); return false;">Sair</a>
+                  <a href="#" id="logout-link">Sair</a>
               </form>
           </li>
       </ul>

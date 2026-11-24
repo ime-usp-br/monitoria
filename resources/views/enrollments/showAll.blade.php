@@ -136,37 +136,4 @@
 
 @section('javascripts_bottom')
   @parent
-  <script>
-    $(document).ready(function() {
-        $('#tabela-inscritos').DataTable({
-            dom: 'B',
-            buttons: {
-                buttons:[{
-                    extend: 'excel',
-                    text:'Exportar para Excel',
-                    className: 'btn-outline-primary',
-                    exportOptions: {
-                        columns: [0,1,2,4,5,6,7,8,9],
-                        format: {
-                            body: function (data, row, column, node) {
-                                let newData = data.replace(/<br\s*\/?>/gi, '; ');
-                                while (newData.indexOf('  ') !== -1) {
-                                    newData = newData.replace(/  /g, ' ');
-                                }
-                                return newData;
-                            }
-                        }
-                    }
-                }],
-                dom:{
-                    button:{
-                        className:'btn'
-                    }
-                }
-            },
-            paging:false,
-            order:[]
-        });
-    });
-  </script>
-@endsection
+  @endsection

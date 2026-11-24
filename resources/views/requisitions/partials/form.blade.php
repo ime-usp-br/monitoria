@@ -135,7 +135,7 @@
                                 <a class="btn btn-link btn-sm text-dark text-decoration-none"
                                     style="padding-left:0px"
                                     id="btn-remove-indicacao-{{ $indicacao->id }}"
-                                    onclick="removeRecommendation({{ $indicacao->id }})"
+                                    data-remove-recommendation="{{ $indicacao->id }}"
                                     title="Remover"
                                 >
                                     <i class="fas fa-trash-alt"></i>
@@ -154,19 +154,14 @@
                         <i class="fas fa-plus-circle"></i>
                     </a>
 
-                    <script>
-                        function removeRecommendation(id){
-                            document.getElementById("indicacao-"+id).remove();
-                        }
-                    </script>
-                </div>
+                    </div>
             </div>
         </div>
 
         <div class="row custom-form-group">
             <div class="col-lg">
                     <label class="pb-1" >Comentários:</label>
-                    <input class="custom-form-control" type="text" name="comments" id="tinymcetextarea"
+                    <input class="custom-form-control" type="text" name="comments"
                         value="{{ old('comments') ?? $turma->requisition->comments ?? ''}}"
                     />
             </div>

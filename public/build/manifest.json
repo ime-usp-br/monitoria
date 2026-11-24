@@ -1,17 +1,271 @@
 {
+  "_jquery.dataTables-DNY814p1.js": {
+    "file": "assets/jquery.dataTables-DNY814p1.js",
+    "name": "jquery.dataTables",
+    "imports": [
+      "_rolldown-runtime-COiEfhsA.js",
+      "resources/js/app.js"
+    ]
+  },
+  "_rolldown-runtime-COiEfhsA.js": {
+    "file": "assets/rolldown-runtime-COiEfhsA.js",
+    "name": "rolldown-runtime"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf": {
+    "file": "assets/fa-brands-400-D1LuMI3I.ttf",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2": {
+    "file": "assets/fa-brands-400-D_cYUPeE.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf": {
+    "file": "assets/fa-regular-400-DZaxPHgR.ttf",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2": {
+    "file": "assets/fa-regular-400-BjRzuEpd.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf": {
+    "file": "assets/fa-solid-900-D0aA9rwL.ttf",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2": {
+    "file": "assets/fa-solid-900-CTAAxXor.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.ttf": {
+    "file": "assets/fa-v4compatibility-CCth-dXg.ttf",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.ttf"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2": {
+    "file": "assets/fa-v4compatibility-C9RhG_FT.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2"
+  },
+  "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js": {
+    "file": "assets/bootstrap.bundle.min-Bii1caxb.js",
+    "name": "bootstrap.bundle.min",
+    "src": "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-COiEfhsA.js",
+      "resources/js/app.js"
+    ]
+  },
+  "node_modules/datatables.net-bs4/js/dataTables.bootstrap4.mjs": {
+    "file": "assets/dataTables.bootstrap4-CUAOJ6Pr.js",
+    "name": "dataTables.bootstrap4",
+    "src": "node_modules/datatables.net-bs4/js/dataTables.bootstrap4.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-COiEfhsA.js",
+      "resources/js/app.js",
+      "_jquery.dataTables-DNY814p1.js"
+    ]
+  },
+  "node_modules/datatables.net-buttons-bs4/js/buttons.bootstrap4.mjs": {
+    "file": "assets/buttons.bootstrap4-CxGza6bU.js",
+    "name": "buttons.bootstrap4",
+    "src": "node_modules/datatables.net-buttons-bs4/js/buttons.bootstrap4.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-COiEfhsA.js",
+      "resources/js/app.js",
+      "node_modules/datatables.net-bs4/js/dataTables.bootstrap4.mjs",
+      "node_modules/datatables.net-buttons/js/dataTables.buttons.mjs"
+    ]
+  },
+  "node_modules/datatables.net-buttons/js/dataTables.buttons.mjs": {
+    "file": "assets/dataTables.buttons-Dj62fjH0.js",
+    "name": "dataTables.buttons",
+    "src": "node_modules/datatables.net-buttons/js/dataTables.buttons.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-COiEfhsA.js",
+      "resources/js/app.js",
+      "_jquery.dataTables-DNY814p1.js"
+    ]
+  },
+  "node_modules/datatables.net-responsive-bs4/js/responsive.bootstrap4.mjs": {
+    "file": "assets/responsive.bootstrap4-DzAL30ti.js",
+    "name": "responsive.bootstrap4",
+    "src": "node_modules/datatables.net-responsive-bs4/js/responsive.bootstrap4.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-COiEfhsA.js",
+      "resources/js/app.js",
+      "node_modules/datatables.net-bs4/js/dataTables.bootstrap4.mjs",
+      "node_modules/datatables.net-responsive/js/dataTables.responsive.mjs"
+    ]
+  },
+  "node_modules/datatables.net-responsive/js/dataTables.responsive.mjs": {
+    "file": "assets/dataTables.responsive-pZQpK5ga.js",
+    "name": "dataTables.responsive",
+    "src": "node_modules/datatables.net-responsive/js/dataTables.responsive.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-COiEfhsA.js",
+      "resources/js/app.js",
+      "_jquery.dataTables-DNY814p1.js"
+    ]
+  },
+  "node_modules/jquery-ui/dist/themes/base/images/ui-icons_444444_256x240.png": {
+    "file": "assets/ui-icons_444444_256x240-8cmSe3ZO.png",
+    "src": "node_modules/jquery-ui/dist/themes/base/images/ui-icons_444444_256x240.png"
+  },
+  "node_modules/jquery-ui/dist/themes/base/images/ui-icons_555555_256x240.png": {
+    "file": "assets/ui-icons_555555_256x240-evkPp16B.png",
+    "src": "node_modules/jquery-ui/dist/themes/base/images/ui-icons_555555_256x240.png"
+  },
+  "node_modules/jquery-ui/dist/themes/base/images/ui-icons_777620_256x240.png": {
+    "file": "assets/ui-icons_777620_256x240-DLf0IoBZ.png",
+    "src": "node_modules/jquery-ui/dist/themes/base/images/ui-icons_777620_256x240.png"
+  },
+  "node_modules/jquery-ui/dist/themes/base/images/ui-icons_777777_256x240.png": {
+    "file": "assets/ui-icons_777777_256x240-DnDWIacA.png",
+    "src": "node_modules/jquery-ui/dist/themes/base/images/ui-icons_777777_256x240.png"
+  },
+  "node_modules/jquery-ui/dist/themes/base/images/ui-icons_cc0000_256x240.png": {
+    "file": "assets/ui-icons_cc0000_256x240-DpfzlXYR.png",
+    "src": "node_modules/jquery-ui/dist/themes/base/images/ui-icons_cc0000_256x240.png"
+  },
+  "node_modules/jquery-ui/dist/themes/base/images/ui-icons_ffffff_256x240.png": {
+    "file": "assets/ui-icons_ffffff_256x240-BWrBcdnK.png",
+    "src": "node_modules/jquery-ui/dist/themes/base/images/ui-icons_ffffff_256x240.png"
+  },
+  "node_modules/jquery-ui/ui/widgets/datepicker.js": {
+    "file": "assets/datepicker-CS45aQJ0.js",
+    "name": "datepicker",
+    "src": "node_modules/jquery-ui/ui/widgets/datepicker.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/jquery-ui/ui/widgets/menu.js": {
+    "file": "assets/menu-Be6-KGS2.js",
+    "name": "menu",
+    "src": "node_modules/jquery-ui/ui/widgets/menu.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/jquery-ui/ui/widgets/progressbar.js": {
+    "file": "assets/progressbar-DWXfVYKY.js",
+    "name": "progressbar",
+    "src": "node_modules/jquery-ui/ui/widgets/progressbar.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/jszip/dist/jszip.min.js": {
+    "file": "assets/jszip.min-DHI56sS5.js",
+    "name": "jszip.min",
+    "src": "node_modules/jszip/dist/jszip.min.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-COiEfhsA.js"
+    ]
+  },
+  "node_modules/pdfmake/build/pdfmake.js": {
+    "file": "assets/pdfmake-C9aa4D9T.js",
+    "name": "pdfmake",
+    "src": "node_modules/pdfmake/build/pdfmake.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-COiEfhsA.js"
+    ]
+  },
+  "node_modules/pdfmake/build/vfs_fonts.js": {
+    "file": "assets/vfs_fonts-D9BViC6C.js",
+    "name": "vfs_fonts",
+    "src": "node_modules/pdfmake/build/vfs_fonts.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-COiEfhsA.js"
+    ]
+  },
   "resources/css/app.css": {
-    "file": "assets/app-Bw10LohQ.css",
+    "file": "assets/app-ymVrlvdX.css",
     "name": "app",
     "names": [
       "app.css"
     ],
     "src": "resources/css/app.css",
-    "isEntry": true
+    "isEntry": true,
+    "assets": [
+      "assets/fa-brands-400-D_cYUPeE.woff2",
+      "assets/fa-brands-400-D1LuMI3I.ttf",
+      "assets/fa-regular-400-BjRzuEpd.woff2",
+      "assets/fa-regular-400-DZaxPHgR.ttf",
+      "assets/fa-solid-900-CTAAxXor.woff2",
+      "assets/fa-solid-900-D0aA9rwL.ttf",
+      "assets/fa-v4compatibility-C9RhG_FT.woff2",
+      "assets/fa-v4compatibility-CCth-dXg.ttf",
+      "assets/ui-icons_444444_256x240-8cmSe3ZO.png",
+      "assets/ui-icons_555555_256x240-evkPp16B.png",
+      "assets/ui-icons_ffffff_256x240-BWrBcdnK.png",
+      "assets/ui-icons_777620_256x240-DLf0IoBZ.png",
+      "assets/ui-icons_cc0000_256x240-DpfzlXYR.png",
+      "assets/ui-icons_777777_256x240-DnDWIacA.png"
+    ]
+  },
+  "resources/js/app-legacy.js": {
+    "file": "assets/app-legacy-DMMjCo-A.js",
+    "name": "app-legacy",
+    "src": "resources/js/app-legacy.js",
+    "isDynamicEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-CiLG-A5a.js",
+    "file": "assets/app-C3WR1KNm.js",
     "name": "app",
     "src": "resources/js/app.js",
-    "isEntry": true
+    "isEntry": true,
+    "imports": [
+      "_rolldown-runtime-COiEfhsA.js"
+    ],
+    "dynamicImports": [
+      "node_modules/jquery-ui/ui/widgets/datepicker.js",
+      "resources/js/datepicker-pt-BR.js",
+      "node_modules/jquery-ui/ui/widgets/menu.js",
+      "node_modules/jquery-ui/ui/widgets/progressbar.js",
+      "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+      "node_modules/jszip/dist/jszip.min.js",
+      "node_modules/pdfmake/build/pdfmake.js",
+      "node_modules/pdfmake/build/vfs_fonts.js",
+      "_jquery.dataTables-DNY814p1.js",
+      "node_modules/datatables.net-bs4/js/dataTables.bootstrap4.mjs",
+      "node_modules/datatables.net-buttons/js/dataTables.buttons.mjs",
+      "node_modules/datatables.net-buttons-bs4/js/buttons.bootstrap4.mjs",
+      "node_modules/datatables.net-responsive/js/dataTables.responsive.mjs",
+      "node_modules/datatables.net-responsive-bs4/js/responsive.bootstrap4.mjs",
+      "resources/js/app-legacy.js",
+      "resources/js/page-utils.js"
+    ],
+    "css": [
+      "assets/app-ymVrlvdX.css"
+    ],
+    "assets": [
+      "assets/fa-brands-400-D_cYUPeE.woff2",
+      "assets/fa-brands-400-D1LuMI3I.ttf",
+      "assets/fa-regular-400-BjRzuEpd.woff2",
+      "assets/fa-regular-400-DZaxPHgR.ttf",
+      "assets/fa-solid-900-CTAAxXor.woff2",
+      "assets/fa-solid-900-D0aA9rwL.ttf",
+      "assets/fa-v4compatibility-C9RhG_FT.woff2",
+      "assets/fa-v4compatibility-CCth-dXg.ttf",
+      "assets/ui-icons_444444_256x240-8cmSe3ZO.png",
+      "assets/ui-icons_555555_256x240-evkPp16B.png",
+      "assets/ui-icons_ffffff_256x240-BWrBcdnK.png",
+      "assets/ui-icons_777620_256x240-DLf0IoBZ.png",
+      "assets/ui-icons_cc0000_256x240-DpfzlXYR.png",
+      "assets/ui-icons_777777_256x240-DnDWIacA.png"
+    ]
+  },
+  "resources/js/datepicker-pt-BR.js": {
+    "file": "assets/datepicker-pt-BR-CykTaTVb.js",
+    "name": "datepicker-pt-BR",
+    "src": "resources/js/datepicker-pt-BR.js",
+    "isDynamicEntry": true
+  },
+  "resources/js/page-utils.js": {
+    "file": "assets/page-utils-CmFLpnB2.js",
+    "name": "page-utils",
+    "src": "resources/js/page-utils.js",
+    "isDynamicEntry": true
   }
 }

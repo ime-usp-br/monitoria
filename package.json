@@ -8,7 +8,19 @@
         "prod": "vite build"
     },
     "devDependencies": {
+        "@fortawesome/fontawesome-free": "^6.7.2",
+        "bootstrap": "^4.6.2",
+        "datatables.net": "^1.13.11",
+        "datatables.net-bs4": "^1.13.11",
+        "datatables.net-buttons": "^2.4.3",
+        "datatables.net-buttons-bs4": "^2.4.3",
+        "datatables.net-responsive": "^2.5.1",
+        "datatables.net-responsive-bs4": "^2.5.1",
+        "jquery": "^3.8.0",
+        "jquery-ui": "^1.14.2",
+        "jszip": "^3.10.2",
         "laravel-vite-plugin": "^3.2.1",
+        "pdfmake": "^0.2.23",
         "vite": "^8.3.8"
     }
 }
