@@ -153,7 +153,7 @@ def test_ui_legacy_datatable_inicializa_com_botoes_de_exportacao(page_as):
     expect(table).to_have_class(re.compile(r"dataTable"))
     expect(page.locator(".dataTables_wrapper")).to_be_visible()
     expect(page.locator(".dt-buttons")).to_be_visible()
-    assert page.locator(".dt-buttons .dt-button").count() >= 4
+    assert page.locator(".dt-buttons button").count() >= 4
     expect(page.locator(".dataTables_filter input")).to_be_visible()
 
 

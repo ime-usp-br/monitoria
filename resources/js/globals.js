@@ -4,10 +4,8 @@ window.$ = window.jQuery = $;
 window.baseURL = window.location.origin;
 
 const load = async () => {
-    await import('jquery-ui/ui/widgets/datepicker');
+    await import('jquery-ui/dist/jquery-ui.min.js');
     await import('./datepicker-pt-BR.js');
-    await import('jquery-ui/ui/widgets/menu');
-    await import('jquery-ui/ui/widgets/progressbar');
     await import('bootstrap/dist/js/bootstrap.bundle.min.js');
 
     const JSZip = (await import('jszip')).default;
@@ -18,12 +16,14 @@ const load = async () => {
     window.JSZip = JSZip;
     window.pdfMake = pdfMake;
 
-    await import('datatables.net');
-    await import('datatables.net-bs4');
-    await import('datatables.net-buttons');
-    await import('datatables.net-buttons-bs4');
-    await import('datatables.net-responsive');
-    await import('datatables.net-responsive-bs4');
+    await import('datatables.net/js/jquery.dataTables.min.js');
+    await import('datatables.net-bs4/js/dataTables.bootstrap4.min.js');
+    await import('datatables.net-buttons/js/dataTables.buttons.min.js');
+    await import('datatables.net-buttons/js/buttons.html5.min.js');
+    await import('datatables.net-buttons/js/buttons.print.min.js');
+    await import('datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js');
+    await import('datatables.net-responsive/js/dataTables.responsive.min.js');
+    await import('datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js');
 
     await import('./app-legacy.js');
     await import('./page-utils.js');
