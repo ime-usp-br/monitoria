@@ -16,6 +16,36 @@ Sistema para gerenciar a distribuição das bolsas de monitoria do IME.
 
 <br />
 
+## Deploy (dev, homologação e produção)
+
+O deploy padrão usa **Portainer + Nginx Proxy Manager (NPM) + banco externo por
+domínio**. Existe uma única stack de aplicação (`docker-compose.yml`) para os
+três ambientes; as diferenças ficam apenas nas variáveis configuradas no
+Portainer. Não há `.env` no servidor, banco ou Redis dentro da stack, portas
+publicadas ou bind mount de código.
+
+- Contrato operacional: [`docs/deploy/README.md`](docs/deploy/README.md)
+- Variáveis (copiável para o Portainer): [`.env.example`](.env.example)
+- Stack de testes isolada: `docker-compose.test.yml`
+- Legado arquivado (não usar): [`docs/deploy/_legacy/`](docs/deploy/_legacy/)
+
+Comandos locais:
+
+```bash
+cp .env.example .env      # opcional, apenas para uso local
+make config               # valida o compose com .env.example
+make up                   # sobe app + worker + web
+make health               # valida /up através do nginx
+make test                 # suíte PHPUnit com banco efêmero isolado
+make backup-db            # backup do banco externo do ambiente atual
+```
+
+O `DB_HOST` deve ser sempre o domínio do banco externo daquele ambiente
+(`db-dev.<dominio>`, `db-homolog.<dominio>` ou `db.<dominio>`), nunca `db`,
+`mysql` ou `localhost`.
+
+<br />
+
 ## Implementação
 
 Clone o repositório

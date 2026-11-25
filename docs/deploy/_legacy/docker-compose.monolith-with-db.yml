@@ -1,0 +1,105 @@
+# ---------------------------------------------------------------------------
+# Monitoria — docker-compose (Laravel 13 / PHP 8.5)
+#
+# Os serviços se comunicam na rede bridge default do projeto. O serviço `nginx`
+# também ingressa numa rede externa (`web`, reverse proxy) para exposição via
+# domínio/TLS — por isso não publica porta de host. A rede externa deve existir:
+#   docker network create web
+# ---------------------------------------------------------------------------
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        user: monitoria
+        uid: 1000
+    container_name: monitoria-app
+    restart: unless-stopped
+    working_dir: /var/www
+    environment:
+      ALLOW_DEV_ENV: ${ALLOW_DEV_ENV:-false}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
+    volumes:
+      - .:/var/www
+      - monitoria-storage:/var/www/storage
+      - monitoria-cache:/var/www/bootstrap/cache
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    entrypoint: ["sh", "./docker/entrypoint.sh"]
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      - mysql
+      - redis
+
+  nginx:
+    image: nginx:1.30.7-alpine@sha256:caf4e1e032a20f9c3c5e28fc7f25ffd768ad8677b4975c54193075997b3a97e3
+    container_name: monitoria-nginx
+    restart: unless-stopped
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - default
+      - web
+    depends_on:
+      - app
+
+  mysql:
+    # Produção: MariaDB 10.5.21 (EOL, exceção aprovada).
+    # Local/E2E: MariaDB 10.5.29, mesma linha 10.5, compatível com o dump.
+    image: mariadb:10.5@sha256:a530aeeefd82f4fa5150f391b6c75462140904780338766f6b03acecb1cca3ce
+    container_name: monitoria-mariadb
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${DB_DATABASE:-laravel}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-root}
+      MARIADB_USER: ${DB_USERNAME:-laravel}
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -uroot -p\"$${MARIADB_ROOT_PASSWORD}\" --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:8.2-alpine@sha256:da23c2478319ceb4903857d77a2fd7aa5137d9e9d4c8165dafbacedac6403e95
+    container_name: monitoria-redis
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        user: monitoria
+        uid: 1000
+    container_name: monitoria-worker
+    restart: unless-stopped
+    working_dir: /var/www
+    environment:
+      ALLOW_DEV_ENV: ${ALLOW_DEV_ENV:-false}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
+    volumes:
+      - .:/var/www
+      - monitoria-storage:/var/www/storage
+      - monitoria-cache:/var/www/bootstrap/cache
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    entrypoint: ["sh", "./docker/worker-entrypoint.sh"]
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      - mysql
+      - redis
+
+networks:
+  web:
+    external: true
+
+volumes:
+  mariadb-data:
+  monitoria-storage:
+  monitoria-cache:

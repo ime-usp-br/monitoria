@@ -1,0 +1,133 @@
+# ---------------------------------------------------------------------------
+# Stack ISOLADA de testes (PHPUnit).
+#
+# - Projeto e rede próprios; não usa a rede externa `web`.
+# - Banco efêmero em tmpfs, criado e destruído com o compose de teste.
+# - Sem portas publicadas e sem bind mount de código.
+# - Não toca no banco central de dev, homologação ou produção.
+#
+# Este é o único lugar do projeto em que DB_HOST=db é permitido; ele não é
+# usado em deploy.
+#
+# Uso: make test
+#      docker compose -f docker-compose.test.yml run --rm --build test
+# ---------------------------------------------------------------------------
+name: monitoria-test
+
+x-test-environment: &test-environment
+  APP_PROJECT: monitoria
+  DEPLOY_ENV: dev
+  APP_NAME: "Sistema de Monitoria (testes)"
+  APP_ENV: testing
+  APP_DEBUG: "true"
+  APP_KEY: "base64:ZTJlLXRlc3Qta2V5LW1vbml0b3JpYS0wMDAwMDAwMDA="
+  APP_URL: "http://localhost"
+  TZ: America/Sao_Paulo
+  LOG_CHANNEL: stderr
+  LOG_LEVEL: debug
+
+  DB_CONNECTION: mysql
+  DB_HOST: db
+  DB_PORT: "3306"
+  DB_DATABASE: laravel_test
+  DB_USERNAME: laravel
+  DB_PASSWORD: root
+
+  CACHE_DRIVER: array
+  SESSION_DRIVER: array
+  QUEUE_CONNECTION: sync
+  FILESYSTEM_DRIVER: local
+  MAIL_MAILER: array
+  BROADCAST_DRIVER: log
+
+  RUN_MIGRATIONS: "false"
+  RUN_SEEDERS: "false"
+  WARM_CACHE: "false"
+  TRUSTED_PROXIES: "127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+  FORCE_HTTPS: "false"
+
+  SENHAUNICA_KEY: "test-key"
+  SENHAUNICA_SECRET: "test-secret"
+  SENHAUNICA_CALLBACK_ID: "1"
+  SENHAUNICA_DEV: "http://senhaunica:3141/wsusuario/oauth"
+  IS_SUPERVISOR_CONFIG: "false"
+  REPLICADO_PATHLOG: storage/logs/replicado.log
+  SENTRY_LARAVEL_DSN: ""
+
+services:
+  db:
+    image: mariadb:10.5@sha256:a530aeeefd82f4fa5150f391b6c75462140904780338766f6b03acecb1cca3ce
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MARIADB_DATABASE: laravel_test
+      MARIADB_USER: laravel
+      MARIADB_PASSWORD: root
+      MARIADB_ROOT_PASSWORD: root
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -uroot -proot --silent"]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+    tmpfs:
+      - /var/lib/mysql
+    networks:
+      - internal
+    security_opt:
+      - no-new-privileges:true
+
+  senhaunica:
+    image: uspdev/senhaunica-faker@sha256:9736cf1fc77a84d1f46a7114ae68342eb983ec7e61860ba54af669cf49a86c88
+    environment:
+      APP_URL: http://senhaunica:3141
+      FAKER_CODIGO_UNIDADE: "45"
+      FAKER_SIGLA_UNIDADE: IME
+      FAKER_NOME_UNIDADE: Instituto de Matematica e Estatistica
+      FAKER_CODIGOS_SETOR: 5000,5001,5002,5003
+      FAKER_SERVIDOR: 10001,10002,10003
+      FAKER_DOCENTE: 20001,20002,20003,20004,20005,20006
+      FAKER_ALUNOGR: 160001,160002,160003,160004
+      FAKER_ALUNOPOS: 800001
+    expose:
+      - "3141"
+    networks:
+      - internal
+    security_opt:
+      - no-new-privileges:true
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: test
+    environment:
+      <<: *test-environment
+    depends_on:
+      db:
+        condition: service_healthy
+      senhaunica:
+        condition: service_started
+    networks:
+      - internal
+    volumes:
+      - test-storage:/var/www/storage
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 15s
+    command:
+      - sh
+      - -c
+      - |
+        set -eu
+        echo "[test] aguardando MariaDB..."
+        until php -r 'new PDO("mysql:host=" . getenv("DB_HOST") . ";port=" . getenv("DB_PORT") . ";dbname=" . getenv("DB_DATABASE"), getenv("DB_USERNAME"), getenv("DB_PASSWORD"));' 2>/dev/null; do
+          sleep 2
+        done
+        php artisan migrate --force
+        vendor/bin/phpunit --colors=never --do-not-cache-result
+
+networks:
+  internal:
+    internal: true
+
+volumes:
+  test-storage:

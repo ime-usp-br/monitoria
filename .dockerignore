@@ -1,57 +1,54 @@
-# Ignorar arquivos e diretórios do Git
-.git
-.gitignore
-.gitattributes
+# Git e metadados
+/.git
+/.gitignore
+/.gitattributes
+/.github
+/.kilo
+/.vscode
+/.idea
 
-# Ignorar dependências instaladas localmente
-vendor
-node_modules
+# Dependências locais (instaladas dentro do build)
+/vendor
+/node_modules
 
-# Ignorar arquivos de ambiente
-.env
-.env.testing
-.env.backup
-.env.local
+# Artefatos de build locais (o Dockerfile gera os seus)
+/public/build
+/public/vendor
+/public/hot
 
-# Ignorar caches e logs do Laravel
-bootstrap/cache/*
-storage/framework/cache/*
-storage/framework/sessions/*
-storage/framework/views/*
-storage/framework/testing
-storage/logs/*
-storage/debugbar
-storage/app/*
-!storage/app/images
-!storage/app/images/**
+# Ambiente e segredos
+/.env
+/.env.*
+/.env.example
 
-# Ignorar arquivos Docker
-docker-compose*.yml
-Dockerfile*
-.docker
+# Caches, logs e artefatos do Laravel
+/bootstrap/cache/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/framework/testing
+/storage/logs/*
+/storage/debugbar
+/storage/backups
+/storage/app/*
+!/storage/app/images
+!/storage/app/images/**
 
-# Ignorar arquivos do editor
-.idea
-.vscode
+# Arquivos Docker/CI/docs da raiz (o diretório docker/ é necessário)
+/docker-compose*.yml
+/Dockerfile
+/Dockerfile.*
+/docs
+/README.md
+/supervisor.conf.example
+/e2e
+/tmp
+/backups
+/.deploy-backup
+/.phpunit.result.cache
+
+# Editores e sistema
 *.swp
 *.swo
-*~
-
-# Ignorar arquivos de sistema operacional
 .DS_Store
 Thumbs.db
-
-# Ignorar documentação e scripts auxiliares
-README.md
-scripts
-
-# Ignorar arquivos de teste e CI
-.phpunit.result.cache
-phpunit.xml
-.styleci.yml
-.editorconfig
-tmp
-.kilo
-e2e/**
-docs/**
-tests/**

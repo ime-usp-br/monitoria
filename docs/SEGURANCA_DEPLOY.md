@@ -1,63 +1,73 @@
 # Segurança de deploy
 
-## Pré-requisitos de produção
+O contrato operacional completo está em `docs/deploy/README.md`. Este documento
+resume as decisões de segurança.
 
-O entrypoint de produção é fail-closed. O container **não cria** `.env`, não instala dependências e não compila assets em runtime.
+## Modelo
 
-Antes do deploy:
+- A stack de aplicação é única (`docker-compose.yml`) para dev, homologação e
+  produção. Não existe overlay de produção nem variante por ambiente.
+- As variáveis vêm do **Portainer** (ou do shell local). Não existe `.env` no
+  servidor.
+- O banco é externo, acessado por domínio (`DB_HOST`/`DATABASE_URL`), fora da
+  rede Docker da aplicação.
+- O NPM é o único ponto HTTP e não expõe banco.
+- A aplicação não publica portas, não monta o código-fonte e não sobe banco.
 
-```sh
-composer install --no-dev --classmap-authoritative --no-interaction
-npm ci
-npm run build
-```
+## Pré-requisitos
 
-O `.env` de produção deve conter, no mínimo:
+A imagem de deploy já contém:
+
+- dependências de produção do Composer;
+- assets compilados pelo Vite;
+- runtime PHP com as extensões necessárias.
+
+O container **não** instala dependências, não compila assets e não cria `.env`
+em runtime. O entrypoint é fail-closed:
+
+- exige `APP_KEY`, `APP_URL`, `DB_HOST`, `DB_PASSWORD` etc.;
+- recusa `DB_HOST` igual a `db`, `mysql`, `mariadb`, `postgres`, `localhost`
+  ou nome de serviço Compose;
+- espera o banco externo por domínio com timeout;
+- falha com mensagem clara se o banco não responder.
+
+## Variáveis mínimas de produção
+
+No Portainer, para `DEPLOY_ENV=prod`:
 
 - `APP_ENV=production`
 - `APP_DEBUG=false`
 - `APP_KEY` definida e rotacionável
 - `APP_URL` com `https://`
-- `DB_PASSWORD` forte e diferente de `root`
-- `TRUSTED_PROXIES` com os IPs/CIDRs do reverse proxy
-- `SESSION_SECURE_COOKIE=true`
+- `DB_HOST` com o domínio do banco de produção
+- `DB_PASSWORD` forte, definida pela infraestrutura
+- `TRUSTED_PROXIES` restrito ao NPM
+- `FORCE_HTTPS=true`
 - `SESSION_ENCRYPT=true`
+- `RUN_MIGRATIONS=true`, `RUN_SEEDERS=false`, `WARM_CACHE=true`
 - `EXTERNAL_REPORT_TOKEN` forte
+- `SENHAUNICA_KEY`/`SENHAUNICA_SECRET` válidos
 
-O proxy reverso deve enviar `X-Forwarded-For`, `X-Forwarded-Proto` e
-`X-Forwarded-Host`, removendo esses headers de requisições externas.
+O cookie seguro é ativado automaticamente quando `APP_ENV=production`.
 
-## Compose de produção
+## Proxy reverso
 
-Use o overlay de produção para montar o código como somente leitura e manter
-`storage` e `bootstrap/cache` em volumes graváveis:
-
-```sh
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
-```
-
-O compose base mantém o bind mount gravável para desenvolvimento e CI. Nunca
-use o compose base em produção.
-
-## Desenvolvimento local
-
-Como o entrypoint é fail-closed, ambientes locais com `APP_ENV=local` precisam
-definir explicitamente:
-
-```sh
-ALLOW_DEV_ENV=true docker compose up -d
-```
+O NPM deve enviar `X-Forwarded-For`, `X-Forwarded-Proto`,
+`X-Forwarded-Host` e `X-Forwarded-Port`, removendo esses headers de requisições
+externas. A aplicação confia nos proxies configurados em `TRUSTED_PROXIES`
+(`bootstrap/app.php`).
 
 ## Migrações
 
-As migrações rodam no entrypoint e falham o boot se houver erro. Faça backup e
-teste o rollback antes de aplicar. Não use `migrate --force || true`.
+As migrações rodam no entrypoint do serviço `app` quando
+`RUN_MIGRATIONS=true` e `CONTAINER_ROLE=web`. O worker nunca migra nem semeia.
+Faça backup e teste o rollback antes de aplicar. Não use
+`migrate --force || true`.
 
 ## Rotação de segredos
 
-Depois do deploy, rotacione `APP_KEY`, senhas de banco, token do relatório
-externo, credenciais SMTP e chaves da Senhaunica. Consulte
-`docs/SEGREDOS_ROTACAO.md`.
+Atualize o valor no Portainer, reinicie `app` e `worker` e valide login, fila,
+e-mail, relatório externo e healthcheck. Consulte `docs/SEGREDOS_ROTACAO.md`.
 
 ## Riscos residuais aceitos
 

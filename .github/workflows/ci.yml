@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   backend:
-    name: PHPUnit, auditorias e E2E
+    name: Contrato, PHPUnit, auditorias e E2E
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
@@ -24,69 +24,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Validar contrato de deploy
+        run: |
+          docker compose --env-file .env.example -f docker-compose.yml config -q
+          docker compose -f docker-compose.test.yml config -q
+          bash ./scripts/check-deploy-contract.sh
+
       - name: Validar matriz E2E
         run: bash ./scripts/validate_e2e_coverage.sh
 
-      - name: Preparar .env de CI
-        run: |
-          cp .env.example .env
-          sed -i 's/^DB_HOST=.*/DB_HOST=mysql/' .env
-          sed -i 's/^DB_DATABASE=.*/DB_DATABASE=laravel_test/' .env
-          sed -i 's/^DB_USERNAME=.*/DB_USERNAME=laravel/' .env
-          sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD=root/' .env
-          sed -i 's/^REDIS_HOST=.*/REDIS_HOST=redis/' .env
+      - name: Build da imagem de teste
+        run: docker compose -f docker-compose.test.yml build test
 
-      - name: Criar rede externa do compose
-        run: docker network create web 2>/dev/null || true
-
-      - name: Subir MySQL e Redis
-        run: |
-          docker compose up -d mysql redis
-          for i in $(seq 1 60); do
-            if docker compose exec -T mysql mariadb-admin ping -h 127.0.0.1 -uroot -proot --silent >/dev/null 2>&1; then
-              exit 0
-            fi
-            sleep 2
-          done
-          echo "MySQL não ficou pronto" >&2
-          docker compose logs mysql
-          exit 1
-
-      - name: Build da imagem da aplicação
-        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml build app
-
-      - name: Instalar dependências, migrar o banco e rodar PHPUnit com cobertura
-        run: |
-          docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm --no-deps --entrypoint sh app -lc '
-            git config --global --add safe.directory /var/www &&
-            apt-get update -qq &&
-            apt-get install -y -qq $PHPIZE_DEPS >/dev/null &&
-            pecl install pcov >/dev/null &&
-            docker-php-ext-enable pcov &&
-            mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/framework/testing storage/logs bootstrap/cache &&
-            chown -R www-data:www-data storage bootstrap/cache &&
-            composer install --no-interaction --prefer-dist --no-progress &&
-            php artisan key:generate --force &&
-            php artisan migrate --force &&
-            mkdir -p build/logs &&
-            php -d pcov.enabled=1 -d pcov.directory=app vendor/bin/phpunit \
-              --colors=never --coverage-text --coverage-clover build/logs/clover.xml
-          '
-
-      - name: Publicar cobertura PHP
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-phpunit
-          path: build/logs/clover.xml
-          if-no-files-found: ignore
+      - name: PHPUnit (stack isolada)
+        run: docker compose -f docker-compose.test.yml run --rm test
 
       - name: Composer audit
         run: |
-          docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm --no-deps --entrypoint sh app -lc '
-            git config --global --add safe.directory /var/www &&
-            composer audit --locked
-          '
+          docker run --rm -v "$PWD":/app -w /app \
+            composer:2@sha256:50ea4d33fdcde1adb0f045547295faa1548b33872e5f789dae5b02ce2fb5de93 \
+            audit --locked
 
       - name: Verificar assets externos
         run: bash ./scripts/check_external_assets.sh
@@ -138,7 +95,7 @@ jobs:
             --skip-dirs tmp --skip-dirs .git --skip-dirs .kilo /repo
 
       - name: Build da imagem para scan
-        run: docker build -t monitoria-app:scan .
+        run: docker build --target runtime -t monitoria-app:scan .
 
       - name: Trivy (imagem OS, critical/high)
         run: |
