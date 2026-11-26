@@ -26,3 +26,5 @@ tmp/
 !/e2e/artifacts/.gitkeep
 .pytest_cache
 __pycache__
+# Relatórios de auditoria (não versionar)
+docs/auditoria/
